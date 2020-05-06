@@ -84,7 +84,6 @@ void supla_esp_board_gpio_init(void) {
 	//PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO0_U);				//pullup GPIO0
 	//PIN_PULLUP_EN(PERIPHS_IO_MUX_MTDI_U);					//pullup GPIO12
 	
-	supla_esp_gpio_set_hi( B_RELAY1_PORT, supla_esp_cfg.gpio0 );	//ustawienie zapamietanego stanu
 	
 }
 
@@ -310,5 +309,5 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
   supla_esp_gpio_set_led(!supla_esp_cfg.StatusLedOff, 0, 0);
-  //supla_esp_gpio_set_hi( B_RELAY1_PORT, supla_esp_cfg.gpio0 );
+  supla_esp_gpio_set_hi( B_RELAY1_PORT, supla_esp_cfg.gpio0 );  //ustawienie zapamietanego stanu
 }
