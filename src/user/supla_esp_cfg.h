@@ -65,6 +65,7 @@ typedef struct {
     char ZeroInitialEnergy;
 	
 	char ThermometerType;
+	char gpio0;
     char zero[200];
 
 }SuplaEspCfg;
@@ -91,6 +92,7 @@ typedef struct {
     char StatusLedOff;
     char InputCfgTriggerOff;
 	char ThermometerType;
+	char gpio0;
 
     char FirmwareUpdate;
     char Test;
@@ -121,6 +123,7 @@ typedef struct {
     char StatusLedOff;
     char InputCfgTriggerOff;
 	char ThermometerType;
+	char gpio0;
     char FirmwareUpdate;
     char Test;
     char Email[SUPLA_EMAIL_MAXSIZE];
@@ -148,6 +151,7 @@ typedef struct {
     char StatusLedOff;
     char InputCfgTriggerOff;
 	char ThermometerType;
+	char gpio0;
     char FirmwareUpdate;
     char Test;
     unsigned int FullOpeningTime[2];
