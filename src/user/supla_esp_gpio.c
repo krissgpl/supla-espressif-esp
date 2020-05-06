@@ -1236,7 +1236,7 @@ supla_esp_gpio_set_hi(int port, char hi) {
 	#ifdef GPIO0_INPUT
 	if (port == 0 ) {
 		supla_esp_cfg.gpio0 = hi;
-		{
+	}
 	#endif
 }
 
