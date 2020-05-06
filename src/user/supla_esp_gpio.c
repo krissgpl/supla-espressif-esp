@@ -1232,7 +1232,12 @@ supla_esp_gpio_set_hi(int port, char hi) {
 	} else {
 		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
 	}
-
+	
+	#ifdef GPIO0_INPUT
+	if (port == 0 ) {
+		supla_esp_cfg.gpio0 = hi;
+		{
+	#endif
 }
 
 void supla_esp_gpio_set_led(char r, char g, char b) {

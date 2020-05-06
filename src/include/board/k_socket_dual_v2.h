@@ -29,6 +29,8 @@
 
 #define TEMP_SELECT
 
+#define GPIO0_INPUT
+
 #define AP_SSID "SOCKET_DUAL_V2"
 
 #define DS18B20
