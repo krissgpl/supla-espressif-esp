@@ -73,7 +73,11 @@ void supla_esp_board_gpio_init(void) {
 	//---------------------------------------
 
 	supla_relay_cfg[2].gpio_id = 20;
-	supla_relay_cfg[2].channel = 2;
+  if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
+	supla_relay_cfg[2].channel = 3;
+  } else {
+	supla_relay_cfg[2].channel = 2;  
+  }
 	
 	//---------------------------------------
     
