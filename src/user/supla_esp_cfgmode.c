@@ -543,7 +543,7 @@ supla_esp_parse_request(TrivialHttpParserVars *pVars, char *pdata, unsigned shor
 
 						cfg->ThermometerType = pVars->intval[0] - '0';
 					#endif
-
+					
 					} else if ( pVars->current_var == VAR_UPD ) {
 
 						cfg->FirmwareUpdate = pVars->intval[0] - '0';
