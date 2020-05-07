@@ -133,6 +133,10 @@
 
 #include "board/k_socket_dual.c"
 
+#elif defined(__BOARD_k_socket_v2)
+
+#include "board/k_socket_v2.c"
+
 #elif defined(__BOARD_k_socket_dual_v2)
 
 #include "board/k_socket_dual_v2.c"
