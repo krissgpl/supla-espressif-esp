@@ -113,7 +113,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void) {
 	supla_esp_channel_set_rgbw_value(0, 0, 0, supla_esp_state.brightness[0], 0, 0);
 }
 
-void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_B *channels, unsigned char *channel_count) {
+void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
 
 	*channel_count = 2;
 
@@ -123,8 +123,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_B *ch
 
 	channels[1].Number = 1;
 	channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[1].FuncList = SUPLA_BIT_RELAYFUNC_POWERSWITCH \
-								| SUPLA_BIT_RELAYFUNC_LIGHTSWITCH;
+	channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH \
+								| SUPLA_BIT_FUNC_LIGHTSWITCH;
 	channels[1].Default = SUPLA_CHANNELFNC_POWERSWITCH;
 	channels[1].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
 }
