@@ -530,7 +530,7 @@ supla_esp_parse_request(TrivialHttpParserVars *pVars, char *pdata, unsigned shor
 
 					} else if ( pVars->current_var == VAR_LED ) {
 
-						cfg->StatusLedOff = (pVars->intval[0] - '0')
+						cfg->StatusLedOff = (pVars->intval[0] - '0';
 						
 					#if defined(POWSENSOR2)
 					} else if ( pVars->current_var == VAR_ZRE ) {
