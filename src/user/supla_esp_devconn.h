@@ -30,15 +30,19 @@ char DEVCONN_ICACHE_FLASH supla_esp_devconn_is_registered(void);
 void DEVCONN_ICACHE_FLASH supla_esp_channel_value__changed(int channel_number, char value[SUPLA_CHANNELVALUE_SIZE]);
 void DEVCONN_ICACHE_FLASH supla_esp_channel_value_changed(int channel_number, char v);
 void DEVCONN_ICACHE_FLASH supla_esp_channel_extendedvalue_changed(unsigned char channel_number, TSuplaChannelExtendedValue *value);
+void DEVCONN_ICACHE_FLASH supla_esp_set_channel_result(unsigned char ChannelNumber, _supla_int_t SenderID, char Success);
 void DEVCONN_ICACHE_FLASH supla_esp_devconn_send_channel_values_with_delay(void);
+void DEVCONN_ICACHE_FLASH supla_esp_devconn_send_channel_values_with__delay(int time_ms);
 void DEVCONN_ICACHE_FLASH supla_esp_devconn_before_system_restart(void);
+uint8 DEVCONN_ICACHE_FLASH supla_esp_devconn_any_outgoingdata_exists(void);
 
 void DEVCONN_ICACHE_FLASH supla_esp_devconn_before_cfgmode_start(void);
 void DEVCONN_ICACHE_FLASH supla_esp_devconn_before_update_start(void);
 
 #ifdef ELECTRICITY_METER_COUNT
-void DEVCONN_ICACHE_FLASH supla_esp_channel_em_value_changed(unsigned char channel_number, TElectricityMeter_ExtendedValue *em_ev);
+void DEVCONN_ICACHE_FLASH supla_esp_channel_em_value_changed(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 *em_ev);
 #endif /*ELECTRICITY_METER_COUNT*/
+
 
 #if defined(POWSENSOR2)
 void ICACHE_FLASH_ATTR supla_pow_R2_setup(void);
@@ -48,6 +52,16 @@ void ICACHE_FLASH_ATTR supla_getPower(char value[SUPLA_CHANNELVALUE_SIZE]);
 void ICACHE_FLASH_ATTR uart_status(unsigned int relay_laststate);
 void ICACHE_FLASH_ATTR supla_micros();
 #endif
+
+#if ESP8266_SUPLA_PROTO_VERSION >= 12 || defined(CHANNEL_STATE_TOOLS)
+void DEVCONN_ICACHE_FLASH
+supla_esp_get_channel_state(_supla_int_t ChannelNumber, _supla_int_t ReceiverID,
+                            TDSC_ChannelState *state);
+void DEVCONN_ICACHE_FLASH supla_esp_get_channel_functions(void);
+void DEVCONN_ICACHE_FLASH supla_esp_channel_value__changed_b(
+    int channel_number, char value[SUPLA_CHANNELVALUE_SIZE],
+    unsigned char offline);
+#endif /*ESP8266_SUPLA_PROTO_VERSION >= 12 || defined(CHANNEL_STATE_TOOLS)*/
 
 #if defined(RGB_CONTROLLER_CHANNEL) \
     || defined(RGBW_CONTROLLER_CHANNEL) \

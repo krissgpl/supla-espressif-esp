@@ -36,6 +36,7 @@
 #include "supla-dev/log.h"
 #include "supla_esp_electricity_meter.h"
 #include "supla_esp_impulse_counter.h"
+#include "supla_esp_countdown_timer.h"
 
 #include "board/supla_esp_board.c"
 
@@ -43,10 +44,32 @@
 #include "supla_update.h"
 #endif
 
-ETSTimer heartbeat_timer;
-uint32 heartbeat_timer_sec;
+typedef struct {
+	uint32 cycles;
+	uint32 last_system_time;
+	ETSTimer timer;
+} _t_usermain_uptime;
 
-void ICACHE_FLASH_ATTR supla_system_restart(void) {
+_t_usermain_uptime usermain_uptime;
+
+unsigned _supla_int64_t MAIN_ICACHE_FLASH uptime_usec(void) {
+	uint32 time = system_get_time();
+	if (time < usermain_uptime.last_system_time) {
+		usermain_uptime.cycles++;
+	}
+	usermain_uptime.last_system_time = time;
+	return usermain_uptime.cycles * (uint32)0xffffffff + (unsigned _supla_int64_t)time;
+}
+
+unsigned _supla_int64_t MAIN_ICACHE_FLASH uptime_msec(void) {
+	return uptime_usec() / 1000;
+}
+
+uint32 MAIN_ICACHE_FLASH uptime_sec(void) {
+	return uptime_msec() / 1000;
+}
+
+void MAIN_ICACHE_FLASH supla_system_restart(void) {
 
 	supla_esp_devconn_before_system_restart();
 
@@ -61,7 +84,7 @@ void ICACHE_FLASH_ATTR supla_system_restart(void) {
 
 }
 
-uint32 ICACHE_FLASH_ATTR
+uint32 MAIN_ICACHE_FLASH
 user_rf_cal_sector_set(void)
 {
 
@@ -99,19 +122,19 @@ user_rf_cal_sector_set(void)
 void MAIN_ICACHE_FLASH user_rf_pre_init() {};
 
 
-void DEVCONN_ICACHE_FLASH
-supla_esp_heartbeat_cb(void *ptr) {
-	heartbeat_timer_sec++;
+void MAIN_ICACHE_FLASH
+supla_esp_uptime_counter_watchdog_cb(void *ptr) {
+	uptime_usec();
 }
 
 
 void MAIN_ICACHE_FLASH user_init(void)
 {
-	heartbeat_timer_sec = 0;
+	memset(&usermain_uptime, 0, sizeof(_t_usermain_uptime));
 
-	os_timer_disarm(&heartbeat_timer);
-	os_timer_setfn(&heartbeat_timer, (os_timer_func_t *)supla_esp_heartbeat_cb, NULL);
-	os_timer_arm(&heartbeat_timer, 1000, 1);
+	os_timer_disarm(&usermain_uptime.timer);
+	os_timer_setfn(&usermain_uptime.timer, (os_timer_func_t *)supla_esp_uptime_counter_watchdog_cb, NULL);
+	os_timer_arm(&usermain_uptime.timer, 10000, 1);
 
 #ifdef BOARD_USER_INIT
 	BOARD_USER_INIT;
@@ -219,6 +242,10 @@ void MAIN_ICACHE_FLASH user_init(void)
 	#endif
 
 	supla_esp_devconn_start();
+
+    #ifndef COUNTDOWN_TIMER_DISABLED
+	supla_esp_countdown_timer_init();
+    #endif /*COUNTDOWN_TIMER_DISABLED*/
 
 	system_print_meminfo();
 	

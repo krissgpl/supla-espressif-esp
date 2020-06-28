@@ -26,8 +26,9 @@
 #include "espmissingincludes.h"
 
 #ifndef SUPLA_ESP_SOFTVER
-#define SUPLA_ESP_SOFTVER "2.7.16"
+#define SUPLA_ESP_SOFTVER "2.7.19"
 #endif
+
 
 #define STATE_UNKNOWN       0
 #define STATE_DISCONNECTED  1
@@ -139,6 +140,10 @@
 
 #ifndef DHT_ICACHE_FLASH
 #define DHT_ICACHE_FLASH ICACHE_FLASH_ATTR
+#endif
+
+#ifndef CDT_ICACHE_FLASH_ATTR
+#define CDT_ICACHE_FLASH_ATTR  ICACHE_FLASH_ATTR
 #endif
 
 #ifndef BTN1_DEFAULT
@@ -286,6 +291,18 @@ extern const uint8_t rsa_public_key_bytes[RSA_NUM_BYTES];
 #define RGBW_CHANNEL_LIMIT if ( ChannelNumber >= 2 ) return;
 #endif
 
-extern uint32 heartbeat_timer_sec;
+#ifdef DONT_SAVE_STATE
+#define DEVICE_STATE_INACTIVE
+#endif
+
+#ifdef BOARD_COUNTDOWN_TIMER_STATE_SAVERESTORE
+#ifndef BOARD_COUNTDOWN_TIMER_SAVE_DELAY_MS
+#define BOARD_COUNTDOWN_TIMER_SAVE_DELAY_MS 5000
+#endif /*BOARD_COUNTDOWN_TIMER_SAVE_DELAY_MS*/
+#endif /*BOARD_COUNTDOWN_TIMER_STATE_SAVERESTORE*/
+
+unsigned _supla_int64_t MAIN_ICACHE_FLASH uptime_usec(void);
+unsigned _supla_int64_t MAIN_ICACHE_FLASH uptime_msec(void);
+uint32 MAIN_ICACHE_FLASH uptime_sec(void);
 
 #endif /* SUPLA_ESP_H_ */
