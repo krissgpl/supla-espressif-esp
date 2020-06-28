@@ -57,7 +57,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
         
 }
 
-void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_E *channels, unsigned char *channel_count) {
+void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_D *channels, unsigned char *channel_count) {
 	
     *channel_count = 2;
 
