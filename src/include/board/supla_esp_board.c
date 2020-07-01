@@ -83,6 +83,88 @@
 
 #include "board/inCan.c"
 
+// Moje Plytki
+
+#elif defined(__BOARD_k_gate_module)   // nice
+
+#include "board/k_gate_module.c"
+
+#elif defined(__BOARD_k_dimmer)
+
+#include "board/k_dimmer.c"
+
+#elif defined(__BOARD_k_gniazdko_neo)
+
+#include "board/k_gniazdko_neo.c"
+
+#elif defined(__BOARD_k_impulse_counter)
+
+#include "board/k_impulse_counter.c"
+
+#elif defined(__BOARD_k_impulse_counter_3)
+
+#include "board/k_impulse_counter_3.c"
+
+#elif defined(__BOARD_k_rs_module) \
+      || defined(__BOARD_k_rs_module_ds18b20) \
+      || defined(__BOARD_k_rs_module_DHT22) \
+
+#include "board/k_rs_module.c"
+
+#elif defined(__BOARD_k_rs_module_v2)
+ 
+#include "board/k_rs_module_v2.c"
+
+#elif defined(__BOARD_k_smoke_module) \
+      || defined(__BOARD_k_smoke_module_ds18b20)	\
+      || defined(__BOARD_k_smoke_module_DHT22)		\
+
+#include "board/k_smoke_module.c"
+
+#elif defined(__BOARD_k_socket) \
+      || defined(__BOARD_k_socket_ds18b20)	\
+      || defined(__BOARD_k_socket_DHT22)		\
+
+#include "board/k_socket.c"
+
+#elif defined(__BOARD_k_socket_dual) \
+      || defined(__BOARD_k_socket_dual_ds18b20)	\
+      || defined(__BOARD_k_socket_dual_DHT22)		\
+
+#include "board/k_socket_dual.c"
+
+#elif defined(__BOARD_k_socket_v2)
+
+#include "board/k_socket_v2.c"
+
+#elif defined(__BOARD_k_socket_dual_v2)
+
+#include "board/k_socket_dual_v2.c"
+
+#elif defined(__BOARD_k_sonoff) \
+      || defined(__BOARD_k_sonoff_ds18b20)	\
+      || defined(__BOARD_k_sonoff_DHT22)		\
+
+#include "board/k_sonoff.c"
+
+#elif defined(__BOARD_k_sonoff_touch) \
+      ||  defined(__BOARD_k_sonoff_touch_dual) \
+      || defined(__BOARD_k_sonoff_touch_triple) \
+
+#include "board/k_sonoff_touch.c"
+
+#elif defined(__BOARD_k_yunschan)
+
+#include "board/k_yunschan.c"
+
+#elif defined(__BOARD_k_socket_01)
+
+#include "board/k_socket_01.c"
+
+#elif defined(__BOARD_k_sonoff_pow_R2)
+
+#include "board/k_sonoff_pow_R2.c"
+
 #endif
 
 #ifdef SUPLA_ESP_BOARD_SUBDEF

@@ -18,6 +18,8 @@
 
 #include "supla_esp_pwm.h"
 
+#include "supla_esp_gpio.h"
+
 #ifdef SUPLA_PWM_COUNT
 
 #include "supla-dev/log.h"
@@ -26,6 +28,7 @@
 #include <eagle_soc.h>
 #include <osapi.h>
 #include <pwm.h>
+
 
 
 void ICACHE_FLASH_ATTR supla_esp_pwm_init(void) {
@@ -65,7 +68,7 @@ void ICACHE_FLASH_ATTR supla_esp_pwm_set_percent_duty(uint8 percent, uint8 perce
 	uint32 duty = ((PWM_PERIOD * 1000 / 45) * percent) / 100;
 	duty = (duty * percent_percent) / 100;
 	
-	//supla_log(LOG_DEBUG, "DUTY: %i, CHANNEL: %i", duty, channel);
+	supla_log(LOG_DEBUG, "DUTY: %i, CHANNEL: %i", duty, channel);
 
 	pwm_set_duty(duty, channel);
 	os_delay_us(1000);

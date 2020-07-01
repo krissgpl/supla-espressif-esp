@@ -169,6 +169,19 @@ void MAIN_ICACHE_FLASH user_init(void)
 
      supla_esp_devconn_init();
 
+	#if defined TEMP_SELECT
+	
+		if ( supla_esp_cfg.ThermometerType == 1 ) {
+			supla_ds18b20_init();
+			supla_log(LOG_DEBUG, "DS18B20 INIT" );
+		}
+		
+		if ( supla_esp_cfg.ThermometerType == 2 ) {
+			supla_dht_init();
+			supla_log(LOG_DEBUG, "DHT22 INIT" );
+		}
+	#else
+		
      #ifdef DS18B20
 		 supla_ds18b20_init();
      #endif
@@ -176,6 +189,8 @@ void MAIN_ICACHE_FLASH user_init(void)
      #ifdef DHTSENSOR
 		 supla_dht_init();
      #endif
+	 
+	#endif
 
 	#ifdef SUPLA_PWM_COUNT
 	     supla_esp_pwm_init();
@@ -199,13 +214,27 @@ void MAIN_ICACHE_FLASH user_init(void)
     	 return;
      }
 
+	#if defined TEMP_SELECT
+	
+		if ( supla_esp_cfg.ThermometerType == 1 ) {
+			supla_ds18b20_start();
+			supla_log(LOG_DEBUG, "DS18B20 START" );
+		}
+		
+		if ( supla_esp_cfg.ThermometerType == 2 ) {
+			supla_dht_start();
+			supla_log(LOG_DEBUG, "DHT22 START" );
+		}
+	#else
 
-    #ifdef DS18B20
+     #ifdef DS18B20
 		supla_ds18b20_start();
-    #endif
+     #endif
 
-	#ifdef DHTSENSOR
+	 #ifdef DHTSENSOR
 		supla_dht_start();
+	 #endif
+	 
 	#endif
 
 	#ifdef ELECTRICITY_METER_COUNT

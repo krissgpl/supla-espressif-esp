@@ -43,6 +43,16 @@ void DEVCONN_ICACHE_FLASH supla_esp_devconn_before_update_start(void);
 void DEVCONN_ICACHE_FLASH supla_esp_channel_em_value_changed(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 *em_ev);
 #endif /*ELECTRICITY_METER_COUNT*/
 
+
+#if defined(POWSENSOR2)
+void ICACHE_FLASH_ATTR supla_pow_R2_setup(void);
+void ICACHE_FLASH_ATTR supla_getVoltage(char value[SUPLA_CHANNELVALUE_SIZE]);
+void ICACHE_FLASH_ATTR supla_getCurrent(char value[SUPLA_CHANNELVALUE_SIZE]);
+void ICACHE_FLASH_ATTR supla_getPower(char value[SUPLA_CHANNELVALUE_SIZE]);
+void ICACHE_FLASH_ATTR uart_status(unsigned int relay_laststate);
+void ICACHE_FLASH_ATTR supla_micros();
+#endif
+
 #if ESP8266_SUPLA_PROTO_VERSION >= 12 || defined(CHANNEL_STATE_TOOLS)
 void DEVCONN_ICACHE_FLASH
 supla_esp_get_channel_state(_supla_int_t ChannelNumber, _supla_int_t ReceiverID,

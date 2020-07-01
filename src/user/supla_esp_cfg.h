@@ -27,6 +27,10 @@
 #define BTN_TYPE_MONOSTABLE       0
 #define BTN_TYPE_BISTABLE         1
 
+#define THERM_NONE				  0
+#define THERM_DS18B20			  1
+#define THERM_DHT22				  2
+
 typedef struct {
 
 	char TAG[6];
@@ -58,7 +62,9 @@ typedef struct {
     unsigned int Time2[CFG_TIME2_COUNT];
 
     char Trigger;
-
+    char ZeroInitialEnergy;
+	
+	char ThermometerType;
     char zero[200];
 
 }SuplaEspCfg;
@@ -84,6 +90,7 @@ typedef struct {
 
     char StatusLedOff;
     char InputCfgTriggerOff;
+	char ThermometerType;
 
     char FirmwareUpdate;
     char Test;
@@ -113,6 +120,7 @@ typedef struct {
     char Button2Type;
     char StatusLedOff;
     char InputCfgTriggerOff;
+	char ThermometerType;
     char FirmwareUpdate;
     char Test;
     char Email[SUPLA_EMAIL_MAXSIZE];
@@ -139,6 +147,7 @@ typedef struct {
     char Button2Type;
     char StatusLedOff;
     char InputCfgTriggerOff;
+	char ThermometerType;
     char FirmwareUpdate;
     char Test;
     unsigned int FullOpeningTime[2];
@@ -162,6 +171,7 @@ typedef struct {
     
     unsigned int Time1Left[CFG_TIME1_COUNT];
     unsigned int Time2Left[CFG_TIME2_COUNT];
+	unsigned int full_energy;	
 
     char turnedOff[RS_MAX_COUNT];
 

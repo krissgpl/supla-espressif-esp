@@ -123,13 +123,15 @@ supla_esp_update_reboot(char uf_finish) {
 void ICACHE_FLASH_ATTR
 supla_esp_check_updates(void *srpc) {
 	
+	supla_log(LOG_DEBUG, "supla_esp_check_updates");
 	if ( update_step == FUPDT_STEP_CHECK ) {
 		update_step = FUPDT_STEP_CHECKING;
 		update_checking_start_time = system_get_time();
+		supla_log(LOG_DEBUG, "if - supla_esp_check_updates");
 
 		supla_esp_cfg.FirmwareUpdate = 0;
-		supla_esp_cfg_save(&supla_esp_cfg);
-
+		supla_esp_cfg_save(&supla_esp_cfg);		
+	
 		TDS_FirmwareUpdateParams params;
 		memset(&params, 0, sizeof(TDS_FirmwareUpdateParams));
 
@@ -228,7 +230,7 @@ supla_esp_update_verify_and_reboot (void) {
 	uint8_t footer[16];
 	memset(footer, 0, 16);
 
-	//supla_log(LOG_DEBUG, "update->downloaded_data_size=%i", update->downloaded_data_size);
+	supla_log(LOG_DEBUG, "update->downloaded_data_size=%i", update->downloaded_data_size);
 
 	if ( update->downloaded_data_size > 16 + RSA_NUM_BYTES )
 		spi_flash_read(update->flash_awo - 16, (uint32_t *)footer, 16);
@@ -264,7 +266,7 @@ supla_esp_update_verify_and_reboot (void) {
 				break;
 			}
 
-			//supla_log(LOG_DEBUG, "%i, %i, %i", bytes_left, (int)update->buff[0], (int)update->buff[update->buff_pos-1]);
+			supla_log(LOG_DEBUG, "%i, %i, %i", bytes_left, (int)update->buff[0], (int)update->buff[update->buff_pos-1]);
 
 			sha256_update(&hash, update->buff_pos, (unsigned char *)update->buff);
 
@@ -297,7 +299,7 @@ supla_esp_update_verify_and_reboot (void) {
 
 
 
-	//supla_log(LOG_DEBUG, "FINISH... %i", verified);
+	supla_log(LOG_DEBUG, "FINISH... %i", verified);
 	supla_esp_update_reboot(verified);
 
 }
@@ -349,7 +351,7 @@ supla_esp_update_recv_cb (void *arg, char *pdata, unsigned short len) {
 					int pos = (int)str - (int)update->http_header_data;
 					pos+=16;
 
-					//supla_log(LOG_DEBUG, "%s", update->http_header_data);
+					supla_log(LOG_DEBUG, "%s", update->http_header_data);
 
 					for(a=pos;a<update->http_header_data_len;a++) {
 
@@ -415,14 +417,14 @@ supla_esp_update_recv_cb (void *arg, char *pdata, unsigned short len) {
 
 		if ( update_step == FUPDT_STEP_DOWNLOADING ) {
 			system_upgrade_flag_set(UPGRADE_FLAG_START);
-			//supla_log(LOG_DEBUG, "WRITE ADDR: %X", update->flash_awo);
+			supla_log(LOG_DEBUG, "WRITE ADDR: %X", update->flash_awo);
 		}
 
 	};
 
 	if ( update_step == FUPDT_STEP_DOWNLOADING ) {
 
-		//supla_log(LOG_DEBUG, "FUPDT_STEP_DOWNLOADING, %i, %i", update->downloaded_data_size, update->expected_file_size);
+		supla_log(LOG_DEBUG, "FUPDT_STEP_DOWNLOADING, %i, %i", update->downloaded_data_size, update->expected_file_size);
 
 		supal_esp_update_download(&pdata[update->http_header_data_len], len-update->http_header_data_len);
 		update->http_header_data_len=0;
@@ -438,7 +440,7 @@ void ICACHE_FLASH_ATTR
 supla_esp_update_disconnect_cb(void *arg){
 
 	if (  update_step != FUPDT_STEP_DOWNLOADING ) {
-		//supla_log(LOG_DEBUG, "UPDATE STEP: %i", update_step);
+		supla_log(LOG_DEBUG, "UPDATE STEP: %i", update_step);
 		supla_esp_update_reboot(0);
 	}
 
@@ -519,7 +521,7 @@ supla_esp_update_url_result(TSD_FirmwareUpdate_UrlResult *url_result) {
 	
 	if ( update_step != FUPDT_STEP_CHECKING ) return;
 	
-	//supla_log(LOG_DEBUG, "Firmware -- exists = %i, host = %s, port = %i, path = %s", url_result->exists, url_result->url.host, url_result->url.port, url_result->url.path);
+	supla_log(LOG_DEBUG, "Firmware -- exists = %i, host = %s, port = %i, path = %s", url_result->exists, url_result->url.host, url_result->url.port, url_result->url.path);
 
 	if ( url_result->exists
          && url_result->url.available_protocols & SUPLA_URL_PROTO_HTTP ) {
