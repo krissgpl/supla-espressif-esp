@@ -30,6 +30,7 @@
 #include "supla_esp_cfg.h"
 #include "supla_esp_devconn.h"
 #include "supla_esp_cfgmode.h"
+#include "supla_esp_pwm.h"
 
 #include "supla-dev/log.h"
 
@@ -628,7 +629,7 @@ char supla_esp_gpio_relay_hi(int port, char hi, char save_before) {
     		break;
     	}
     
-    //supla_log(LOG_DEBUG, "port=%i, hi=%i, save_before=%i",port, hi, save_before);
+    supla_log(LOG_DEBUG, "port=%i, hi=%i, save_before=%i",port, hi, save_before);
     
     system_soft_wdt_stop();
 
@@ -744,7 +745,7 @@ LOCAL void supla_esp_gpio_relay_switch(supla_input_cfg_t *input_cfg, char hi) {
 LOCAL void
 supla_esp_gpio_on_input_active(supla_input_cfg_t *input_cfg) {
 
-	//supla_log(LOG_DEBUG, "active");
+	supla_log(LOG_DEBUG, "active");
 
 	#ifdef BOARD_ON_INPUT_ACTIVE
 	BOARD_ON_INPUT_ACTIVE;
@@ -752,7 +753,7 @@ supla_esp_gpio_on_input_active(supla_input_cfg_t *input_cfg) {
 
 	if ( input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE_RS ) {
 
-		//supla_log(LOG_DEBUG, "RELAY HI");
+		supla_log(LOG_DEBUG, "RELAY HI");
 		#ifdef _ROLLERSHUTTER_SUPPORT
 			supla_roller_shutter_cfg_t *rs_cfg = supla_esp_gpio_get_rs__cfg(input_cfg->relay_gpio_id);
 			if ( rs_cfg != NULL ) {
@@ -779,7 +780,7 @@ supla_esp_gpio_on_input_active(supla_input_cfg_t *input_cfg) {
 LOCAL void
 supla_esp_gpio_on_input_inactive(supla_input_cfg_t *input_cfg) {
 
-	//supla_log(LOG_DEBUG, "inactive");
+	supla_log(LOG_DEBUG, "inactive");
 
 	#ifdef BOARD_ON_INPUT_INACTIVE
 	BOARD_ON_INPUT_INACTIVE;
@@ -787,13 +788,14 @@ supla_esp_gpio_on_input_inactive(supla_input_cfg_t *input_cfg) {
 
 	if ( input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE_RS ) {
 
-		//supla_log(LOG_DEBUG, "RELAY LO");
+		supla_log(LOG_DEBUG, "RELAY LO");
 		#ifdef _ROLLERSHUTTER_SUPPORT
 			supla_roller_shutter_cfg_t *rs_cfg = supla_esp_gpio_get_rs__cfg(input_cfg->relay_gpio_id);
 			if ( rs_cfg != NULL ) {
 				supla_esp_gpio_rs_set_relay(rs_cfg, RS_RELAY_OFF, 1, 1);
 			}
 		#endif /*_ROLLERSHUTTER_SUPPORT*/
+		
 	} else if ( input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE
 		 || input_cfg->type == INPUT_TYPE_BTN_BISTABLE ) {
 
@@ -820,6 +822,8 @@ supla_esp_gpio_input_timer_cb(void *timer_arg) {
 	uint8 v = gpio__input_get(input_cfg->gpio_id);
 	uint8 active = (input_cfg->flags & INPUT_FLAG_PULLUP) ? 0 : 1;
 
+	supla_log(LOG_DEBUG, "v=%i", v);
+	
 	if ( input_cfg->step == 1 ) {
 
 		if ( v == active ) {
@@ -832,7 +836,7 @@ supla_esp_gpio_input_timer_cb(void *timer_arg) {
 				      || (system_get_time() - input_cfg->last_active) >= 2000000 ) ) {
 
 				input_cfg->cfg_counter = 0;
-				//supla_log(LOG_DEBUG, "RESET cfg_counter = 0");
+				supla_log(LOG_DEBUG, "RESET cfg_counter = 0");
 			}
 
 			input_cfg->step = 2;
@@ -930,7 +934,7 @@ supla_esp_gpio_input_timer_cb(void *timer_arg) {
 
 					input_cfg->cfg_counter++;
 
-					//supla_log(LOG_DEBUG, "cfg_counter = %i", input_cfg->cfg_counter);
+					supla_log(LOG_DEBUG, "cfg_counter = %i", input_cfg->cfg_counter);
 
 					if ( supla_esp_cfgmode_started() == 0 ) {
 
@@ -994,7 +998,7 @@ supla_esp_gpio_intr_handler(void *params) {
 	BOARD_INTR_HANDLER;
 	#endif
 
-	//supla_log(LOG_DEBUG, "INTR");
+	supla_log(LOG_DEBUG, "INTR");
 
 	for(a=0;a<INPUT_MAX_COUNT;a++) {
 
@@ -1004,6 +1008,10 @@ supla_esp_gpio_intr_handler(void *params) {
 			 && input_cfg->gpio_id < 16
 			 && gpio_status & BIT(input_cfg->gpio_id) ) {
 
+			 supla_log(LOG_DEBUG, "INTR(b) a=%i", a);
+			 supla_log(LOG_DEBUG, "gpio_status=%i", gpio_status);
+			 supla_log(LOG_DEBUG, "gpio_id=%i", input_cfg->gpio_id);
+			 
 			ETS_GPIO_INTR_DISABLE();
 
             gpio_pin_intr_state_set(GPIO_ID_PIN(input_cfg->gpio_id), GPIO_PIN_INTR_DISABLE);
@@ -1047,7 +1055,7 @@ void GPIO_ICACHE_FLASH
 supla_esp_gpio_init(void) {
 
 	int a;
-	//supla_log(LOG_DEBUG, "supla_esp_gpio_init");
+	supla_log(LOG_DEBUG, "supla_esp_gpio_init");
 
 	supla_esp_gpio_init_time = 0;
 	supla_esp_restart_on_cfg_press = 0;
@@ -1080,7 +1088,7 @@ supla_esp_gpio_init(void) {
 	#endif
 
 	ETS_GPIO_INTR_DISABLE();
-
+	
 	GPIO_PORT_INIT;
 	ETS_GPIO_INTR_ATTACH(supla_esp_gpio_intr_handler, NULL);
 
@@ -1127,7 +1135,7 @@ supla_esp_gpio_init(void) {
 
 		if ( supla_relay_cfg[a].gpio_id != 255 ) {
 
-			  //supla_log(LOG_DEBUG, "relay init %i", supla_relay_cfg[a].gpio_id);
+			  supla_log(LOG_DEBUG, "relay init %i", supla_relay_cfg[a].gpio_id);
 
 			if ( supla_relay_cfg[a].gpio_id <= 15
 				 && !(supla_relay_cfg[a].flags & RELAY_FLAG_VIRTUAL_GPIO ) ) {
@@ -1143,7 +1151,7 @@ supla_esp_gpio_init(void) {
 
 			if ( supla_relay_cfg[a].flags & RELAY_FLAG_RESTORE_FORCE ) {
 
-				//supla_log(LOG_DEBUG, "RESTORE_FORCE, %i, %i, %i", a, supla_relay_cfg[a].gpio_id, supla_esp_state.Relay[a]);
+				supla_log(LOG_DEBUG, "RESTORE_FORCE, %i, %i, %i", a, supla_relay_cfg[a].gpio_id, supla_esp_state.Relay[a]);
 				supla_esp_gpio_relay_hi(supla_relay_cfg[a].gpio_id, supla_esp_state.Relay[a], 255);
 
 			} else if ( supla_relay_cfg[a].flags & RELAY_FLAG_RESTORE ) {
@@ -1151,13 +1159,13 @@ supla_esp_gpio_init(void) {
 				struct rst_info *rtc_info = system_get_rst_info();
 
 				if ( rtc_info->reason == 0 ) {
-					   //supla_log(LOG_DEBUG, "RESTORE");
+					   supla_log(LOG_DEBUG, "RESTORE");
 					   supla_esp_gpio_relay_hi(supla_relay_cfg[a].gpio_id, supla_esp_state.Relay[a], 255);
 				}
 
 			} else if ( supla_relay_cfg[a].flags & RELAY_FLAG_RESET ) {
 
-				//supla_log(LOG_DEBUG, "LO_VALUE");
+				supla_log(LOG_DEBUG, "LO_VALUE");
 				supla_esp_gpio_relay_hi(supla_relay_cfg[a].gpio_id, LO_VALUE, 0);
 
 			}
@@ -1171,7 +1179,7 @@ supla_esp_gpio_init(void) {
     	    && supla_input_cfg[a].gpio_id < 16
     		&& supla_input_cfg[a].type != 0 ) {
 
-    	//supla_log(LOG_DEBUG, "input init %i", supla_input_cfg[a].gpio_id);
+    	supla_log(LOG_DEBUG, "input init %i", supla_input_cfg[a].gpio_id);
 
         gpio_output_set(0, 0, 0, BIT(supla_input_cfg[a].gpio_id));
 
@@ -1210,18 +1218,17 @@ supla_esp_gpio_init(void) {
 void
 supla_esp_gpio_set_hi(int port, char hi) {
 
-    //supla_log(LOG_DEBUG, "supla_esp_gpio_set_hi %i, %i", port, hi);
+    supla_log(LOG_DEBUG, "supla_esp_gpio_set_hi %i, %i", port, hi);
 
 	#ifdef BOARD_GPIO_OUTPUT_SET_HI
 	BOARD_GPIO_OUTPUT_SET_HI
 	#endif
-
+	
 	if ( port == 16 ) {
 		gpio16_output_set(hi == 1 ? 1 : 0);
 	} else {
 		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
 	}
-
 }
 
 void supla_esp_gpio_set_led(char r, char g, char b) {
@@ -1235,9 +1242,9 @@ void supla_esp_gpio_set_led(char r, char g, char b) {
 
     #ifdef LED_GREEN_PORT
 		supla_esp_gpio_set_hi(LED_GREEN_PORT, g);
-    #endif
+	#endif
 
-	#ifdef LED_BLUE_PORT
+    #ifdef LED_BLUE_PORT
 		supla_esp_gpio_set_hi(LED_BLUE_PORT, b);
 	#endif
 }
