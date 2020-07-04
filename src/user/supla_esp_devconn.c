@@ -690,9 +690,13 @@ void DEVCONN_ICACHE_FLASH supla_esp_devconn_on_countdown_on_disarm(uint8 channel
 		if ( supla_relay_cfg[a].gpio_id != 255
 			 && channel_number == supla_relay_cfg[a].channel ) {
 			if (supla_relay_cfg[a].channel_flags & SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) {
-				TSuplaChannelExtendedValue ev;
-				supla_esp_countdown_get_state_ev(channel_number, &ev);
-				supla_esp_channel_extendedvalue_changed(channel_number, &ev);
+				TSuplaChannelExtendedValue *ev =
+				     (TSuplaChannelExtendedValue *)malloc(sizeof(TSuplaChannelExtendedValue));
+				if (ev != NULL) {
+					supla_esp_countdown_get_state_ev(channel_number, ev);
+					supla_esp_channel_extendedvalue_changed(channel_number, ev);
+					free(ev);
+				}
 			}
 			break;
 		}
@@ -1220,6 +1224,8 @@ supla_esp_channel_set_value(TSD_SuplaChannelNewValue *new_value) {
 
 	supla_esp_countdown_timer_disarm(new_value->ChannelNumber);
 
+	new_value->DurationMS = 30000;
+
 	if ( new_value->DurationMS > 0 ) {
 
 		for(a=0;a<RELAY_MAX_COUNT;a++)
@@ -1241,9 +1247,13 @@ supla_esp_channel_set_value(TSD_SuplaChannelNewValue *new_value) {
 
 	                #if ESP8266_SUPLA_PROTO_VERSION >= 12
 					if (supla_relay_cfg[a].channel_flags & SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) {
-						TSuplaChannelExtendedValue ev;
-						supla_esp_countdown_get_state_ev(new_value->ChannelNumber, &ev);
-						supla_esp_channel_extendedvalue_changed(new_value->ChannelNumber, &ev);
+						TSuplaChannelExtendedValue *ev =
+						     (TSuplaChannelExtendedValue *)malloc(sizeof(TSuplaChannelExtendedValue));
+						if (ev != NULL) {
+							supla_esp_countdown_get_state_ev(new_value->ChannelNumber, ev);
+							supla_esp_channel_extendedvalue_changed(new_value->ChannelNumber, ev);
+							free(ev);
+						}
 					}
 	                #endif /*ESP8266_SUPLA_PROTO_VERSION >= 12*/
 				}
@@ -1856,9 +1866,13 @@ supla_esp_devconn_timer1_cb(void *timer_arg) {
 
 #ifdef ELECTRICITY_METER_COUNT
 void DEVCONN_ICACHE_FLASH supla_esp_channel_em_value_changed(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 *em_ev) {
-	TSuplaChannelExtendedValue ev;
-	srpc_evtool_v2_emextended2extended(em_ev, &ev);
-	supla_esp_channel_extendedvalue_changed(channel_number, &ev);
+	TSuplaChannelExtendedValue *ev =
+	     (TSuplaChannelExtendedValue *)malloc(sizeof(TSuplaChannelExtendedValue));
+	if (ev != NULL) {
+		srpc_evtool_v2_emextended2extended(em_ev, ev);
+		supla_esp_channel_extendedvalue_changed(channel_number, ev);
+		free(ev);
+	}
 }
 #endif /*ELECTRICITY_METER_COUNT*/
 

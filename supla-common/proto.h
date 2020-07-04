@@ -359,14 +359,21 @@ extern char sproto_tag[SUPLA_TAG_SIZE];
 #define SUPLA_CHANNELFNC_CONTROLLINGTHEENGINESPEED 600    // ver. >= 12
 #define SUPLA_CHANNELFNC_ACTIONTRIGGER 700                // ver. >= 12
 
-#define SUPLA_BIT_FUNC_CONTROLLINGTHEGATEWAYLOCK 0x0001
-#define SUPLA_BIT_FUNC_CONTROLLINGTHEGATE 0x0002
-#define SUPLA_BIT_FUNC_CONTROLLINGTHEGARAGEDOOR 0x0004
-#define SUPLA_BIT_FUNC_CONTROLLINGTHEDOORLOCK 0x0008
-#define SUPLA_BIT_FUNC_CONTROLLINGTHEROLLERSHUTTER 0x0010
-#define SUPLA_BIT_FUNC_POWERSWITCH 0x0020
-#define SUPLA_BIT_FUNC_LIGHTSWITCH 0x0040
-#define SUPLA_BIT_FUNC_STAIRCASETIMER 0x0080  // ver. >= 8
+#define SUPLA_BIT_FUNC_CONTROLLINGTHEGATEWAYLOCK 0x00000001
+#define SUPLA_BIT_FUNC_CONTROLLINGTHEGATE 0x00000002
+#define SUPLA_BIT_FUNC_CONTROLLINGTHEGARAGEDOOR 0x00000004
+#define SUPLA_BIT_FUNC_CONTROLLINGTHEDOORLOCK 0x00000008
+#define SUPLA_BIT_FUNC_CONTROLLINGTHEROLLERSHUTTER 0x00000010
+#define SUPLA_BIT_FUNC_POWERSWITCH 0x00000020
+#define SUPLA_BIT_FUNC_LIGHTSWITCH 0x00000040
+#define SUPLA_BIT_FUNC_STAIRCASETIMER 0x00000080  // ver. >= 8
+#define SUPLA_BIT_FUNC_THERMOMETER 0x00000100             // ver. >= 12
+#define SUPLA_BIT_FUNC_HUMIDITYANDTEMPERATURE 0x00000200  // ver. >= 12
+#define SUPLA_BIT_FUNC_HUMIDITY 0x00000400                // ver. >= 12
+#define SUPLA_BIT_FUNC_WINDSENSOR 0x00000800              // ver. >= 12
+#define SUPLA_BIT_FUNC_PRESSURESENSOR 0x00001000          // ver. >= 12
+#define SUPLA_BIT_FUNC_RAINSENSOR 0x00002000              // ver. >= 12
+#define SUPLA_BIT_FUNC_WEIGHTSENSOR 0x00004000            // ver. >= 12
 
 #define SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK 10
 #define SUPLA_EVENT_CONTROLLINGTHEGATE 20
@@ -400,6 +407,8 @@ extern char sproto_tag[SUPLA_TAG_SIZE];
 #define SUPLA_MFR_HEATPOL 8
 #define SUPLA_MFR_FAKRO 9
 #define SUPLA_MFR_PEVEKO 10
+#define SUPLA_MFR_WEKTA 11
+#define SUPLA_MFR_LUXINO 12
 
 #define SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE 0x0001                    // ver. >= 12
 #define SUPLA_CHANNEL_FLAG_IR_BRIDGE 0x0002                       // ver. >= 12
@@ -422,6 +431,7 @@ extern char sproto_tag[SUPLA_TAG_SIZE];
 #define SUPLA_CHANNEL_OFFLINE_DURING_REGISTRATION 0x00400000      // ver. >= 12
 #define SUPLA_CHANNEL_FLAG_ZIGBEE_BRIDGE 0x00800000               // ver. >= 12
 #define SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED 0x01000000   // ver. >= 12
+#define SUPLA_CHANNEL_FLAG_LIGHTSOURCEHEALTH_SETTABLE 0x02000000  // ver. >= 12
 
 #define SUPLA_DEVICE_FLAG_GROUP_CONTROL_EXPECTED 0x0001  // ver. >= 12
 
@@ -1186,6 +1196,7 @@ typedef struct {
 #define SUPLA_CALCFG_CMD_ZWAVE_CONFIG_MODE_ACTIVE 4000    // v. >= 12
 #define SUPLA_CALCFG_CMD_DEBUG_STRING 5000                // v. >= 12
 #define SUPLA_CALCFG_CMD_PROGRESS_REPORT 5001             // v. >= 12
+#define SUPLA_CALCFG_CMD_SET_LIGHTSOURCE_HEALTH 6000      // v. >= 12
 
 #define CALCFG_ZWAVE_SCREENTYPE_UNKNOWN 0
 #define CALCFG_ZWAVE_SCREENTYPE_MULTILEVEL 1
@@ -1193,6 +1204,7 @@ typedef struct {
 #define CALCFG_ZWAVE_SCREENTYPE_MULTILEVEL_AUTOSHADE 3
 #define CALCFG_ZWAVE_SCREENTYPE_MULTILEVEL_COLOR_CONTROL 4
 #define CALCFG_ZWAVE_SCREENTYPE_BINARY_COLOR_CONTROL 5
+#define CALCFG_ZWAVE_SCREENTYPE_SENSOR 6
 
 #define ZWAVE_NODE_NAME_MAXSIZE 50
 
@@ -1214,6 +1226,12 @@ typedef struct {
   _supla_int_t Command;
   unsigned char Progress;  // 0 - 100%
 } TCalCfg_ProgressReport;
+
+typedef struct {
+  unsigned char ResetCounter;             // 0 - NO, 1 - YES
+  unsigned char SetTime;                  // 0 - NO, 1 - YES
+  unsigned short LightSourceHealthTotal;  // 0 - 65535 hours
+} TCalCfg_LightSourceHealth;
 
 // CALCFG == CALIBRATION / CONFIG
 typedef struct {
@@ -1455,8 +1473,8 @@ typedef struct {
   unsigned char BatteryHealth;
   unsigned char LastConnectionResetCause;  // SUPLA_LASTCONNECTIONRESETCAUSE_*
   unsigned short LightSourceHealthTotal;   // 0 - 65535 hours
-  unsigned short
-      LightSourceHealthLeft;  // 0.00 - 100.00% LightSourceHealthTotal * 0.01
+  short
+      LightSourceHealthLeft;  // -327,67 - 100.00% LightSourceHealthTotal * 0.01
   char EmptySpace[4];         // Empty space for future use
 } TDSC_ChannelState;          // v. >= 12 Device -> Server -> Client
 
@@ -1480,7 +1498,6 @@ typedef struct {
       SenderNameSize;  // including the terminating null byte ('\0')
   char SenderName[SUPLA_SENDER_NAME_MAXSIZE];  // Last variable in struct!
                                                // UTF8 | Filled by server
-
 } TTimerState_ExtendedValue;
 
 typedef struct {

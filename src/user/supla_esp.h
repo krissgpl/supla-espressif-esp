@@ -26,9 +26,8 @@
 #include "espmissingincludes.h"
 
 #ifndef SUPLA_ESP_SOFTVER
-#define SUPLA_ESP_SOFTVER "2.7.19"
+#define SUPLA_ESP_SOFTVER "2.7.21"
 #endif
-
 
 #define STATE_UNKNOWN       0
 #define STATE_DISCONNECTED  1
@@ -294,12 +293,6 @@ extern const uint8_t rsa_public_key_bytes[RSA_NUM_BYTES];
 #ifdef DONT_SAVE_STATE
 #define DEVICE_STATE_INACTIVE
 #endif
-
-#ifdef BOARD_COUNTDOWN_TIMER_STATE_SAVERESTORE
-#ifndef BOARD_COUNTDOWN_TIMER_SAVE_DELAY_MS
-#define BOARD_COUNTDOWN_TIMER_SAVE_DELAY_MS 5000
-#endif /*BOARD_COUNTDOWN_TIMER_SAVE_DELAY_MS*/
-#endif /*BOARD_COUNTDOWN_TIMER_STATE_SAVERESTORE*/
 
 unsigned _supla_int64_t MAIN_ICACHE_FLASH uptime_usec(void);
 unsigned _supla_int64_t MAIN_ICACHE_FLASH uptime_msec(void);
