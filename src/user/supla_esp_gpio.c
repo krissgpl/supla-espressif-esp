@@ -31,6 +31,7 @@
 #include "supla_esp_devconn.h"
 #include "supla_esp_cfgmode.h"
 #include "supla_esp_pwm.h"
+#include "supla_esp_countdown_timer.h"
 
 #include "supla-dev/log.h"
 
@@ -763,15 +764,19 @@ supla_esp_gpio_on_input_active(supla_input_cfg_t *input_cfg) {
 
 	} else if ( input_cfg->type == INPUT_TYPE_BTN_BISTABLE ) {
 
+        #ifndef COUNTDOWN_TIMER_DISABLED
+		if (input_cfg->channel != 255) {
+		   supla_esp_countdown_timer_disarm(input_cfg->channel);
+		}
+        #endif /*COUNTDOWN_TIMER_DISABLED*/
+
 		//supla_log(LOG_DEBUG, "RELAY");
 		supla_esp_gpio_relay_switch(input_cfg, 255);
-
 
 	} else if ( input_cfg->type == INPUT_TYPE_SENSOR
 				&&  input_cfg->channel != 255 ) {
 
 		supla_esp_channel_value_changed(input_cfg->channel, 1);
-
 	}
 
 	input_cfg->last_state = 1;
@@ -799,13 +804,18 @@ supla_esp_gpio_on_input_inactive(supla_input_cfg_t *input_cfg) {
 	} else if ( input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE
 		 || input_cfg->type == INPUT_TYPE_BTN_BISTABLE ) {
 
+        #ifndef COUNTDOWN_TIMER_DISABLED
+		if (input_cfg->channel != 255) {
+		   supla_esp_countdown_timer_disarm(input_cfg->channel);
+		}
+        #endif /*COUNTDOWN_TIMER_DISABLED*/
 
 		supla_esp_gpio_relay_switch(input_cfg, 255);
 
 	} else if ( input_cfg->type == INPUT_TYPE_SENSOR
 			    &&  input_cfg->channel != 255 ) {
-		supla_esp_channel_value_changed(input_cfg->channel, 0);
 
+		supla_esp_channel_value_changed(input_cfg->channel, 0);
 	}
 
 	input_cfg->last_state = 0;
