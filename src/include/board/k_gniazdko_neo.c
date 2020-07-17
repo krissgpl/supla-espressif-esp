@@ -57,7 +57,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
 	
-	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE
+	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 
 	channels[0].FuncList = SUPLA_BIT_FUNC_POWERSWITCH \
 								| SUPLA_BIT_FUNC_LIGHTSWITCH;
