@@ -97,8 +97,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	
 	//supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);	// ustaw gpio5 (rs) high
 	//os_delay_us(500000);						// poczekaj 0,5s
-	//supla_esp_gpio_set_hi(B_RELAY1_PORT, 0);	// ustaw gpio5 (rs) low
-	//supla_esp_gpio_set_hi(B_RELAY2_PORT, 0);	// ustaw gpio13 (rs) low
+	supla_esp_gpio_set_hi(B_RELAY1_PORT, 0);	// ustaw gpio5 (rs) low
+	supla_esp_gpio_set_hi(B_RELAY2_PORT, 0);	// ustaw gpio13 (rs) low
 	
 	//----------------------------------------
 
@@ -119,6 +119,7 @@ void ICACHE_FLASH_ATTR
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[0].FuncList =  SUPLA_BIT_RELAYFUNC_CONTROLLINGTHEROLLERSHUTTER;
+	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[0].Default = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER;
 	channels[0].value[0] = (*supla_rs_cfg[0].position)-1;
 
