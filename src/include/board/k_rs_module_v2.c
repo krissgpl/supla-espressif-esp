@@ -118,7 +118,7 @@ void ICACHE_FLASH_ATTR
 
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[0].FuncList =  SUPLA_BIT_RELAYFUNC_CONTROLLINGTHEROLLERSHUTTER;
+	channels[0].FuncList =  SUPLA_BIT_FUNC_CONTROLLINGTHEROLLERSHUTTER;
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[0].Default = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER;
 	channels[0].value[0] = (*supla_rs_cfg[0].position)-1;
@@ -142,14 +142,14 @@ void ICACHE_FLASH_ATTR
    if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 		channels[2].Number = 2;
 		channels[2].Type = SUPLA_CHANNELTYPE_RELAY;
-		channels[2].FuncList = SUPLA_BIT_RELAYFUNC_POWERSWITCH;
+		channels[2].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 		channels[2].Default = 0;
 		channels[2].value[0] = supla_esp_gpio_relay_on(20);
    }
    else {
 		channels[1].Number = 1;
 		channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
-		channels[1].FuncList = SUPLA_BIT_RELAYFUNC_POWERSWITCH;
+		channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 		channels[1].Default = 0;
 		channels[1].value[0] = supla_esp_gpio_relay_on(20);
    }
