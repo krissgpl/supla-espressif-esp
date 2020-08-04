@@ -33,6 +33,11 @@
 
 #ifdef DS18B20
 
+if ( supla_esp_cfg.ThermometerType == 2 ) {
+			supla_log(LOG_DEBUG, "DHT22 SENSOR" );
+		}
+else {
+
 
 static double supla_ds18b20_last_temp = -275;
 
@@ -210,6 +215,7 @@ void ICACHE_FLASH_ATTR supla_ds18b20_start(void)
 void ICACHE_FLASH_ATTR supla_get_temperature(char value[SUPLA_CHANNELVALUE_SIZE]) {
 	// Only temperature
 	memcpy(value, &supla_ds18b20_last_temp, sizeof(double));
+}
 }
 
 #endif
