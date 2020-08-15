@@ -23,9 +23,8 @@
 #include "board/supla_esp_board.h"
 #include "espmissingincludes.h"
 
-
 #ifndef SUPLA_ESP_SOFTVER
-#define SUPLA_ESP_SOFTVER "2.7.22"
+#define SUPLA_ESP_SOFTVER "2.7.24"
 #endif
 
 #define STATE_UNKNOWN       0
@@ -105,6 +104,14 @@
 #define INPUT_TYPE_BTN_BISTABLE_RS       5
 #define INPUT_TYPE_CUSTOM                200
 
+#ifndef INPUT_MIN_CYCLE_COUNT
+#define INPUT_MIN_CYCLE_COUNT   5
+#endif /*INPUT_MIN_CYCLE_COUNT*/
+
+#ifndef INPUT_CYCLE_TIME
+#define INPUT_CYCLE_TIME        20
+#endif /*INPUT_CYCLE_TIME*/
+
 // milliseconds
 #ifndef RS_START_DELAY
 #define RS_START_DELAY 1000
@@ -162,6 +169,10 @@
 
 #ifndef PRODUCT_ID
 #define PRODUCT_ID 0
+#endif
+
+#ifndef DEVICE_FLAGS
+#define DEVICE_FLAGS 0
 #endif
 
 void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size);
