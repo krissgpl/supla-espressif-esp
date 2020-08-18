@@ -104,6 +104,7 @@ void ICACHE_FLASH_ATTR
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[0].FuncList =  SUPLA_BIT_RELAYFUNC_CONTROLLINGTHEROLLERSHUTTER;
+	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[0].Default = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER;
 	channels[0].value[0] = (*supla_rs_cfg[0].position)-1;
 
