@@ -23,7 +23,7 @@
 
 #define BOARD_ON_CONNECT
 
-#define SUPLA_ESP_SOFTVER "2.7.22.1"
+#define SUPLA_ESP_SOFTVER "2.7.24.0"
 
 #define LED_RED_PORT     4
 #define B_RELAY1_PORT    12
