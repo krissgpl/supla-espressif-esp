@@ -87,7 +87,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 }
 
 void ICACHE_FLASH_ATTR
-   supla_esp_board_set_channels(TDS_SuplaDeviceChannel_B *channels, unsigned char *channel_count) {
+   supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
 	
     #ifdef __BOARD_k_rs_module_ds18b20
     *channel_count = 3;
@@ -103,7 +103,7 @@ void ICACHE_FLASH_ATTR
 
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[0].FuncList =  SUPLA_BIT_RELAYFUNC_CONTROLLINGTHEROLLERSHUTTER;
+	channels[0].FuncList =  SUPLA_BIT_FUNC_CONTROLLINGTHEROLLERSHUTTER;
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[0].Default = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER;
 	channels[0].value[0] = (*supla_rs_cfg[0].position)-1;
@@ -129,13 +129,13 @@ void ICACHE_FLASH_ATTR
 	#if defined(__BOARD_k_rs_module_ds18b20) || defined(__BOARD_k_rs_module_DHT22)
 		channels[2].Number = 2;
 		channels[2].Type = SUPLA_CHANNELTYPE_RELAY;
-		channels[2].FuncList = SUPLA_BIT_RELAYFUNC_POWERSWITCH;
+		channels[2].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 		channels[2].Default = 0;
 		channels[2].value[0] = supla_esp_gpio_relay_on(20);
 	#else
 		channels[1].Number = 1;
 		channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
-		channels[1].FuncList = SUPLA_BIT_RELAYFUNC_POWERSWITCH;
+		channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 		channels[1].Default = 0;
 		channels[1].value[0] = supla_esp_gpio_relay_on(20);
 	#endif
