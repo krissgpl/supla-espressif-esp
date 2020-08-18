@@ -67,6 +67,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 								| SUPLA_BIT_FUNC_CONTROLLINGTHEGATE \
 								| SUPLA_BIT_FUNC_CONTROLLINGTHEGARAGEDOOR \
 								| SUPLA_BIT_FUNC_CONTROLLINGTHEDOORLOCK;
+	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;							
 	channels[0].Default = SUPLA_CHANNELFNC_CONTROLLINGTHEGATE;
 	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
 
