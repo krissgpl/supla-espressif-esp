@@ -210,6 +210,5 @@ void ICACHE_FLASH_ATTR supla_get_temperature(char value[SUPLA_CHANNELVALUE_SIZE]
 	// Only temperature
 	memcpy(value, &supla_ds18b20_last_temp, sizeof(double));
 }
-}
 
 #endif
