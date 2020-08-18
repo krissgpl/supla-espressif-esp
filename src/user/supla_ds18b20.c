@@ -33,12 +33,6 @@
 
 #ifdef DS18B20
 
-if ( supla_esp_cfg.ThermometerType == 2 ) {
-			supla_log(LOG_DEBUG, "DHT22 SENSOR" );
-		}
-else {
-
-
 static double supla_ds18b20_last_temp = -275;
 
 ETSTimer supla_ds18b20_timer1;
