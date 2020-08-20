@@ -226,7 +226,7 @@ void DEVCONN_ICACHE_FLASH supla_esp_em_extendedvalue_to_value(TElectricityMeter_
 _supla_int_t SRPC_ICACHE_FLASH srpc_ds_async_channel_extendedvalue_changed(
     void *_srpc, unsigned char channel_number,
     TSuplaChannelExtendedValue *value);
-_supla_int_t SRPC_ICACHE_FLASH srpc_evtool_v1_emextended2extended(
+_supla_int_t SRPC_ICACHE_FLASH srpc_evtool_v2_emextended2extended(
     TElectricityMeter_ExtendedValue_V2 *em_ev, TSuplaChannelExtendedValue *ev);
 _supla_int_t SRPC_ICACHE_FLASH srpc_evtool_v1_extended2emextended(
     TSuplaChannelExtendedValue *ev, TElectricityMeter_ExtendedValue_V2 *em_ev);
