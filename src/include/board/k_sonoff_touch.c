@@ -105,7 +105,7 @@ void supla_esp_board_gpio_init(void) {
 
 }
 
-void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_B *channels, unsigned char *channel_count) {
+void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
 	
 #ifdef __BOARD_k_sonoff_touch
 
@@ -114,16 +114,16 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_B *channels, unsigned c
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
 
-	channels[0].FuncList = SUPLA_BIT_RELAYFUNC_POWERSWITCH \
-								| SUPLA_BIT_RELAYFUNC_LIGHTSWITCH;
-
+	channels[0].FuncList = SUPLA_BIT_FUNC_POWERSWITCH \
+								| SUPLA_BIT_FUNC_LIGHTSWITCH;
+	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[0].Default = SUPLA_CHANNELFNC_LIGHTSWITCH;
 	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
 
 	
 	channels[1].Number = 1;
 	channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[1].FuncList = SUPLA_BIT_RELAYFUNC_POWERSWITCH;
+	channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[1].Default = 0;
 	channels[1].value[0] = supla_esp_gpio_relay_on(20);
 
@@ -138,21 +138,22 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_B *channels, unsigned c
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
 
-	channels[0].FuncList = SUPLA_BIT_RELAYFUNC_POWERSWITCH \
-								| SUPLA_BIT_RELAYFUNC_LIGHTSWITCH;
-
+	channels[0].FuncList = SUPLA_BIT_FUNC_POWERSWITCH \
+								| SUPLA_BIT_FUNC_LIGHTSWITCH;
+	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[0].Default = SUPLA_CHANNELFNC_LIGHTSWITCH;
 	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
 
 	channels[1].Number = 1;
 	channels[1].Type = channels[0].Type;
 	channels[1].FuncList = channels[0].FuncList;
+	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[1].Default = channels[0].Default;
 	channels[1].value[0] = supla_esp_gpio_relay_on(B_RELAY2_PORT);
 
 	channels[2].Number = 2;
 	channels[2].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[2].FuncList = SUPLA_BIT_RELAYFUNC_POWERSWITCH;
+	channels[2].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[2].Default = 0;
 	channels[2].value[0] = supla_esp_gpio_relay_on(20);
 
@@ -165,27 +166,29 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_B *channels, unsigned c
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
 
-	channels[0].FuncList = SUPLA_BIT_RELAYFUNC_POWERSWITCH \
-								| SUPLA_BIT_RELAYFUNC_LIGHTSWITCH;
-
+	channels[0].FuncList = SUPLA_BIT_FUNC_POWERSWITCH \
+								| SUPLA_BIT_FUNC_LIGHTSWITCH;
+	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[0].Default = SUPLA_CHANNELFNC_LIGHTSWITCH;
 	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
 
 	channels[1].Number = 1;
 	channels[1].Type = channels[0].Type;
 	channels[1].FuncList = channels[0].FuncList;
+	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[1].Default = channels[0].Default;
 	channels[1].value[0] = supla_esp_gpio_relay_on(B_RELAY2_PORT);
 
 	channels[2].Number = 2;
 	channels[2].Type = channels[0].Type;
 	channels[2].FuncList = channels[0].FuncList;
+	channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[2].Default = channels[0].Default;
 	channels[2].value[0] = supla_esp_gpio_relay_on(B_RELAY3_PORT);
 
 	channels[3].Number = 3;
 	channels[3].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[3].FuncList = SUPLA_BIT_RELAYFUNC_POWERSWITCH;
+	channels[3].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[3].Default = 0;
 	channels[3].value[0] = supla_esp_gpio_relay_on(20);
 
