@@ -36,7 +36,7 @@
 void ICACHE_FLASH_ATTR supla_esp_em_get_value(
     unsigned char channel_number, char value[SUPLA_CHANNELVALUE_SIZE]);
 
-#define ESP8266_SUPLA_PROTO_VERSION 10
+#define ESP8266_SUPLA_PROTO_VERSION 12
 #define MANUFACTURER_ID 0
 #define PRODUCT_ID 0
 
@@ -50,7 +50,7 @@ void ICACHE_FLASH_ATTR supla_esp_em_get_value(
 
 #define AP_SSID "SONOFF_POW_R2"
 
-#define SUPLA_ESP_SOFTVER "2.7.12.0"
+#define SUPLA_ESP_SOFTVER "2.7.24.0"
 
 /*#define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) {if (port == 20) { \
  	supla_log(LOG_DEBUG, "update, port = %i", port); \
