@@ -221,7 +221,7 @@ void DEVCONN_ICACHE_FLASH supla_get_voltage();
 void DEVCONN_ICACHE_FLASH supla_get_current();
 void DEVCONN_ICACHE_FLASH supla_get_power();
 void ICACHE_FLASH_ATTR sel_pin_voltage();
-void DEVCONN_ICACHE_FLASH supla_esp_em_extendedvalue_to_value(TElectricityMeter_ExtendedValue *ev, char *value);
+void DEVCONN_ICACHE_FLASH supla_esp_em_extendedvalue_to_value(TElectricityMeter_ExtendedValue_V2 *ev, char *value);
 
 _supla_int_t SRPC_ICACHE_FLASH srpc_ds_async_channel_extendedvalue_changed(
     void *_srpc, unsigned char channel_number,
