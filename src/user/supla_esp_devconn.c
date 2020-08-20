@@ -227,9 +227,9 @@ _supla_int_t SRPC_ICACHE_FLASH srpc_ds_async_channel_extendedvalue_changed(
     void *_srpc, unsigned char channel_number,
     TSuplaChannelExtendedValue *value);
 _supla_int_t SRPC_ICACHE_FLASH srpc_evtool_v1_emextended2extended(
-    TElectricityMeter_ExtendedValue *em_ev, TSuplaChannelExtendedValue *ev);
+    TElectricityMeter_ExtendedValue_V2 *em_ev, TSuplaChannelExtendedValue *ev);
 _supla_int_t SRPC_ICACHE_FLASH srpc_evtool_v1_extended2emextended(
-    TSuplaChannelExtendedValue *ev, TElectricityMeter_ExtendedValue *em_ev);
+    TSuplaChannelExtendedValue *ev, TElectricityMeter_ExtendedValue_V2 *em_ev);
 #endif
 
 void DEVCONN_ICACHE_FLASH supla_esp_devconn_timer1_cb(void *timer_arg);
@@ -1582,10 +1582,6 @@ supla_esp_devconn_disconnect_cb(void *arg){
 
 void DEVCONN_ICACHE_FLASH supla_esp_devconn_dns__found(ip_addr_t *ip) {
   //supla_log(LOG_DEBUG, "supla_esp_devconn_dns_found_cb");
-
-#ifdef POWSENSOR2
-	int rel;
-#endif
 	
   if (ip == NULL) {
     supla_esp_set_state(LOG_NOTICE, "Domain not found.");
@@ -1620,6 +1616,9 @@ void DEVCONN_ICACHE_FLASH supla_esp_devconn_dns_found_cb(const char *name,
 
 
 #if defined (POWSENSOR2)
+
+	int rel;
+
 	rel = supla_espconn_connect(&devconn->ESPConn);
 	devconn->last_state = rel;
 	if (rel == 0) {
@@ -1920,7 +1919,7 @@ void DEVCONN_ICACHE_FLASH supla_esp_calcfg_result(TDS_DeviceCalCfgResult *result
 #endif /*BOARD_CALCFG*/
 
 #if defined(POWSENSOR2)
-void ICACHE_FLASH_ATTR supla_esp_em_extendedvalue_to_value(TElectricityMeter_ExtendedValue *ev, char *value) {
+void ICACHE_FLASH_ATTR supla_esp_em_extendedvalue_to_value(TElectricityMeter_ExtendedValue_V2 *ev, char *value) {
   memset(value, 0, SUPLA_CHANNELVALUE_SIZE);
 
   if (sizeof(TElectricityMeter_Value) > SUPLA_CHANNELVALUE_SIZE) {
@@ -1957,11 +1956,11 @@ void ICACHE_FLASH_ATTR supla_esp_em_extendedvalue_to_value(TElectricityMeter_Ext
 }
 
 void ICACHE_FLASH_ATTR supla_esp_em_get_value(unsigned char channel_number, char value[SUPLA_CHANNELVALUE_SIZE]) {
-  TElectricityMeter_ExtendedValue ev;
-  memset(&ev, 0, sizeof(TElectricityMeter_ExtendedValue));
+  TElectricityMeter_ExtendedValue_V2 ev;
+  memset(&ev, 0, sizeof(TElectricityMeter_ExtendedValue_V2));
 }
 
-void DEVCONN_ICACHE_FLASH  supla_esp_channel_em_value_changed(unsigned char channel_number, TElectricityMeter_ExtendedValue *em_ev) {
+void DEVCONN_ICACHE_FLASH  supla_esp_channel_em_value_changed(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 *em_ev) {
 	TSuplaChannelExtendedValue ev;
 	srpc_evtool_v1_emextended2extended(em_ev, &ev);
 	supla_esp_channel_extendedvalue_changed(channel_number, &ev);
@@ -1982,10 +1981,10 @@ supla_get_parameters() {
 	unsigned int power_difference = 0;
     unsigned char channel_number;
 	char value[SUPLA_CHANNELVALUE_SIZE];
-    TElectricityMeter_ExtendedValue ev;
+    TElectricityMeter_ExtendedValue_V2 ev;
     TElectricityMeter_Value v;
 
-    memset(&ev, 0, sizeof(TElectricityMeter_ExtendedValue));
+    memset(&ev, 0, sizeof(TElectricityMeter_ExtendedValue_V2));
 	memset(&v, 0, sizeof(TElectricityMeter_Value));
 
 	channel_number = 1;
