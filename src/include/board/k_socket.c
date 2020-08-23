@@ -53,7 +53,7 @@ void supla_esp_board_gpio_init(void) {
 
 	//---------------------------------------
 
-	supla_relay_cfg[1].gpio_id = 20;
+	supla_relay_cfg[1].gpio_id = B_UPD_PORT;
 	supla_relay_cfg[1].channel = 1;
 	
 	//---------------------------------------
@@ -89,7 +89,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[1].Default = 0;
-	channels[1].value[0] = supla_esp_gpio_relay_on(20);
+	channels[1].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
 
 	#ifdef __BOARD_k_socket_ds18b20
 		channels[2].Number = 2;
@@ -120,7 +120,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 
 	supla_esp_channel_value_changed(0, supla_esp_gpio_relay_on(B_RELAY1_PORT));
-	
+	supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_UPD_PORT));
 }
 
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
@@ -289,6 +289,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
             supla_esp_channel_value_changed(
                 input_cfg->channel,
                 supla_esp_gpio_relay_is_hi(input_cfg->relay_gpio_id));
+				supla_log(LOG_DEBUG, "update, gpio = %i", relay_gpio_id);
     }
 }
 
