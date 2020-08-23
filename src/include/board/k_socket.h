@@ -51,14 +51,15 @@
 #define LED_RED_PORT      2
 #define B_RELAY1_PORT     4
 #define B_CFG_PORT        0
+#define B_UPD_PORT		  20
 
-#define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) {if (port == 20) { \
+/*#define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) {if (port == 20) { \
  	supla_log(LOG_DEBUG, "update, port = %i", port); \
 	supla_esp_cfg.FirmwareUpdate = 1;\
 	supla_esp_cfg_save(&supla_esp_cfg);\
 	os_delay_us(200); \
 	supla_system_restart(); };\
-};
+};*/
 
 
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(

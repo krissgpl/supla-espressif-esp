@@ -54,6 +54,7 @@ void supla_esp_board_gpio_init(void) {
 	//---------------------------------------
 
 	supla_relay_cfg[1].gpio_id = B_UPD_PORT;
+	supla_relay_cfg[1].flags = RELAY_FLAG_RESTORE_FORCE;
 	supla_relay_cfg[1].channel = 1;
 	
 	//---------------------------------------
