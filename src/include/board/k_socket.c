@@ -282,8 +282,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
 
     if (input_cfg->relay_gpio_id != 255) {
 
-        supla_log(LOG_DEBUG, "RELAY input_cfg->relay_gpio_id");
-		supla_log(LOG_DEBUG, "update, gpio = %i", input_cfg->relay_gpio_id);
+        //supla_log(LOG_DEBUG, "RELAY");
 
         supla_esp_gpio_relay_hi(input_cfg->relay_gpio_id, hi, 0);
 
@@ -291,7 +290,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
             supla_esp_channel_value_changed(
                 input_cfg->channel,
                 supla_esp_gpio_relay_is_hi(input_cfg->relay_gpio_id));
-				supla_log(LOG_DEBUG, "update, gpio = %i", input_cfg->relay_gpio_id);
     }
 }
 
@@ -333,4 +331,18 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 	}
 
     input_cfg->last_state = 0;
+}
+
+void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
+
+   //  wyślij komendę po 433MHz
+   supla_log(LOG_DEBUG, "set_hi, port = %i, hi = %i", port, hi);
+
+}
+
+uint8 supla_esp_board_gpio_output_is_hi(uint8 port) {
+
+	// Odczytaj stan wysyłając komendę po 433MHz
+	supla_log(LOG_DEBUG, "is_hi, port = %i, hi = %i", port, hi);
+	return 0;
 }

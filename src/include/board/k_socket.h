@@ -60,7 +60,11 @@
 	os_delay_us(200); \
 	supla_system_restart(); };\
 };*/
+#define BOARD_GPIO_OUTPUT_SET_HI if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
+#define BOARD_GPIO_OUTPUT_IS_HI if ( port >= 20 ) return supla_esp_board_gpio_output_is_hi(port);
 
+void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
+uint8 supla_esp_board_gpio_output_is_hi(uint8 port);
 
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved);
