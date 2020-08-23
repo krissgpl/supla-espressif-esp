@@ -45,10 +45,6 @@ void supla_esp_board_gpio_init(void) {
 	supla_input_cfg[0].channel = 0;
 
 	// ---------------------------------------
-	
-	supla_input_cfg[1].type = INPUT_TYPE_BTN_MONOSTABLE;	//jest potrzebne zeby gpio0 dzialalo
-	supla_input_cfg[1].gpio_id = 5;
-	
 	// ---------------------------------------
 
     supla_relay_cfg[0].gpio_id = B_RELAY1_PORT;
