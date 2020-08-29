@@ -340,6 +340,8 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
 	int a;
 	
+	a=1;
+
 	if ( hi == 1 ) {
 	
 		supla_log(LOG_DEBUG, "update, port = %i", port); 
