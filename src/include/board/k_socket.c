@@ -338,20 +338,22 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	//  wyślij komendę po 433MHz
 	//supla_log(LOG_DEBUG, "set_hi, port = %i, hi = %i", port, hi);
 	
-	int a;
-	
-	a=1;
-
 	if ( hi == 1 ) {
 	
 		supla_log(LOG_DEBUG, "update, port = %i", port); 
-		a = a+1;
-		supla_log(LOG_DEBUG, "update, a = %i", a); 
-		//supla_esp_cfg.FirmwareUpdate = 1;
+		
+		if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
+		supla_esp_cfg.FirmwareUpdate = 1; 
+		supla_esp_cfg_save(&supla_esp_cfg);
+		};
+		
+		if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
 		//supla_esp_cfg_save(&supla_esp_cfg);
-		//os_delay_us(200);
+		os_delay_us(200);
 		//supla_esp_devconn_stop();
 		//supla_system_restart();
+		supla_log(LOG_DEBUG, "update init restart ");
+		}
 	}
    
 }
