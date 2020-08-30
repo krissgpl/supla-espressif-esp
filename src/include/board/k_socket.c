@@ -366,7 +366,7 @@ uint8 supla_esp_board_gpio_output_is_hi(uint8 port) {
 	
 	if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
 		
-		supla_esp_gpio_set_hi(20, 1);
+		supla_esp_channel_value_changed(1, 1);
 		
 	}
 	
