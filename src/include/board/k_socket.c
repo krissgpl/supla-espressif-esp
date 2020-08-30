@@ -363,5 +363,12 @@ uint8 supla_esp_board_gpio_output_is_hi(uint8 port) {
 
 	// Odczytaj stan wysyłając komendę po 433MHz
 	supla_log(LOG_DEBUG, "is_hi, port = %i", port);
+	
+	if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
+		
+		hi = 1;
+		
+	}
+	
 	return 0;
 }
