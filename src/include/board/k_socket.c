@@ -342,18 +342,19 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
 		supla_log(LOG_DEBUG, "update, port = %i", port); 
 		
-		if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
-		supla_esp_cfg.FirmwareUpdate = 1; 
-		supla_esp_cfg_save(&supla_esp_cfg);
-		};
-		
 		if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
 		//supla_esp_cfg_save(&supla_esp_cfg);
 		os_delay_us(200);
 		//supla_esp_devconn_stop();
 		//supla_system_restart();
 		supla_log(LOG_DEBUG, "update init restart ");
-		}
+		};
+		
+		if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
+		supla_esp_cfg.FirmwareUpdate = 1; 
+		supla_esp_cfg_save(&supla_esp_cfg);
+		};
+		
 	}
    
 }
