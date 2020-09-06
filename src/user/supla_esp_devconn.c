@@ -597,7 +597,7 @@ supla_esp_channel_value_changed(int channel_number, char v) {
 
 	if ( supla_esp_devconn_is_registered() == 1 ) {
 
-		//supla_log(LOG_DEBUG, "supla_esp_channel_value_changed(%i, %i)", channel_number, v);
+		supla_log(LOG_DEBUG, "supla_esp_channel_value_changed(%i, %i)", channel_number, v);
 	#ifdef POWSENSOR2
 		if ( channel_number == 0 ) {
 			relay_laststate = v;
