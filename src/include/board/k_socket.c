@@ -340,7 +340,9 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
 	if ( hi == 1 ) {
 	
-		supla_log(LOG_DEBUG, "update, port = %i", port); 
+		supla_log(LOG_DEBUG, "update, port = %i", port);
+		unsigned int t = system_get_time();
+		supla_log(LOG_DEBUG, "update, t = %i", t);
 		
 		if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
 			
