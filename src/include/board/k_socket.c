@@ -338,7 +338,7 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	//  wyślij komendę po 433MHz
 	//supla_log(LOG_DEBUG, "set_hi, port = %i, hi = %i", port, hi);
 	int upd_cont;
-	supla_log(LOG_DEBUG, "upd_cont = %i", upd_cont);
+	//supla_log(LOG_DEBUG, "upd_cont = %i", upd_cont);
 	
 	if ( hi == 1 ) {
 	
