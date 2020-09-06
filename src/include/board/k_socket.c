@@ -347,12 +347,12 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			//supla_esp_cfg_save(&supla_esp_cfg);
 			supla_esp_channel_value_changed(1, 1);
 			supla_log(LOG_DEBUG, "value_changed 1 1 upd1");
-			//os_delay_us(500000);
-			supla_log(LOG_DEBUG, "update init restart ");
+			os_delay_us(1000);
+			//supla_log(LOG_DEBUG, "update init restart ");
 			//supla_esp_devconn_stop();
 			//os_delay_us(500000);
 			supla_log(LOG_DEBUG, "update restart ");
-			//supla_system_restart();
+			supla_system_restart();
 		};
 		
 		if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
