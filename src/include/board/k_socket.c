@@ -54,7 +54,7 @@ void supla_esp_board_gpio_init(void) {
 	//---------------------------------------
 
 	supla_relay_cfg[1].gpio_id = B_UPD_PORT;
-	supla_relay_cfg[1].flags = RELAY_FLAG_VIRTUAL_GPIO;
+	supla_relay_cfg[1].flags = RELAY_FLAG_VIRTUAL_GPIO | RELAY_FLAG_RESET;
 	supla_relay_cfg[1].channel = 1;
 	
 	//---------------------------------------
@@ -343,16 +343,17 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		supla_log(LOG_DEBUG, "update, port = %i", port); 
 		
 		if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
-		//supla_esp_cfg_save(&supla_esp_cfg);
-		os_delay_us(200);
-		//supla_esp_devconn_stop();
-		//supla_system_restart();
-		supla_log(LOG_DEBUG, "update init restart ");
+			supla_esp_channel_value_changed(1, 1);
+			//supla_esp_cfg_save(&supla_esp_cfg);
+			os_delay_us(200);
+			//supla_esp_devconn_stop();
+			//supla_system_restart();
+			supla_log(LOG_DEBUG, "update init restart ");
 		};
 		
 		if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
-		supla_esp_cfg.FirmwareUpdate = 1; 
-		supla_esp_cfg_save(&supla_esp_cfg);
+			supla_esp_cfg.FirmwareUpdate = 1; 
+			supla_esp_cfg_save(&supla_esp_cfg);
 		};
 		
 	}
