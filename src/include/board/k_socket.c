@@ -355,7 +355,7 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			os_delay_us(500000);
 			supla_log(LOG_DEBUG, "update restart ");
 			os_delay_us(500000);
-			supla_system_restart();
+			//supla_system_restart();
 		};
 		
 		if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
