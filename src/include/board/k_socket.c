@@ -337,7 +337,7 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 
 	//  wyślij komendę po 433MHz
 	//supla_log(LOG_DEBUG, "set_hi, port = %i, hi = %i", port, hi);
-	int upd_cont;
+	//int upd_cont;
 	//supla_log(LOG_DEBUG, "upd_cont = %i", upd_cont);
 	
 	if ( hi == 1 ) {
@@ -357,7 +357,7 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			//os_delay_us(500000);
 			//supla_log(LOG_DEBUG, "update restart ");
 			//os_delay_us(500000);
-			upd_cont = 1;
+			//upd_cont = 1;
 			supla_log(LOG_DEBUG, "upd_cont = %i", upd_cont);
 			//supla_system_restart();
 		};
@@ -371,25 +371,25 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		
 	};
 	
-	if ( upd_cont == 1 ) {
+	/*if ( upd_cont == 1 ) {
 		
 		os_delay_us(500000);
 		supla_log(LOG_DEBUG, "update restart ");
 		//supla_system_restart();
 		
-	};
+	};*/
 }
 
 uint8 supla_esp_board_gpio_output_is_hi(uint8 port) {
 
 	// Odczytaj stan wysyłając komendę po 433MHz
 	supla_log(LOG_DEBUG, "is_hi, port = %i", port);
-	/*
+	
 	if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
 		
-		supla_esp_channel_value_changed(1, 1);
+		supla_log(LOG_DEBUG, "is_hi, port=20 fwupd 1");
 		
 	}
-	*/
+	
 	return 0;
 }
