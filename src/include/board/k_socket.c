@@ -358,7 +358,7 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			//supla_log(LOG_DEBUG, "update restart ");
 			//os_delay_us(500000);
 			//upd_cont = 1;
-			supla_log(LOG_DEBUG, "upd_cont = %i", upd_cont);
+			//supla_log(LOG_DEBUG, "upd_cont = %i", upd_cont);
 			//supla_system_restart();
 		};
 		
