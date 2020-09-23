@@ -23,7 +23,7 @@
 #include "supla_dht.h"
 #include "supla_ds18b20.h"
 
-
+ETSTimer value_timer1;
 
 void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	#if defined __BOARD_k_socket_ds18b20
