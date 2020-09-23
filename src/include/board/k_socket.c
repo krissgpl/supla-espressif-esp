@@ -382,7 +382,7 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	};*/
 }
 
-uint8 supla_esp_board_gpio_output_is_hi(uint8 port) {
+/*uint8 supla_esp_board_gpio_output_is_hi(uint8 port) {
 
 	// Odczytaj stan wysyłając komendę po 433MHz
 	supla_log(LOG_DEBUG, "is_hi, port = %i", port);
@@ -394,4 +394,4 @@ uint8 supla_esp_board_gpio_output_is_hi(uint8 port) {
 	}
 	
 	return 0;
-}
+}*/
