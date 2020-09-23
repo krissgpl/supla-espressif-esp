@@ -122,6 +122,10 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 
 	supla_esp_channel_value_changed(0, supla_esp_gpio_relay_on(B_RELAY1_PORT));
 	supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_UPD_PORT));
+	
+	if ( supla_esp_state.Relay[1] = 1 ) {
+		supla_log(LOG_DEBUG, "send channel with delay UPD 1");
+	}
 }
 
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
