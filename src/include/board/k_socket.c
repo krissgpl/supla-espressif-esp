@@ -35,6 +35,18 @@ void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	#endif
 }
 
+void supla_esp_baord_value_timer1_cb(void *timer_arg) {
+
+	supla_esp_state.Relay[1] = supla_esp_gpio_relay_is_hi(B_UPD_PORT);
+
+	//os_printf("S:%d,%d", supla_esp_state.Relay[0], supla_esp_state.Relay[1]);
+
+	supla_esp_save_state(SAVE_STATE_DELAY);
+
+	supla_esp_channel_value_changed(1, supla_esp_state.Relay[1]);
+	
+	supla_log(LOG_DEBUG, "TEST timera :)");
+}
 
 void supla_esp_board_gpio_init(void) {
 		
@@ -60,6 +72,10 @@ void supla_esp_board_gpio_init(void) {
 	//---------------------------------------
 	
     PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO0_U);	// pullup gpio 0
+	
+	os_timer_disarm(&value_timer1);
+	os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
+	os_timer_arm(&value_timer1, 50, 0);
 
 }
 
@@ -122,10 +138,6 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 
 	supla_esp_channel_value_changed(0, supla_esp_gpio_relay_on(B_RELAY1_PORT));
 	supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_UPD_PORT));
-	
-	if ( supla_esp_state.Relay[1] == 1 ) {
-		supla_log(LOG_DEBUG, "send channel with delay UPD 1");
-	}
 }
 
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
