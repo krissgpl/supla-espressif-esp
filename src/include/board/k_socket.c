@@ -73,10 +73,6 @@ void supla_esp_board_gpio_init(void) {
 	
     PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO0_U);	// pullup gpio 0
 	
-	os_timer_disarm(&value_timer1);
-	os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
-	os_timer_arm(&value_timer1, 50, 0);
-
 }
 
 void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
@@ -287,7 +283,13 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
-  supla_esp_gpio_set_led(supla_esp_cfg.StatusLedOff, 0, 0);
+	
+	supla_esp_gpio_set_led(supla_esp_cfg.StatusLedOff, 0, 0);
+  
+	os_timer_disarm(&value_timer1);
+	os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
+	os_timer_arm(&value_timer1, 50, 0);
+
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
@@ -399,7 +401,7 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	};*/
 }
 
-/*uint8 supla_esp_board_gpio_output_is_hi(uint8 port) {
+uint8 supla_esp_board_gpio_output_is_hi(uint8 port) {
 
 	// Odczytaj stan wysyłając komendę po 433MHz
 	supla_log(LOG_DEBUG, "is_hi, port = %i", port);
@@ -411,4 +413,4 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	}
 	
 	return 0;
-}*/
+}
