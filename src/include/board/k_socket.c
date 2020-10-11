@@ -46,7 +46,7 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	//supla_esp_channel_value_changed(1, supla_esp_state.Relay[1]);
 	
 	supla_log(LOG_DEBUG, "TEST timera :)");
-	//supla_system_restart();
+	supla_system_restart();
 }
 
 void supla_esp_board_gpio_init(void) {
