@@ -37,13 +37,13 @@ void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 
-	supla_esp_state.Relay[1] = supla_esp_gpio_relay_is_hi(B_UPD_PORT);
+	//supla_esp_state.Relay[1] = supla_esp_gpio_relay_is_hi(B_UPD_PORT);
 
 	//os_printf("S:%d,%d", supla_esp_state.Relay[0], supla_esp_state.Relay[1]);
 
-	supla_esp_save_state(SAVE_STATE_DELAY);
+	//supla_esp_save_state(SAVE_STATE_DELAY);
 
-	supla_esp_channel_value_changed(1, supla_esp_state.Relay[1]);
+	//supla_esp_channel_value_changed(1, supla_esp_state.Relay[1]);
 	
 	supla_log(LOG_DEBUG, "TEST timera :)");
 }
@@ -288,7 +288,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
   
 	os_timer_disarm(&value_timer1);
 	os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
-	os_timer_arm(&value_timer1, 50, 0);
+	os_timer_arm(&value_timer1, 1000, 1);
 
 }
 
