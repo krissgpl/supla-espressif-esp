@@ -46,7 +46,7 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	//supla_esp_channel_value_changed(1, supla_esp_state.Relay[1]);
 	
 	supla_log(LOG_DEBUG, "TEST timera :)");
-	supla_system_restart();
+	//supla_system_restart();
 }
 
 void supla_esp_board_gpio_init(void) {
@@ -290,10 +290,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	
 	supla_esp_gpio_set_led(supla_esp_cfg.StatusLedOff, 0, 0);
   
-	//os_timer_disarm(&value_timer1);
-	//os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
-	//os_timer_arm(&value_timer1, 5000, 1);
-
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
@@ -373,11 +369,11 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			//supla_esp_cfg_save(&supla_esp_cfg);
 			supla_esp_state.Relay[1] = 1;
 			supla_log(LOG_DEBUG, "value_changed 1 1 upd1");
-			supla_esp_save_state(SAVE_STATE_DELAY);
-			supla_esp_channel_value_changed(1, 1);
+			//supla_esp_save_state(SAVE_STATE_DELAY);
+			//supla_esp_channel_value_changed(1, 1);
 			supla_log(LOG_DEBUG, "update restart ");
 			supla_esp_save_state(SAVE_STATE_DELAY);
-			//supla_esp_channel_value_changed(1, supla_esp_state.Relay[1]);
+			supla_esp_channel_value_changed(1, supla_esp_state.Relay[1]);
 			os_timer_disarm(&value_timer1);
 			os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
 			os_timer_arm(&value_timer1, 7000, 0);
