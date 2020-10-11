@@ -74,6 +74,9 @@ void supla_esp_board_gpio_init(void) {
 	
     PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO0_U);	// pullup gpio 0
 	
+	supla_esp_cfg.FirmwareUpdate = 0; 		// testowo
+	supla_esp_cfg_save(&supla_esp_cfg);
+	
 }
 
 void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
@@ -373,6 +376,8 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			supla_esp_save_state(SAVE_STATE_DELAY);
 			supla_esp_channel_value_changed(1, 1);
 			supla_log(LOG_DEBUG, "update restart ");
+			supla_esp_save_state(SAVE_STATE_DELAY);
+			//supla_esp_channel_value_changed(1, supla_esp_state.Relay[1]);
 			os_timer_disarm(&value_timer1);
 			os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
 			os_timer_arm(&value_timer1, 7000, 0);
