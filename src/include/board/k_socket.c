@@ -24,6 +24,8 @@
 #include "supla_ds18b20.h"
 
 ETSTimer value_timer1;
+int UPD_channel;
+
 
 void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	#if defined __BOARD_k_socket_ds18b20
@@ -117,8 +119,6 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 
 		supla_get_temp_and_humidity(channels[2].value);
 	#endif
-
-		
 
 }
 
@@ -343,16 +343,18 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 
 void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
+	UPD_channel = 1;
+	
 	if ( hi == 1 ) {
 	
 		supla_log(LOG_DEBUG, "update, port = %i", port);
 		
 		if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
 			
-			supla_esp_state.Relay[1] = 1;
+			supla_esp_state.Relay[UPD_channel] = 1;
 			supla_log(LOG_DEBUG, "value_changed upd - 1");
 			supla_esp_save_state(SAVE_STATE_DELAY);
-			supla_esp_channel_value_changed(1, supla_esp_state.Relay[1]);
+			supla_esp_channel_value_changed(UPD_channel, supla_esp_state.Relay[UPD_channel]);
 			os_timer_disarm(&value_timer1);
 			os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
 			os_timer_arm(&value_timer1, 7000, 0);
@@ -361,7 +363,7 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
 			supla_esp_cfg.FirmwareUpdate = 1; 
 			supla_esp_cfg_save(&supla_esp_cfg);
-			supla_esp_channel_value_changed(1, 1);
+			supla_esp_channel_value_changed(UPD_channel, 1);
 			supla_log(LOG_DEBUG, "value_changed upd - 0");
 		};
 	};
