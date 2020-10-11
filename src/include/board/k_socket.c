@@ -286,9 +286,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	
 	supla_esp_gpio_set_led(supla_esp_cfg.StatusLedOff, 0, 0);
   
-	os_timer_disarm(&value_timer1);
-	os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
-	os_timer_arm(&value_timer1, 1000, 1);
+	//os_timer_disarm(&value_timer1);
+	//os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
+	//os_timer_arm(&value_timer1, 5000, 1);
 
 }
 
@@ -372,6 +372,9 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			supla_esp_save_state(SAVE_STATE_DELAY);
 			supla_esp_channel_value_changed(1, 1);
 			supla_log(LOG_DEBUG, "update restart ");
+			os_timer_disarm(&value_timer1);
+			os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
+			os_timer_arm(&value_timer1, 5000, 1);
 			//os_delay_us(500000);
 			//supla_log(LOG_DEBUG, "update init restart ");
 			//supla_esp_devconn_stop();
