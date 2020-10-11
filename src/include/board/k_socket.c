@@ -375,7 +375,7 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			supla_log(LOG_DEBUG, "update restart ");
 			os_timer_disarm(&value_timer1);
 			os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
-			os_timer_arm(&value_timer1, 5000, 0);
+			os_timer_arm(&value_timer1, 7000, 0);
 			//os_delay_us(500000);
 			//supla_log(LOG_DEBUG, "update init restart ");
 			//supla_esp_devconn_stop();
