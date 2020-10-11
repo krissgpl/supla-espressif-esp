@@ -36,17 +36,10 @@ void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 }
 
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {
-
-	//supla_esp_state.Relay[1] = supla_esp_gpio_relay_is_hi(B_UPD_PORT);
-
-	//os_printf("S:%d,%d", supla_esp_state.Relay[0], supla_esp_state.Relay[1]);
-
-	//supla_esp_save_state(SAVE_STATE_DELAY);
-
-	//supla_esp_channel_value_changed(1, supla_esp_state.Relay[1]);
 	
-	supla_log(LOG_DEBUG, "TEST timera :)");
+	supla_log(LOG_DEBUG, "TIMER update - restart");
 	supla_system_restart();
+	
 }
 
 void supla_esp_board_gpio_init(void) {
@@ -73,9 +66,6 @@ void supla_esp_board_gpio_init(void) {
 	//---------------------------------------
 	
     PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO0_U);	// pullup gpio 0
-	
-	supla_esp_cfg.FirmwareUpdate = 0; 		// testowo
-	supla_esp_cfg_save(&supla_esp_cfg);
 	
 }
 
@@ -352,70 +342,27 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 }
 
 void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
-
-	//  wyślij komendę po 433MHz
-	//supla_log(LOG_DEBUG, "set_hi, port = %i, hi = %i", port, hi);
-	//int upd_cont;
-	//supla_log(LOG_DEBUG, "upd_cont = %i", upd_cont);
 	
 	if ( hi == 1 ) {
 	
 		supla_log(LOG_DEBUG, "update, port = %i", port);
-		//unsigned int t = system_get_time();
-		//supla_log(LOG_DEBUG, "update, t = %i", t);
 		
 		if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
 			
-			//supla_esp_cfg_save(&supla_esp_cfg);
 			supla_esp_state.Relay[1] = 1;
-			supla_log(LOG_DEBUG, "value_changed 1 1 upd1");
-			//supla_esp_save_state(SAVE_STATE_DELAY);
-			//supla_esp_channel_value_changed(1, 1);
-			supla_log(LOG_DEBUG, "update restart ");
+			supla_log(LOG_DEBUG, "value_changed upd - 1");
 			supla_esp_save_state(SAVE_STATE_DELAY);
 			supla_esp_channel_value_changed(1, supla_esp_state.Relay[1]);
 			os_timer_disarm(&value_timer1);
 			os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
 			os_timer_arm(&value_timer1, 7000, 0);
-			//os_delay_us(500000);
-			//supla_log(LOG_DEBUG, "update init restart ");
-			//supla_esp_devconn_stop();
-			//os_delay_us(500000);
-			//supla_log(LOG_DEBUG, "update restart ");
-			//os_delay_us(500000);
-			//upd_cont = 1;
-			//supla_log(LOG_DEBUG, "upd_cont = %i", upd_cont);
-			//supla_system_restart();
 		};
 		
 		if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
 			supla_esp_cfg.FirmwareUpdate = 1; 
 			supla_esp_cfg_save(&supla_esp_cfg);
 			supla_esp_channel_value_changed(1, 1);
-			supla_log(LOG_DEBUG, "value_changed 1 1 upd0");
+			supla_log(LOG_DEBUG, "value_changed upd - 0");
 		};
-		
 	};
-	
-	/*if ( upd_cont == 1 ) {
-		
-		os_delay_us(500000);
-		supla_log(LOG_DEBUG, "update restart ");
-		//supla_system_restart();
-		
-	};*/
-}
-
-uint8 supla_esp_board_gpio_output_is_hi(uint8 port) {
-
-	// Odczytaj stan wysyłając komendę po 433MHz
-	supla_log(LOG_DEBUG, "is_hi, port = %i", port);
-	
-	if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
-		
-		supla_log(LOG_DEBUG, "is_hi, port=20 fwupd 1");
-		
-	}
-	
-	return 0;
 }
