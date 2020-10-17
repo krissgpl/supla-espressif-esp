@@ -389,7 +389,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
     input_cfg->last_state = 0;
 }
 
-void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
+void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
 	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 		
