@@ -393,37 +393,43 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
 	if ( port == 20 ) {
 	
-	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
+		if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 		
 			UPD_channel = 2;
 			
-	} else {
+		} else {
 		
 			UPD_channel = 1;
 			
-	}
-	
-	if ( hi == 1 ) {
-	
-		supla_log(LOG_DEBUG, "update, port = %i", port);
-		
-		if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
-			
-			supla_esp_state.Relay[UPD_channel] = 1;
-			supla_log(LOG_DEBUG, "value_changed upd - 1");
-			supla_esp_save_state(SAVE_STATE_DELAY);
-			supla_esp_channel_value_changed(UPD_channel, supla_esp_state.Relay[UPD_channel]);
-			os_timer_disarm(&value_timer1);
-			os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
-			os_timer_arm(&value_timer1, 4000, 0);
 		};
+	
+		if ( hi == 1 ) {
+	
+			supla_log(LOG_DEBUG, "update, port = %i", port);
 		
-		if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
-			supla_esp_cfg.FirmwareUpdate = 1; 
-			supla_esp_cfg_save(&supla_esp_cfg);
-			supla_esp_channel_value_changed(UPD_channel, 1);
-			supla_log(LOG_DEBUG, "value_changed upd - 0");
+			if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
+			
+				supla_esp_state.Relay[UPD_channel] = 1;
+				supla_log(LOG_DEBUG, "value_changed upd - 1");
+				supla_esp_save_state(SAVE_STATE_DELAY);
+				supla_esp_channel_value_changed(UPD_channel, supla_esp_state.Relay[UPD_channel]);
+				os_timer_disarm(&value_timer1);
+				os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
+				os_timer_arm(&value_timer1, 4000, 0);
+			};
+		
+			if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
+				supla_esp_cfg.FirmwareUpdate = 1; 
+				supla_esp_cfg_save(&supla_esp_cfg);
+				supla_esp_channel_value_changed(UPD_channel, 1);
+				supla_log(LOG_DEBUG, "value_changed upd - 0");
+			};
 		};
 	};
-}
+	
+	if ( port == 5 || port == 13 ) {
+		
+		supla_log(LOG_DEBUG, " port 5 i 13 TEST");
+		
+	};
 }
