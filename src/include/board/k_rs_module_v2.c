@@ -427,7 +427,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		};
 	};
 	
-	if ( port == 5 || port == 13 ) {
+	if ( port == 5 && port == 13 ) {
 		
 		supla_log(LOG_DEBUG, " port 5 i 13 TEST");
 		
