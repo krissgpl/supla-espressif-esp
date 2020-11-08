@@ -23,7 +23,7 @@
 
 #define BOARD_ON_CONNECT
 
-#define SUPLA_ESP_SOFTVER "2.7.25.0"
+#define SUPLA_ESP_SOFTVER "2.7.25.1"
 
 #define LED_RED_PORT     4
 #define B_RELAY1_PORT    12
@@ -32,7 +32,9 @@
 
 #define AP_SSID "GNIAZDKO_NEO"
 
-#define BOARD_GPIO_OUTPUT_SET_HI if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
+#define BOARD_GPIO_OUTPUT_SET_HI					\
+	supla_esp_board_gpiooutput_set_hi(port, hi); 	\
+	return;
 
 void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
