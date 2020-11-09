@@ -37,7 +37,7 @@
  supla_esp_gpio_set_led(hi, 1, 1); }\
    else if (port == 20) { \
 	supla_esp_board_gpiooutput_set_hi(port, hi); 	\
-	return; };
+    return; } };
 
 void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
