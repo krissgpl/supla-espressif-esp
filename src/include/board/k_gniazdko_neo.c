@@ -188,9 +188,9 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	if ( port == B_RELAY1_PORT ) {
 		
 		supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi, port = %i", port);
-		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
+		//GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
 		hi =!supla_esp_gpio_output_is_hi(B_RELAY1_PORT);
-		supla_esp_gpio_set_led(hi, 1, 1);
+		//supla_esp_gpio_set_led(hi, 1, 1);
 		
 	};
 }
