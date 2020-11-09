@@ -154,9 +154,6 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 
 void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
-	char _hi;
-	_hi =!supla_esp_gpio_output_is_hi(B_RELAY1_PORT);
-	
 	if ( port == B_UPD_PORT ) { 
 	
 		UPD_channel = 1;
@@ -186,19 +183,5 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 				
 			};
 		};
-	};
-	
-	/*if ( port == LED_RED_PORT ) {
-		
-		supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi, port = %i", port);
-		//GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
-		hi_ =!supla_esp_gpio_output_is_hi(B_RELAY1_PORT);
-		//supla_esp_gpio_set_led(hi, 1, 1);
-		
-	};*/
-		
-	if (port==B_RELAY1_PORT) {
-		supla_esp_gpio_set_led(_hi, 1, 1); 
-		
 	};
 }

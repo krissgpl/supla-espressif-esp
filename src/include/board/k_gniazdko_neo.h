@@ -32,9 +32,12 @@
 
 #define AP_SSID "GNIAZDKO_NEO"
 
-#define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) {					\
+#define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) {if (port == LED_RED_PORT) {hi =!supla_esp_gpio_output_is_hi(B_RELAY1_PORT);\
+ } else if (port==B_RELAY1_PORT) {\
+ supla_esp_gpio_set_led(hi, 1, 1); }\
+   else if (port == 20) { \
 	supla_esp_board_gpiooutput_set_hi(port, hi); 	\
-return; };
+	return; };
 
 void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
