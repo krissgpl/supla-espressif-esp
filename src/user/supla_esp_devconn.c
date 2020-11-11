@@ -1775,7 +1775,7 @@ supla_esp_devconn_start(void) {
     stationConf.ssid[31] = 0;
     stationConf.password[63] = 0;
 
-	wifi_station_set_hostname("esp8266_TEST");
+	wifi_station_set_hostname("esp8266-TEST");
 
     wifi_station_set_config(&stationConf);
     wifi_station_set_auto_connect(1);
