@@ -68,6 +68,10 @@ case $1 in
       FOTA=1
       FLASH_SIZE="4096"
    ;;
+   "k_rs_module_v3")
+      FOTA=1
+      FLASH_SIZE="4096"
+   ;;
    "k_smoke_module")
       FOTA=1
       FLASH_SIZE="4096"
@@ -280,6 +284,7 @@ case $1 in
    echo "              k_rs_module_ds18b20";
    echo "              k_rs_module_DHT22";
    echo "              k_rs_module_v2 (wybor czujnika temp)";
+   echo "              k_rs_module_v3 (wybor czujnika temp)";
    echo "              k_smoke_module";
    echo "              k_smoke_module_ds18b20";
    echo "              k_smoke_module_DHT22";

@@ -119,6 +119,10 @@
 	  
 #include "board/k_rs_module_v2.h"
 
+#elif defined(__BOARD_k_rs_module_v3)
+	  
+#include "board/k_rs_module_v3.h"
+
 #elif defined(__BOARD_k_smoke_module) \
       || defined(__BOARD_k_smoke_module_ds18b20)	\
       || defined(__BOARD_k_smoke_module_DHT22)
