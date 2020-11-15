@@ -62,7 +62,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 		
 	supla_input_cfg[1].type = INPUT_TYPE_BTN_MONOSTABLE_RS;
 	supla_input_cfg[1].gpio_id = B_BTN1_PORT;
-	supla_input_cfg[1].flags = INPUT_FLAG_CFG_BTN;
+	supla_input_cfg[1].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN;
     supla_input_cfg[1].relay_gpio_id = B_RELAY1_PORT;
 
 	supla_input_cfg[2].type = INPUT_TYPE_BTN_MONOSTABLE_RS;
@@ -391,7 +391,6 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
-	if ( port == 20 ) {
 	
 		if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 		
@@ -425,11 +424,4 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 				supla_log(LOG_DEBUG, "value_changed upd - 0");
 			};
 		};
-	};
-	
-	if ( port == 5 && port == 13 ) {
-		
-		supla_log(LOG_DEBUG, " port 5 i 13 TEST");
-		
-	};
 }

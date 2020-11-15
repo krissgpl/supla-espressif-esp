@@ -46,14 +46,14 @@
 #define B_RELAY2_PORT      13
 #define B_BTN1_PORT        14
 #define B_BTN2_PORT        12
-#define B_UPD_PORT		  20
+#define B_UPD_PORT		   20
 #define LED_RED_PORT   	   16
 
 #define WATCHDOG_TIMEOUT_SEC 90
 
-#define BOARD_GPIO_OUTPUT_SET_HI  					 \
+#define BOARD_GPIO_OUTPUT_SET_HI  if (supla_last_state == STATE_CONNECTED) {if (port == 20) {	\
 		supla_esp_board_gpiooutput_set_hi(port, hi); \
-		return; 
+		return; };
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
