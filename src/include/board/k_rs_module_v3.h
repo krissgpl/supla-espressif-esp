@@ -53,10 +53,8 @@
 
 #define WATCHDOG_TIMEOUT_SEC 90
 
-#define BOARD_GPIO_OUTPUT_SET_HI  					 \
-		supla_esp_board_gpiooutput_set_hi(port, hi); \
-		return; 
-
+#define BOARD_GPIO_OUTPUT_SET_HI if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
+		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
 char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(

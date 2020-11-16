@@ -393,8 +393,6 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
-	if ( port == 20 ) {
-	
 		if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 		
 			UPD_channel = 2;
@@ -427,11 +425,4 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 				supla_log(LOG_DEBUG, "value_changed upd - 0");
 			};
 		};
-	};
-	
-	if ( port == 5 && port == 13 ) {
-		
-		supla_log(LOG_DEBUG, " port 5 i 13 TEST");
-		
-	};
 }
