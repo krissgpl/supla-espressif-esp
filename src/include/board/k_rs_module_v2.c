@@ -395,10 +395,12 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 		
 			UPD_channel = 2;
+			supla_log(LOG_DEBUG, "UPD_channel = %i", UPD_channel);
 			
 		} else {
 		
 			UPD_channel = 1;
+			supla_log(LOG_DEBUG, "UPD_channel = %i", UPD_channel);
 			
 		};
 	
