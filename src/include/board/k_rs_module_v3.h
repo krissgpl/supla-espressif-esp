@@ -36,10 +36,10 @@
 #define TEMP_SELECT
 
 #define DHTSENSOR
-#define TEMPERATURE_HUMIDITY_CHANNEL 1
+#define TEMPERATURE_HUMIDITY_CHANNEL 2
 
 #define DS18B20
-#define TEMPERATURE_CHANNEL 1
+#define TEMPERATURE_CHANNEL 2
 
 #define USE_GPIO16_OUTPUT
 
@@ -48,7 +48,7 @@
 #define B_RELAY2_PORT      13
 #define B_BTN1_PORT        14
 #define B_BTN2_PORT        12
-#define B_UPD_PORT		  20
+#define B_UPD_PORT		   20
 #define LED_RED_PORT   	   16
 
 #define WATCHDOG_TIMEOUT_SEC 90

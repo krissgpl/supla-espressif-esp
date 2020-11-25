@@ -124,38 +124,28 @@ void ICACHE_FLASH_ATTR
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[0].Default = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER;
 	channels[0].value[0] = (*supla_rs_cfg[0].position)-1;
+	
+	channels[1].Number = 1;
+	channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[1].Default = 0;
+	channels[1].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
 
    if( supla_esp_cfg.ThermometerType == 1 ) {
-    channels[1].Number = 1;
-	channels[1].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
-	channels[1].FuncList = 0;
-	channels[1].Default = 0;
-	supla_get_temperature(channels[1].value);
+    channels[2].Number = 2;
+	channels[2].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
+	channels[2].FuncList = 0;
+	channels[2].Default = 0;
+	supla_get_temperature(channels[2].value);
    }
 
    if( supla_esp_cfg.ThermometerType == 2 ) {
-	channels[1].Number = 1;
-	channels[1].Type = SUPLA_CHANNELTYPE_DHT22;
-	channels[1].FuncList = 0;
-	channels[1].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
-	supla_get_temp_and_humidity(channels[1].value);
+	channels[2].Number = 2;
+	channels[2].Type = SUPLA_CHANNELTYPE_DHT22;
+	channels[2].FuncList = 0;
+	channels[2].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+	supla_get_temp_and_humidity(channels[2].value);
    }
-
-   if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
-		channels[2].Number = 2;
-		channels[2].Type = SUPLA_CHANNELTYPE_RELAY;
-		channels[2].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
-		channels[2].Default = 0;
-		channels[2].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
-   }
-   else {
-		channels[1].Number = 1;
-		channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
-		channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
-		channels[1].Default = 0;
-		channels[1].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
-   }
-
 }
 
 void ICACHE_FLASH_ATTR
@@ -393,7 +383,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
-		if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
+		/*if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 		
 			UPD_channel = 2;
 			
@@ -401,7 +391,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		
 			UPD_channel = 1;
 			
-		};
+		};*/
+		
+		UPD_channel = 1;
 	
 		if ( hi == 1 ) {
 	
