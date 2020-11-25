@@ -56,3 +56,4 @@ valgrind-suppressions.cfg
 # Build output
 firmware/
 src/.output/
+src/user/supla_esp.h.orig
