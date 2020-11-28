@@ -87,6 +87,10 @@ supla_dht_read_th(void *timer_arg) {
 	} else {
 		supla_dht_last_temp = -275;
 		supla_dht_last_humidity = -1;
+		
+		gpio_output_set(0, BIT10, BIT10, 0);
+		os_delay_us(300000);
+		gpio_output_set(BIT10, 0, BIT10, 0);
 
 	}
 }
