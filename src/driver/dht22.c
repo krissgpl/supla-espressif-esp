@@ -23,6 +23,8 @@
 #include "driver/dht22.h"
 #include "espmissingincludes.h"
 
+#include "supla-dev/log.h"
+
 //#define DHT_DEBUG
 
 #ifdef DHT_DEBUG
