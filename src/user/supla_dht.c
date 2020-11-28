@@ -28,7 +28,7 @@
 #include "supla_ds18b20.h"
 
 #include "supla_esp_devconn.h"
-#include "supla_esp_gpio.h"
+//#include "supla_esp_gpio.h"
 
 #ifdef DHTSENSOR
 
@@ -92,9 +92,9 @@ supla_dht_read_th(void *timer_arg) {
 		/*gpio_output_set(0, BIT10, BIT10, 0);
 		os_delay_us(300000);
 		gpio_output_set(BIT10, 0, BIT10, 0);*/
-		supla_esp_gpio_set_hi(10, 0);	// ustaw gpio10 low wyl zasilania DHT
+		/*supla_esp_gpio_set_hi(10, 0);	// ustaw gpio10 low wyl zasilania DHT
 		os_delay_us(300000);						// poczekaj 0,3s
-		supla_esp_gpio_set_hi(10, 1);
+		supla_esp_gpio_set_hi(10, 1);*/
 
 	}
 }
