@@ -106,6 +106,7 @@ bool ICACHE_FLASH_ATTR DHTRead(DHT_Sensor *sensor, DHT_Sensor_Data* output)
 		
 		GPIO_OUTPUT_SET(pin, 0);
 		GPIO_OUTPUT_SET(10, 0);
+		GPIO_DIS_OUTPUT(pin);
 		sleepms(500);
 		//GPIO_OUTPUT_SET(10, 1);
 		sleepms(500);
