@@ -103,6 +103,12 @@ bool ICACHE_FLASH_ATTR DHTRead(DHT_Sensor *sensor, DHT_Sensor_Data* output)
 		DHT_DEBUG("DHT: Failed to get reading from GPIO%d, dying\r\n", pin);
 		supla_log(LOG_DEBUG, "DHT: Failed to get reading from GPIO%d, dying\r\n", pin);
 	    return false;
+		
+		GPIO_OUTPUT_SET(10, 0);
+		sleepms(300);
+		GPIO_OUTPUT_SET(10, 1);
+		sleepms(500);
+		
 	}
 
 	// read data
