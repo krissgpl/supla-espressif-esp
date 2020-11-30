@@ -104,12 +104,10 @@ bool ICACHE_FLASH_ATTR DHTRead(DHT_Sensor *sensor, DHT_Sensor_Data* output)
 		supla_log(LOG_DEBUG, "DHT: Failed to get reading from GPIO%d, dying\r\n", pin);
 	    //return false;
 		
-		GPIO_OUTPUT_SET(pin, 0);
 		GPIO_OUTPUT_SET(10, 0);
-		GPIO_DIS_OUTPUT(pin);
 		sleepms(500);
-		//GPIO_OUTPUT_SET(10, 1);
-		sleepms(500);
+		GPIO_OUTPUT_SET(10, 1);
+		sleepms(300);
 		supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
 		
 		return false;
