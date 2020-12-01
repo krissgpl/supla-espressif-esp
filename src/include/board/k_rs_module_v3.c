@@ -98,8 +98,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	supla_esp_gpio_set_hi(10, 0);	// ustaw gpio10 low wyl zasilania DHT
 	supla_log(LOG_DEBUG, "ustaw gpio10 low wyl zasilania DHT");
 	os_delay_us(500000);						// poczekaj 0,3s
-	//supla_esp_gpio_set_hi(10, 1);	// ustaw gpio10 high wl zasilania DHT
-	//supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
+	supla_esp_gpio_set_hi(10, 1);	// ustaw gpio10 high wl zasilania DHT
+	supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
 	
 	supla_esp_gpio_set_hi(B_RELAY1_PORT, 0);	// ustaw gpio5 (rs) low
 	supla_esp_gpio_set_hi(B_RELAY2_PORT, 0);	// ustaw gpio13 (rs) low
