@@ -1083,6 +1083,7 @@ supla_esp_channel_set_value(TSD_SuplaChannelNewValue *new_value) {
 		if ( ColorBrightness > 100 )
 			ColorBrightness = 0;
 
+        #ifndef DONT_SAVE_STATE
 		if (new_value->ChannelNumber < RS_MAX_COUNT) {
 			#ifdef RGBW_ONOFF_SUPPORT
 			if ( new_value->ChannelNumber == rgb_cn ) {
@@ -1133,6 +1134,7 @@ supla_esp_channel_set_value(TSD_SuplaChannelNewValue *new_value) {
 			}
 			#endif /*RGBW_ONOFF_SUPPORT*/
 		}
+        #endif /*DONT_SAVE_STATE*/
 
 		#ifdef RGBW_ONOFF_SUPPORT
 		   supla_esp_channel_set_rgbw_value(new_value->ChannelNumber, Color, ColorBrightness, Brightness, TurnOnOff, 1, 1);
