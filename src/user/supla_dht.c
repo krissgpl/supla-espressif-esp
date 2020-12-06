@@ -28,7 +28,6 @@
 #include "supla_ds18b20.h"
 
 #include "supla_esp_devconn.h"
-//#include "supla_esp_gpio.h"
 
 #ifdef DHTSENSOR
 

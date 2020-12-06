@@ -24,7 +24,6 @@
 #include "espmissingincludes.h"
 
 #include "supla-dev/log.h"
-#include "user/supla_esp.h"
 
 //#define DHT_DEBUG
 
@@ -105,14 +104,12 @@ bool ICACHE_FLASH_ATTR DHTRead(DHT_Sensor *sensor, DHT_Sensor_Data* output)
 		supla_log(LOG_DEBUG, "DHT: Failed to get reading from GPIO%d, dying\r\n", pin);
 	    //return false;
 		
-	if ( supla_esp_cfg.ThermometerType == 2 ) {	
 		GPIO_OUTPUT_SET(10, 0);
 		sleepms(500);
 		GPIO_OUTPUT_SET(10, 1);
 		//sleepms(300);
 		supla_log(LOG_DEBUG, "reset zasilania DH");
-	};
-		
+	
 		return false;
 		
 	}
@@ -144,8 +141,7 @@ bool ICACHE_FLASH_ATTR DHTRead(DHT_Sensor *sensor, DHT_Sensor_Data* output)
 
 	if (j >= 39) {
 		checksum = (data[0] + data[1] + data[2] + data[3]) & 0xFF;
-	    //DHT_DEBUG("DHT%s: %02x %02x %02x %02x [%02x] CS: %02x (GPIO%d)\r\n",
-		supla_log(LOG_DEBUG, "DHT%s: %02x %02x %02x %02x [%02x] CS: %02x (GPIO%d)\r\n",
+	      DHT_DEBUG("DHT%s: %02x %02x %02x %02x [%02x] CS: %02x (GPIO%d)\r\n",
 	              sensor->type==DHT11?"11":"22",
 	              data[0], data[1], data[2], data[3], data[4], checksum, pin);
 		if (data[4] == checksum) {
@@ -153,20 +149,17 @@ bool ICACHE_FLASH_ATTR DHTRead(DHT_Sensor *sensor, DHT_Sensor_Data* output)
 			output->temperature = scale_temperature(sensor->type, data);
 			output->humidity = scale_humidity(sensor->type, data);
 			//DHT_DEBUG("DHT: Temperature =  %d *C, Humidity = %d %%\r\n", (int)(reading.temperature * 100), (int)(reading.humidity * 100));
-			//DHT_DEBUG("DHT: Temperature*100 =  %d *C, Humidity*100 = %d %% (GPIO%d)\n",
-			supla_log(LOG_DEBUG, "DHT: Temperature*100 =  %d *C, Humidity*100 = %d %% (GPIO%d)\n",
+			  DHT_DEBUG("DHT: Temperature*100 =  %d *C, Humidity*100 = %d %% (GPIO%d)\n",
 		          (int) (output->temperature * 100), (int) (output->humidity * 100), pin);
 		} else {
 			//DHT_DEBUG("Checksum was incorrect after %d bits. Expected %d but got %d\r\n", j, data[4], checksum);
-			//DHT_DEBUG("DHT: Checksum was incorrect after %d bits. Expected %d but got %d (GPIO%d)\r\n",
-			supla_log(LOG_DEBUG, "DHT: Checksum was incorrect after %d bits. Expected %d but got %d (GPIO%d)\r\n",
+			  DHT_DEBUG("DHT: Checksum was incorrect after %d bits. Expected %d but got %d (GPIO%d)\r\n",
 		                j, data[4], checksum, pin);
 		    return false;
 		}
 	} else {
 		//DHT_DEBUG("Got too few bits: %d should be at least 40\r\n", j);
-	    //DHT_DEBUG("DHT: Got too few bits: %d should be at least 40 (GPIO%d)\r\n", j, pin);
-		supla_log(LOG_DEBUG, "DHT: Got too few bits: %d should be at least 40 (GPIO%d)\r\n", j, pin);
+	      DHT_DEBUG("DHT: Got too few bits: %d should be at least 40 (GPIO%d)\r\n", j, pin);
 	    return false;
 	}
 	return true;
