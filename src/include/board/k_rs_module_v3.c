@@ -89,6 +89,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	
 	//----------------------------------------
 	
+	  PIN_FUNC_SELECT(PERIPHS_IO_MUX_SD_DATA3_U, FUNC_GPIO10);
+	  PIN_PULLUP_EN(PERIPHS_IO_MUX_SD_DATA3_U);
+	
 	  PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO4_U);	// pullup gpio 4
 	  PIN_PULLUP_EN(PERIPHS_IO_MUX_MTDI_U);		// pullup gpio 12	
 	  PIN_PULLUP_EN(PERIPHS_IO_MUX_MTMS_U);		// pullup gpio 14
