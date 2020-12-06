@@ -28,7 +28,6 @@
 #include "supla_ds18b20.h"
 
 #include "supla_esp_devconn.h"
-#include "supla_esp.h"
 //#include "supla_esp_gpio.h"
 
 #ifdef DHTSENSOR
@@ -90,12 +89,6 @@ supla_dht_read_th(void *timer_arg) {
 		supla_dht_last_temp = -275;
 		supla_dht_last_humidity = -1;
 		
-		if ( supla_esp_cfg.ThermometerType == 2 ) {
-			
-			supla_esp_gpio_set_hi(10, 0);	// ustaw gpio10 low - wyl zasilania DHT
-			os_delay_us(300000);						// poczekaj 0,3s
-			supla_esp_gpio_set_hi(10, 1);	// ustaw gpio10 high - wl zasilania DHT
-		}
 	}
 }
 
