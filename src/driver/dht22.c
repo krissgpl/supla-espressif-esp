@@ -24,6 +24,7 @@
 #include "espmissingincludes.h"
 
 #include "supla-dev/log.h"
+#include "supla_esp.h"
 
 //#define DHT_DEBUG
 
