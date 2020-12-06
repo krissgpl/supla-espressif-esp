@@ -25,7 +25,7 @@
 
 #include "supla-dev/log.h"
 
-#define DHT_DEBUG
+//#define DHT_DEBUG
 
 #ifdef DHT_DEBUG
 #undef DHT_DEBUG
@@ -101,17 +101,17 @@ bool ICACHE_FLASH_ATTR DHTRead(DHT_Sensor *sensor, DHT_Sensor_Data* output)
 	if(i == DHT_MAXCOUNT)
 	{
 		DHT_DEBUG("DHT: Failed to get reading from GPIO%d, dying\r\n", pin);
-		supla_log(LOG_DEBUG, "DHT: Failed to get reading from GPIO%d, dying\r\n", pin);
 	    //return false;
 		
+		//-------------------------------  moj kod (reset zasilania DHT
 		GPIO_OUTPUT_SET(10, 0);
 		sleepms(500);
 		GPIO_OUTPUT_SET(10, 1);
 		//sleepms(300);
-		supla_log(LOG_DEBUG, "reset zasilania DH");
+		DHT_DEBUG("reset zasilania DH");
 	
 		return false;
-		
+		//-------------------------------
 	}
 
 	// read data
