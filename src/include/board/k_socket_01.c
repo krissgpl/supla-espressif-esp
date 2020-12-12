@@ -29,6 +29,9 @@ void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	
+	sint32 temperature;
+	uint32 pressure, humidity;
+	
 	//supla_log(LOG_DEBUG, "TIMER update - restart");
 	if(BME280_ReadAll(&temperature, &pressure, &humidity))
 			supla_log(LOG_DEBUG, "Sensor read error!");
