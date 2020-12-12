@@ -30,7 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 #include <c_types.h>
 //#include "user_config.h"
 #include "supla_esp.h"
-#include "supa_i2c.h"
+#include "supla_i2c.h"
 
 //Device Address
 #define BME280_I2C_ADDR		0xEC	//0xEC or 0xEE
