@@ -18,7 +18,8 @@
 
 #include "public_key_in_c_code" 
 
-#include "supla_BME280"
+#include "supla_BME280.h"
+#include "supla_i2c.h"
 
 void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 		ets_snprintf(buffer, buffer_size, "SOCKET-01");
