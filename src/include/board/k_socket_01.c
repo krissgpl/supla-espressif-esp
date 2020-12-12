@@ -18,6 +18,8 @@
 
 #include "public_key_in_c_code" 
 
+#include "supla_BME280"
+
 void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 		ets_snprintf(buffer, buffer_size, "SOCKET-01");
 }
@@ -45,6 +47,8 @@ void supla_esp_board_gpio_init(void) {
 	// ---------------------------------------
 	
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO0_U);	// pullup gpio 0
+	
+	i2c_master_gpio_init();
 
 }
 
