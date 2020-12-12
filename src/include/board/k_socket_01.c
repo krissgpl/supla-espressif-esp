@@ -21,8 +21,19 @@
 #include "supla_BME280.h"
 #include "supla_i2c.h"
 
+ETSTimer value_timer1;
+
 void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 		ets_snprintf(buffer, buffer_size, "SOCKET-01");
+}
+
+void supla_esp_baord_value_timer1_cb(void *timer_arg) {
+	
+	//supla_log(LOG_DEBUG, "TIMER update - restart");
+	if(BME280_ReadAll(&temperature, &pressure, &humidity))
+			supla_log(LOG_DEBUG, "Sensor read error!");
+		else
+			supla_log(LOG_DEBUG, "BME280: Temperature =  %d *C, Humidity = %d %%\r\n", temperature, humidity );
 }
 
 
@@ -56,6 +67,10 @@ void supla_esp_board_gpio_init(void) {
 			supla_log(LOG_DEBUG, "BME280 init error");
 	else
 			supla_log(LOG_DEBUG, "BME280 init done");
+			
+	os_timer_disarm(&value_timer1);
+	os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
+	os_timer_arm(&value_timer1, 1000, 1);
 }
 
 void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {	
