@@ -23,7 +23,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  ********************************************************************************/
 
-#include "BME280.h"
+#include "supla_BME280.h"
 
 
 #define ID_REG			0xD0

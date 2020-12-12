@@ -1,7 +1,8 @@
 #ifndef __SUPLA_I2C_H__
 #define __SUPLA_I2C_H__
 
-#include "c_types.h"
+//#include "c_types.h"
+#include "supla_esp.h"
 
 #define I2C_MASTER_SDA_MUX PERIPHS_IO_MUX_GPIO2_U
 #define I2C_MASTER_SCL_MUX PERIPHS_IO_MUX_MTMS_U
