@@ -9,9 +9,12 @@
  *     2014/3/12, v1.0 create this file.
 		2020/12/12 zaadoptowanie biblioteki dla supli - kris.sg
 *******************************************************************************/
-#include "ets_sys.h"
-#include "osapi.h"
+
+#include <osapi.h>
+#include <os_type.h>
+#include <eagle_soc.h>
 #include "gpio.h"
+#include "ets_sys.h"
 
 #include "supla_i2c.h"
 
