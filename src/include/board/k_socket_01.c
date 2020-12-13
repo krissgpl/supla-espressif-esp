@@ -61,6 +61,8 @@ void supla_esp_board_gpio_init(void) {
 	
 	// ---------------------------------------
 	
+	system_uart_swap ();
+	
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO0_U);	// pullup gpio 0
 	
 	i2c_master_gpio_init();
