@@ -65,7 +65,7 @@ void supla_esp_board_gpio_init(void) {
 	
 	i2c_master_gpio_init();
 	
-	if(BME280_Init(BME280_OS_T_16, BME280_OS_P_16, BME280_OS_H_16,
+	/*if(BME280_Init(BME280_OS_T_16, BME280_OS_P_16, BME280_OS_H_16,
 					BME280_FILTER_16, BME280_MODE_NORMAL, BME280_TSB_05))
 			supla_log(LOG_DEBUG, "BME280 init error");
 	else
@@ -73,7 +73,7 @@ void supla_esp_board_gpio_init(void) {
 			
 	os_timer_disarm(&value_timer1);
 	os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
-	os_timer_arm(&value_timer1, 1000, 1);
+	os_timer_arm(&value_timer1, 1000, 1);*/
 }
 
 void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {	
