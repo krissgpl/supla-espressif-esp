@@ -63,7 +63,7 @@ void supla_esp_board_gpio_init(void) {
 	
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO0_U);	// pullup gpio 0
 	
-	i2c_master_gpio_init();
+	//i2c_master_gpio_init();
 	
 	/*if(BME280_Init(BME280_OS_T_16, BME280_OS_P_16, BME280_OS_H_16,
 					BME280_FILTER_16, BME280_MODE_NORMAL, BME280_TSB_05))

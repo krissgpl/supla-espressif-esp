@@ -39,6 +39,8 @@
 #include "supla_esp_countdown_timer.h"
 #include "supla_esp_dns_client.h"
 
+#include "supla_i2c.h"		//test
+
 #include "board/supla_esp_board.c"
 
 #ifdef __FOTA
@@ -179,6 +181,8 @@ void MAIN_ICACHE_FLASH user_init(void)
      #endif /*ADDITIONAL_DNS_CLIENT_DISABLED*/
 
      supla_esp_devconn_init();
+	 
+	 i2c_master_gpio_init();
 
 	#if defined TEMP_SELECT
 	
