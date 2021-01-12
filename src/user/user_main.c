@@ -213,6 +213,7 @@ void MAIN_ICACHE_FLASH user_init(void) {
   supla_esp_gpio_init();
 
   supla_log(LOG_DEBUG, "Starting %i", system_get_time());
+#endif
 
 #ifdef BOARD_ESP_STARTING
   BOARD_ESP_STARTING;
