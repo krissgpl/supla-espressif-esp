@@ -22,7 +22,7 @@ NOSSL=0
 SPI_MODE="DIO"
 BOARD_SELECTED=0
 
-export PATH=/hdd2/Espressif/sdk_1x/xtensa-lx106-elf/bin:$PATH
+export PATH=/hdd2/Espressif/sdk_3x/xtensa-lx106-elf/bin:$PATH
 export COMPILE=gcc
 
 if [ -e ./build_include.sh ]; then
@@ -31,123 +31,6 @@ fi
 
 if [ $BOARD_SELECTED = 0 ]; then
 case $1 in
-   "k_gate_module")		
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_dimmer")
-	 FLASH_SIZE="4096"
-	 FOTA=1
-     DEP_LIBS="-lpwm"
-     NOSSL=1
-   ;;
-   "k_gniazdko_neo")
-      FOTA=1
-   ;;
-   "k_impulse_counter")
-     FLASH_SIZE="2048"
-     FOTA=1
-   ;;
-   "k_impulse_counter_3")
-     FLASH_SIZE="2048"
-     FOTA=1
-   ;;
-   "k_rs_module")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_rs_module_ds18b20")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_rs_module_DHT22")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_rs_module_v2")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_rs_module_v3")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_smoke_module")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_smoke_module_ds18b20")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_smoke_module_DHT22")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_socket")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_socket_ds18b20")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_socket_DHT22")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_socket_dual")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_socket_dual_ds18b20")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_socket_dual_DHT22")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_socket_v2")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_socket_dual_v2")
-      FOTA=1
-      FLASH_SIZE="4096"
-   ;;
-   "k_sonoff")
-      FOTA=1
-   ;;
-   "k_sonoff_ds18b20")
-      FOTA=1
-   ;;
-   "k_sonoff_DHT22")
-      FOTA=1
-   ;;
-   "k_sonoff_touch")
-      SPI_MODE="DOUT"
-      FOTA=1
-   ;;
-   "k_sonoff_touch_dual")
-      SPI_MODE="DOUT"
-      FOTA=1
-   ;;
-   "k_sonoff_touch_triple")
-      SPI_MODE="DOUT"
-      FOTA=1
-   ;;
-   "k_yunschan")
-      FLASH_SIZE="4096"
-      FOTA=1
-   ;;
-   "k_socket_01")
-	  FOTA=1
-   ;;
-   "k_sonoff_pow_R2")
-      FLASH_SIZE="2048"
-      FOTA=1
-   ;;   
    "wifisocket")
    ;;
    "wifisocket_x4")
@@ -164,6 +47,10 @@ case $1 in
       FLASH_SIZE="2048"
    ;;
    "gate_module2_wroom")
+      FOTA=1
+      FLASH_SIZE="2048"
+   ;;
+   "rs_module")
       FOTA=1
       FLASH_SIZE="2048"
    ;;
@@ -185,7 +72,18 @@ case $1 in
    "lightswitch_x2_54_DHT22")
      FLASH_SIZE="4096"
    ;;
+   "sonoff")
+      FOTA=1
+   ;;
    "sonoff_socket")
+      FOTA=1
+   ;;
+   "sonoff_touch")
+      SPI_MODE="DOUT"
+      FOTA=1
+   ;;
+   "sonoff_touch_dual")
+      SPI_MODE="DOUT"
       FOTA=1
    ;;
    "sonoff_dual")
@@ -204,12 +102,20 @@ case $1 in
      DEP_LIBS="-lpwm"
      NOSSL=1
    ;;
+   "dimmer")
+     DEP_LIBS="-lpwm"
+     NOSSL=1
+   ;;
    "rgbw_wroom")
       FLASH_SIZE="2048"
       DEP_LIBS="-lpwm -lssl"
    ;;
    "h801")
      DEP_LIBS="-lpwm -lssl"
+     FOTA=1
+   ;;
+   "impulse_counter")
+     FLASH_SIZE="2048"
      FOTA=1
    ;;
    "inCan_DS")
@@ -250,6 +156,10 @@ case $1 in
    echo "              gate_module_dht22";
    echo "              gate_module_wroom";
    echo "              gate_module2_wroom";
+   echo "              rs_module";
+   echo "              sonoff";
+   echo "              sonoff_ds18b20";
+   echo "              sonoff_touch";
    echo "              sonoff_dual";
    echo "              sonoff_socket";
    echo "              sonoff_th10";
@@ -333,9 +243,9 @@ case $FLASH_SIZE in
 esac
 
 OUTDIR=../firmware
-export SDK_PATH=/hdd2/Espressif/sdk_1x/ESP8266_NONOS_SDK154
-export BIN_PATH=/hdd2/Espressif/sdk_1x/ESP8266_BIN154
-LD_DIR=sdk154
+export SDK_PATH=/hdd2/Espressif/sdk_3x/ESP8266_NONOS_SDK-3.0.4
+export BIN_PATH=/hdd2/Espressif/sdk_3x/ESP8266_BIN304
+LD_DIR=sdk304
 
 make clean
 
@@ -373,16 +283,16 @@ if [ "$FOTA" -eq 1 ]; then
   esac
 
    make SUPLA_DEP_LIBS="$DEP_LIBS" FOTA="$FOTA" BOARD=$1 CFG_SECTOR="$CFG_SECTOR" BOOT=new APP="$APP" SPI_SPEED=40 SPI_MODE="$SPI_MODE" SPI_SIZE_MAP="$SPI_SIZE_MAP" __EXTRA_CCFLAGS="$EXTRA_CCFLAGS" && \
-   cp $BIN_PATH/upgrade/user"$APP"."$FLASH_SIZE".new."$SPI_SIZE_MAP".bin "$OUTDIR"/"$BOARD_NAME"_user"$APP"."$FLASH_SIZE"_"$SPI_MODE".new."${SPI_SIZE_MAP}${OUTPUT_FILENAME_SUFFIX}".bin && \
-   cp $SDK_PATH/bin/boot_v1.5.bin $OUTDIR/boot_v1.5.bin
+   cp $BIN_PATH/upgrade/user"$APP"."$FLASH_SIZE".new."$SPI_SIZE_MAP".bin "$OUTDIR"/"$BOARD_NAME"_user"$APP"."$FLASH_SIZE"_"$SPI_MODE".new."${SPI_SIZE_MAP}${OUTPUT_FILENAME_SUFFIX}".sdk3x.bin && \
+   cp $SDK_PATH/bin/boot_v1.6.bin $OUTDIR/boot_v1.6.bin
 
 else
 
    cp ./ld/"$LD_DIR"/"$FLASH_SIZE"_eagle.app.v6.ld $SDK_PATH/ld/eagle.app.v6.ld || exit 1
 
    make SUPLA_DEP_LIBS="$DEP_LIBS" BOARD=$1 CFG_SECTOR=$CFG_SECTOR BOOT=new APP=0 SPI_SPEED=40 SPI_MODE="$SPI_MODE" SPI_SIZE_MAP="$SPI_SIZE_MAP" __EXTRA_CCFLAGS="$EXTRA_CCFLAGS" && \
-   cp $BIN_PATH/eagle.flash.bin $OUTDIR/"$BOARD_NAME"_"$FLASH_SIZE"_"$SPI_MODE"_eagle.flash.bin && \
-   cp $BIN_PATH/eagle.irom0text.bin $OUTDIR/"$BOARD_NAME"_"$FLASH_SIZE"_"$SPI_MODE"_eagle.irom0text.bin &&
+   cp $BIN_PATH/eagle.flash.bin $OUTDIR/"$BOARD_NAME"_"$FLASH_SIZE"_"$SPI_MODE"_eagle.flash.sdk3x.bin && \
+   cp $BIN_PATH/eagle.irom0text.bin $OUTDIR/"$BOARD_NAME"_"$FLASH_SIZE"_"$SPI_MODE"_eagle.irom0text.sdk3x.bin &&
    
    exit 0
 fi
