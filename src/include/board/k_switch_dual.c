@@ -366,6 +366,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 			    &&  input_cfg->channel != 255 ) {
 		supla_esp_channel_value_changed(input_cfg->channel, 0);
 
+	}
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
