@@ -25,7 +25,7 @@
 #define ESP8266_SUPLA_PROTO_VERSION 12
 #define BOARD_CFG_HTML_TEMPLATE
 
-#define SUPLA_ESP_SOFTVER "2.7.27.0"
+#define SUPLA_ESP_SOFTVER "3.0.0.0"
 
 #define _ROLLERSHUTTER_SUPPORT
 
@@ -42,7 +42,7 @@
 
 #define USE_GPIO16_OUTPUT
 
-#define B_CFG_PORT          4
+//#define B_CFG_PORT          4
 #define B_RELAY1_PORT       5
 #define B_RELAY2_PORT      13
 #define B_BTN1_PORT        14
