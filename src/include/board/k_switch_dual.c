@@ -79,7 +79,7 @@ void supla_esp_board_gpio_init(void) {
 	
 	//---------------------------------------
 
-	upla_relay_cfg[2].gpio_id = B_UPD_PORT;	// update init channel
+	supla_relay_cfg[2].gpio_id = B_UPD_PORT;	// update init channel
 	supla_relay_cfg[2].channel = 2;  
   
 	//---------------------------------------	
