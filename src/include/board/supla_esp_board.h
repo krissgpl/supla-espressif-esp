@@ -153,11 +153,11 @@
       || defined(__BOARD_k_sonoff_ds18b20)	\
       || defined(__BOARD_k_sonoff_DHT22)
 
+#include "board/k_sonoff.h"
+
 #elif defined(__BOARD_k_switch_dual)
 	  
 #include "board/k_switch_dual.h"
-
-#include "board/k_sonoff.h"
 
 #elif defined(__BOARD_k_sonoff_touch)  \
       ||  defined(__BOARD_k_sonoff_touch_dual)  \
