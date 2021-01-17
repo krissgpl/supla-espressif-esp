@@ -98,7 +98,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	
 	//----------------------------------------	wlaczenie zasilania dht z opoznieniem (zaklocenia)
 	
-	if ( supla_esp_cfg.ThermometerType == 2 ) {
+	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 	
 		supla_esp_gpio_set_hi(10, 0);	// ustaw gpio10 low wyl zasilania DHT
 		supla_log(LOG_DEBUG, "ustaw gpio10 low wyl zasilania DHT");
