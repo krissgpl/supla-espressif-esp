@@ -260,14 +260,15 @@ void MAIN_ICACHE_FLASH user_init(void) {
 		}
 	#else
 		
-#ifdef DS18B20
-  supla_ds18b20_init();
-		 supla_log(LOG_DEBUG, "DS18B20 old INIT" );
-#endif
+	#ifdef DS18B20
+		supla_ds18b20_init();
+		supla_log(LOG_DEBUG, "DS18B20 old INIT" );
+	#endif
 
-#ifdef DHTSENSOR
-  supla_dht_init();
-  supla_log(LOG_DEBUG, "DHT22 old INIT" );
+	#ifdef DHTSENSOR
+		supla_dht_init();
+		supla_log(LOG_DEBUG, "DHT22 old INIT" );
+	#endif
 #endif
 
 #ifdef SUPLA_PWM_COUNT
@@ -304,13 +305,13 @@ void MAIN_ICACHE_FLASH user_init(void) {
 	#else
 
      #ifdef DS18B20
-  supla_ds18b20_start();
-  supla_log(LOG_DEBUG, "DS18B20 old START" );
+		supla_ds18b20_start();
+		supla_log(LOG_DEBUG, "DS18B20 old START" );
      #endif
 
 	 #ifdef DHTSENSOR
-  supla_dht_start();
-  supla_log(LOG_DEBUG, "DHT22 old START" );
+		supla_dht_start();
+		supla_log(LOG_DEBUG, "DHT22 old START" );
 	 #endif
 #endif
 
