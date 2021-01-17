@@ -90,9 +90,18 @@ void supla_esp_board_gpio_init(void) {
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO12);	//uzycie GPIO12
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTCK_U, FUNC_GPIO13);	//uzycie GPIO13
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTMS_U, FUNC_GPIO14);	//uzycie GPIO14
-	//PIN_PULLUP_EN(PERIPHS_IO_MUX_MTDI_U);					//pullup GPIO12
+	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTCK_U);					//pullup GPIO13
 	
+	//----------------------------------------	wlaczenie zasilania dht z opoznieniem (zaklocenia)
 	
+	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
+	
+		supla_esp_gpio_set_hi(10, 0);	// ustaw gpio10 low wyl zasilania DHT
+		supla_log(LOG_DEBUG, "ustaw gpio10 low wyl zasilania DHT");
+		os_delay_us(500000);						// poczekaj 0,3s
+		supla_esp_gpio_set_hi(10, 1);	// ustaw gpio10 high wl zasilania DHT
+		supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
+	};
 }
 
 void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
