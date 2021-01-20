@@ -149,6 +149,10 @@
 
 #include "board/k_socket_dual_v2.h"
 
+#elif defined(__BOARD_k_socket_SSR)
+
+#include "board/k_socket_SSR.h"
+
 #elif defined(__BOARD_k_sonoff) \
       || defined(__BOARD_k_sonoff_ds18b20)	\
       || defined(__BOARD_k_sonoff_DHT22)
