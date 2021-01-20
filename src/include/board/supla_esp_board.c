@@ -147,7 +147,7 @@
 
 #elif defined(__BOARD_k_socket_SSR)
 
-#include "board/k_socket_dual_SSR.c"
+#include "board/k_socket_SSR.c"
 
 #elif defined(__BOARD_k_switch_dual)
  
