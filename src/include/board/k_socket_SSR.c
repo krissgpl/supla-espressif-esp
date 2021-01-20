@@ -89,6 +89,7 @@ void supla_esp_board_gpio_init(void) {
 		os_delay_us(500000);						// poczekaj 0,3s
 		supla_esp_gpio_set_hi(10, 1);	// ustaw gpio10 high wl zasilania DHT
 		supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
+	}
 }
 
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {
