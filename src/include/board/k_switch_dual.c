@@ -319,7 +319,10 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
-  supla_esp_gpio_set_led(!supla_esp_cfg.StatusLedOff, 0, 0);
+	
+  //supla_esp_gpio_set_led(!supla_esp_cfg.StatusLedOff, 0, 0);
+  if ( supla_esp_gpio_output_is_hi(5) == 1 ) { supla_esp_gpio_set_led(1, 0, 0); }
+  if ( supla_esp_gpio_output_is_hi(5) == 0 ) { supla_esp_gpio_set_led(0, 0, 0); }
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
@@ -381,15 +384,36 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
-		/*if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
+	if ( port == 5 ) {
 		
-			UPD_channel = 2;
-			
+		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
+		
+		if (supla_last_state == STATE_CONNECTED) {
+		
+			os_timer_disarm(&supla_gpio_timer1);
+			os_timer_disarm(&supla_gpio_timer2);
+		
+			supla_esp_gpio_set_hi(LED_RED_PORT, hi);
+		};
+		
 		} else {
+		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
+	}
+	
+	if ( port == 13 ) {
 		
-			UPD_channel = 1;
-			
-		};*/
+		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
+		
+		os_timer_disarm(&supla_gpio_timer1);
+		os_timer_disarm(&supla_gpio_timer2);
+		
+		supla_esp_gpio_set_hi(LED_BLUE_PORT, hi);
+		
+	} else {
+		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
+	}
+
+	if ( port == 20 ) {
 		
 		UPD_channel = 2;
 	
@@ -415,4 +439,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 				supla_log(LOG_DEBUG, "value_changed upd - 0");
 			};
 		};
+		
+	} else {
+		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
+	}	
 }

@@ -21,7 +21,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 12
 
-#define SUPLA_ESP_SOFTVER "3.0.0.3"
+#define SUPLA_ESP_SOFTVER "3.0.0.5"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -41,13 +41,24 @@
 #define USE_GPIO16_OUTPUT
 
 #define LED_RED_PORT     16
+#define LED_BLUE_PORT     4
 #define B_RELAY1_PORT     5
 #define B_RELAY2_PORT    13
 #define B_BTN1_PORT      14
 #define B_BTN2_PORT      12
 #define B_UPD_PORT		 20
 
-#define BOARD_GPIO_OUTPUT_SET_HI if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
+/*#define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) \
+	{if (port == LED_RED_PORT) {hi = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);\
+	} else if (port==B_RELAY1_PORT) {\
+		supla_esp_gpio_set_led(hi, 1, 1); }\
+	  else if (port == 20) { \
+		supla_esp_board_gpiooutput_set_hi(port, hi); 	\
+		return; } };*/
+		
+#define BOARD_GPIO_OUTPUT_SET_HI 	\
+	supla_esp_board_gpiooutput_set_hi(port, hi); \
+	return;
 		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 	
