@@ -23,6 +23,7 @@
 #include "supla_ds18b20.h"
 
 #include "supla_esp.h"
+#include "supla_esp_gpio.h"
 
 ETSTimer value_timer1;
 int UPD_channel;
