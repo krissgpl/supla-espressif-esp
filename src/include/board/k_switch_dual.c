@@ -391,13 +391,13 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		
 		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
 		
-		if (supla_last_state == STATE_CONNECTED) {
+		//if (supla_last_state == STATE_CONNECTED) {
 		
-			os_timer_disarm(&supla_gpio_timer1);
-			os_timer_disarm(&supla_gpio_timer2);
+			//os_timer_disarm(&supla_gpio_timer1);
+			//os_timer_disarm(&supla_gpio_timer2);
 		
 			supla_esp_gpio_set_hi(LED_RED_PORT, hi);
-		};
+		//};
 		
 		} else {
 		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
@@ -407,8 +407,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		
 		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
 		
-		os_timer_disarm(&supla_gpio_timer1);
-		os_timer_disarm(&supla_gpio_timer2);
+		//os_timer_disarm(&supla_gpio_timer1);
+		//os_timer_disarm(&supla_gpio_timer2);
 		
 		supla_esp_gpio_set_hi(LED_BLUE_PORT, hi);
 		
