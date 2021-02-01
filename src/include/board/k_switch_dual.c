@@ -397,6 +397,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			//os_timer_disarm(&supla_gpio_timer2);
 		
 			gpio16_output_set(hi == 1 ? 1 : 0);
+			supla_log(LOG_DEBUG, "supla_esp_set_led1 %i", hi);
 		//};
 		
 		} else {
@@ -411,6 +412,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		//os_timer_disarm(&supla_gpio_timer2);
 		
 		GPIO_OUTPUT_SET(GPIO_ID_PIN(4), hi == 1 ? 1 : 0);
+		supla_log(LOG_DEBUG, "supla_esp_set_led2 %i", hi);
 		
 	} else {
 		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
