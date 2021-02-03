@@ -69,9 +69,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc);
 
-#define BOARD_ON_INPUT_ACTIVE                        \
+/*#define BOARD_ON_INPUT_ACTIVE                        \
     supla_esp_board_gpio_on_input_active(input_cfg); \
-    return;
+    return; */
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg);
 
 #define BOARD_ON_INPUT_INACTIVE                        \
