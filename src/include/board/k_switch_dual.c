@@ -23,7 +23,7 @@
 #include "supla_ds18b20.h"
 
 #include "supla_esp.h"
-#include "supla_esp_gpio.h"
+//#include "supla_esp_gpio.h"
 
 ETSTimer value_timer1;
 int UPD_channel;
@@ -388,30 +388,23 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
 	supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port);
+	
 	if ( port == 5 ) {
+		
 		supla_log(LOG_DEBUG, "supla_esp_set_gpio port %i", port);
 		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
+		gpio16_output_set(hi == 1 ? 1 : 0);
+		supla_log(LOG_DEBUG, "supla_esp_set_led1 %i", hi);
 		
-		//if (supla_last_state == STATE_CONNECTED) {
-		
-			//os_timer_disarm(&supla_gpio_timer1);
-			//os_timer_disarm(&supla_gpio_timer2);
-		
-			gpio16_output_set(hi == 1 ? 1 : 0);
-			supla_log(LOG_DEBUG, "supla_esp_set_led1 %i", hi);
-		//};
 		
 		} else {
 		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
 	}
 	
 	if ( port == 13 ) {
+		
 		supla_log(LOG_DEBUG, "supla_esp_set_gpio port %i", port);
 		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
-		
-		//os_timer_disarm(&supla_gpio_timer1);
-		//os_timer_disarm(&supla_gpio_timer2);
-		
 		GPIO_OUTPUT_SET(GPIO_ID_PIN(4), hi == 1 ? 1 : 0);
 		supla_log(LOG_DEBUG, "supla_esp_set_led2 %i", hi);
 		
