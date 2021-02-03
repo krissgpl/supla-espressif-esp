@@ -1231,18 +1231,10 @@ supla_esp_gpio_set_hi(int port, char hi) {
 	BOARD_GPIO_OUTPUT_SET_HI
 	#endif
 	
-	if ( port == 5 ) {
-		
-		supla_log(LOG_DEBUG, "supla_esp_set_gpio port %i", port);
-		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
-		gpio16_output_set(hi == 1 ? 1 : 0);
-		supla_log(LOG_DEBUG, "supla_esp_set_led1 %i", hi);
-		
-		
-/*		} else if ( port == 16 ) {
+	if ( port == 16 ) {
 		gpio16_output_set(hi == 1 ? 1 : 0);
 	} else {
-		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0); */
+		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
 	}
 }
 
