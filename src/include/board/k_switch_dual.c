@@ -387,6 +387,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
+	supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port);
 	if ( port == 5 ) {
 		supla_log(LOG_DEBUG, "supla_esp_set_gpio port %i", port);
 		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
