@@ -48,18 +48,13 @@
 #define B_BTN2_PORT      12
 #define B_UPD_PORT		 20
 
-/*#define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) \
-	{if (port == LED_RED_PORT) {hi = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);\
-	} else if (port==B_RELAY1_PORT) {\
-		supla_esp_gpio_set_led(hi, 1, 1); }\
-	  else if (port == 20) { \
-		supla_esp_board_gpiooutput_set_hi(port, hi); 	\
-		return; } };*/
-		
-#define BOARD_GPIO_OUTPUT_SET_HI 	\
-	supla_esp_board_gpiooutput_set_hi(port, hi); \
-	return;
-		
+#define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) \
+	{if (port == LED_RED_PORT) {hi =!supla_esp_gpio_output_is_hi(B_RELAY1_PORT); \
+	} else if (port == B_RELAY1_PORT) {supla_esp_gpio_set_led(supla_esp_gpio_output_is_hi(B_RELAY1_PORT), supla_esp_gpio_output_is_hi(B_RELAY2_PORT), 1); \
+	} else if (port == B_RELAY2_PORT) {supla_esp_gpio_set_led(supla_esp_gpio_output_is_hi(B_RELAY1_PORT), supla_esp_gpio_output_is_hi(B_RELAY2_PORT), 1); \
+	} else if (port == 20) {supla_esp_board_gpiooutput_set_hi(port, hi); \
+	return; } };
+				
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
 	
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(

@@ -388,58 +388,30 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
 	
 	supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port);
+		
+	UPD_channel = 2;
 	
-	if ( port == 5 ) {
-		
-		supla_log(LOG_DEBUG, "supla_esp_set_gpio port %i", port);
-		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
-		gpio16_output_set(hi == 1 ? 1 : 0);
-		supla_log(LOG_DEBUG, "supla_esp_set_led1 %i", hi);
-		
-		
-		} else {
-		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
-	}
+	if ( hi == 1 ) {
 	
-	if ( port == 13 ) {
+		supla_log(LOG_DEBUG, "update, port = %i", port);
 		
-		supla_log(LOG_DEBUG, "supla_esp_set_gpio port %i", port);
-		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
-		GPIO_OUTPUT_SET(GPIO_ID_PIN(4), hi == 1 ? 1 : 0);
-		supla_log(LOG_DEBUG, "supla_esp_set_led2 %i", hi);
-		
-	} else {
-		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
-	}
-
-	if ( port == 20 ) {
-		
-		UPD_channel = 2;
-	
-		if ( hi == 1 ) {
-	
-			supla_log(LOG_DEBUG, "update, port = %i", port);
-		
-			if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
+		if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
 			
-				supla_esp_state.Relay[UPD_channel] = 1;
-				supla_log(LOG_DEBUG, "value_changed upd - 1");
-				supla_esp_save_state(SAVE_STATE_DELAY);
-				supla_esp_channel_value_changed(UPD_channel, supla_esp_state.Relay[UPD_channel]);
-				os_timer_disarm(&value_timer1);
-				os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
-				os_timer_arm(&value_timer1, 4000, 0);
-			};
-		
-			if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
-				supla_esp_cfg.FirmwareUpdate = 1; 
-				supla_esp_cfg_save(&supla_esp_cfg);
-				supla_esp_channel_value_changed(UPD_channel, 1);
-				supla_log(LOG_DEBUG, "value_changed upd - 0");
-			};
+			supla_esp_state.Relay[UPD_channel] = 1;
+			supla_log(LOG_DEBUG, "value_changed upd - 1");
+			supla_esp_save_state(SAVE_STATE_DELAY);
+			supla_esp_channel_value_changed(UPD_channel, supla_esp_state.Relay[UPD_channel]);
+			os_timer_disarm(&value_timer1);
+			os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
+			os_timer_arm(&value_timer1, 4000, 0);
 		};
 		
-	} else {
-		GPIO_OUTPUT_SET(GPIO_ID_PIN(port), hi == 1 ? 1 : 0);
-	}	
+		if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
+			
+			supla_esp_cfg.FirmwareUpdate = 1; 
+			supla_esp_cfg_save(&supla_esp_cfg);
+			supla_esp_channel_value_changed(UPD_channel, 1);
+			supla_log(LOG_DEBUG, "value_changed upd - 0");
+		};
+	};		
 }
