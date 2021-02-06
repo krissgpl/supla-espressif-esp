@@ -1018,7 +1018,7 @@ supla_esp_channel_set_rgbw_value(int ChannelNumber, int Color, char ColorBrightn
 	 }
      #endif /*CVD_MAX_COUNT*/
 
-	supla_esp_hw_timer_init(FRC1_SOURCE, 1, _supla_esp_devconn_smooth_cb);
+	supla_esp_hw_timer_init(FRC1_SOURCE, 1, NULL, _supla_esp_devconn_smooth_cb);
 	supla_esp_hw_timer_arm(10000);
 #endif
 
@@ -1782,10 +1782,14 @@ supla_esp_devconn_start(void) {
 
     stationConf.ssid[31] = 0;
     stationConf.password[63] = 0;
+<<<<<<< HEAD
 	
 	#ifdef ESP_HOSTNAME
 		wifi_station_set_hostname(ESP_HOSTNAME);
 	#endif
+=======
+    stationConf.threshold.rssi = -127;
+>>>>>>> develop-sdk3x
 
     wifi_station_set_config(&stationConf);
     wifi_station_set_auto_connect(1);
@@ -1830,6 +1834,7 @@ supla_esp_devconn_laststate(void) {
 	return devconn->laststate;
 }
 
+<<<<<<< HEAD
 void DEVCONN_ICACHE_FLASH
 supla_esp_wifi_check_status(void) {
 
@@ -1856,21 +1861,40 @@ supla_esp_wifi_check_status(void) {
 		}
 
 	} else {
+=======
+void DEVCONN_ICACHE_FLASH supla_esp_wifi_check_status(void) {
+  uint8 status = wifi_station_get_connect_status();
+>>>>>>> develop-sdk3x
 
-		switch(status) {
+  if (devconn->last_wifi_status == status) {
+    return;
+  }
 
-			case STATION_NO_AP_FOUND:
-				supla_esp_set_state(LOG_NOTICE, "SSID Not found");
-				break;
-			case STATION_WRONG_PASSWORD:
-				supla_esp_set_state(LOG_NOTICE, "WiFi - Wrong password");
-				break;
-		}
+  supla_log(LOG_DEBUG, "WiFi Status: %i", status);
+  devconn->last_wifi_status = status;
 
-		supla_esp_gpio_state_disconnected();
+  if (STATION_GOT_IP == status) {
+    if (devconn->srpc == NULL) {
+      supla_esp_gpio_state_ipreceived();
+      supla_esp_devconn_resolvandconnect();
+    }
 
-	}
+  } else {
+    switch (status) {
+      case STATION_NO_AP_FOUND: {
+        char buffer[WIFI_SSID_MAXSIZE + 30];
+        ets_snprintf(buffer, sizeof(buffer),
+                     "WiFi Network &quot;%s&quot; Not found",
+                     supla_esp_cfg.WIFI_SSID);
+        supla_esp_set_state(LOG_NOTICE, buffer);
+      } break;
+      case STATION_WRONG_PASSWORD:
+        supla_esp_set_state(LOG_NOTICE, "WiFi - Wrong password");
+        break;
+    }
 
+    supla_esp_gpio_state_disconnected();
+  }
 }
 
 void DEVCONN_ICACHE_FLASH
@@ -1945,7 +1969,23 @@ void DEVCONN_ICACHE_FLASH supla_esp_calcfg_result(TDS_DeviceCalCfgResult *result
 }
 #endif /*BOARD_CALCFG*/
 
-<<<<<<< HEAD
+#ifdef BOARD_ON_USER_LOCALTIME_RESULT
+void DEVCONN_ICACHE_FLASH supla_esp_devconn_get_user_localtime(void) {
+  if (supla_esp_devconn_is_registered() == 1) {
+    srpc_dcs_async_get_user_localtime(devconn->srpc);
+  }
+}
+#endif /*BOARD_ON_USER_LOCALTIME_RESULT*/
+
+#ifdef BOARD_ON_CHANNEL_INT_PARAMS_RESULT
+void DEVCONN_ICACHE_FLASH
+supla_esp_devconn_get_channel_int_params(unsigned char channel_number) {
+  if (supla_esp_devconn_is_registered() == 1) {
+	  srpc_ds_async_get_channel_int_params(devconn->srpc, channel_number);
+  }
+}
+#endif /*BOARD_ON_CHANNEL_INT_PARAMS_RESULT*/
+
 #if defined(POWSENSOR2)
 void ICACHE_FLASH_ATTR supla_esp_em_extendedvalue_to_value(TElectricityMeter_ExtendedValue_V2 *ev, char *value) {
   memset(value, 0, SUPLA_CHANNELVALUE_SIZE);
@@ -1953,7 +1993,6 @@ void ICACHE_FLASH_ATTR supla_esp_em_extendedvalue_to_value(TElectricityMeter_Ext
   if (sizeof(TElectricityMeter_Value) > SUPLA_CHANNELVALUE_SIZE) {
     return;
   }
-
   TElectricityMeter_Measurement *m = NULL;
   TElectricityMeter_Value v;
   memset(&v, 0, sizeof(TElectricityMeter_Value));
@@ -2078,21 +2117,3 @@ supla_get_parameters() {
 }
 
 #endif
-=======
-#ifdef BOARD_ON_USER_LOCALTIME_RESULT
-void DEVCONN_ICACHE_FLASH supla_esp_devconn_get_user_localtime(void) {
-  if (supla_esp_devconn_is_registered() == 1) {
-    srpc_dcs_async_get_user_localtime(devconn->srpc);
-  }
-}
-#endif /*BOARD_ON_USER_LOCALTIME_RESULT*/
-
-#ifdef BOARD_ON_CHANNEL_INT_PARAMS_RESULT
-void DEVCONN_ICACHE_FLASH
-supla_esp_devconn_get_channel_int_params(unsigned char channel_number) {
-  if (supla_esp_devconn_is_registered() == 1) {
-	  srpc_ds_async_get_channel_int_params(devconn->srpc, channel_number);
-  }
-}
-#endif /*BOARD_ON_CHANNEL_INT_PARAMS_RESULT*/
->>>>>>> upstream/develop-sdk3x
