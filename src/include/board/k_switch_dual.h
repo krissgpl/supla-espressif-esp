@@ -49,9 +49,7 @@
 #define B_UPD_PORT		 20
 
 #define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) \
-	{if (port == B_RELAY1_PORT) {supla_esp_gpio_set_led(1, 1, 1); \
-	supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port); \
-	} else if (port == B_RELAY2_PORT) {supla_esp_gpio_set_led(supla_esp_gpio_output_is_hi(B_RELAY1_PORT), supla_esp_gpio_output_is_hi(B_RELAY2_PORT), 1); \
+	{if (port == LED_RED_PORT) {supla_esp_gpio_set_led(supla_esp_gpio_output_is_hi(B_RELAY1_PORT), 1, 1); \
 	supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port); \
 	} else if (port == 20) {supla_esp_board_gpiooutput_set_hi(port, hi); \
 	return; } };
