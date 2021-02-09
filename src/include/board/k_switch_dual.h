@@ -61,7 +61,8 @@
 		} else if (port == B_RELAY1_PORT) {supla_esp_gpio_set_led(hi1, hi2, 1); \
 		} else if (port == B_RELAY2_PORT) {supla_esp_gpio_set_led(hi1, hi2, 1); }	\
 	} else if (port == 20) {supla_esp_board_gpiooutput_set_hi(port, hi); 	\
-return;  };	\
+							supla_log(LOG_DEBUG, "PORT 20 MAKRO");	\
+							return;  };	\
 }
 				
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
