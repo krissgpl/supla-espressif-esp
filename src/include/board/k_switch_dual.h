@@ -49,20 +49,19 @@
 #define B_UPD_PORT		 20
 
 #define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) { \
-	if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
-		supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\
-	} else if {	\
-		char hi1;	\
-		char hi2;	\
-		hi1 = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
-		hi2 = supla_esp_gpio_output_is_hi(B_RELAY2_PORT);	\
-		if (port == LED_RED_PORT) {hi1 = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
+		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
+			supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\
+		} else {	\
+			char hi1;	\
+			char hi2;	\
+			hi1 = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
 			hi2 = supla_esp_gpio_output_is_hi(B_RELAY2_PORT);	\
-		} else if (port == B_RELAY1_PORT) {supla_esp_gpio_set_led(hi1, hi2, 1); \
-		} else if (port == B_RELAY2_PORT) {supla_esp_gpio_set_led(hi1, hi2, 1); } \
-	} else if (port == 20) {supla_esp_board_gpiooutput_set_hi(port, hi); 	\
-	return; } \
-	}
+			if (port == LED_RED_PORT) {hi1 = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
+				hi2 = supla_esp_gpio_output_is_hi(B_RELAY2_PORT);	\
+			} else if (port == B_RELAY1_PORT) {supla_esp_gpio_set_led(hi1, hi2, 1); \
+			} else if (port == B_RELAY2_PORT) {supla_esp_gpio_set_led(hi1, hi2, 1); };	}; \
+	else if (port == 20) {supla_esp_board_gpiooutput_set_hi(port, hi); 	\
+	return; } 
 				
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
 	
@@ -73,7 +72,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc);
 
-#define BOARD_ON_INPUT_ACTIVE                        \
+#define BOARD_ON_INPUT_ACTIVE                        
     supla_esp_board_gpio_on_input_active(input_cfg); \
     return; 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg);
