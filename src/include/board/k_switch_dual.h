@@ -51,7 +51,7 @@
 #define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) { \
 	if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
 		supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\
-	} else {	\
+	} else if {	\
 		char hi1;	\
 		char hi2;	\
 		hi1 = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
