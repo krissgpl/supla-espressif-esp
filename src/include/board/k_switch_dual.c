@@ -261,7 +261,7 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       "value=\"%s\"><label>E-mail</label></i></div><div "
       "class=\"w\"><h3>Additional Settings</h3>"
 	  "<i><select name=\"led\"><option value=\"0\" %s>LED "
-      "ON<option value=\"1\" %s>LED OFF</select><label>Status - connected</label></i>"
+      "ON<option value=\"1\" %s>LED OFF<option value=\"2\" %s>CHANNEL STATUS</select><label>Status - connected</label></i>"
 	  "<i><select name=\"trm\"><option value=\"0\" %s>NONE</option>"
       "<option value=\"1\" %s>DS18B20</option><option value=\"2\" %s>DHT22</option>"
       "</select><label>Thermometer type:</label></i>"
@@ -311,6 +311,7 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       supla_esp_cfg.Server, supla_esp_cfg.Email,
 	  supla_esp_cfg.StatusLedOff == 0 ? "selected" : "",
       supla_esp_cfg.StatusLedOff == 1 ? "selected" : "",
+	  supla_esp_cfg.StatusLedOff == 2 ? "selected" : "",
 	  supla_esp_cfg.ThermometerType == 0 ? "selected" : "",
 	  supla_esp_cfg.ThermometerType == 1 ? "selected" : "",
   	  supla_esp_cfg.ThermometerType == 2 ? "selected" : "",
@@ -324,8 +325,8 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	
   //supla_esp_gpio_set_led(!supla_esp_cfg.StatusLedOff, 0, 0);
-  if ( supla_esp_gpio_output_is_hi(5) == 1 ) { supla_esp_gpio_set_led(1, 0, 0); }
-  if ( supla_esp_gpio_output_is_hi(5) == 0 ) { supla_esp_gpio_set_led(0, 0, 0); }
+  supla_esp_gpio_set_led(supla_esp_gpio_output_is_hi(B_RELAY1_PORT), supla_esp_gpio_output_is_hi(B_RELAY2_PORT), 0);
+  
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
