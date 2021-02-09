@@ -41,7 +41,7 @@
 #define USE_GPIO16_OUTPUT
 
 #define LED_RED_PORT     16
-#define LED_BLUE_PORT     4
+#define LED_GREEN_PORT    4
 #define B_RELAY1_PORT     5
 #define B_RELAY2_PORT    13
 #define B_BTN1_PORT      14
