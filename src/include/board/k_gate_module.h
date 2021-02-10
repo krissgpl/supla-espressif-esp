@@ -21,12 +21,29 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 12
 
-#define SUPLA_ESP_SOFTVER "2.7.24.0"
+#define SUPLA_ESP_SOFTVER "2.8.0.0"
+#define ESP_HOSTNAME "SUPLA-NICE"
 
 #define AP_SSID "SUPLA-NICE"
 
-#define LED_RED_PORT  2
+#define BOARD_CFG_HTML_TEMPLATE
+
+#define BOARD_ON_CONNECT
+
+#define B_CFG_PORT          0
+#define LED_RED_PORT  		2
+#define B_RELAY1_PORT       4
+
+#define B_SENSOR_PORT1      5
+#define B_UPD_PORT		    20
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
+
+#define BOARD_GPIO_OUTPUT_SET_HI if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
+		
+void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
+
+char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
+    char dev_name[25], const char mac[6], const char data_saved);
 
 #endif
