@@ -81,8 +81,8 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
   
-  if ( supla_esp_gpio_output_is_hi(12) == 1 ) { supla_esp_gpio_set_led(0, 0, 0); }
-  if ( supla_esp_gpio_output_is_hi(12) == 0 ) { supla_esp_gpio_set_led(1, 0, 0); }
+  supla_esp_gpio_set_led(!supla_esp_gpio_output_is_hi(12), 0, 0); 
+  
 	  
 }
 
