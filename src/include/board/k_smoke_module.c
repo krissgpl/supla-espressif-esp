@@ -22,7 +22,8 @@
 #include "supla_dht.h"
 #include "supla_ds18b20.h"
 
-
+ETSTimer value_timer1;
+int UPD_channel;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	#if defined __BOARD_k_smoke_module_ds18b20
@@ -34,6 +35,13 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffe
 	#endif
 }
 
+void supla_esp_baord_value_timer1_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "TIMER update - restart");
+	supla_system_restart();
+	
+}
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 		
 	supla_input_cfg[0].type = supla_esp_cfg.CfgButtonType = INPUT_TYPE_BTN_MONOSTABLE;
@@ -43,23 +51,17 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	supla_input_cfg[1].type = INPUT_TYPE_SENSOR;
 	supla_input_cfg[1].gpio_id = B_SENSOR_PORT1;
 	supla_input_cfg[1].channel = 1;
-	
-	//supla_input_cfg[2].type = INPUT_TYPE_SENSOR;
-	//supla_input_cfg[2].gpio_id = B_SENSOR_PORT2;
-	//supla_input_cfg[2].channel = 2;
-	
-	// ---------------------------------------
-	// ---------------------------------------
-
-    //supla_relay_cfg[0].gpio_id = B_RELAY1_PORT;
-    //supla_relay_cfg[0].flags = RELAY_FLAG_RESET;
-    //supla_relay_cfg[0].channel = 0;
 
     // ---------------------------------------
 	// ---------------------------------------
     
-    supla_relay_cfg[1].gpio_id = 20;
+    supla_relay_cfg[1].gpio_id = B_UPD_PORT;
+	
+	#if defined( __BOARD_k_smoke_module_ds18b20) || defined(__BOARD_k_smoke_module_DHT22)
     supla_relay_cfg[1].channel = 2;
+	#else
+	supla_relay_cfg[1].channel = 1;
+	#endif
 	
 	//----------------------------------------
 	
@@ -80,28 +82,12 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
     	*channel_count = 2;
 	#endif
 
-	/*channels[0].Number = 0;
-	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[0].FuncList =  SUPLA_BIT_RELAYFUNC_CONTROLLINGTHEGATEWAYLOCK \
-								| SUPLA_BIT_RELAYFUNC_CONTROLLINGTHEGATE \
-								| SUPLA_BIT_RELAYFUNC_CONTROLLINGTHEGARAGEDOOR \
-								| SUPLA_BIT_RELAYFUNC_CONTROLLINGTHEDOORLOCK;
-	channels[0].Default = 0;
-	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT); */
-
-	
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_SENSORNO;
 	channels[0].FuncList = 0;
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[0].Default = 0;
 	channels[0].value[0] = 0;
-
-	/*channels[2].Number = 2;
-	channels[2].Type = SUPLA_CHANNELTYPE_SENSORNO;
-	channels[2].FuncList = 0;
-	channels[2].Default = 0;
-	channels[2].value[0] = 0; */
 
 	#ifdef __BOARD_k_smoke_module_ds18b20
 		channels[1].Number = 1;
@@ -127,22 +113,29 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 		channels[2].Number = 2;
 		channels[2].Type = SUPLA_CHANNELTYPE_RELAY;
 		channels[2].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+		channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 		channels[2].Default = 0;
-		channels[2].value[0] = supla_esp_gpio_relay_on(20);
+		channels[2].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
 	#else
 		channels[1].Number = 1;
 		channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
 		channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+		channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 		channels[1].Default = 0;
-		channels[1].value[0] = supla_esp_gpio_relay_on(20);
+		channels[1].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
 	#endif
 
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc) {
 
-	supla_esp_channel_value_changed(1, gpio__input_get(B_SENSOR_PORT1));
-	//supla_esp_channel_value_changed(2, gpio__input_get(B_SENSOR_PORT2));
+	supla_esp_channel_value_changed(0, gpio__input_get(B_SENSOR_PORT1));
+	
+	#if defined( __BOARD_k_smoke_module_ds18b20) || defined(__BOARD_k_smoke_module_DHT22)
+		supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_UPD_PORT));
+	#else
+		supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_UPD_PORT));
+	#endif	
 
 }
 
@@ -294,4 +287,40 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
   supla_esp_gpio_set_led(supla_esp_cfg.StatusLedOff, 0, 0);
+}
+
+void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
+	
+		#if defined( __BOARD_k_smoke_module_ds18b20) || defined(__BOARD_k_smoke_module_DHT22)
+		
+			UPD_channel = 2;
+			
+		#else
+		
+			UPD_channel = 1;
+			
+		#endif
+		
+		if ( hi == 1 ) {
+	
+			supla_log(LOG_DEBUG, "update, port = %i", port);
+		
+			if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
+			
+				supla_esp_state.Relay[UPD_channel] = 1;
+				supla_log(LOG_DEBUG, "value_changed upd - 1");
+				supla_esp_save_state(SAVE_STATE_DELAY);
+				supla_esp_channel_value_changed(UPD_channel, supla_esp_state.Relay[UPD_channel]);
+				os_timer_disarm(&value_timer1);
+				os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
+				os_timer_arm(&value_timer1, 4000, 0);
+			};
+		
+			if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
+				supla_esp_cfg.FirmwareUpdate = 1; 
+				supla_esp_cfg_save(&supla_esp_cfg);
+				supla_esp_channel_value_changed(UPD_channel, 1);
+				supla_log(LOG_DEBUG, "value_changed upd - 0");
+			};
+		};
 }

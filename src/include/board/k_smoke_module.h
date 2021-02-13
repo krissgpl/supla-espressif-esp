@@ -21,9 +21,10 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 12
 
-#define SUPLA_ESP_SOFTVER "2.7.24.0"
+#define SUPLA_ESP_SOFTVER "2.8.0.0"
 
 #define BOARD_CFG_HTML_TEMPLATE
+
 #define BOARD_ON_CONNECT
 
 #ifdef __BOARD_k_smoke_module_ds18b20
@@ -48,20 +49,16 @@
 	#define AP_SSID "SMOKE-MODULE"
 #endif
 
+#define ESP_HOSTNAME "SUPLA-SMOKE-MODULE"
+
 #define LED_RED_PORT      2
-//#define B_RELAY1_PORT     4
 #define B_CFG_PORT        0
+#define B_SENSOR_PORT1    12
+#define B_UPD_PORT		   20
 
-#define B_SENSOR_PORT1     12
-//#define B_SENSOR_PORT2     14
+#define BOARD_GPIO_OUTPUT_SET_HI if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
 
-#define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) {if (port == 20) { \
- 	supla_log(LOG_DEBUG, "update, port = %i", port); \
-	supla_esp_cfg.FirmwareUpdate = 1;\
-	supla_esp_cfg_save(&supla_esp_cfg);\
-	os_delay_us(200); \
-	supla_system_restart(); };\
-	}; 
+void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 	
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved);
