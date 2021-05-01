@@ -47,6 +47,8 @@
 #define B_BTN1_PORT      14
 #define B_BTN2_PORT      12
 #define B_UPD_PORT		 20
+#define B_RELAY1_DIS	 21
+#define B_RELAY2_DIS	 22
 
 #define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) { \
 	if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
@@ -60,7 +62,7 @@
 								   hi2 = supla_esp_gpio_output_is_hi(B_RELAY2_PORT);	\
 		} else if (port == B_RELAY1_PORT) {supla_esp_gpio_set_led(hi1, hi2, 1); \
 		} else if (port == B_RELAY2_PORT) {supla_esp_gpio_set_led(hi1, hi2, 1); }; }	\
-	if (port == 20) {supla_esp_board_gpiooutput_set_hi(port, hi); 	\
+	if (port >= 20) {supla_esp_board_gpiooutput_set_hi(port, hi); 	\
 					supla_log(LOG_DEBUG, "PORT 20 MAKRO");	\
 					return;  };	\
 }

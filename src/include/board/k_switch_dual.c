@@ -83,7 +83,13 @@ void supla_esp_board_gpio_init(void) {
 	//---------------------------------------
 
 	supla_relay_cfg[2].gpio_id = B_UPD_PORT;	// update init channel
-	supla_relay_cfg[2].channel = 2;  
+	supla_relay_cfg[2].channel = 2;
+
+	supla_relay_cfg[3].gpio_id = B_RELAY1_DIS;	// rel1 dis channel
+	supla_relay_cfg[3].channel = 4;
+
+	supla_relay_cfg[4].gpio_id = B_RELAY2_DIS;	// rel2 dis channel
+	supla_relay_cfg[4].channel = 5;	
   
 	//---------------------------------------	
     
@@ -112,11 +118,11 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 
 	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 	
-		*channel_count = 4;
+		*channel_count = 6;
 		}
 	else {
 
-		*channel_count = 3;
+		*channel_count = 5;
 		}
 
 	channels[0].Number = 0;
@@ -157,6 +163,20 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[3].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
 	supla_get_temp_and_humidity(channels[3].value);
    }
+   
+	channels[4].Number = 4;
+	channels[4].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[4].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[4].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[4].Default = 0;
+	channels[4].value[0] = supla_esp_gpio_relay_on(B_RELAY1_DIS);
+	
+	channels[5].Number = 5;
+	channels[5].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[5].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[5].Default = 0;
+	channels[5].value[0] = supla_esp_gpio_relay_on(B_RELAY2_DIS);
 }
 
 
@@ -166,7 +186,8 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 	supla_esp_channel_value_changed(0, supla_esp_gpio_relay_on(B_RELAY1_PORT));
 	supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_RELAY2_PORT));
 	supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_UPD_PORT));
-	
+	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
+	supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_RELAY1_DIS));
 }
 
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
