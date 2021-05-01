@@ -86,9 +86,11 @@ void supla_esp_board_gpio_init(void) {
 	supla_relay_cfg[2].channel = 2;
 
 	supla_relay_cfg[3].gpio_id = B_RELAY1_DIS;	// rel1 dis channel
+	supla_relay_cfg[3].flags = RELAY_FLAG_RESTORE_FORCE;
 	supla_relay_cfg[3].channel = 4;
 
 	supla_relay_cfg[4].gpio_id = B_RELAY2_DIS;	// rel2 dis channel
+	supla_relay_cfg[4].flags = RELAY_FLAG_RESTORE_FORCE;
 	supla_relay_cfg[4].channel = 5;	
   
 	//---------------------------------------	
