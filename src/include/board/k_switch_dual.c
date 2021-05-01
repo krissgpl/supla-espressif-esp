@@ -440,5 +440,14 @@ if ( port == 20 ) {
 			supla_log(LOG_DEBUG, "value_changed upd - 0");
 		};
 	};
-};	
+};
+
+if ( port == 21 ) {	
+			
+		supla_esp_state.Relay[4] = hi;
+		supla_esp_save_state(SAVE_STATE_DELAY);
+		supla_esp_channel_value_changed(4, supla_esp_state.Relay[4]);
+		supla_esp_cfg_save(&supla_esp_cfg);
+		supla_esp_channel_value_changed(4, hi);
+};
 }
