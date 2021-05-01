@@ -490,6 +490,10 @@ gpio_output_get(void)
 uint8
 gpio__input_get(uint8 port)
 {
+#ifdef BOARD_GPIO_INPUT_IS_HI
+	BOARD_GPIO_INPUT_IS_HI
+#endif
+
 	if ( port == 16 )
       return gpio16_input_get();
 
@@ -993,6 +997,21 @@ supla_esp_gpio_input_timer_cb(void *timer_arg) {
 
 }
 
+void
+supla_esp_gpio_start_input_timer(supla_input_cfg_t *input_cfg) {
+    if ( input_cfg->type != INPUT_TYPE_CUSTOM &&
+    		( input_cfg->step == 0
+    		  || input_cfg->step == 3 ) ) {
+
+    	if ( input_cfg->step == 0 )
+        	input_cfg->step = 1;
+
+    	os_timer_disarm(&input_cfg->timer);
+    	os_timer_setfn(&input_cfg->timer, supla_esp_gpio_input_timer_cb, input_cfg);
+    	os_timer_arm (&input_cfg->timer, INPUT_CYCLE_TIME, true);
+    }
+}
+
 LOCAL void
 supla_esp_gpio_intr_handler(void *params) {
 
@@ -1024,17 +1043,7 @@ supla_esp_gpio_intr_handler(void *params) {
             gpio_pin_intr_state_set(GPIO_ID_PIN(input_cfg->gpio_id), GPIO_PIN_INTR_DISABLE);
             GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS, gpio_status & BIT(input_cfg->gpio_id)); // //clear interrupt status
 
-            if ( input_cfg->type != INPUT_TYPE_CUSTOM &&
-            		( input_cfg->step == 0
-            		  || input_cfg->step == 3 ) ) {
-
-            	if ( input_cfg->step == 0 )
-                	input_cfg->step = 1;
-
-    			os_timer_disarm(&input_cfg->timer);
-    			os_timer_setfn(&input_cfg->timer, supla_esp_gpio_input_timer_cb, input_cfg);
-    			os_timer_arm (&input_cfg->timer, INPUT_CYCLE_TIME, true);
-            }
+            supla_esp_gpio_start_input_timer(input_cfg);
 
             gpio_pin_intr_state_set(GPIO_ID_PIN(input_cfg->gpio_id), GPIO_PIN_INTR_ANYEDGE);
             gpio_status = gpio_status ^ BIT(input_cfg->gpio_id);

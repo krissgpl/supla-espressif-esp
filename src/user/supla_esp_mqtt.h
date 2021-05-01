@@ -16,26 +16,13 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef SUPLA_ELECTRICITY_METER_H_
-#define SUPLA_ELECTRICITY_METER_H_
+#ifndef SUPLA_MQTT_H_
+#define SUPLA_MQTT_H_
 
 #include "supla_esp.h"
 
-#ifdef ELECTRICITY_METER_COUNT
+#ifdef MQTT_SUPPORT_ENABLED
 
-#ifndef ELECTRICITY_METER_CHANNEL_OFFSET
-#define ELECTRICITY_METER_CHANNEL_OFFSET 0
-#endif /*ELECTRICITY_METER_CHANNEL_OFFSET*/
-
-void ICACHE_FLASH_ATTR supla_esp_em_init(void);
-void ICACHE_FLASH_ATTR supla_esp_em_start(void);
-void ICACHE_FLASH_ATTR supla_esp_em_stop(void);
-void ICACHE_FLASH_ATTR supla_esp_em_device_registered(void);
-void ICACHE_FLASH_ATTR supla_esp_em_get_value(
-    unsigned char channel_number, char value[SUPLA_CHANNELVALUE_SIZE]);
-void ICACHE_FLASH_ATTR supla_esp_em_send_base_value_enabled(char enabled);
-void ICACHE_FLASH_ATTR supla_esp_em_set_measurement_frequency(int freq);
-
-#endif /*ELECTRICITY_METER_COUNT*/
+#endif /*MQTT_SUPPORT_ENABLED*/
 
 #endif
