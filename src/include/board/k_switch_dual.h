@@ -27,6 +27,8 @@
 
 #define BOARD_ON_CONNECT
 
+#define RELAY_MAX_COUNT		5
+
 #define TEMP_SELECT
 
 #define AP_SSID "SWITCH_DUAL"
