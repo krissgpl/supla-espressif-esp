@@ -421,7 +421,7 @@ if ( port == 20 ) {
 
 	supla_system_restart();		//Tymczasowo na testy
 
-	if ( hi == 1 ) {
+/*	if ( hi == 1 ) {
 	
 		supla_log(LOG_DEBUG, "update, port = %i", port);
 		
@@ -443,7 +443,7 @@ if ( port == 20 ) {
 			supla_esp_channel_value_changed(UPD_channel, 1);
 			supla_log(LOG_DEBUG, "value_changed upd - 0");
 		};
-	};
+	}; */
 };
 
 if ( port == 21 ) {	
