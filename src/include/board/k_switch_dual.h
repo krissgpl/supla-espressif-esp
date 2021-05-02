@@ -27,7 +27,7 @@
 
 #define BOARD_ON_CONNECT
 
-#define RELAY_MAX_COUNT		5
+#define RELAY_MAX_COUNT		6
 
 #define TEMP_SELECT
 
