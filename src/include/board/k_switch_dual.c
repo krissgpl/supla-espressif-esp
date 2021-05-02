@@ -452,4 +452,13 @@ if ( port == 21 ) {
 		supla_esp_cfg_save(&supla_esp_cfg);
 		supla_esp_channel_value_changed(4, hi);
 };
+
+if ( port == 22 ) {	
+			
+		supla_esp_state.Relay[5] = hi;
+		supla_esp_save_state(SAVE_STATE_DELAY);
+		supla_esp_channel_value_changed(5, supla_esp_state.Relay[5]);
+		supla_esp_cfg_save(&supla_esp_cfg);
+		supla_esp_channel_value_changed(5, hi);
+};
 }
