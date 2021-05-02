@@ -422,6 +422,7 @@ if ( port == 20 ) {
 	if ( hi == 1 ) {
 	
 		supla_log(LOG_DEBUG, "update, port = %i", port);
+		supla_system_restart();		//Tymczasowo na testy
 		
 		if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
 			
