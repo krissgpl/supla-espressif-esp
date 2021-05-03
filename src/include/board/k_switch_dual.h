@@ -52,7 +52,7 @@
 #define B_RELAY1_DIS	 21
 #define B_RELAY2_DIS	 22
 
-#define BOARD_GPIO_OUTPUT_SET_HI	if ( port == 5 || supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
+#define BOARD_GPIO_OUTPUT_SET_HI	if ( port == 5 && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
 	return;	}	\
 	if (supla_last_state == STATE_CONNECTED) { \
 		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
