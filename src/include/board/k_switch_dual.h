@@ -52,8 +52,18 @@
 #define B_RELAY1_DIS	 21
 #define B_RELAY2_DIS	 22
 
-#define BOARD_GPIO_OUTPUT_SET_HI	if ( port == 5 && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
-	return;	}	\
+#define BOARD_GPIO_OUTPUT_SET_HI	\
+	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {	\
+		if ( port == B_RELAY1_PORT && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
+																	return;	}	\
+		if ( port == B_RELAY2_PORT && supla_esp_state.Relay[5] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	\
+																	return;	}	\
+	} else {	\
+		if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
+																	return;	}	\
+		if ( port == B_RELAY2_PORT && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	\
+																	return;	}	\
+	};	\
 	if (supla_last_state == STATE_CONNECTED) { \
 		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
 			supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\

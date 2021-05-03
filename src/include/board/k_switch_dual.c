@@ -23,7 +23,6 @@
 #include "supla_ds18b20.h"
 
 #include "supla_esp.h"
-//#include "supla_esp_gpio.h"
 
 ETSTimer value_timer1;
 int UPD_channel;
@@ -166,6 +165,8 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	supla_get_temp_and_humidity(channels[3].value);
    }
    
+   if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
+	   
 	channels[4].Number = 4;
 	channels[4].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[4].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
@@ -179,6 +180,21 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[5].Default = 0;
 	channels[5].value[0] = supla_esp_gpio_relay_on(B_RELAY2_DIS);
+   } else {
+	channels[3].Number = 3;
+	channels[3].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[3].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[3].Default = 0;
+	channels[3].value[0] = supla_esp_gpio_relay_on(B_RELAY1_DIS);
+	
+	channels[4].Number = 4;
+	channels[4].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[4].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[4].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[4].Default = 0;
+	channels[4].value[0] = supla_esp_gpio_relay_on(B_RELAY2_DIS);
+   };
 }
 
 
@@ -188,8 +204,14 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 	supla_esp_channel_value_changed(0, supla_esp_gpio_relay_on(B_RELAY1_PORT));
 	supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_RELAY2_PORT));
 	supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_UPD_PORT));
-	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
-	supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_RELAY1_DIS));
+	
+	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
+		supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
+		supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_RELAY1_DIS));
+	} else {
+		supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_RELAY1_DIS));
+		supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
+	};
 }
 
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
@@ -420,11 +442,17 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
 		
 	UPD_channel = 2;
 	
+	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
+		DIS1_CH = 4;
+		DIS2_CH = 5;
+	} else {
+		DIS1_CH = 3;
+		DIS2_CH = 4;
+	};
+	
 if ( port == 20 ) {	
 
-	supla_system_restart();		//Tymczasowo na testy
-
-/*	if ( hi == 1 ) {
+	if ( hi == 1 ) {
 	
 		supla_log(LOG_DEBUG, "update, port = %i", port);
 		
@@ -446,24 +474,24 @@ if ( port == 20 ) {
 			supla_esp_channel_value_changed(UPD_channel, 1);
 			supla_log(LOG_DEBUG, "value_changed upd - 0");
 		};
-	}; */
+	}; 
 };
 
 if ( port == 21 ) {	
 			
-		supla_esp_state.Relay[4] = hi;
+		supla_esp_state.Relay[DIS1_CH] = hi;
 		supla_esp_save_state(SAVE_STATE_DELAY);
-		supla_esp_channel_value_changed(4, supla_esp_state.Relay[4]);
+		supla_esp_channel_value_changed(DIS1_CH, supla_esp_state.Relay[DIS1_CH]);
 		supla_esp_cfg_save(&supla_esp_cfg);
-		supla_esp_channel_value_changed(4, hi);
+		supla_esp_channel_value_changed(DIS1_CH, hi);
 };
 
 if ( port == 22 ) {	
 			
-		supla_esp_state.Relay[5] = hi;
+		supla_esp_state.Relay[DIS2_CH] = hi;
 		supla_esp_save_state(SAVE_STATE_DELAY);
-		supla_esp_channel_value_changed(5, supla_esp_state.Relay[5]);
+		supla_esp_channel_value_changed(DIS2_CH, supla_esp_state.Relay[DIS2_CH]);
 		supla_esp_cfg_save(&supla_esp_cfg);
-		supla_esp_channel_value_changed(5, hi);
+		supla_esp_channel_value_changed(DIS2_CH, hi);
 };
 }

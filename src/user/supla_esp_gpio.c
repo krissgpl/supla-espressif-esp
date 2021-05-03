@@ -623,8 +623,7 @@ char supla_esp_gpio_relay_hi(int port, char hi, char save_before) {
     		if ( supla_relay_cfg[a].flags & RELAY_FLAG_RESTORE
     			 || supla_relay_cfg[a].flags & RELAY_FLAG_RESTORE_FORCE )
     			state = &supla_esp_state.Relay[a];
-				supla_log(LOG_DEBUG, "!!RELAY HI State=%i",state);			// moje testowo
-
+				
     		if ( supla_relay_cfg[a].flags &  RELAY_FLAG_LO_LEVEL_TRIGGER )
     			_hi = hi == HI_VALUE ? LO_VALUE : HI_VALUE;
 
