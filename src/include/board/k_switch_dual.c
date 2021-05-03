@@ -26,6 +26,8 @@
 
 ETSTimer value_timer1;
 int UPD_channel;
+int DIS1_CH;
+int DIS2_CH;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
