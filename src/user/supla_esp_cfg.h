@@ -73,6 +73,8 @@ typedef struct {
 
   char Trigger;
   char ZeroInitialEnergy;
+  
+  char ThermometerType;
 	
   char ServerFingerprint[SUPLA_FINGERPRINT_SIZE];
   unsigned int Flags;  // CFG_FLAG_*
