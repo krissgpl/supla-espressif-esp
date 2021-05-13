@@ -32,42 +32,56 @@
 #define THERM_DHT22				  2
 
 typedef struct {
+  char TAG[6];
+  char GUID[SUPLA_GUID_SIZE];
+  char AuthKey[SUPLA_AUTHKEY_SIZE];
 
-	char TAG[6];
-	char GUID[SUPLA_GUID_SIZE];
-    char AuthKey[SUPLA_AUTHKEY_SIZE];
+  char Server[SERVER_MAXSIZE];
 
-	char Server[SERVER_MAXSIZE];
-	char Email[SUPLA_EMAIL_MAXSIZE];
+  union {
+    char Email[SUPLA_EMAIL_MAXSIZE];
+    char Username[SUPLA_EMAIL_MAXSIZE];
+  };
 
-	int LocationID;
+  union {
+    int LocationID;
+    int Port;
+  };
+
+  union {
     char LocationPwd[SUPLA_LOCATION_PWD_MAXSIZE];
+    char Password[SUPLA_LOCATION_PWD_MAXSIZE];
+  };
 
-    char WIFI_SSID[WIFI_SSID_MAXSIZE];
-    char WIFI_PWD[WIFI_PWD_MAXSIZE];
+  char WIFI_SSID[WIFI_SSID_MAXSIZE];
+  char WIFI_PWD[WIFI_PWD_MAXSIZE];
 
-    char CfgButtonType;
-    char Button1Type;
-    char Button2Type;
+  char CfgButtonType;
+  char Button1Type;
+  char Button2Type;
 
-    char StatusLedOff;
-    char InputCfgTriggerOff;
+  char StatusLedOff;
+  char InputCfgTriggerOff;
 
-    char FirmwareUpdate;
-    char Test;
+  char FirmwareUpdate;
+  char Test;
 
-    char UpsideDown;
+  char UpsideDown;
 
-    unsigned int Time1[CFG_TIME1_COUNT];
-    unsigned int Time2[CFG_TIME2_COUNT];
+  unsigned int Time1[CFG_TIME1_COUNT];
+  unsigned int Time2[CFG_TIME2_COUNT];
 
-    char Trigger;
-    char ZeroInitialEnergy;
+  char Trigger;
+  char ZeroInitialEnergy;
 	
-	char ThermometerType;
-    char zero[200];
+  char ServerFingerprint[SUPLA_FINGERPRINT_SIZE];
+  unsigned int Flags;  // CFG_FLAG_*
+  char MqttTopicPrefix[MQTT_PREFIX_SIZE];
+  char MqttQoS;
 
-}SuplaEspCfg;
+  char zero[200];
+
+} SuplaEspCfg;
 
 typedef struct {
 
@@ -90,7 +104,7 @@ typedef struct {
 
     char StatusLedOff;
     char InputCfgTriggerOff;
-	char ThermometerType;
+    char ThermometerType;
 
     char FirmwareUpdate;
     char Test;
@@ -120,7 +134,7 @@ typedef struct {
     char Button2Type;
     char StatusLedOff;
     char InputCfgTriggerOff;
-	char ThermometerType;
+    char ThermometerType;
     char FirmwareUpdate;
     char Test;
     char Email[SUPLA_EMAIL_MAXSIZE];
@@ -147,7 +161,7 @@ typedef struct {
     char Button2Type;
     char StatusLedOff;
     char InputCfgTriggerOff;
-	char ThermometerType;
+    char ThermometerType;
     char FirmwareUpdate;
     char Test;
     unsigned int FullOpeningTime[2];
@@ -171,7 +185,7 @@ typedef struct {
     
     unsigned int Time1Left[CFG_TIME1_COUNT];
     unsigned int Time2Left[CFG_TIME2_COUNT];
-	unsigned int full_energy;	
+    unsigned int full_energy;	
 
     char turnedOff[RS_MAX_COUNT];
 
