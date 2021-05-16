@@ -151,38 +151,6 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[2].Default = 0;
 	channels[2].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
 
-   if( supla_esp_cfg.ThermometerType == 1 ) {
-    channels[3].Number = 3;
-	channels[3].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
-	channels[3].FuncList = 0;
-	channels[3].Default = 0;
-	supla_get_temperature(channels[3].value);
-   }
-
-   if( supla_esp_cfg.ThermometerType == 2 ) {
-	channels[3].Number = 3;
-	channels[3].Type = SUPLA_CHANNELTYPE_DHT22;
-	channels[3].FuncList = 0;
-	channels[3].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
-	supla_get_temp_and_humidity(channels[3].value);
-   }
-   
-   if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
-	   
-	channels[4].Number = 4;
-	channels[4].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[4].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
-	channels[4].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[4].Default = 0;
-	channels[4].value[0] = supla_esp_gpio_relay_on(B_RELAY1_DIS);
-	
-	channels[5].Number = 5;
-	channels[5].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[5].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
-	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[5].Default = 0;
-	channels[5].value[0] = supla_esp_gpio_relay_on(B_RELAY2_DIS);
-   } else {
 	channels[3].Number = 3;
 	channels[3].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[3].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
@@ -196,7 +164,22 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[4].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[4].Default = 0;
 	channels[4].value[0] = supla_esp_gpio_relay_on(B_RELAY2_DIS);
-   };
+
+   if( supla_esp_cfg.ThermometerType == 1 ) {
+    channels[5].Number = 5;
+	channels[5].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
+	channels[5].FuncList = 0;
+	channels[5].Default = 0;
+	supla_get_temperature(channels[5].value);
+   }
+
+   if( supla_esp_cfg.ThermometerType == 2 ) {
+	channels[5].Number = 5;
+	channels[5].Type = SUPLA_CHANNELTYPE_DHT22;
+	channels[5].FuncList = 0;
+	channels[5].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+	supla_get_temp_and_humidity(channels[5].value);
+   }
 }
 
 
@@ -206,14 +189,8 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 	supla_esp_channel_value_changed(0, supla_esp_gpio_relay_on(B_RELAY1_PORT));
 	supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_RELAY2_PORT));
 	supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_UPD_PORT));
-	
-	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
-		supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
-		supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_RELAY1_DIS));
-	} else {
-		supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_RELAY1_DIS));
-		supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
-	};
+	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_RELAY1_DIS));
+	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
 }
 
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
@@ -377,8 +354,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 		supla_esp_gpio_set_led(supla_esp_gpio_output_is_hi(B_RELAY1_PORT), supla_esp_gpio_output_is_hi(B_RELAY2_PORT), 0);
 	}
 	supla_log(LOG_DEBUG, "supla_esp_state RELAY 0 = %i", supla_esp_state.Relay[0]);
+	supla_log(LOG_DEBUG, "supla_esp_state RELAY 3 = %i", supla_esp_state.Relay[3]);
 	supla_log(LOG_DEBUG, "supla_esp_state RELAY 4 = %i", supla_esp_state.Relay[4]);
-	supla_log(LOG_DEBUG, "supla_esp_state RELAY 5 = %i", supla_esp_state.Relay[5]);
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
@@ -444,13 +421,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
 		
 	UPD_channel = 2;
 	
-	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
-		DIS1_CH = 4;
-		DIS2_CH = 5;
-	} else {
-		DIS1_CH = 3;
-		DIS2_CH = 4;
-	};
+	DIS1_CH = 3;
+	DIS2_CH = 4;
 	
 if ( port == 20 ) {	
 

@@ -35,10 +35,10 @@
 #define ESP_HOSTNAME "SUPLA-SWITCH-DUAL"
 
 #define DS18B20
-#define TEMPERATURE_CHANNEL 3
+#define TEMPERATURE_CHANNEL 5
 
 #define DHTSENSOR
-#define TEMPERATURE_HUMIDITY_CHANNEL 3
+#define TEMPERATURE_HUMIDITY_CHANNEL 5
 
 #define USE_GPIO16_OUTPUT
 
@@ -53,21 +53,12 @@
 #define B_RELAY2_DIS	 22
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
-	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {	\
-		if ( port == B_RELAY1_PORT && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
+	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
 																	GPIO_OUTPUT_SET(5, 0);	\
 																	return;	}	\
-		if ( port == B_RELAY2_PORT && supla_esp_state.Relay[5] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	\
+	if ( port == B_RELAY2_PORT && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	\
 																	GPIO_OUTPUT_SET(13, 0);	\
 																	return;	}	\
-	} else {	\
-		if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
-																	GPIO_OUTPUT_SET(5, 0);	\
-																	return;	}	\
-		if ( port == B_RELAY2_PORT && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	\
-																	GPIO_OUTPUT_SET(13, 0);	\
-																	return;	}	\
-	};	\
 	if (supla_last_state == STATE_CONNECTED) { \
 		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
 			supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\
@@ -86,17 +77,10 @@
 }
 
 #define BOARD_GPIO_OUTPUT_IS_HI	\
-			if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {	\
-				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
-									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	\
-				if ( port == 22)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 5 = %i", supla_esp_state.Relay[5]);	\
-									return supla_esp_state.Relay[5] == 1 ? 1 : 0;	}	\
-			} else {	\
 				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 3 = %i", supla_esp_state.Relay[3]);	\
 									return supla_esp_state.Relay[3] == 1 ? 1 : 0;	}	\
 				if ( port == 22)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
 									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	\
-			};
 				
 				
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
