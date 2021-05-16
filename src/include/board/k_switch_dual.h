@@ -55,13 +55,17 @@
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {	\
 		if ( port == B_RELAY1_PORT && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
+																	GPIO_OUTPUT_SET(5, 0);	\
 																	return;	}	\
 		if ( port == B_RELAY2_PORT && supla_esp_state.Relay[5] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	\
+																	GPIO_OUTPUT_SET(13, 0);	\
 																	return;	}	\
 	} else {	\
 		if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
+																	GPIO_OUTPUT_SET(5, 0);	\
 																	return;	}	\
 		if ( port == B_RELAY2_PORT && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	\
+																	GPIO_OUTPUT_SET(13, 0);	\
 																	return;	}	\
 	};	\
 	if (supla_last_state == STATE_CONNECTED) { \
