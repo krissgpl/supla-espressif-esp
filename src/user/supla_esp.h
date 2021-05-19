@@ -24,7 +24,7 @@
 #include "espmissingincludes.h"
 
 #ifndef SUPLA_ESP_SOFTVER
-#define SUPLA_ESP_SOFTVER "2.8.5"
+#define SUPLA_ESP_SOFTVER "2.8.4"
 #endif
 
 #define STATE_UNKNOWN 0
@@ -179,7 +179,8 @@
 #endif /*MQTT_PREFIX_SIZE*/
 
 #define CFG_FLAG_MQTT_ENABLED 0x01
-#define CFG_FLAG_MQTT_RETAIN 0x02
+#define CFG_FLAG_MQTT_NO_RETAIN 0x02
+#define CFG_FLAG_MQTT_TLS 0x04
 
 void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size);
 #if ESP8266_SUPLA_PROTO_VERSION >= 10

@@ -76,7 +76,6 @@ typedef struct {
   
   char ThermometerType;
 	
-  char ServerFingerprint[SUPLA_FINGERPRINT_SIZE];
   unsigned int Flags;  // CFG_FLAG_*
   char MqttTopicPrefix[MQTT_PREFIX_SIZE];
   char MqttQoS;
