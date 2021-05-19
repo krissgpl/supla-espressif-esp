@@ -25,6 +25,7 @@
 
 ETSTimer value_timer1;
 int UPD_channel;
+int DIS_CH;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
@@ -83,6 +84,10 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
     supla_relay_cfg[2].gpio_id = B_UPD_PORT;	// update init channel
     supla_relay_cfg[2].channel = 1;
 	
+	supla_relay_cfg[3].gpio_id = B_RS_DIS;	// rel1 dis channel
+	supla_relay_cfg[3].flags = RELAY_FLAG_RESTORE_FORCE | RELAY_FLAG_VIRTUAL_GPIO;
+	supla_relay_cfg[3].channel = 2;
+	
 	//----------------------------------------
 	
 	  PIN_FUNC_SELECT(PERIPHS_IO_MUX_SD_DATA3_U, FUNC_GPIO10); //ustawienie funkcji GPIO10
@@ -115,11 +120,11 @@ void ICACHE_FLASH_ATTR
 	
    if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 	
-    *channel_count = 3;
+    *channel_count = 4;
     }
    else {
 
-    *channel_count = 2;
+    *channel_count = 3;
     }
 
 	channels[0].Number = 0;
@@ -134,21 +139,28 @@ void ICACHE_FLASH_ATTR
 	channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[1].Default = 0;
 	channels[1].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
+	
+	channels[2].Number = 2;
+	channels[2].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[2].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[2].Default = 0;
+	channels[2].value[0] = supla_esp_gpio_relay_on(B_RS_DIS);
 
    if( supla_esp_cfg.ThermometerType == 1 ) {
-    channels[2].Number = 2;
-	channels[2].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
-	channels[2].FuncList = 0;
-	channels[2].Default = 0;
-	supla_get_temperature(channels[2].value);
+    channels[3].Number = 3;
+	channels[3].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
+	channels[3].FuncList = 0;
+	channels[3].Default = 0;
+	supla_get_temperature(channels[3].value);
    }
 
    if( supla_esp_cfg.ThermometerType == 2 ) {
-	channels[2].Number = 2;
-	channels[2].Type = SUPLA_CHANNELTYPE_DHT22;
-	channels[2].FuncList = 0;
-	channels[2].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
-	supla_get_temp_and_humidity(channels[2].value);
+	channels[3].Number = 3;
+	channels[3].Type = SUPLA_CHANNELTYPE_DHT22;
+	channels[3].FuncList = 0;
+	channels[3].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+	supla_get_temp_and_humidity(channels[3].value);
    }
 }
 
@@ -156,6 +168,7 @@ void ICACHE_FLASH_ATTR
 	supla_esp_board_send_channel_values_with_delay(void *srpc) {
 		
 		supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_UPD_PORT));
+		supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_RS_DIS));
 }
 
 char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
@@ -388,17 +401,10 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
-		/*if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
+	UPD_channel = 1;
+	DIS_CH = 2;
 		
-			UPD_channel = 2;
-			
-		} else {
-		
-			UPD_channel = 1;
-			
-		};*/
-		
-		UPD_channel = 1;
+	if ( port == 20 ) {	
 	
 		if ( hi == 1 ) {
 	
@@ -422,4 +428,14 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 				supla_log(LOG_DEBUG, "value_changed upd - 0");
 			};
 		};
+	};
+	
+	if ( port == 21 ) {	
+			
+		supla_esp_state.Relay[DIS_CH] = hi;
+		supla_esp_save_state(SAVE_STATE_DELAY);
+		supla_esp_channel_value_changed(DIS_CH, supla_esp_state.Relay[DIS_CH]);
+		supla_esp_cfg_save(&supla_esp_cfg);
+		supla_esp_channel_value_changed(DIS_CH, hi);
+	};
 }

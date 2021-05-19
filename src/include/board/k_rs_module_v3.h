@@ -25,7 +25,7 @@
 #define ESP8266_SUPLA_PROTO_VERSION 12
 #define BOARD_CFG_HTML_TEMPLATE
 
-#define SUPLA_ESP_SOFTVER "2.8.0.0"
+#define SUPLA_ESP_SOFTVER "2.8.4.0"
 
 #define _ROLLERSHUTTER_SUPPORT
 
@@ -48,11 +48,19 @@
 #define B_BTN1_PORT        14
 #define B_BTN2_PORT        12
 #define B_UPD_PORT		   20
+#define B_RS_DIS		   21
 #define LED_RED_PORT   	   16
 
 #define WATCHDOG_TIMEOUT_SEC 90
 
-#define BOARD_GPIO_OUTPUT_SET_HI if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
+#define BOARD_GPIO_OUTPUT_SET_HI	\
+	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[2] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	return;	};	\
+	if ( port == B_RELAY2_PORT && supla_esp_state.Relay[2] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	return;	};	\
+	if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
+	
+#define BOARD_GPIO_OUTPUT_IS_HI	\
+				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 2 = %i", supla_esp_state.Relay[2]);	\
+									return supla_esp_state.Relay[2] == 1 ? 1 : 0;	}	
 		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
