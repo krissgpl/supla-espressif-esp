@@ -16,22 +16,12 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef SUPLA_ESP_DNS_CLIENT_H_
-#define SUPLA_ESP_DNS_CLIENT_H_
-
-#ifndef ADDITIONAL_DNS_CLIENT_DISABLED
-
-#include <ip_addr.h>
+#ifndef SUPLA_ESP_STATE_H_
+#define SUPLA_ESP_STATE_H_
 
 #include "supla_esp.h"
 
-#define ntohs htons
+void ICACHE_FLASH_ATTR supla_esp_set_state(int __pri, const char *message);
+const char *ICACHE_FLASH_ATTR supla_esp_get_laststate(void);
 
-typedef void (*_dns_query_result_cb)(ip_addr_t *ip);
-void DNS_ICACHE_FLASH_ATTR supla_esp_dns_client_init(void);
-uint16 DNS_ICACHE_FLASH_ATTR htons(uint16 n);
-void DNS_ICACHE_FLASH_ATTR supla_esp_dns_resolve(
-    const char *domain, _dns_query_result_cb dns_query_result_cb);
-#endif /*ADDITIONAL_DNS_CLIENT_DISABLED*/
-
-#endif /*SUPLA_ESP_DNS_CLIENT_H_*/
+#endif /* SUPLA_ESP_STATE_H_ */
