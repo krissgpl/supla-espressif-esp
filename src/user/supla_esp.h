@@ -23,7 +23,7 @@
 #include "espmissingincludes.h"
 
 #ifndef SUPLA_ESP_SOFTVER
-#define SUPLA_ESP_SOFTVER "2.8.4"
+#define SUPLA_ESP_SOFTVER "2.8.5"
 #endif
 
 #define STATE_UNKNOWN 0
@@ -182,12 +182,17 @@
 #endif /*MQTT_RECVBUF_SIZE*/
 
 #ifndef MQTT_SENDBUF_SIZE
-#define MQTT_SENDBUF_SIZE 1024
+#define MQTT_SENDBUF_SIZE 4096
 #endif /*MQTT_SENDBUF_SIZE*/
+
+#ifndef MQTT_DEVICE_NAME
+#define MQTT_DEVICE_NAME AP_SSID
+#endif /*MQTT_DEVICE_NAME*/
 
 #define CFG_FLAG_MQTT_ENABLED 0x01
 #define CFG_FLAG_MQTT_NO_RETAIN 0x02
 #define CFG_FLAG_MQTT_TLS 0x04
+#define CFG_FLAG_MQTT_AUTH 0x08
 
 void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size);
 #if ESP8266_SUPLA_PROTO_VERSION >= 10
@@ -201,6 +206,7 @@ void supla_esp_board_relay_before_change_state(void);
 void supla_esp_board_relay_after_change_state(void);
 void supla_esp_board_gpio_init(void);
 void ICACHE_FLASH_ATTR supla_system_restart(void);
+void ICACHE_FLASH_ATTR supla_system_restart_with_delay(uint32 delay_ms);
 
 #ifdef __FOTA
 
@@ -311,6 +317,10 @@ extern const uint8_t rsa_public_key_bytes[RSA_NUM_BYTES];
 // WATCHDOG_SOFT_TIMEOUT_SEC > WATCHDOG_TIMEOUT == WATCHDOG_TIMEOUT inactive
 #define WATCHDOG_SOFT_TIMEOUT_SEC 65
 #endif /*WATCHDOG_SOFT_TIMEOUT_SEC*/
+
+#ifndef RECONNECT_DELAY_MSEC
+#define RECONNECT_DELAY_MSEC 2000
+#endif /*RECONNECT_DELAY_MSEC*/
 
 #ifndef RELAY_DOUBLE_TRY
 #define RELAY_DOUBLE_TRY 10000

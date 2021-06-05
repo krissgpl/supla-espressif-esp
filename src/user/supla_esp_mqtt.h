@@ -23,20 +23,60 @@
 
 #ifdef MQTT_SUPPORT_ENABLED
 
-#define MQTT_WANTS_PUBLISH_ALL 0
-
 void ICACHE_FLASH_ATTR supla_esp_mqtt_init(void);
 void ICACHE_FLASH_ATTR supla_esp_mqtt_before_system_restart(void);
 void ICACHE_FLASH_ATTR supla_esp_mqtt_client_start(void);
 void ICACHE_FLASH_ATTR supla_esp_mqtt_client_stop(void);
+uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_server_connected(void);
+const char ICACHE_FLASH_ATTR *supla_esp_mqtt_topic_prefix(void);
+uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_prepare_topic(char **topic_name_out,
+                                                     const char *topic, ...);
+uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_prepare_message(
+    char **topic_name_out, void **message_out, size_t *message_size_out,
+    const char *topic, const char *message, ...);
+uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_prepare_channel_state_message(
+    char **topic_name_out, void **message_out, size_t *message_size_out,
+    const char *topic, const char *message, uint8 channel_number);
 
-void ICACHE_FLASH_ATTR supla_esp_mqtt_wants_publish(uint8 idx);
+#ifdef ELECTRICITY_METER_COUNT
+uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_prepare_em_message(
+    char **topic_name_out, void **message_out, size_t *message_size_out,
+    uint8 index, uint8 channel_number, _supla_int_t channel_flags);
+#endif /*ELECTRICITY_METER_COUNT*/
+
+uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_prepare__message(
+    char **topic_name_out, void **message_out, size_t *message_size_out,
+    const char *topic, const char *message, uint8 channel_number);
+
+uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_parser_set_on(
+    const void *topic_name, uint16_t topic_name_size, const char *message,
+    size_t message_size, uint8 *channel_number, uint8 *on);
+
+void ICACHE_FLASH_ATTR supla_esp_mqtt_wants_publish(uint8 idx_from,
+                                                    uint8 idx_to);
 void ICACHE_FLASH_ATTR supla_esp_mqtt_wants_subscribe(void);
 
 uint8 ICACHE_FLASH_ATTR
 supla_esp_board_mqtt_get_subscription_topic(char **topic_name, uint8 index);
-uint8 ICACHE_FLASH_ATTR supla_esp_board_mqtt_get_topic_for_publication(
+uint8 ICACHE_FLASH_ATTR supla_esp_board_mqtt_get_message_for_publication(
     char **topic_name, void **message, size_t *message_size, uint8 index);
+
+void ICACHE_FLASH_ATTR supla_esp_board_mqtt_on_message_received(
+    uint8_t dup_flag, uint8_t qos_level, uint8_t retain_flag,
+    const void *topic_name, uint16_t topic_name_size, const char *message,
+    size_t message_size);
+
+#ifdef MQTT_HA_RELAY_SUPPORT
+uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_ha_relay_prepare_message(
+    char **topic_name_out, void **message_out, size_t *message_size_out,
+    uint8 light, uint8 channel_number, const char *mfr);
+#endif /*MQTT_HA_RELAY_SUPPORT*/
+
+#ifdef MQTT_HA_EM_SUPPORT
+uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_ha_prepare_em_message(
+    char **topic_name_out, void **message_out, size_t *message_size_out,
+    uint8 channel_number, const char *mfr, uint8 index);
+#endif
 
 #endif /*MQTT_SUPPORT_ENABLED*/
 
