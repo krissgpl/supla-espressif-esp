@@ -182,7 +182,7 @@ uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_subscribe(void) {
       if (r == MQTT_ERROR_SEND_BUFFER_IS_FULL) {
         supla_esp_mqtt_vars->client.error = MQTT_OK;
       }
-      supla_log(LOG_DEBUG, "MQTT Publish Error %s. Retry...",
+      supla_log(LOG_DEBUG, "MQTT Subscribe Error %s. Retry...",
                 mqtt_error_str(r));
     }
   }
@@ -314,7 +314,7 @@ ssize_t ICACHE_FLASH_ATTR mqtt_pal_sendall(mqtt_pal_socket_handle methods,
   sint8 r = supla_esp_mqtt_conn_sent((uint8 *)buf, len);
   if (r == 0) {
     return len;
-  } else if (r == ESPCONN_INPROGRESS) {
+  } else if (r == ESPCONN_INPROGRESS || r == ESPCONN_MAXNUM) {
     return 0;
   }
 
@@ -325,15 +325,8 @@ ssize_t ICACHE_FLASH_ATTR mqtt_pal_recvall(mqtt_pal_socket_handle methods,
                                            void *buf, size_t bufsz, int flags) {
   ssize_t result = supla_esp_mqtt_vars->recv_len;
   supla_esp_mqtt_vars->recv_len = 0;
-  if (result > 0) {
-    return result;
-  }
 
-  return supla_esp_mqtt_vars->status == CONN_STATUS_CONNECTED ||
-                 supla_esp_mqtt_vars->status == CONN_STATUS_CONNECTING ||
-                 supla_esp_mqtt_vars->status == CONN_STATUS_READY
-             ? 0
-             : MQTT_ERROR_SOCKET_ERROR;
+  return result;
 }
 
 void ICACHE_FLASH_ATTR supla_esp_mqtt_conn_recv_cb(void *arg, char *pdata,
@@ -422,7 +415,7 @@ void ICACHE_FLASH_ATTR supla_esp_mqtt_conn_on_connect(void *arg) {
   char *username = NULL;
   char *password = NULL;
 
-  if (supla_esp_cfg.Flags & CFG_FLAG_MQTT_AUTH) {
+  if (!(supla_esp_cfg.Flags & CFG_FLAG_MQTT_NO_AUTH)) {
     username = supla_esp_cfg.Username;
     password = supla_esp_cfg.Password;
   }
@@ -432,6 +425,7 @@ void ICACHE_FLASH_ATTR supla_esp_mqtt_conn_on_connect(void *arg) {
                               MQTT_CONNECT_CLEAN_SESSION,
                               MQTT_KEEP_ALIVE_SEC)) {
     supla_esp_gpio_state_connected();
+    supla_esp_set_state(LOG_NOTICE, "Broker connected");
     supla_esp_mqtt_set_status(CONN_STATUS_READY);
     supla_esp_mqtt_wants_subscribe();
     supla_esp_mqtt_wants_publish(1, 255);
@@ -456,6 +450,9 @@ void ICACHE_FLASH_ATTR supla_esp_mqtt_conn_on_connect(void *arg) {
 
 void ICACHE_FLASH_ATTR supla_esp_mqtt_conn_on_disconnect(void *arg) {
   supla_esp_mqtt_set_status(CONN_STATUS_DISCONNECTED);
+  supla_esp_gpio_state_ipreceived();  // We go back to the state after
+                                      // connecting to wifi, and before
+                                      // connecting to the broker
 }
 
 void ICACHE_FLASH_ATTR supla_esp_mqtt_reconnect(struct mqtt_client *client,
@@ -482,7 +479,8 @@ void ICACHE_FLASH_ATTR supla_esp_mqtt_reconnect(struct mqtt_client *client,
 
   supla_esp_mqtt_espconn_diconnect();
 
-  supla_log(LOG_INFO, "Connecting to %s:%i", supla_esp_cfg.Server,
+  supla_esp_set_state(LOG_NOTICE, "Connecting to MQTT Broker");
+  supla_log(LOG_INFO, "Broker address %s:%i", supla_esp_cfg.Server,
             supla_esp_cfg.Port);
 
   supla_esp_mqtt_vars->esp_conn.proto.tcp = &supla_esp_mqtt_vars->esptcp;
@@ -560,6 +558,10 @@ void ICACHE_FLASH_ATTR supla_esp_mqtt_on_wifi_status_changed(uint8 status) {
   if (!supla_esp_mqtt_vars->started || status != STATION_GOT_IP) {
     return;
   }
+
+  supla_esp_gpio_state_ipreceived();  // We go back to the state after
+                                      // connecting to wifi, and before
+                                      // connecting to the broker
 
   uint32_t _ip = ipaddr_addr(supla_esp_cfg.Server);
 

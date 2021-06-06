@@ -385,7 +385,7 @@ supla_esp_data_write(void *buf, int count, void *dcd) {
 		r = supla_espconn_sent(&devconn->ESPConn, buf, count);
 		//supla_log(LOG_DEBUG, "sproto send count: %i result: %i", count, r);
 
-		if ( ESPCONN_INPROGRESS == r  ) {
+		if ( ESPCONN_INPROGRESS == r  || ESPCONN_MAXNUM == r ) {
 			return supla_esp_data_write_append_buffer(buf, count);
 		} else {
 
@@ -1565,23 +1565,21 @@ void DEVCONN_ICACHE_FLASH supla_espconn_disconnect(struct espconn *espconn) {
 
 void DEVCONN_ICACHE_FLASH
 supla_esp_devconn_connect_cb(void *arg) {
-	supla_log(LOG_DEBUG, "devconn_connect_cb");
 	supla_esp_srpc_init();
 }
 
+void DEVCONN_ICACHE_FLASH supla_esp_devconn_disconnect_cb(void *arg) {
+  supla_esp_gpio_state_ipreceived();  // We go back to the state after
+                                      // connecting to wifi, and before
+                                      // connecting to the server
 
-void DEVCONN_ICACHE_FLASH
-supla_esp_devconn_disconnect_cb(void *arg){
-	supla_log(LOG_DEBUG, "devconn_disconnect_cb");
+  devconn->esp_send_buffer_len = 0;
+  devconn->recvbuff_size = 0;
 
-	devconn->esp_send_buffer_len = 0;
-	devconn->recvbuff_size = 0;
-
-	if (devconn->started) {
-		supla_esp_devconn_reconnect_with_delay(RECONNECT_DELAY_MSEC);
-	}
+  if (devconn->started) {
+    supla_esp_devconn_reconnect_with_delay(RECONNECT_DELAY_MSEC);
+  }
 }
-
 
 void DEVCONN_ICACHE_FLASH supla_esp_devconn_dns__found(ip_addr_t *ip) {
   //supla_log(LOG_DEBUG, "supla_esp_devconn_dns_found_cb");
@@ -1748,8 +1746,12 @@ supla_esp_devconn_on_wifi_status_changed(uint8 status) {
 
 void DEVCONN_ICACHE_FLASH supla_esp_devconn_start(void) {
   if (!devconn) {
- 	return;
+    return;
   }
+
+  supla_esp_gpio_state_ipreceived();  // We go back to the state after
+                                      // connecting to wifi, and before
+                                      // connecting to the server
 
   devconn->started = 1;
   supla_esp_wifi_station_connect(supla_esp_devconn_on_wifi_status_changed);
