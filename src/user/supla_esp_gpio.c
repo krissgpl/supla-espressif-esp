@@ -33,6 +33,7 @@
 #include "supla_esp_pwm.h"
 #include "supla_esp_countdown_timer.h"
 #include "supla_esp_mqtt.h"
+#include "supla_update.h"
 
 #include "supla-dev/log.h"
 
@@ -1341,7 +1342,8 @@ void GPIO_ICACHE_FLASH
 supla_esp_gpio_state_disconnected(void) {
 
 	if ( supla_last_state == STATE_DISCONNECTED
-			|| supla_esp_cfgmode_started())
+			|| supla_esp_cfgmode_started()
+			|| supla_esp_update_started())
 		return;
 
 	supla_last_state = STATE_DISCONNECTED;
@@ -1369,7 +1371,8 @@ void GPIO_ICACHE_FLASH
 supla_esp_gpio_state_ipreceived(void) {
 
 	if ( supla_last_state == STATE_IPRECEIVED
-			|| supla_esp_cfgmode_started())
+			|| supla_esp_cfgmode_started()
+			|| supla_esp_update_started())
 		return;
 
 	supla_last_state = STATE_IPRECEIVED;
@@ -1412,7 +1415,8 @@ void GPIO_ICACHE_FLASH
 supla_esp_gpio_state_connected(void) {
 
 	if ( supla_last_state == STATE_CONNECTED
-			|| supla_esp_cfgmode_started())
+			|| supla_esp_cfgmode_started()
+			|| supla_esp_update_started())
 		return;
 
 	supla_last_state = STATE_CONNECTED;
