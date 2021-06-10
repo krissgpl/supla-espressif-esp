@@ -55,8 +55,8 @@
 #define VAR_LED 10
 #define VAR_UPD 11
 #define VAR_RBT 12
-#define VAR_ZRE          13
-#define VAR_TRM			 14		// wybor czujnika temperatury
+#define VAR_ZRE 13		// pow r2
+#define VAR_TRM	14		// wybor czujnika temperatury
 #define VAR_EML 20
 #define VAR_USD 21
 #define VAR_TRG 22
