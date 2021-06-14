@@ -58,3 +58,4 @@ firmware/
 src/.output/
 src/user/supla_esp.h.orig
 *.orig
+public_key_in_c_code
