@@ -80,6 +80,9 @@ typedef struct {
   char MqttTopicPrefix[MQTT_PREFIX_SIZE];
   char MqttQoS;
 
+  uint32_t OvercurrentThreshold1;
+  uint32_t OvercurrentThreshold2;
+
   char zero[200];
 
 } SuplaEspCfg;
