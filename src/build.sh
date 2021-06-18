@@ -35,6 +35,10 @@ case $1 in
      FOTA=1
      FLASH_SIZE="4096"
    ;;
+   	"k_gate_module_v3")		
+     FOTA=1
+     FLASH_SIZE="4096"
+   ;;
    "k_dimmer")
 	 FLASH_SIZE="4096"
 	 FOTA=1
