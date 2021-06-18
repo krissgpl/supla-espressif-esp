@@ -63,11 +63,11 @@
 			char hi1;	\
 			hi1 = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
 			if (port == LED_RED_PORT) {hi1 = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
-			} else if (port == B_RELAY1_PORT) {supla_esp_gpio_set_led(hi1 ,1 , 1); \
+			} else if (port == B_RELAY1_PORT) {supla_esp_gpio_set_led(hi1 ,1 , 1); };\
 		if (port >= 20) {supla_esp_board_gpiooutput_set_hi(port, hi); 	\
 						supla_log(LOG_DEBUG, "PORT 20 MAKRO");	\
 						return;  };	\
-}
+	}	};
 
 #define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
