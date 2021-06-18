@@ -89,6 +89,10 @@
 
 #include "board/k_gate_module.c"
 
+#elif defined(__BOARD_k_gate_module_v3)
+
+#include "board/k_gate_module_v3.c"
+
 #elif defined(__BOARD_k_dimmer)
 
 #include "board/k_dimmer.c"
