@@ -16,7 +16,12 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include "supla_esp.h"
+// #include "supla_esp.h"
+
+#include "supla-dev/log.h"	//dodalem bo wydaje sie ze ma byc
+#include "supla_esp.h"		//dodalem bo wydaje sie ze ma byc
+#include "supla_esp_cfg.h"	//dodalem bo wydaje sie ze ma byc
+#include "supla_esp_state.h"//dodalem bo wydaje sie ze ma byc
 
 #if !defined(BOARD_CFG_HTML_TEMPLATE) && !defined(MQTT_SUPPORT_ENABLED)
 char *ICACHE_FLASH_ATTR supla_esp_cfgmode_get_html_template(
