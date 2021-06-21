@@ -272,7 +272,7 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       "%s>NO<option value=\"1\" %s>YES</select><label>Firmware "
       "update</label></i></div><button type=\"submit\">SAVE</button></form></div><br><br>";
 
-  int bufflen = strlen(supla_esp_devconn_laststate())
+/*  int bufflen = strlen(supla_esp_devconn_laststate())
 				+strlen(dev_name)
 				+strlen(SUPLA_ESP_SOFTVER)
 				+strlen(supla_esp_cfg.WIFI_SSID)
@@ -280,7 +280,12 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 				+strlen(supla_esp_cfg.Email)
 				+strlen(html_template_header)
 				+strlen(html_template)
-				+200;
+				+200; */
+				
+	int bufflen = strlen(supla_esp_get_laststate()) + strlen(dev_name) +
+                strlen(SUPLA_ESP_SOFTVER) + strlen(supla_esp_cfg.WIFI_SSID) +
+                strlen(supla_esp_cfg.Server) + strlen(supla_esp_cfg.Email) +
+                strlen(html_template_header) + strlen(html_template) + 200;
 
   char *buffer = (char *)malloc(bufflen);
 
