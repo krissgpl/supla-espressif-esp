@@ -200,16 +200,29 @@ void ICACHE_FLASH_ATTR supla_esp_http_send_response(struct espconn *pespconn,
   os_timer_arm(&cfgmode_vars.response_timer, 10, 1);
 }
 
+void ICACHE_FLASH_ATTR supla_esp_http_send__response(struct espconn *pespconn,
+                                                     const char *code,
+                                                     const char *html) {
+  char *html_copy = NULL;
+  if (html) {
+    size_t size = strlen(html) + 1;
+    char *html_copy = zalloc(size);
+    ets_snprintf(html_copy, size, "%s", html);
+  }
+
+  supla_esp_http_send_response(pespconn, code, html_copy);
+}
+
 void ICACHE_FLASH_ATTR supla_esp_http_ok(struct espconn *pespconn, char *html) {
   supla_esp_http_send_response(pespconn, "200 OK", html);
 }
 
 void ICACHE_FLASH_ATTR supla_esp_http_404(struct espconn *pespconn) {
-  supla_esp_http_send_response(pespconn, "404 Not Found", "Not Found");
+  supla_esp_http_send__response(pespconn, "404 Not Found", "Not Found");
 }
 
 void ICACHE_FLASH_ATTR supla_esp_http_error(struct espconn *pespconn) {
-  supla_esp_http_send_response(pespconn, "500 Internal Server Error", "Error");
+  supla_esp_http_send__response(pespconn, "500 Internal Server Error", "Error");
 }
 
 int ICACHE_FLASH_ATTR Power(int x, int y) {
@@ -263,7 +276,8 @@ int ICACHE_FLASH_ATTR cfg_str2int(TrivialHttpParserVars *pVars) {
   return result;
 }
 
-// Converts float with 0.01 precision to int multiplied by 100, i.e. "3.1415" -> 314 
+// Converts float with 0.01 precision to int multiplied by 100, i.e. "3.1415" ->
+// 314
 int ICACHE_FLASH_ATTR cfg_str2centInt(TrivialHttpParserVars *pVars) {
   int result = 0;
 
@@ -315,13 +329,15 @@ void ICACHE_FLASH_ATTR supla_esp_parse_proto_var(TrivialHttpParserVars *pVars,
     }
 
     if (pVars->current_var == VAR_PRO) {
+      pVars->pbuff[pVars->offset] = pdata[a];
+      pVars->offset++;
+
       if (pVars->offset >= pVars->buff_size || a >= len - 1 ||
           pdata[a] == '&') {
         if (pVars->offset < pVars->buff_size)
           pVars->pbuff[pVars->offset] = 0;
         else
           pVars->pbuff[pVars->buff_size - 1] = 0;
-
         pVars->matched++;
         pVars->current_var = VAR_NONE;
 
@@ -548,7 +564,7 @@ void ICACHE_FLASH_ATTR supla_esp_parse_vars(TrivialHttpParserVars *pVars,
           pVars->pbuff = pVars->intval;
         }
 #ifdef CFG_TIME_VARIABLES
-          else if (memcmp(t10, &pdata[a], 3) == 0) {
+        else if (memcmp(t10, &pdata[a], 3) == 0) {
           pVars->current_var = VAR_T10;
           pVars->buff_size = 12;
           pVars->pbuff = pVars->intval;
@@ -679,9 +695,8 @@ void ICACHE_FLASH_ATTR supla_esp_parse_vars(TrivialHttpParserVars *pVars,
           cfg->OvercurrentThreshold2 = cfg_str2centInt(pVars);
           supla_log(LOG_DEBUG, "Found TH2 = %d", cfg->OvercurrentThreshold2);
         }
-
 #ifdef CFG_TIME_VARIABLES
-          else if (pVars->current_var == VAR_T10) {
+        else if (pVars->current_var == VAR_T10) {
           cfg->Time1[0] = cfg_str2int(pVars);
 
         } else if (pVars->current_var == VAR_T11) {
@@ -878,8 +893,6 @@ void ICACHE_FLASH_ATTR supla_esp_cfgmode_start(void) {
   memset(apconfig.ssid, 0, sizeof(apconfig.ssid));
   memset(apconfig.password, 0, sizeof(apconfig.password));
 
-  struct espconn *conn;
-
   if (cfgmode_vars.entertime != 0) return;
 
   if (supla_esp_cfg.Flags & CFG_FLAG_MQTT_ENABLED) {
@@ -932,10 +945,8 @@ void ICACHE_FLASH_ATTR supla_esp_cfgmode_start(void) {
 
   wifi_softap_set_config(&apconfig);
 
-  conn = (struct espconn *)malloc(sizeof(struct espconn));
-  memset(conn, 0, sizeof(struct espconn));
+  struct espconn *conn = (struct espconn *)zalloc(sizeof(struct espconn));
 
-  espconn_create(conn);
   espconn_regist_time(conn, 5, 0);
 
   conn->type = ESPCONN_TCP;

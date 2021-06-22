@@ -67,6 +67,7 @@ typedef struct {
 
   uint8 subscribe_idx;
   uint8 publish_idx[32];
+  uint8 publish_next;
 
   uint16 prefix_len;
   char *prefix;
@@ -189,16 +190,25 @@ uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_subscribe(void) {
 }
 
 uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_publish(void) {
-  uint8 ret = 0;
+  uint8 idx = 0;
+  uint8 bit = 0;
+  uint8 find_next = 1;
 
-  do {
-    uint8 idx = 0;
-    uint8 bit = 0;
-    for (uint8 a = 0; a < 255; a++) {
-      bit = 1 << (a % 8);
-      if (supla_esp_mqtt_vars->publish_idx[a / 8] & bit) {
-        idx = a + 1;
+  while (find_next) {
+    if (supla_esp_mqtt_vars->publish_next == 255) {
+      supla_esp_mqtt_vars->publish_next = 0;
+    }
+
+    while (supla_esp_mqtt_vars->publish_next < 255) {
+      bit = 1 << (supla_esp_mqtt_vars->publish_next % 8);
+      if (supla_esp_mqtt_vars
+              ->publish_idx[supla_esp_mqtt_vars->publish_next / 8] &
+          bit) {
+        supla_esp_mqtt_vars->publish_next++;
+        idx = supla_esp_mqtt_vars->publish_next;
         break;
+      } else {
+        supla_esp_mqtt_vars->publish_next++;
       }
     }
 
@@ -219,7 +229,6 @@ uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_publish(void) {
         topic_name == NULL || topic_name[0] == 0) {
       supla_esp_mqtt_vars->publish_idx[(idx - 1) / 8] &= ~bit;
     } else {
-      ret = 1;
       uint8 publish_flags = 0;
 
       switch (supla_esp_cfg.MqttQoS) {
@@ -238,7 +247,7 @@ uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_publish(void) {
         publish_flags |= MQTT_PUBLISH_RETAIN;
       }
 
-      // supla_log(LOG_DEBUG, "Publish %s", topic_name);
+      // supla_log(LOG_DEBUG, "Publish %i %s", idx, topic_name);
 
       enum MQTTErrors r = mqtt_publish(&supla_esp_mqtt_vars->client, topic_name,
                                        message, message_size, publish_flags);
@@ -249,9 +258,10 @@ uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_publish(void) {
         if (r == MQTT_ERROR_SEND_BUFFER_IS_FULL) {
           supla_esp_mqtt_vars->client.error = MQTT_OK;
         }
-        supla_log(LOG_DEBUG, "MQTT Publish Error %s. Retry...",
+        supla_log(LOG_DEBUG, "MQTT Publish Error %s. Will retry...",
                   mqtt_error_str(r));
       }
+      find_next = 0;
     }
 
     if (topic_name) {
@@ -263,8 +273,7 @@ uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_publish(void) {
       free(message);
       message = NULL;
     }
-
-  } while (!ret);
+  }
 
   return 1;
 }
@@ -422,6 +431,7 @@ void ICACHE_FLASH_ATTR supla_esp_mqtt_conn_on_connect(void *arg) {
     supla_esp_set_state(LOG_NOTICE, "Broker connected");
     supla_esp_mqtt_set_status(CONN_STATUS_READY);
     supla_esp_mqtt_wants_subscribe();
+    supla_esp_mqtt_vars->publish_next = BOARD_MAX_IDX;
     supla_esp_mqtt_wants_publish(1, 255);
 
 #ifdef ELECTRICITY_METER_COUNT
@@ -1535,5 +1545,125 @@ uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_ha_prepare_em_message(
   return 0;
 }
 #endif /*MQTT_HA_EM_SUPPORT*/
+
+#ifdef MQTT_HA_ROLLERSHUTTER_SUPPORT
+uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_ha_relay_prepare_message(
+    char **topic_name_out, void **message_out, size_t *message_size_out,
+    uint8 channel_number, const char *mfr) {
+  if (!supla_esp_mqtt_prepare_ha_cfg_topic("cover", topic_name_out,
+                                           channel_number, 0)) {
+    return 0;
+  }
+
+  const char cfg[] =
+      "{\"~\":\"%s/channels/"
+      "%i\",\"device\":{\"ids\":\"%s\",\"mf\":\"%s\",\"name\":\"%s\",\"sw\":\"%"
+      "s\"},\"name\":\"#%i Roof window "
+      "operation\",\"uniq_id\":\"supla_%02x%02x%02x%02x%02x%02x_%i_%i\","
+      "\"qos\":0,\"ret\":false,\"opt\":false,\"cmd_t\":\"~/"
+      "execute_action\",\"dev_cla\":\"shutter\",\"pl_open\":\"REVEAL\",\"pl_"
+      "cls\":\"SHUT\",\"pl_stop\":\"STOP\",\"set_pos_t\":\"~/set/"
+      "closing_percentage\",\"pos_t\":\"~/state/"
+      "shut\",\"pos_open\":0,\"pos_clsd\":100,\"avty_t\":\"%s/"
+      "connected\",\"pl_avail\":\"true\",\"pl_not_avail\":\"false\",\"pos_"
+      "tpl\":\"{%% if value is defined %%}{%% if value | int < 0 %%}0{%% elif "
+      "value | int > 100 %%}100{%% else %%}{{value | int}}{%% endif %%}{%% "
+      "else %%}0{%% endif %%}\"}";
+
+  char c = 0;
+
+  char device_name[SUPLA_DEVICE_NAME_MAXSIZE] = {};
+  supla_esp_board_set_device_name(device_name, SUPLA_DEVICE_NAME_MAXSIZE);
+
+  unsigned char mac[6] = {};
+  wifi_get_macaddr(STATION_IF, mac);
+
+  size_t buffer_size = 0;
+
+  for (uint8 a = 0; a < 2; a++) {
+    buffer_size = ets_snprintf(a ? *message_out : &c, a ? buffer_size : 1, cfg,
+                               supla_esp_mqtt_vars->prefix, channel_number,
+                               supla_esp_mqtt_vars->device_id, mfr, device_name,
+                               SUPLA_ESP_SOFTVER, channel_number, mac[0],
+                               mac[1], mac[2], mac[3], mac[4], mac[5],
+                               channel_number, 0, supla_esp_mqtt_vars->prefix) +
+                  1;
+
+    if (!a) {
+      *message_out = malloc(buffer_size);
+      if (*message_out == NULL) {
+        if (*topic_name_out) {
+          free(*topic_name_out);
+          *topic_name_out = NULL;
+        }
+        return 0;
+      }
+    }
+  }
+
+  *message_size_out = strnlen(*message_out, buffer_size);
+  return 1;
+}
+
+uint8 ICACHE_FLASH_ATTR supla_esp_mqtt_parser_rs_action(
+    const void *topic_name, uint16_t topic_name_size, const char *message,
+    size_t message_size, uint8 *channel_number, uint8 *action,
+    uint8 *percentage) {
+  if (!topic_name || topic_name_size == 0 || !message || message_size == 0 ||
+      !channel_number || !action || !supla_esp_mqtt_vars->prefix ||
+      supla_esp_mqtt_vars->prefix[0] == 0 ||
+      supla_esp_mqtt_vars->prefix_len + 1 >= topic_name_size) {
+    return 0;
+  }
+
+  char *tn = (char *)topic_name;
+
+  if (memcmp(tn, supla_esp_mqtt_vars->prefix,
+             supla_esp_mqtt_vars->prefix_len) == 0) {
+    tn += supla_esp_mqtt_vars->prefix_len + 1;
+    topic_name_size -= supla_esp_mqtt_vars->prefix_len + 1;
+  } else {
+    return 0;
+  }
+
+  uint8 err = 1;
+  *channel_number = supla_esp_mqtt_parse_int_with_prefix(
+      "channels/", 9, &tn, &topic_name_size, &err);
+
+  if (err) {
+    return 0;
+  }
+
+  if (topic_name_size == 22 &&
+      memcmp(tn, "set/closing_percentage", topic_name_size) == 0) {
+    uint8 err = 1;
+    int p = supla_esp_mqtt_str2int(message, message_size, &err);
+    if (!err && p >= 0 && p <= 100) {
+      *percentage = p;
+      *action = MQTT_ACTION_SHUT_WITH_PERCENTAGE;
+      return 1;
+    }
+
+  } else if (topic_name_size == 14 &&
+             memcmp(tn, "execute_action", topic_name_size) == 0) {
+    if (message_size == 4 &&
+        supla_esp_mqtt_lc_equal("shut", message, message_size)) {
+      *action = MQTT_ACTION_SHUT;
+      return 1;
+    } else if (message_size == 6 &&
+               supla_esp_mqtt_lc_equal("reveal", message, message_size)) {
+      *action = MQTT_ACTION_REVEAL;
+      return 1;
+    } else if (message_size == 4 &&
+               supla_esp_mqtt_lc_equal("stop", message, message_size)) {
+      *action = MQTT_ACTION_STOP;
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+#endif /*MQTT_HA_ROLLERSHUTTER_SUPPORT*/
 
 #endif /*MQTT_SUPPORT_ENABLED*/
