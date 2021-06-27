@@ -82,8 +82,8 @@
 				if ( port == 22)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
 									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	\
 				
-#define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields = LastConnectionResetCause;	\
-										LastConnectionResetCause = 2;
+#define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields = SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+										state->LastConnectionResetCause = 2;
 				
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
 	
