@@ -75,6 +75,7 @@ typedef struct {
   char ZeroInitialEnergy;
   
   char ThermometerType;
+  char UpdateStatus;
 	
   unsigned int Flags;  // CFG_FLAG_*
   char MqttTopicPrefix[MQTT_PREFIX_SIZE];
