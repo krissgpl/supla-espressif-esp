@@ -84,6 +84,9 @@ void ICACHE_FLASH_ATTR supla_esp_update_init(void) {
 
 	if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
 		update_step = FUPDT_STEP_CHECK;
+		
+		supla_esp_cfg.UpdateStatus = 0;			// update status - przed upgrade ustawienie na 0 (jezeli upgrade sie nie uda to zostaje 0 )
+		supla_esp_cfg_save(&supla_esp_cfg);
 
 	} else {
 		update_step = FUPDT_STEP_NONE;
