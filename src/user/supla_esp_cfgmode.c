@@ -57,6 +57,7 @@
 #define VAR_RBT 12
 #define VAR_ZRE 13		// pow r2
 #define VAR_TRM	14		// wybor czujnika temperatury
+#define VAR_UPS	15		// update status
 #define VAR_EML 20
 #define VAR_USD 21
 #define VAR_TRG 22
@@ -373,6 +374,7 @@ void ICACHE_FLASH_ATTR supla_esp_parse_vars(TrivialHttpParserVars *pVars,
 #ifdef TEMP_SELECT											// wybor czujnika temperatury
 				char trm[3] = { 't', 'r', 'm' };
 #endif
+	  char ups[3] = {'u', 'p', 's'};		// update status
       char upd[3] = {'u', 'p', 'd'};
       char rbt[3] = {'r', 'b', 't'};
       char eml[3] = {'e', 'm', 'l'};
@@ -468,6 +470,11 @@ void ICACHE_FLASH_ATTR supla_esp_parse_vars(TrivialHttpParserVars *pVars,
 						pVars->buff_size = 12;
 						pVars->pbuff = pVars->intval;
 					#endif
+
+        } else if (memcmp(ups, &pdata[a], 3) == 0) {		// update status
+          pVars->current_var = VAR_UPS;
+          pVars->buff_size = 12;
+          pVars->pbuff = pVars->intval;
 					
         } else if (memcmp(upd, &pdata[a], 3) == 0) {
           pVars->current_var = VAR_UPD;
@@ -642,6 +649,9 @@ void ICACHE_FLASH_ATTR supla_esp_parse_vars(TrivialHttpParserVars *pVars,
 		cfg->ThermometerType = pVars->intval[0] - '0';
 	#endif
 					
+        } else if (pVars->current_var == VAR_UPS) {
+          cfg->UpdateStatus = pVars->intval[0] - '0';
+		  
         } else if (pVars->current_var == VAR_UPD) {
           cfg->FirmwareUpdate = pVars->intval[0] - '0';
 

@@ -169,6 +169,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
     channels[5].Number = 5;
 	channels[5].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
 	channels[5].FuncList = 0;
+	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[5].Default = 0;
 	supla_get_temperature(channels[5].value);
    }
@@ -177,6 +178,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[5].Number = 5;
 	channels[5].Type = SUPLA_CHANNELTYPE_DHT22;
 	channels[5].FuncList = 0;
+	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[5].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
 	supla_get_temp_and_humidity(channels[5].value);
    }

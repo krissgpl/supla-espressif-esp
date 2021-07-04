@@ -109,6 +109,7 @@ typedef struct {
     char StatusLedOff;
     char InputCfgTriggerOff;
     char ThermometerType;
+	char UpdateStatus;
 
     char FirmwareUpdate;
     char Test;
@@ -139,6 +140,7 @@ typedef struct {
     char StatusLedOff;
     char InputCfgTriggerOff;
     char ThermometerType;
+	char UpdateStatus;
     char FirmwareUpdate;
     char Test;
     char Email[SUPLA_EMAIL_MAXSIZE];
@@ -166,6 +168,7 @@ typedef struct {
     char StatusLedOff;
     char InputCfgTriggerOff;
     char ThermometerType;
+	char UpdateStatus;
     char FirmwareUpdate;
     char Test;
     unsigned int FullOpeningTime[2];
