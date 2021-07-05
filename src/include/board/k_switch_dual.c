@@ -296,8 +296,8 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       "update</label></i></div><button "
     "type=\"submit\">SAVE</button><br><br><button type=\"button\" "
     "onclick=\"saveAndReboot();\">SAVE &amp; RESTART</button><input "
-    "type=\"hidden\" name=\"rbt\" value=\"0\" "
-    "/></form></div><br><br>";
+    "type=\"hidden\" name=\"rbt\" value=\"2\" "
+    "/></form></div><br><br></body></html>!";
 
   int bufflen = strlen(supla_esp_devconn_laststate())
 				+strlen(dev_name)
