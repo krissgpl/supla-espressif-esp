@@ -137,6 +137,7 @@ void ICACHE_FLASH_ATTR
 	channels[1].Number = 1;
 	channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[1].Default = 0;
 	channels[1].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
 	
@@ -150,6 +151,7 @@ void ICACHE_FLASH_ATTR
    if( supla_esp_cfg.ThermometerType == 1 ) {
     channels[3].Number = 3;
 	channels[3].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
+	channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[3].FuncList = 0;
 	channels[3].Default = 0;
 	supla_get_temperature(channels[3].value);
@@ -158,6 +160,7 @@ void ICACHE_FLASH_ATTR
    if( supla_esp_cfg.ThermometerType == 2 ) {
 	channels[3].Number = 3;
 	channels[3].Type = SUPLA_CHANNELTYPE_DHT22;
+	channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[3].FuncList = 0;
 	channels[3].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
 	supla_get_temp_and_humidity(channels[3].value);

@@ -25,7 +25,7 @@
 #define ESP8266_SUPLA_PROTO_VERSION 12
 #define BOARD_CFG_HTML_TEMPLATE
 
-#define SUPLA_ESP_SOFTVER "2.8.7.0"
+#define SUPLA_ESP_SOFTVER "2.8.11.0"
 
 #define _ROLLERSHUTTER_SUPPORT
 
@@ -60,7 +60,10 @@
 	
 #define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 2 = %i", supla_esp_state.Relay[2]);	\
-									return supla_esp_state.Relay[2] == 1 ? 1 : 0;	}	
+									return supla_esp_state.Relay[2] == 1 ? 1 : 0;	}
+
+#define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;									
 		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
