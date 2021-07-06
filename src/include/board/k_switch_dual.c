@@ -287,17 +287,14 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       "value=\"%s\"><label>E-mail</label></i></div><div "
       "class=\"w\"><h3>Additional Settings</h3>"
 	  "<i><select name=\"led\"><option value=\"0\" %s>LED "
-      "ON<option value=\"1\" %s>LED OFF<option value=\"2\" %s>CHANNEL STATUS</select><label>Status - connected</label></i>"
+      "ON<option value=\"1\" %s>LED OFF<option value=\"2\" %s>CHANNEL STATUS</select><label>Status LED</label></i>"
 	  "<i><select name=\"trm\"><option value=\"0\" %s>NONE</option>"
       "<option value=\"1\" %s>DS18B20</option><option value=\"2\" %s>DHT22</option>"
       "</select><label>Thermometer type:</label></i>"
 	  "<i><select name=\"upd\"><option value=\"0\" "
       "%s>NO<option value=\"1\" %s>YES</select><label>Firmware "
       "update</label></i></div><button "
-    "type=\"submit\">SAVE</button><br><br><button type=\"button\" "
-    "onclick=\"saveAndReboot();\">SAVE &amp; RESTART</button><input "
-    "type=\"hidden\" name=\"rbt\" value=\"2\" "
-    "/></form></div><br><br></body></html>!";
+    "type=\"submit\">SAVE</button></form></div><br><br>";
 
   int bufflen = strlen(supla_esp_devconn_laststate())
 				+strlen(dev_name)
