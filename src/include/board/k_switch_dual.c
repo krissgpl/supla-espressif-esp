@@ -25,6 +25,9 @@
 #include "supla_esp.h"
 
 ETSTimer value_timer1;
+ETSTimer Led_ON;
+ETSTimer Led_OFF;
+
 int UPD_channel;
 int DIS1_CH;
 int DIS2_CH;
@@ -54,6 +57,20 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER update - restart");
 	supla_system_restart();
+	
+}
+
+void supla_esp_baord_Led_ON_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "TIMER Led ON");
+	supla_esp_gpio_set_led(1, 0, 0);
+	
+}
+
+void supla_esp_baord_Led_OFF_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "TIMER Led OFF");
+	supla_esp_gpio_set_led(0, 0, 0);
 	
 }
 

@@ -55,6 +55,9 @@
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
 																	GPIO_OUTPUT_SET(5, 0);	\
+																	os_timer_disarm(&Led_OFF);	\
+																	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	\
+																	os_timer_arm(&Led_OFF, 500, 0);	\
 																	return;	}	\
 	if ( port == B_RELAY2_PORT && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	\
 																	GPIO_OUTPUT_SET(13, 0);	\
