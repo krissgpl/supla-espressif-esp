@@ -32,6 +32,9 @@ int UPD_channel;
 int DIS1_CH;
 int DIS2_CH;
 
+#define LED_RED_BLOCK    0x1
+#define LED_BLUE_BLOCK   0x4
+
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
 	supla_log(LOG_DEBUG, "Termometr: %i", supla_esp_cfg.ThermometerType);
@@ -63,7 +66,12 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 void supla_esp_baord_Led_ON_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER Led ON");
-	supla_esp_gpio_set_led(red, blue, 0);
+	
+	if ( (int)timer_arg & LED_RED_BLOCK )
+		supla_esp_gpio_set_led(1, 0, 0);
+	
+	if ( (int)timer_arg & LED_BLUE_BLOCK )
+		supla_esp_gpio_set_led(0, 1, 0);
 	
 }
 
@@ -435,14 +443,14 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 	}
 }
 
-void ICACHE_FLASH_ATTR supla_esp_board_block_channel(char red, char blue)	{
+void ICACHE_FLASH_ATTR supla_esp_board_block_channel(int ledblock)	{
 	
 	os_timer_disarm(&Led_OFF);
 	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
 	os_timer_arm(&Led_OFF, 500, 0);	
 	
 	os_timer_disarm(&Led_ON);
-	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, NULL);	
+	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
 	os_timer_arm(&Led_ON, 500, 0);
 	
 	os_timer_disarm(&Led_OFF);
@@ -450,7 +458,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_block_channel(char red, char blue)	{
 	os_timer_arm(&Led_OFF, 500, 0);	
 	
 	os_timer_disarm(&Led_ON);
-	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, NULL);	
+	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
 	os_timer_arm(&Led_ON, 500, 0);
 	
 }
