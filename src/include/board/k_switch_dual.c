@@ -395,7 +395,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
 
         supla_esp_gpio_relay_hi(input_cfg->relay_gpio_id, hi, 0);
 		
-		if (input_cfg->relay_gpio_id = 5 && supla_esp_state.Relay[3] = 1) { supla_esp_board_block_channel(LED_RED_BLOCK); };
+		if (input_cfg->relay_gpio_id = 5 && supla_esp_state.Relay[3] == 1) { supla_esp_board_block_channel(LED_RED_BLOCK); };
 
         if (input_cfg->channel != 255)
             supla_esp_channel_value_changed(
