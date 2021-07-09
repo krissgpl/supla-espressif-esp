@@ -442,6 +442,8 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 
 void ICACHE_FLASH_ATTR supla_esp_board_block_channel(int ledblock)	{
 	
+	supla_log(LOG_DEBUG, "Blokada LED void !!!");
+	
 	os_timer_disarm(&Led_OFF);
 	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
 	os_timer_arm(&Led_OFF, 500, 0);	
