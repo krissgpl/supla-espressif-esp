@@ -458,6 +458,10 @@ void ICACHE_FLASH_ATTR supla_esp_board_block_channel(int ledblock)	{
 	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
 	os_timer_arm(&Led_ON, 500, 0);
 	
+	os_timer_disarm(&Led_OFF);
+	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
+	os_timer_arm(&Led_OFF, 500, 0);	
+	
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
