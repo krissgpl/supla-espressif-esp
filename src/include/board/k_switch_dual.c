@@ -63,7 +63,7 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 void supla_esp_baord_Led_ON_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER Led ON");
-	supla_esp_gpio_set_led(1, 0, 0);
+	supla_esp_gpio_set_led(red, blue, 0);
 	
 }
 
@@ -435,22 +435,22 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 	}
 }
 
-void ICACHE_FLASH_ATTR supla_esp_board_block_channel(int channel)	{
+void ICACHE_FLASH_ATTR supla_esp_board_block_channel(char red, char blue)	{
 	
 	os_timer_disarm(&Led_OFF);
-	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_gpio_set_led(0, 0, 0), NULL);	
+	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
 	os_timer_arm(&Led_OFF, 500, 0);	
 	
 	os_timer_disarm(&Led_ON);
-	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_gpio_set_led(1, 0, 0), NULL);	
+	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, NULL);	
 	os_timer_arm(&Led_ON, 500, 0);
 	
 	os_timer_disarm(&Led_OFF);
-	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_gpio_set_led(0, 0, 0), NULL);	
+	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
 	os_timer_arm(&Led_OFF, 500, 0);	
 	
 	os_timer_disarm(&Led_ON);
-	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_gpio_set_led(1, 0, 0), NULL);	
+	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, NULL);	
 	os_timer_arm(&Led_ON, 500, 0);
 	
 }
