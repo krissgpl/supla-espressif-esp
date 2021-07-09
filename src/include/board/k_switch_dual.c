@@ -32,9 +32,6 @@ int UPD_channel;
 int DIS1_CH;
 int DIS2_CH;
 
-#define LED_RED_BLOCK    0x1
-#define LED_BLUE_BLOCK   0x4
-
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
 	supla_log(LOG_DEBUG, "Termometr: %i", supla_esp_cfg.ThermometerType);
