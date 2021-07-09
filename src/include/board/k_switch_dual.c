@@ -435,6 +435,26 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 	}
 }
 
+void ICACHE_FLASH_ATTR supla_esp_board_block_channel(int channel);	{
+	
+	os_timer_disarm(&Led_OFF);
+	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_gpio_set_led(0, 0, 0), NULL);	
+	os_timer_arm(&Led_OFF, 500, 0);	
+	
+	os_timer_disarm(&Led_ON);
+	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_gpio_set_led(1, 0, 0), NULL);	
+	os_timer_arm(&Led_ON, 500, 0);
+	
+	os_timer_disarm(&Led_OFF);
+	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_gpio_set_led(0, 0, 0), NULL);	
+	os_timer_arm(&Led_OFF, 500, 0);	
+	
+	os_timer_disarm(&Led_ON);
+	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_gpio_set_led(1, 0, 0), NULL);	
+	os_timer_arm(&Led_ON, 500, 0);
+	
+}
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
 	
 	supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port);
