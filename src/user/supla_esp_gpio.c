@@ -1538,10 +1538,4 @@ char  supla_esp_gpio_relay_on(int port) {
 	return supla_esp_gpio_output_is_hi(port) == HI_VALUE ? 1 : 0;
 }
 
-void supla_block_channel(void) {
-	
-	supla_log(LOG_DEBUG, "Blokada LED void !!!");
-	
-}
-
 
