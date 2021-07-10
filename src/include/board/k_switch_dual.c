@@ -209,7 +209,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
    }
 }
 
-void GPIO_ICACHE_FLASH supla_block_channel(void)	{
+/*void GPIO_ICACHE_FLASH supla_block_channel(void)	{
 	
 	supla_log(LOG_DEBUG, "Blokada LED void !!!");
 	
@@ -232,9 +232,9 @@ void GPIO_ICACHE_FLASH supla_block_channel(void)	{
 	os_timer_disarm(&Led_OFF);
 	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
 	os_timer_arm(&Led_OFF, 500, 0);	
-	*/
+	
 }
-
+*/
 void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 
 	supla_esp_channel_value_changed(0, supla_esp_gpio_relay_on(B_RELAY1_PORT));
