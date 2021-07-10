@@ -55,8 +55,6 @@
 #define B_RELAY1_DIS	 21
 #define B_RELAY2_DIS	 22
 
-void supla_block_channel(int ledblock);
-
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
 																	supla_block_channel(LED_RED_BLOCK);	\
@@ -92,6 +90,8 @@ void supla_block_channel(int ledblock);
 										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;
 				
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
+
+void supla_block_channel(int ledblock);
 	
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved);
