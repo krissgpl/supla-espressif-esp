@@ -498,7 +498,7 @@ if ( port == 20 ) {
 		
 		if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
 			
-			supla_esp_cfg.FirmwareUpdate = 1; 
+			//supla_esp_cfg.FirmwareUpdate = 1; 
 			supla_esp_cfg_save(&supla_esp_cfg);
 			supla_esp_channel_value_changed(UPD_channel, 1);
 			supla_log(LOG_DEBUG, "value_changed upd - 0");
