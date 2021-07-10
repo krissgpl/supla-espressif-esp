@@ -1538,6 +1538,30 @@ char  supla_esp_gpio_relay_on(int port) {
 	return supla_esp_gpio_output_is_hi(port) == HI_VALUE ? 1 : 0;
 }
 
-
+void supla_block_channel(void)	{
+	
+	supla_log(LOG_DEBUG, "Blokada LED void !!!");
+	
+	/*os_timer_disarm(&Led_OFF);
+	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
+	os_timer_arm(&Led_OFF, 500, 0);	
+	
+	os_timer_disarm(&Led_ON);
+	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+	os_timer_arm(&Led_ON, 500, 0);
+	
+	os_timer_disarm(&Led_OFF);
+	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
+	os_timer_arm(&Led_OFF, 500, 0);	
+	
+	os_timer_disarm(&Led_ON);
+	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+	os_timer_arm(&Led_ON, 500, 0);
+	
+	os_timer_disarm(&Led_OFF);
+	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
+	os_timer_arm(&Led_OFF, 500, 0);	
+	*/
+}
 
 
