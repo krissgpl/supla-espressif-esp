@@ -92,7 +92,7 @@
 				
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
 
-void ICACHE_FLASH_ATTR supla_esp_board_block_channel(int ledblock);
+void supla_esp_board_block_channel(int ledblock);
 	
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved);
