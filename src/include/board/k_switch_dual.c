@@ -206,7 +206,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
    }
 }
 
-void supla_esp_board_block_channel(void)	{
+void supla_block_channel(void)	{
 	
 	supla_log(LOG_DEBUG, "Blokada LED void !!!");
 	
@@ -406,7 +406,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	supla_log(LOG_DEBUG, "supla_esp_state RELAY 3 = %i", supla_esp_state.Relay[3]);
 	supla_log(LOG_DEBUG, "supla_esp_state RELAY 4 = %i", supla_esp_state.Relay[4]);
 	
-	supla_esp_board_block_channel();	//test void
+	supla_block_channel();	//test void
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
