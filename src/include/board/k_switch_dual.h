@@ -57,7 +57,7 @@
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
-																	supla_block_channel();	\
+																	supla_block_channel(LED_RED_BLOCK);	\
 																	supla_log(LOG_DEBUG, "Blokada GPIO5 !!! po");	\
 																	return;	}	\
 	if ( port == B_RELAY2_PORT && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	\
@@ -91,8 +91,7 @@
 				
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
 
-//void supla_esp_board_block_channel(int ledblock);
-void supla_block_channel(void);
+void supla_block_channel(int ledblock);
 	
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved);
