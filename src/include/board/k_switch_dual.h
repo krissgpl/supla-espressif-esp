@@ -58,6 +58,7 @@
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
 																	supla_esp_board_block_channel(LED_RED_BLOCK);	\
+																	supla_log(LOG_DEBUG, "Blokada GPIO5 !!! po");	\
 																	return;	}	\
 	if ( port == B_RELAY2_PORT && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	\
 																	GPIO_OUTPUT_SET(13, 0);	\
