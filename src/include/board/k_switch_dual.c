@@ -206,11 +206,11 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
    }
 }
 
-void supla_esp_board_block_channel(int ledblock)	{
+void supla_esp_board_block_channel(void)	{
 	
 	supla_log(LOG_DEBUG, "Blokada LED void !!!");
 	
-	os_timer_disarm(&Led_OFF);
+	/*os_timer_disarm(&Led_OFF);
 	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
 	os_timer_arm(&Led_OFF, 500, 0);	
 	
@@ -229,7 +229,7 @@ void supla_esp_board_block_channel(int ledblock)	{
 	os_timer_disarm(&Led_OFF);
 	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
 	os_timer_arm(&Led_OFF, 500, 0);	
-	
+	*/
 }
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc) {
