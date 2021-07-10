@@ -127,10 +127,6 @@ void supla_esp_board_gpio_init(void) {
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTMS_U, FUNC_GPIO14);	//uzycie GPIO14
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTCK_U);					//pullup GPIO13
 	
-	supla_log(LOG_DEBUG, "TEST void przed");
-	supla_block_channel();	//test void
-	supla_log(LOG_DEBUG, "TEST void po");
-	
 	//----------------------------------------	wlaczenie zasilania dht z opoznieniem (zaklocenia)
 	
 	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
