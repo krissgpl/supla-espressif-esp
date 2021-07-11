@@ -43,7 +43,7 @@
 #define USE_GPIO16_OUTPUT
 
 #define LED_RED_BLOCK    0x1
-#define LED_BLUE_BLOCK   0x4
+#define LED_GREEN_BLOCK  0x2
 
 #define LED_RED_PORT     16
 #define LED_GREEN_PORT    4

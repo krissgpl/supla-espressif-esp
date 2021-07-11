@@ -66,17 +66,22 @@ void supla_esp_baord_Led_ON_cb(void *timer_arg) {
 	supla_log(LOG_DEBUG, "TIMER Led ON");
 	
 	if ( (int)timer_arg & LED_RED_BLOCK )
-		supla_esp_gpio_set_led(1, 0, 0);
+		supla_esp_gpio_set_hi(LED_RED_PORT, 1);
 	
-	if ( (int)timer_arg & LED_BLUE_BLOCK )
-		supla_esp_gpio_set_led(0, 1, 0);
+	if ( (int)timer_arg & LED_GREEN_BLOCK )
+		supla_esp_gpio_set_hi(LED_GREEN_PORT, 1);
 	
 }
 
 void supla_esp_baord_Led_OFF_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER Led OFF");
-	supla_esp_gpio_set_led(0, 0, 0);
+	
+	if ( (int)timer_arg & LED_RED_BLOCK )
+		supla_esp_gpio_set_hi(LED_RED_PORT, 0);
+	
+	if ( (int)timer_arg & LED_GREEN_BLOCK )
+		supla_esp_gpio_set_hi(LED_GREEN_PORT, 0);
 	
 }
 
@@ -211,9 +216,11 @@ void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 	
 	supla_log(LOG_DEBUG, "Blokada board LED void !!!");
 	
-	os_timer_disarm(&Led_OFF);
-	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
-	os_timer_arm(&Led_OFF, 500, 0);	
+	if ( ledblock == LED_RED_BLOCK )
+		supla_esp_gpio_set_hi(LED_RED_PORT, 0);
+	
+	if ( ledblock == LED_GREEN_BLOCK )
+		supla_esp_gpio_set_hi(LED_GREEN_PORT, 0);
 	
 	os_timer_disarm(&Led_ON);
 	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
@@ -221,15 +228,15 @@ void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 	
 	os_timer_disarm(&Led_OFF);
 	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
-	os_timer_arm(&Led_OFF, 500, 0);	
+	os_timer_arm(&Led_OFF, 1000, 0);	
 	
 	os_timer_disarm(&Led_ON);
 	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
-	os_timer_arm(&Led_ON, 500, 0);
+	os_timer_arm(&Led_ON, 1500, 0);
 	
 	os_timer_disarm(&Led_OFF);
 	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
-	os_timer_arm(&Led_OFF, 500, 0);	
+	os_timer_arm(&Led_OFF, 2000, 0);	
 
 }
 
