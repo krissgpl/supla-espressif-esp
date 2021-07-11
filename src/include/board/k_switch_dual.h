@@ -57,7 +57,6 @@
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
-																	GPIO_OUTPUT_SET(B_RELAY1_PORT, 0);	\
 																	supla_block_channel(LED_RED_BLOCK);	\
 																	supla_log(LOG_DEBUG, "Blokada GPIO5 !!! po");	\
 																	if (supla_esp_gpio_output_is_hi(B_RELAY1_PORT) == 0) {\
@@ -87,6 +86,7 @@
 									return supla_esp_state.Relay[3] == 1 ? 1 : 0;	}	\
 				if ( port == 22)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
 									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	\
+				if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_esp_gpio_set_hi( B_RELAY1_PORT, 0 );	}
 				
 #define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;
