@@ -232,19 +232,19 @@ void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 	
 		os_timer_disarm(&Led_ON);
 		os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
-		os_timer_arm(&Led_ON, 300, 0);
+		os_timer_arm(&Led_ON, 200, 0);
 	
 		os_timer_disarm(&Led_OFF);
 		os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
-		os_timer_arm(&Led_OFF, 600, 0);	
+		os_timer_arm(&Led_OFF, 400, 0);	
 	
 		os_timer_disarm(&Led_ON2);
 		os_timer_setfn(&Led_ON2, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
-		os_timer_arm(&Led_ON2, 1200, 0);
+		os_timer_arm(&Led_ON2, 800, 0);
 	
 		os_timer_disarm(&Led_OFF2);
 		os_timer_setfn(&Led_OFF2, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
-		os_timer_arm(&Led_OFF2, 1500, 0);	
+		os_timer_arm(&Led_OFF2, 1200, 0);	
 	}
 }
 
