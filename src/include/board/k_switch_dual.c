@@ -32,9 +32,7 @@ ETSTimer Led_OFF;
 int UPD_channel;
 int DIS1_CH;
 int DIS2_CH;
-int Licznik;
-
-Licznik = 0;
+unsigned int Licznik = 0;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
