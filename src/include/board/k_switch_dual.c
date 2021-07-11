@@ -32,6 +32,9 @@ ETSTimer Led_OFF;
 int UPD_channel;
 int DIS1_CH;
 int DIS2_CH;
+int Licznik;
+
+Licznik = 0;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
@@ -214,30 +217,35 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 
 void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 	
+	Licznik = Licznik + 1;
 	supla_log(LOG_DEBUG, "Blokada board LED void !!!");
 	
-	if ( ledblock == LED_RED_BLOCK )
-		supla_esp_gpio_set_hi(LED_RED_PORT, 0);
+	if ( Licznik = 2)	{
+		
+		Licznik = 0;
 	
-	if ( ledblock == LED_GREEN_BLOCK )
-		supla_esp_gpio_set_hi(LED_GREEN_PORT, 0);
+		if ( ledblock == LED_RED_BLOCK )
+			supla_esp_gpio_set_hi(LED_RED_PORT, 0);
 	
-	os_timer_disarm(&Led_ON);
-	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
-	os_timer_arm(&Led_ON, 500, 0);
+		if ( ledblock == LED_GREEN_BLOCK )
+			supla_esp_gpio_set_hi(LED_GREEN_PORT, 0);
 	
-	os_timer_disarm(&Led_OFF);
-	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
-	os_timer_arm(&Led_OFF, 1000, 0);	
+		os_timer_disarm(&Led_ON);
+		os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+		os_timer_arm(&Led_ON, 500, 0);
 	
-	os_timer_disarm(&Led_ON);
-	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
-	os_timer_arm(&Led_ON, 1500, 0);
+		os_timer_disarm(&Led_OFF);
+		os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
+		os_timer_arm(&Led_OFF, 1000, 0);	
 	
-	os_timer_disarm(&Led_OFF);
-	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
-	os_timer_arm(&Led_OFF, 2000, 0);	
-
+		os_timer_disarm(&Led_ON);
+		os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+		os_timer_arm(&Led_ON, 1500, 0);
+	
+		os_timer_disarm(&Led_OFF);
+		os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
+		os_timer_arm(&Led_OFF, 2000, 0);	
+	}
 }
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc) {
