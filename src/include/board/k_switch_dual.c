@@ -503,7 +503,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
 	DIS1_CH = 3;
 	DIS2_CH = 4;
 	
-	int ledblock;
+	//int ledblock;
 	
 if ( port == 20 ) {	
 
