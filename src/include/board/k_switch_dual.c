@@ -94,10 +94,10 @@ void supla_esp_baord_Port_OFF_cb(void *timer_arg) {
 	supla_log(LOG_DEBUG, "TIMER Port OFF");
 	
 	if ( (int)timer_arg & LED_RED_BLOCK )
-		supla_esp_gpio_set_hi(B_RELAY1_PORT, 0);
+		supla_esp_channel_value_changed(0, 0);
 	
 	if ( (int)timer_arg & LED_GREEN_BLOCK )
-		supla_esp_gpio_set_hi(B_RELAY2_PORT, 0);
+		supla_esp_channel_value_changed(1, 0);
 	
 }
 
@@ -503,7 +503,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
 	DIS1_CH = 3;
 	DIS2_CH = 4;
 	
-	//int ledblock;
+	int ledblock;
 	
 if ( port == 20 ) {	
 
@@ -540,11 +540,11 @@ if ( port == 21 ) {
 		supla_esp_cfg_save(&supla_esp_cfg);
 		supla_esp_channel_value_changed(DIS1_CH, hi);
 	
-		/*ledblock=LED_RED_BLOCK;
+		ledblock=LED_RED_BLOCK;
 		os_timer_disarm(&Port_OFF);
 		os_timer_setfn(&Port_OFF, (os_timer_func_t *)supla_esp_baord_Port_OFF_cb, (void*)ledblock);	
 		os_timer_arm(&Port_OFF, 300, 0);
-		*/
+		
 };
 
 if ( port == 22 ) {	
