@@ -226,9 +226,11 @@ void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 	
 		if ( ledblock == LED_RED_BLOCK )
 			supla_esp_gpio_set_hi(LED_RED_PORT, 0);
+			supla_esp_gpio_set_hi(B_RELAY1_PORT, 0);
 	
 		if ( ledblock == LED_GREEN_BLOCK )
 			supla_esp_gpio_set_hi(LED_GREEN_PORT, 0);
+			supla_esp_gpio_set_hi(B_RELAY2_PORT, 0);
 	
 		os_timer_disarm(&Led_ON);
 		os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
