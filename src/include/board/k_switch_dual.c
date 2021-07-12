@@ -243,10 +243,6 @@ void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 		if ( ledblock == LED_GREEN_BLOCK )
 			supla_esp_gpio_set_hi(LED_GREEN_PORT, 0);
 		
-		os_timer_disarm(&Port_OFF);
-		os_timer_setfn(&Port_OFF, (os_timer_func_t *)supla_esp_baord_Port_OFF_cb, (void*)ledblock);	
-		os_timer_arm(&Port_OFF, 300, 0);	
-	
 		os_timer_disarm(&Led_ON);
 		os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
 		os_timer_arm(&Led_ON, 200, 0);
@@ -541,6 +537,12 @@ if ( port == 21 ) {
 		supla_esp_channel_value_changed(DIS1_CH, supla_esp_state.Relay[DIS1_CH]);
 		supla_esp_cfg_save(&supla_esp_cfg);
 		supla_esp_channel_value_changed(DIS1_CH, hi);
+	
+		ledblock=LED_RED_BLOCK;
+		os_timer_disarm(&Port_OFF);
+		os_timer_setfn(&Port_OFF, (os_timer_func_t *)supla_esp_baord_Port_OFF_cb, (void*)ledblock);	
+		os_timer_arm(&Port_OFF, 300, 0);
+		
 };
 
 if ( port == 22 ) {	
