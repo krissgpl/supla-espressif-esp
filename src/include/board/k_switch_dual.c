@@ -513,7 +513,7 @@ if ( port == 20 ) {
 	
 		supla_log(LOG_DEBUG, "update, port = %i", port);
 		
-		if ( supla_esp_cfg.FirmwareUpdate == 0 ) {	//z 1 na 0
+		if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
 			
 			supla_esp_state.Relay[UPD_channel] = 1;
 			supla_log(LOG_DEBUG, "value_changed upd - 1");
