@@ -556,5 +556,10 @@ if ( port == 22 ) {
 		supla_esp_channel_value_changed(DIS2_CH, supla_esp_state.Relay[DIS2_CH]);
 		supla_esp_cfg_save(&supla_esp_cfg);
 		supla_esp_channel_value_changed(DIS2_CH, hi);
+		
+		ledblock=LED_GREEN_BLOCK;
+		os_timer_disarm(&Port_OFF);
+		os_timer_setfn(&Port_OFF, (os_timer_func_t *)supla_esp_baord_Port_OFF_cb, (void*)ledblock);	
+		os_timer_arm(&Port_OFF, 300, 0);
 };
 }
