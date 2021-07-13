@@ -468,7 +468,7 @@ void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 	Licznik = Licznik + 1;
 	supla_log(LOG_DEBUG, "Blokada board LED void !!!");
 	
-	if ( Licznik == 2)	{
+	if ( Licznik == 1)	{
 		
 		Licznik = 0;
 	
