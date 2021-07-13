@@ -93,11 +93,13 @@ void supla_esp_baord_Port_OFF_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER Port OFF");
 	
-	if ( (int)timer_arg & LED_RED_BLOCK )
-		supla_esp_channel_value_changed(0, 0);
+	if ( (int)timer_arg & LED_RED_BLOCK ) {
+		supla_esp_gpio_set_hi(B_RELAY1_PORT, 0);
+		supla_esp_channel_value_changed(0, 0); }
 	
-	if ( (int)timer_arg & LED_GREEN_BLOCK )
-		supla_esp_channel_value_changed(1, 0);
+	if ( (int)timer_arg & LED_GREEN_BLOCK ) {
+		supla_esp_gpio_set_hi(B_RELAY2_PORT, 0);
+	supla_esp_channel_value_changed(1, 0); }
 	
 }
 
@@ -226,39 +228,6 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[5].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
 	supla_get_temp_and_humidity(channels[5].value);
    }
-}
-
-void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
-	
-	Licznik = Licznik + 1;
-	supla_log(LOG_DEBUG, "Blokada board LED void !!!");
-	
-	if ( Licznik == 2)	{
-		
-		Licznik = 0;
-	
-		if ( ledblock == LED_RED_BLOCK )
-			supla_esp_gpio_set_hi(LED_RED_PORT, 0);
-			
-		if ( ledblock == LED_GREEN_BLOCK )
-			supla_esp_gpio_set_hi(LED_GREEN_PORT, 0);
-		
-		os_timer_disarm(&Led_ON);
-		os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
-		os_timer_arm(&Led_ON, 200, 0);
-	
-		os_timer_disarm(&Led_OFF);
-		os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
-		os_timer_arm(&Led_OFF, 400, 0);	
-	
-		os_timer_disarm(&Led_ON2);
-		os_timer_setfn(&Led_ON2, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
-		os_timer_arm(&Led_ON2, 800, 0);
-	
-		os_timer_disarm(&Led_OFF2);
-		os_timer_setfn(&Led_OFF2, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
-		os_timer_arm(&Led_OFF2, 1200, 0);	
-	}
 }
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc) {
@@ -491,6 +460,39 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 			    &&  input_cfg->channel != 255 ) {
 		supla_esp_channel_value_changed(input_cfg->channel, 0);
 
+	}
+}
+
+void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
+	
+	Licznik = Licznik + 1;
+	supla_log(LOG_DEBUG, "Blokada board LED void !!!");
+	
+	if ( Licznik == 2)	{
+		
+		Licznik = 0;
+	
+		if ( ledblock == LED_RED_BLOCK )
+			supla_esp_gpio_set_hi(LED_RED_PORT, 0);
+			
+		if ( ledblock == LED_GREEN_BLOCK )
+			supla_esp_gpio_set_hi(LED_GREEN_PORT, 0);
+		
+		os_timer_disarm(&Led_ON);
+		os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+		os_timer_arm(&Led_ON, 200, 0);
+	
+		os_timer_disarm(&Led_OFF);
+		os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
+		os_timer_arm(&Led_OFF, 400, 0);	
+	
+		os_timer_disarm(&Led_ON2);
+		os_timer_setfn(&Led_ON2, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+		os_timer_arm(&Led_ON2, 800, 0);
+	
+		os_timer_disarm(&Led_OFF2);
+		os_timer_setfn(&Led_OFF2, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
+		os_timer_arm(&Led_OFF2, 1200, 0);	
 	}
 }
 

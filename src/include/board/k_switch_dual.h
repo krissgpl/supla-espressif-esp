@@ -62,7 +62,9 @@
 																	supla_log(LOG_DEBUG, "Blokada GPIO5 !!! po");	\
 																	return;	} 	}	\
 	if ( port == B_RELAY2_PORT && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	\
-																	GPIO_OUTPUT_SET(B_RELAY2_PORT, 0);	\
+																	supla_block_channel(LED_GREEN_BLOCK);	\
+																	if (supla_esp_gpio_output_is_hi(B_RELAY2_PORT) == 0) {\
+																	supla_log(LOG_DEBUG, "Blokada GPIO13 !!! po");	\
 																	return;	}	\
 	if (supla_last_state == STATE_CONNECTED) { \
 		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
