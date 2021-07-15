@@ -421,7 +421,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
     input_cfg->last_state = 0;
 }
 
-void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
+void GPIO_ICACHE_FLASH supla_block_channel(void) {
 
 	supla_log(LOG_DEBUG, "Blokada board LED void !!!");
 
