@@ -24,6 +24,11 @@
 #include "supla_dht.h"
 
 ETSTimer value_timer1;
+ETSTimer Led_ON;
+ETSTimer Led_OFF;
+ETSTimer Led_ON2;
+ETSTimer Led_OFF2;
+
 int UPD_channel;
 int DIS_CH;
 
@@ -52,6 +57,20 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER update - restart");
 	supla_system_restart();
+	
+}
+
+void supla_esp_baord_Led_ON_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "TIMER Led ON");
+	supla_esp_gpio_set_hi(LED_RED_PORT, 1);
+	
+}
+
+void supla_esp_baord_Led_OFF_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "TIMER Led OFF");
+	supla_esp_gpio_set_hi(LED_RED_PORT, 0);
 	
 }
 
@@ -400,6 +419,30 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
     }
 
     input_cfg->last_state = 0;
+}
+
+void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
+
+	supla_log(LOG_DEBUG, "Blokada board LED void !!!");
+
+	supla_esp_gpio_set_hi(LED_RED_PORT, 0);
+
+	os_timer_disarm(&Led_ON);
+	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, NULL);	
+	os_timer_arm(&Led_ON, 200, 0);
+	
+	os_timer_disarm(&Led_OFF);
+	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
+	os_timer_arm(&Led_OFF, 400, 0);	
+	
+	os_timer_disarm(&Led_ON2);
+	os_timer_setfn(&Led_ON2, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, NULL);	
+	os_timer_arm(&Led_ON2, 800, 0);
+	
+	os_timer_disarm(&Led_OFF2);
+	os_timer_setfn(&Led_OFF2, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
+	os_timer_arm(&Led_OFF2, 1200, 0);
+	
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
