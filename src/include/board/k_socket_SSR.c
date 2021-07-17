@@ -119,39 +119,29 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[0].Default = SUPLA_CHANNELFNC_POWERSWITCH;
 	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
 	
-  if( supla_esp_cfg.ThermometerType == 1 ) {
-    channels[1].Number = 1;
-	channels[1].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
-	channels[1].FuncList = 0;
-	channels[1].Default = 0;
-	supla_get_temperature(channels[1].value);
-  }
-
-  if( supla_esp_cfg.ThermometerType == 2 ) {
-	channels[1].Number = 1;
-	channels[1].Type = SUPLA_CHANNELTYPE_DHT22;
-	channels[1].FuncList = 0;
-	channels[1].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
-	supla_get_temp_and_humidity(channels[1].value);
-   }
-	
-  if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
-	channels[2].Number = 2;
-	channels[2].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[2].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
-	channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[2].Default = 0;
-	channels[2].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
-   }
-  else {
 	channels[1].Number = 1;
 	channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[1].Default = 0;
 	channels[1].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
-   }
+	
+  if( supla_esp_cfg.ThermometerType == 1 ) {
+    channels[2].Number = 2;
+	channels[2].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
+	channels[2].FuncList = 0;
+	channels[2].Default = 0;
+	supla_get_temperature(channels[2].value);
+  }
 
+  if( supla_esp_cfg.ThermometerType == 2 ) {
+	channels[2].Number = 2;
+	channels[2].Type = SUPLA_CHANNELTYPE_DHT22;
+	channels[2].FuncList = 0;
+	channels[2].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+	supla_get_temp_and_humidity(channels[2].value);
+   }
+	 
 }
 
 
@@ -159,12 +149,8 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 
 	supla_esp_channel_value_changed(0, supla_esp_gpio_relay_on(B_RELAY1_PORT));
+	supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_UPD_PORT));
 	
-	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
-		supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_UPD_PORT));
-	} else {
-		supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_UPD_PORT));
-	}
 }
 
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
@@ -259,7 +245,7 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       "value=\"%s\"><label>E-mail</label></i></div><div "
       "class=\"w\"><h3>Additional Settings</h3>"
 	  "<i><select name=\"led\"><option value=\"0\" %s>LED "
-      "ON<option value=\"1\" %s>LED OFF</select><label>Status - connected</label></i>"
+      "ON<option value=\"1\" %s>LED OFF<option value=\"2\" %s>CHANNEL STATUS</select><label>Status LED</label></i>"
 	  "<i><select name=\"trm\"><option value=\"0\" %s>NONE</option>"
       "<option value=\"1\" %s>DS18B20</option><option value=\"2\" %s>DHT22</option>"
       "</select><label>Thermometer type:</label></i>"
@@ -309,6 +295,7 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       supla_esp_cfg.Server, supla_esp_cfg.Email,
 	  supla_esp_cfg.StatusLedOff == 0 ? "selected" : "",
       supla_esp_cfg.StatusLedOff == 1 ? "selected" : "",
+	  supla_esp_cfg.StatusLedOff == 2 ? "selected" : "",
 	  supla_esp_cfg.ThermometerType == 0 ? "selected" : "",
 	  supla_esp_cfg.ThermometerType == 1 ? "selected" : "",
   	  supla_esp_cfg.ThermometerType == 2 ? "selected" : "",
@@ -320,7 +307,12 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
-  supla_esp_gpio_set_led(!supla_esp_cfg.StatusLedOff, 0, 0);
+	
+  if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {
+		supla_esp_gpio_set_led(!supla_esp_cfg.StatusLedOff, 0, 0);
+	} else {
+		supla_esp_gpio_set_led(supla_esp_gpio_output_is_hi(B_RELAY1_PORT), 0, 0);
+	}
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {

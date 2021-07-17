@@ -21,7 +21,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 12
 
-#define SUPLA_ESP_SOFTVER "3.0.0.1"
+#define SUPLA_ESP_SOFTVER "2.8.12.0"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -31,12 +31,13 @@
 
 #define AP_SSID "SOCKET_SSR"
 #define ESP_HOSTNAME "SUPLA-SOCKET-SSR"
+#define CFGMODE_SSID_LIMIT_MACLEN
 
 #define DS18B20
-#define TEMPERATURE_CHANNEL 1
+#define TEMPERATURE_CHANNEL 2
 
 #define DHTSENSOR
-#define TEMPERATURE_HUMIDITY_CHANNEL 1
+#define TEMPERATURE_HUMIDITY_CHANNEL 2
 
 #define USE_GPIO16_OUTPUT
 
@@ -46,6 +47,9 @@
 #define B_UPD_PORT		 20
 
 #define BOARD_GPIO_OUTPUT_SET_HI if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
+
+#define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;
 		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 	
