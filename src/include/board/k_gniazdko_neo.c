@@ -74,6 +74,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[1].Number = 1;
 	channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[1].Default = 0;
 	channels[1].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
 
@@ -81,9 +82,8 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
   
-  supla_esp_gpio_set_led(!supla_esp_gpio_output_is_hi(12), 0, 0); 
-  
-	  
+  supla_esp_gpio_set_led(!supla_esp_gpio_output_is_hi(B_RELAY1_PORT), 0, 0); 
+  	  
 }
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc) {
