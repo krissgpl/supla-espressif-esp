@@ -85,6 +85,7 @@ void GPIO_ICACHE_FLASH
 supla_esp_gpio_rs_set_relay_delayed(void *timer_arg) {
 
 	supla_esp_gpio_rs_set_relay((supla_roller_shutter_cfg_t*)timer_arg, ((supla_roller_shutter_cfg_t*)timer_arg)->delayed_trigger.value, 0, 0);
+  // TODO reset delayed_trigger.value to 0
 
 }
 
@@ -227,7 +228,7 @@ supla_esp_gpio_rs_move_position(supla_roller_shutter_cfg_t *rs_cfg, unsigned int
 
 	if ( ((*rs_cfg->position) == 100 && up == 1) || ((*rs_cfg->position) == 10100 && up == 0) ) {
 
-		if ( (*time) >= (*full_time) * 1.1 ) {
+		if ( (*time) >= (int)((*full_time) * 1.1) ) {
 
 			supla_esp_gpio_rs_set_relay(rs_cfg, RS_RELAY_OFF, 0, 0);
 			//supla_log(LOG_DEBUG, "Timeout full_time + 10%");
@@ -342,23 +343,19 @@ supla_esp_gpio_rs_timer_cb(void *timer_arg) {
 	if ( supla_esp_gpio_init_time == 0 )
 		return;
 
-	unsigned int t = system_get_time()/100000;
-
-	if ( t == 0 )
-		t = 1;
-
+	unsigned int t = system_get_time();
 
 	if ( 1 == __supla_esp_gpio_relay_is_hi(rs_cfg->up) ) {
 
 		rs_cfg->down_time = 0;
-		rs_cfg->up_time += (t-rs_cfg->last_time)*100;
+		rs_cfg->up_time += (t-rs_cfg->last_time)/1000;
 
 		supla_esp_gpio_rs_calibrate(rs_cfg, *rs_cfg->full_opening_time, rs_cfg->up_time, 100);
 		supla_esp_gpio_rs_move_position(rs_cfg, rs_cfg->full_opening_time, &rs_cfg->up_time, 1);
 
 	} else if ( 1 == __supla_esp_gpio_relay_is_hi(rs_cfg->down) ) {
 
-		rs_cfg->down_time += (t-rs_cfg->last_time)*100;
+		rs_cfg->down_time += (t-rs_cfg->last_time)/1000;
 		rs_cfg->up_time = 0;
 
 		supla_esp_gpio_rs_calibrate(rs_cfg, *rs_cfg->full_closing_time, rs_cfg->down_time, 10100);
@@ -374,12 +371,9 @@ supla_esp_gpio_rs_timer_cb(void *timer_arg) {
 
 	}
 
-
-
 	supla_esp_gpio_rs_task_processing(rs_cfg);
 
-
-	if ( rs_cfg->last_time-rs_cfg->n >= 10 ) { // 10 == 1 sec.
+	if ( rs_cfg->last_time-rs_cfg->last_comm_time >= 1000 ) { // 1000 == 1 sec.
 
 		if ( rs_cfg->last_position != *rs_cfg->position ) {
 
@@ -388,20 +382,20 @@ supla_esp_gpio_rs_timer_cb(void *timer_arg) {
 			supla_esp_channel_value_changed(rs_cfg->up->channel, pos);
 
 #ifdef BOARD_ON_ROLLERSHUTTER_POSITION_CHANGED
-                        supla_esp_board_on_rollershutter_position_changed(
-                            rs_cfg->up->channel, pos);
+      supla_esp_board_on_rollershutter_position_changed(
+          rs_cfg->up->channel, pos);
 #endif /*BOARD_ON_ROLLERSHUTTER_POSITION_CHANGED*/
-                }
+    }
 
+    // TODO: move timeout based relay switch off out of current "if"
+    // TODO: reset up/down_time to 0 just after stop
 		if ( rs_cfg->up_time > 600000 || rs_cfg->down_time > 600000 ) { // 10 min. - timeout
 			supla_esp_gpio_rs_set_relay(rs_cfg, RS_RELAY_OFF, 0, 0);
 		}
 		
 		//supla_log(LOG_DEBUG, "UT: %i, DT: %i, FOT: %i, FCT: %i, pos: %i", rs_cfg->up_time, rs_cfg->down_time, *rs_cfg->full_opening_time, *rs_cfg->full_closing_time, *rs_cfg->position);
-		rs_cfg->n = t;
+		rs_cfg->last_comm_time = t;
 	}
-
-
 
 	rs_cfg->last_time = t;
 }
@@ -635,7 +629,7 @@ char supla_esp_gpio_relay_hi(int port, char hi, char save_before) {
     		if ( supla_relay_cfg[a].flags & RELAY_FLAG_RESTORE
     			 || supla_relay_cfg[a].flags & RELAY_FLAG_RESTORE_FORCE )
     			state = &supla_esp_state.Relay[a];
-				
+
     		if ( supla_relay_cfg[a].flags &  RELAY_FLAG_LO_LEVEL_TRIGGER )
     			_hi = hi == HI_VALUE ? LO_VALUE : HI_VALUE;
 
