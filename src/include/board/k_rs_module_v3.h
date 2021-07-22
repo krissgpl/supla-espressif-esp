@@ -25,7 +25,7 @@
 #define ESP8266_SUPLA_PROTO_VERSION 12
 #define BOARD_CFG_HTML_TEMPLATE
 
-#define SUPLA_ESP_SOFTVER "2.8.12.0"
+#define SUPLA_ESP_SOFTVER "2.8.14.0"
 
 #define _ROLLERSHUTTER_SUPPORT
 
@@ -52,6 +52,7 @@
 #define LED_RED_PORT   	   16
 
 #define WATCHDOG_TIMEOUT_SEC 90
+#define RELAY_MIN_DELAY 50
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[2] == 1 ) { \
