@@ -21,27 +21,33 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 12
 
-#define SUPLA_ESP_SOFTVER "2.7.24.0"
+#define SUPLA_ESP_SOFTVER "2.8.14.0"
 
 #define BOARD_ON_CONNECT
+#define CFGMODE_SSID_LIMIT_MACLEN
 
 #define LED_RED_PORT     2
 #define B_RELAY1_PORT    4
 #define B_CFG_PORT       5
+#define B_UPD_PORT		 20
 
 #define AP_SSID "YUNSCHAN"
 
-#define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) {if (port == LED_RED_PORT) {hi =!supla_esp_gpio_output_is_hi(B_RELAY1_PORT);\
- } else if (port==B_RELAY1_PORT) {\
- GPIO_OUTPUT_SET(GPIO_ID_PIN(LED_RED_PORT),  hi); }\
- else if (port == 20) { \
- 	supla_log(LOG_DEBUG, "update, port = %i", port); \
-	supla_esp_devconn_stop(); \
-	os_delay_us(200); \
-	supla_system_restart(); };  \
-};
+#define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) \
+	{if (port == LED_RED_PORT) { hi =!supla_esp_gpio_output_is_hi(B_RELAY1_PORT);\
+	 } else if (port==B_RELAY1_PORT) {\
+		supla_esp_gpio_set_led(hi, 1, 1); }\
+	  else if (port == 20) { \
+		supla_esp_board_gpiooutput_set_hi(port, hi); 	\
+		return; } };
+
+#define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;		
+
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
+
+void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
 #define BOARD_ON_INPUT_ACTIVE                        \
     supla_esp_board_gpio_on_input_active(input_cfg); \

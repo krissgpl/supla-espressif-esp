@@ -18,6 +18,8 @@
 	
 #include "public_key_in_c_code"		// moj klucz
 
+ETSTimer value_timer1;
+int UPD_channel;
 
 void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 
@@ -25,6 +27,12 @@ void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 
 }
 
+void supla_esp_baord_value_timer1_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "TIMER update - restart");
+	supla_system_restart();
+	
+}
 
 void supla_esp_board_gpio_init(void) {
 		
@@ -35,7 +43,6 @@ void supla_esp_board_gpio_init(void) {
 	supla_input_cfg[0].channel = 0;
 
 	// ---------------------------------------
-	// ---------------------------------------
 
     supla_relay_cfg[0].gpio_id = B_RELAY1_PORT;
     supla_relay_cfg[0].flags = RELAY_FLAG_RESTORE_FORCE;
@@ -43,7 +50,8 @@ void supla_esp_board_gpio_init(void) {
 
 	//---------------------------------------
 
-	supla_relay_cfg[1].gpio_id = 20;
+	supla_relay_cfg[1].gpio_id = B_UPD_PORT;	// update init channel
+	supla_relay_cfg[1].flags = RELAY_FLAG_VIRTUAL_GPIO;
 	supla_relay_cfg[1].channel = 1;
     
 
@@ -57,32 +65,32 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
-
 	channels[0].FuncList = SUPLA_BIT_FUNC_POWERSWITCH \
 								| SUPLA_BIT_FUNC_LIGHTSWITCH;
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[0].Default = SUPLA_CHANNELFNC_POWERSWITCH;
-
 	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
-	//---------------------------------------
+
 	channels[1].Number = 1;
 	channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[1].Default = 0;
-	channels[1].value[0] = supla_esp_gpio_relay_on(20);
+	channels[1].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
 
 }
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 
 	supla_esp_channel_value_changed(0, supla_esp_gpio_relay_on(B_RELAY1_PORT));
+	supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_UPD_PORT));
 	
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
   
-  if ( supla_esp_gpio_output_is_hi(4) == 1 ) { supla_esp_gpio_set_led(1, 0, 0); }
-  if ( supla_esp_gpio_output_is_hi(4) == 0 ) { supla_esp_gpio_set_led(0, 0, 0); }
+  supla_esp_gpio_set_led(supla_esp_gpio_output_is_hi(B_RELAY1_PORT), 0, 0);
+  
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
@@ -142,4 +150,35 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 	}
 
     input_cfg->last_state = 0;
+}
+
+void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
+		
+	UPD_channel = 1;
+	
+	if ( hi == 1 ) {
+	
+		supla_log(LOG_DEBUG, "update, port = %i", port);
+		
+		if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
+			
+			supla_esp_state.Relay[UPD_channel] = 1;
+			supla_log(LOG_DEBUG, "value_changed upd - 1");
+			supla_esp_save_state(SAVE_STATE_DELAY);
+			supla_esp_channel_value_changed(UPD_channel, supla_esp_state.Relay[UPD_channel]);
+			os_timer_disarm(&value_timer1);
+			os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
+			os_timer_arm(&value_timer1, 4000, 0);
+				
+		};
+		
+		if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
+				
+			supla_esp_cfg.FirmwareUpdate = 1; 
+			supla_esp_cfg_save(&supla_esp_cfg);
+			supla_esp_channel_value_changed(UPD_channel, 1);
+			supla_log(LOG_DEBUG, "value_changed upd - 0");
+				
+		};
+	};
 }
