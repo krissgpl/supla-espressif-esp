@@ -21,7 +21,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 12
 
-#define SUPLA_ESP_SOFTVER "2.8.12.0"
+#define SUPLA_ESP_SOFTVER "2.8.14.0"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -46,7 +46,13 @@
 #define B_BTN1_PORT       0
 #define B_UPD_PORT		 20
 
-#define BOARD_GPIO_OUTPUT_SET_HI if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
+#define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) \
+	{if (port == LED_RED_PORT) { hi =!supla_esp_gpio_output_is_hi(B_RELAY1_PORT);\
+	 } else if (port==B_RELAY1_PORT) {\
+		supla_esp_gpio_set_led(hi, 1, 1); }\
+	  else if (port == 20) { \
+		supla_esp_board_gpiooutput_set_hi(port, hi); 	\
+		return; } };
 
 #define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;

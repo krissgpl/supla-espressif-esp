@@ -130,6 +130,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
     channels[2].Number = 2;
 	channels[2].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
 	channels[2].FuncList = 0;
+	channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[2].Default = 0;
 	supla_get_temperature(channels[2].value);
   }
@@ -138,6 +139,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[2].Number = 2;
 	channels[2].Type = SUPLA_CHANNELTYPE_DHT22;
 	channels[2].FuncList = 0;
+	channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[2].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
 	supla_get_temp_and_humidity(channels[2].value);
    }
@@ -317,16 +319,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
-		if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
-		
-			UPD_channel = 2;
+		UPD_channel = 1;
 			
-		} else {
-		
-			UPD_channel = 1;
-			
-		};
-		
 		if ( hi == 1 ) {
 	
 			supla_log(LOG_DEBUG, "update, port = %i", port);
