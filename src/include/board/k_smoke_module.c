@@ -92,8 +92,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	#ifdef __BOARD_k_smoke_module_ds18b20
 		channels[1].Number = 1;
 		channels[1].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
-
 		channels[1].FuncList = 0;
+		channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 		channels[1].Default = 0;
 
 		supla_get_temperature(channels[1].value);
@@ -102,8 +102,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	#ifdef __BOARD_k_smoke_module_DHT22
 		channels[1].Number = 1;
 		channels[1].Type = SUPLA_CHANNELTYPE_DHT22;
-
 		channels[1].FuncList = 0;
+		channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 		channels[1].Default = 0;
 
 		supla_get_temp_and_humidity(channels[1].value);
