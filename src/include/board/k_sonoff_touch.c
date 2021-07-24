@@ -306,8 +306,8 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       "value=\"%s\"><label>E-mail</label></i></div><div "
       "class=\"w\"><h3>Additional Settings</h3><i><select name=\"led\"><option "
       "value=\"0\" %s>LED "
-      "ON<option value=\"1\" %s>LED OFF</select><label>Status - "
-      "connected</label></i><i><select name=\"upd\"><option value=\"0\" "
+      "ON<option value=\"1\" %s>LED OFF</select><label>Status LED"
+      "</label></i><i><select name=\"upd\"><option value=\"0\" "
       "%s>NO<option value=\"1\" %s>YES</select><label>Firmware "
       "update</label></i></div><button "
       "type=\"submit\">SAVE</button></form></div><br><br>";

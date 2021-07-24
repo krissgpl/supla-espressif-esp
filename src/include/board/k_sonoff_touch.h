@@ -26,7 +26,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 12
 
-#define SUPLA_ESP_SOFTVER "3.0.0.0"
+#define SUPLA_ESP_SOFTVER "2.8.14.0"
 
 #ifdef __BOARD_k_sonoff_touch
 	#define AP_SSID "SONOFF-TOUCH"
@@ -43,6 +43,8 @@
 	#define ESP_HOSTNAME "SONOFF-TOUCH-TRIPLE"
 #endif
 
+#define CFGMODE_SSID_LIMIT_MACLEN
+
 #define LED_RED_PORT     13
 #define B_RELAY1_PORT    12
 #define B_RELAY2_PORT     5
@@ -55,6 +57,9 @@
 #define B_UPD_PORT		 20
 
 #define BOARD_GPIO_OUTPUT_SET_HI if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
+
+#define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;
 		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
