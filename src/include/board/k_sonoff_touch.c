@@ -20,7 +20,20 @@
 #include "public_key_in_c_code"
 
 ETSTimer value_timer1;
+ETSTimer Led_ON;
+ETSTimer Led_OFF;
+ETSTimer Led_ON2;
+ETSTimer Led_OFF2;
+ETSTimer Port_OFF;
+
 int UPD_channel;
+int DIS1_CH;
+#if defined(__BOARD_k_sonoff_touch_dual) || defined(__BOARD_k_sonoff_touch_triple)
+int DIS2_CH;
+#ifdef __BOARD_k_sonoff_touch_triple
+int DIS3_CH;
+#endif
+unsigned int Licznik = 0;
 
 void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 		#if defined __BOARD_k_sonoff_touch_triple
@@ -36,6 +49,36 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER update - restart");
 	supla_system_restart();
+	
+}
+
+void supla_esp_baord_Led_ON_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "TIMER Led ON");
+	supla_esp_gpio_set_hi(LED_RED_PORT, 1);
+}
+
+void supla_esp_baord_Led_OFF_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "TIMER Led OFF");
+	supla_esp_gpio_set_hi(LED_RED_PORT, 0);
+}
+
+void supla_esp_baord_Port_OFF_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "TIMER Port OFF");
+	
+	if ( (int)timer_arg & LED_RED_BLOCK ) {
+		supla_esp_gpio_set_hi(B_RELAY1_PORT, 0);
+		supla_esp_channel_value_changed(0, 0); }
+	
+	if ( (int)timer_arg & LED_GREEN_BLOCK ) {
+		supla_esp_gpio_set_hi(B_RELAY2_PORT, 0);
+		supla_esp_channel_value_changed(1, 0); }
+		
+	if ( (int)timer_arg & LED_BLUE_BLOCK ) {
+		supla_esp_gpio_set_hi(B_RELAY3_PORT, 0);
+		supla_esp_channel_value_changed(2, 0); }
 	
 }
 
@@ -95,17 +138,41 @@ void supla_esp_board_gpio_init(void) {
 	#if defined __BOARD_k_sonoff_touch_triple
 	
 		supla_relay_cfg[3].gpio_id = B_UPD_PORT;	
-		supla_relay_cfg[3].channel = 3;  
+		supla_relay_cfg[3].channel = 3;
+
+		supla_relay_cfg[4].gpio_id = B_RELAY1_DIS;	// rel1 dis channel
+		supla_relay_cfg[4].flags = RELAY_FLAG_RESTORE_FORCE | RELAY_FLAG_VIRTUAL_GPIO;
+		supla_relay_cfg[4].channel = 4;
+
+		supla_relay_cfg[5].gpio_id = B_RELAY2_DIS;	// rel2 dis channel
+		supla_relay_cfg[5].flags = RELAY_FLAG_RESTORE_FORCE | RELAY_FLAG_VIRTUAL_GPIO;
+		supla_relay_cfg[5].channel = 5;			
+	
+		supla_relay_cfg[6].gpio_id = B_RELAY3_DIS;	// rel3 dis channel
+		supla_relay_cfg[6].flags = RELAY_FLAG_RESTORE_FORCE | RELAY_FLAG_VIRTUAL_GPIO;
+		supla_relay_cfg[6].channel = 6;			
 	
 	#elif defined __BOARD_k_sonoff_touch_dual
 	
 		supla_relay_cfg[2].gpio_id = B_UPD_PORT;	
 		supla_relay_cfg[2].channel = 2;
 		
+		supla_relay_cfg[3].gpio_id = B_RELAY1_DIS;	// rel1 dis channel
+		supla_relay_cfg[3].flags = RELAY_FLAG_RESTORE_FORCE | RELAY_FLAG_VIRTUAL_GPIO;
+		supla_relay_cfg[3].channel = 3;
+
+		supla_relay_cfg[4].gpio_id = B_RELAY2_DIS;	// rel2 dis channel
+		supla_relay_cfg[4].flags = RELAY_FLAG_RESTORE_FORCE | RELAY_FLAG_VIRTUAL_GPIO;
+		supla_relay_cfg[4].channel = 4;	
+		
 	#else
 	
 		supla_relay_cfg[1].gpio_id = B_UPD_PORT;	
 		supla_relay_cfg[1].channel = 1;
+		
+		supla_relay_cfg[2].gpio_id = B_RELAY1_DIS;	// rel1 dis channel
+		supla_relay_cfg[2].flags = RELAY_FLAG_RESTORE_FORCE | RELAY_FLAG_VIRTUAL_GPIO;
+		supla_relay_cfg[2].channel = 2;
 		
 	#endif
   
@@ -126,7 +193,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	
 #ifdef __BOARD_k_sonoff_touch
 
-	*channel_count = 2;
+	*channel_count = 3;
 
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
@@ -145,17 +212,21 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[1].Default = 0;
 	channels[1].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
 
-	
+	channels[2].Number = 2;
+	channels[2].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[2].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[2].Default = 0;
+	channels[2].value[0] = supla_esp_gpio_relay_on(B_RELAY1_DIS);
 
 #endif
 
 #ifdef __BOARD_k_sonoff_touch_dual
 
-	*channel_count = 3;
+	*channel_count = 5;
 
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
-
 	channels[0].FuncList = SUPLA_BIT_FUNC_POWERSWITCH \
 								| SUPLA_BIT_FUNC_LIGHTSWITCH;
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
@@ -175,12 +246,26 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[2].Default = 0;
 	channels[2].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
+	
+	channels[3].Number = 3;
+	channels[3].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[3].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[3].Default = 0;
+	channels[3].value[0] = supla_esp_gpio_relay_on(B_RELAY1_DIS);
+	
+	channels[4].Number = 4;
+	channels[4].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[4].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[4].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[4].Default = 0;
+	channels[4].value[0] = supla_esp_gpio_relay_on(B_RELAY2_DIS);
 
 #endif
 
 #ifdef __BOARD_k_sonoff_touch_triple
 
-	*channel_count = 4;
+	*channel_count = 7;
 
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
@@ -211,6 +296,27 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[3].Default = 0;
 	channels[3].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
+	
+	channels[4].Number = 4;
+	channels[4].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[4].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[4].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[4].Default = 0;
+	channels[4].value[0] = supla_esp_gpio_relay_on(B_RELAY1_DIS);
+	
+	channels[5].Number = 5;
+	channels[5].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[5].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[5].Default = 0;
+	channels[5].value[0] = supla_esp_gpio_relay_on(B_RELAY2_DIS);
+	
+	channels[6].Number = 6;
+	channels[6].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[6].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[6].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[6].Default = 0;
+	channels[6].value[0] = supla_esp_gpio_relay_on(B_RELAY3_DIS);
 
 #endif
 
@@ -361,6 +467,7 @@ void ICACHE_FLASH_ATTR
 
 	supla_esp_channel_value_changed(0, supla_esp_gpio_relay_on(B_RELAY1_PORT));
 	supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_UPD_PORT));
+	supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_RELAY1_DIS));
 
 #endif
 
@@ -369,6 +476,8 @@ void ICACHE_FLASH_ATTR
 	supla_esp_channel_value_changed(0, supla_esp_gpio_relay_on(B_RELAY1_PORT));
 	supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_RELAY2_PORT));
 	supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_UPD_PORT));
+	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_RELAY1_DIS));
+	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY2_DIS));
 
 #endif
 
@@ -378,6 +487,9 @@ void ICACHE_FLASH_ATTR
 	supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_RELAY2_PORT));
 	supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_RELAY3_PORT));
 	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_UPD_PORT));
+	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
+	supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_RELAY2_DIS));
+	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_RELAY3_DIS));
 
 #endif
 }
@@ -441,15 +553,54 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
     input_cfg->last_state = 0;
 }
 
+void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
+	
+	Licznik = Licznik + 1;
+	supla_log(LOG_DEBUG, "Blokada board LED void !!!");
+	
+	if ( Licznik == 1)	{
+		
+		Licznik = 0;
+	
+		supla_esp_gpio_set_hi(LED_RED_PORT, 0);
+
+		os_timer_disarm(&Led_ON);
+		os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+		os_timer_arm(&Led_ON, 200, 0);
+	
+		os_timer_disarm(&Led_OFF);
+		os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
+		os_timer_arm(&Led_OFF, 400, 0);	
+	
+		os_timer_disarm(&Led_ON2);
+		os_timer_setfn(&Led_ON2, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+		os_timer_arm(&Led_ON2, 800, 0);
+	
+		os_timer_disarm(&Led_OFF2);
+		os_timer_setfn(&Led_OFF2, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
+		os_timer_arm(&Led_OFF2, 1200, 0);	
+	}
+}
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
 		#if defined __BOARD_k_sonoff_touch_triple
 			UPD_channel = 3;
+			DIS1_CH = 4;
+			DIS2_CH = 5;
+			DIS3_CH = 6;			
 		#elif defined __BOARD_k_sonoff_touch_dual
 			UPD_channel = 2;
+			DIS1_CH = 3;
+			DIS2_CH = 4;
 		#else
 			UPD_channel = 1;
+			DIS1_CH = 2;
 		#endif
+	
+		int ledblock;
+	
+	if ( port == 20 ) {
 	
 		if ( hi == 1 ) {
 	
@@ -473,4 +624,55 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 				supla_log(LOG_DEBUG, "value_changed upd - 0");
 			};
 		};
+		
+	};
+
+	if ( port == 21 ) {	
+			
+		supla_esp_state.Relay[DIS1_CH] = hi;
+		supla_esp_save_state(SAVE_STATE_DELAY);
+		supla_esp_channel_value_changed(DIS1_CH, supla_esp_state.Relay[DIS1_CH]);
+		supla_esp_cfg_save(&supla_esp_cfg);
+		supla_esp_channel_value_changed(DIS1_CH, hi);
+	
+		ledblock=LED_RED_BLOCK;
+		os_timer_disarm(&Port_OFF);
+		os_timer_setfn(&Port_OFF, (os_timer_func_t *)supla_esp_baord_Port_OFF_cb, (void*)ledblock);	
+		os_timer_arm(&Port_OFF, 300, 0);
+		
+	};
+	
+#if defined(__BOARD_k_sonoff_touch_dual) || defined(__BOARD_k_sonoff_touch_triple)
+	
+	if ( port == 22 ) {	
+			
+		supla_esp_state.Relay[DIS2_CH] = hi;
+		supla_esp_save_state(SAVE_STATE_DELAY);
+		supla_esp_channel_value_changed(DIS2_CH, supla_esp_state.Relay[DIS2_CH]);
+		supla_esp_cfg_save(&supla_esp_cfg);
+		supla_esp_channel_value_changed(DIS2_CH, hi);
+		
+		ledblock=LED_GREEN_BLOCK;
+		os_timer_disarm(&Port_OFF);
+		os_timer_setfn(&Port_OFF, (os_timer_func_t *)supla_esp_baord_Port_OFF_cb, (void*)ledblock);	
+		os_timer_arm(&Port_OFF, 300, 0);
+	};
+	
+#ifdef __BOARD_k_sonoff_touch_triple	
+	
+	if ( port == 23 ) {	
+			
+		supla_esp_state.Relay[DIS3_CH] = hi;
+		supla_esp_save_state(SAVE_STATE_DELAY);
+		supla_esp_channel_value_changed(DIS3_CH, supla_esp_state.Relay[DIS3_CH]);
+		supla_esp_cfg_save(&supla_esp_cfg);
+		supla_esp_channel_value_changed(DIS3_CH, hi);
+		
+		ledblock=LED_BLUE_BLOCK;
+		os_timer_disarm(&Port_OFF);
+		os_timer_setfn(&Port_OFF, (os_timer_func_t *)supla_esp_baord_Port_OFF_cb, (void*)ledblock);	
+		os_timer_arm(&Port_OFF, 300, 0);
+	};
+	
+#endif
 }
