@@ -23,7 +23,7 @@
 #include "espmissingincludes.h"
 
 #ifndef SUPLA_ESP_SOFTVER
-#define SUPLA_ESP_SOFTVER "2.8.14"
+#define SUPLA_ESP_SOFTVER "2.8.20"
 #endif
 
 #define STATE_UNKNOWN 0
@@ -77,6 +77,24 @@
 #ifndef RS_SAVE_STATE_DELAY
 #define RS_SAVE_STATE_DELAY 0
 #endif /*RS_SAVE_STATE_DELAY*/
+
+#ifndef RS_AUTOCAL_FILTERING_TIME_MS
+// 300 ms of filtering time since RS start movement and we start to check if
+// RS motor is taking current
+#define RS_AUTOCAL_FILTERING_TIME_MS 300
+#endif /*RS_AUTOCAL_FILTERING_TIME_MS*/
+
+#ifndef RS_AUTOCAL_MIN_TIME_MS
+// auto calibration with calculated times below 500 ms will be considered as
+// error
+#define RS_AUTOCAL_MIN_TIME_MS 500
+#endif /*RS_AUTOCAL_MIN_TIME_MS*/
+
+#ifndef RS_AUTOCAL_MAX_TIME_MS
+// auto calibration with calculated time above 9 min 50 s will be considered as
+// error
+#define RS_AUTOCAL_MAX_TIME_MS ((9 * 60 + 50) * 1000)
+#endif /*RS_AUTOCAL_MAX_TIME_MS*/
 
 #ifndef CFG_TIME1_COUNT
 #define CFG_TIME1_COUNT 8
@@ -356,5 +374,11 @@ extern const uint8_t rsa_public_key_bytes[RSA_NUM_BYTES];
 unsigned _supla_int64_t MAIN_ICACHE_FLASH uptime_usec(void);
 unsigned _supla_int64_t MAIN_ICACHE_FLASH uptime_msec(void);
 uint32 MAIN_ICACHE_FLASH uptime_sec(void);
+
+#ifdef CFG_TIME_VARIABLES
+#ifndef CFG_TIME_VARIABLES_PRECISION
+#define CFG_TIME_VARIABLES_PRECISION 0
+#endif /*CFG_TIME_VARIABLES_PRECISION*/
+#endif /*CFG_TIME_VARIABLES*/
 
 #endif /* SUPLA_ESP_H_ */
