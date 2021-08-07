@@ -28,8 +28,11 @@ ETSTimer Port_OFF;
 
 int UPD_channel;
 int DIS1_CH;
+
 #if defined(__BOARD_k_sonoff_touch_dual) || defined(__BOARD_k_sonoff_touch_triple)
 int DIS2_CH;
+#endif
+
 #ifdef __BOARD_k_sonoff_touch_triple
 int DIS3_CH;
 #endif
