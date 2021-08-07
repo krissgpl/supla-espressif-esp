@@ -26,7 +26,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 12
 
-#define RELAY_MAX_COUNT		6
+#define RELAY_MAX_COUNT		7
 
 #define SUPLA_ESP_SOFTVER "2.8.14.0"
 
