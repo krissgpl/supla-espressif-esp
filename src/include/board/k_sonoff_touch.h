@@ -83,15 +83,13 @@
 																	supla_log(LOG_DEBUG, "Blokada GPIO4 !!! po");	\
 																	return;	}	}	\
 				if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
-				
 	#define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
 									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	\
 				if ( port == 22)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 5 = %i", supla_esp_state.Relay[5]);	\
 									return supla_esp_state.Relay[5] == 1 ? 1 : 0;	}	\
 				if ( port == 23)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 6 = %i", supla_esp_state.Relay[6]);	\
-									return supla_esp_state.Relay[6] == 1 ? 1 : 0;	}	\			
-				
+									return supla_esp_state.Relay[6] == 1 ? 1 : 0;	}	\
 #elif defined __BOARD_k_sonoff_touch_dual
 	#define BOARD_GPIO_OUTPUT_SET_HI	\
 				if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO12 !!!");	\
@@ -105,7 +103,6 @@
 																	supla_log(LOG_DEBUG, "Blokada GPIO5 !!! po");	\
 																	return;	}	}	\
 				if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
-				
 	#define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 3 = %i", supla_esp_state.Relay[3]);	\
 									return supla_esp_state.Relay[3] == 1 ? 1 : 0;	}	\
@@ -119,11 +116,9 @@
 																	supla_log(LOG_DEBUG, "Blokada GPIO12 !!! po");	\
 																	return;	} 	}	\
 				if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
-				
 	#define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 2 = %i", supla_esp_state.Relay[2]);	\
 									return supla_esp_state.Relay[2] == 1 ? 1 : 0;	}	\
-
 #endif
 
 #define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
