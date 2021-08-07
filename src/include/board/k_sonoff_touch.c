@@ -643,7 +643,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	};
 	
 #if defined(__BOARD_k_sonoff_touch_dual) || defined(__BOARD_k_sonoff_touch_triple)
-	
 	if ( port == 22 ) {	
 			
 		supla_esp_state.Relay[DIS2_CH] = hi;
@@ -657,9 +656,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		os_timer_setfn(&Port_OFF, (os_timer_func_t *)supla_esp_baord_Port_OFF_cb, (void*)ledblock);	
 		os_timer_arm(&Port_OFF, 300, 0);
 	};
-	
+#endif
+
 #ifdef __BOARD_k_sonoff_touch_triple	
-	
 	if ( port == 23 ) {	
 			
 		supla_esp_state.Relay[DIS3_CH] = hi;
@@ -673,6 +672,5 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		os_timer_setfn(&Port_OFF, (os_timer_func_t *)supla_esp_baord_Port_OFF_cb, (void*)ledblock);	
 		os_timer_arm(&Port_OFF, 300, 0);
 	};
-	
 #endif
 }
