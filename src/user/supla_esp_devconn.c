@@ -143,6 +143,7 @@ typedef struct {
 	channel_value_delayed cvd[CVD_MAX_COUNT];
 	#endif /*CVD_MAX_COUNT*/
 
+	bool resolving_started;
 
 
 }devconn_params;
@@ -1385,11 +1386,9 @@ void DEVCONN_ICACHE_FLASH supla_esp_on_remote_call_received(
         supla_esp_update_url_result(rd.data.sc_firmware_update_url_result);
         break;
 #endif /*__FOTA*/
-#ifdef BOARD_CALCFG
       case SUPLA_SD_CALL_DEVICE_CALCFG_REQUEST:
-        supla_esp_board_calcfg_request(rd.data.sd_device_calcfg_request);
+        supla_esp_calcfg_request(rd.data.sd_device_calcfg_request);
         break;
-#endif /*BOARD_CALCFG*/
 #ifdef BOARD_ON_USER_LOCALTIME_RESULT
       case SUPLA_DCS_CALL_GET_USER_LOCALTIME_RESULT:
         supla_esp_board_on_user_localtime_result(
@@ -1422,6 +1421,34 @@ void DEVCONN_ICACHE_FLASH supla_esp_on_remote_call_received(
   }
 }
 
+#if ESP8266_SUPLA_PROTO_VERSION >= 10
+void DEVCONN_ICACHE_FLASH
+supla_esp_devconn_set_channels(TDS_SuplaRegisterDevice_E *srd) {
+  supla_esp_board_set_channels(srd->channels, &srd->channel_count);
+
+  uint8 a = 0;
+  uint8 b = 0;
+
+  for (a = 0; a < srd->channel_count; a++) {
+    if (srd->channels[a].FuncList &
+        SUPLA_BIT_FUNC_CONTROLLINGTHEROLLERSHUTTER) {
+      srd->channels[a].Flags |= SUPLA_CHANNEL_FLAG_CALCFG_RECALIBRATE;
+    }
+  }
+
+  for (a = 0; a < RELAY_MAX_COUNT; a++) {
+    if (supla_relay_cfg[a].gpio_id != 255) {
+      for (b = 0; b < srd->channel_count; b++) {
+        if (srd->channels[b].Number == supla_relay_cfg[a].channel) {
+          supla_relay_cfg[a].channel_flags = srd->channels[b].Flags;
+          break;
+        }
+      }
+    }
+  }
+}
+#endif /*ESP8266_SUPLA_PROTO_VERSION >= 10*/
+
 void
 supla_esp_devconn_iterate(void *timer_arg) {
 
@@ -1449,19 +1476,7 @@ supla_esp_devconn_iterate(void *timer_arg) {
 					os_memcpy(srd.GUID, supla_esp_cfg.GUID, SUPLA_GUID_SIZE);
 					os_memcpy(srd.AuthKey, supla_esp_cfg.AuthKey, SUPLA_AUTHKEY_SIZE);
 
-					supla_esp_board_set_channels(srd.channels, &srd.channel_count);
-
-					for(uint8 a=0;a<RELAY_MAX_COUNT;a++) {
-						if ( supla_relay_cfg[a].gpio_id != 255 ) {
-							for(uint8 b=0;b<srd.channel_count;b++) {
-								if (srd.channels[b].Number == supla_relay_cfg[a].channel) {
-									supla_relay_cfg[a].channel_flags = srd.channels[b].Flags;
-									break;
-								}
-							}
-						}
-					}
-
+					supla_esp_devconn_set_channels(&srd);
 
 					srpc_ds_async_registerdevice_e(devconn->srpc, &srd);
 				#else
@@ -1573,8 +1588,14 @@ void DEVCONN_ICACHE_FLASH supla_esp_devconn_disconnect_cb(void *arg) {
 }
 
 void DEVCONN_ICACHE_FLASH supla_esp_devconn_dns__found(ip_addr_t *ip) {
-  //supla_log(LOG_DEBUG, "supla_esp_devconn_dns_found_cb");
+  // supla_log(LOG_DEBUG, "supla_esp_devconn_dns_found_cb");
 	
+  if (devconn == NULL) {
+    return;
+  }
+
+  devconn->resolving_started = false;
+
   if (ip == NULL) {
     supla_esp_set_state(LOG_NOTICE, "Domain not found.");
     return;
@@ -1632,23 +1653,30 @@ void DEVCONN_ICACHE_FLASH supla_esp_devconn_dns_found_cb(const char *name,
   supla_esp_devconn_dns__found(ip);
 }
 
-void DEVCONN_ICACHE_FLASH
-supla_esp_devconn_resolvandconnect(void) {
+void DEVCONN_ICACHE_FLASH supla_esp_devconn_resolvandconnect(void) {
+  if (!devconn || devconn->resolving_started) {
+    // Calling espconn_gethostbyname twice causes Fatal exception 29
+    // (StoreProhibitedCause)
+    supla_log(LOG_DEBUG, "Resolving already started!");
+    return;
+  }
 
-	//supla_log(LOG_DEBUG, "supla_esp_devconn_resolvandconnect");
-	supla_espconn_disconnect(&devconn->ESPConn);
+  devconn->resolving_started = true;
 
-	uint32_t _ip = ipaddr_addr(supla_esp_cfg.Server);
+  // supla_log(LOG_DEBUG, "supla_esp_devconn_resolvandconnect");
+  supla_espconn_disconnect(&devconn->ESPConn);
 
-	if ( _ip == -1 ) {
-		 supla_log(LOG_DEBUG, "Resolv %s", supla_esp_cfg.Server);
+  uint32_t _ip = ipaddr_addr(supla_esp_cfg.Server);
 
-		 espconn_gethostbyname(&devconn->ESPConn, supla_esp_cfg.Server, &devconn->ipaddr, supla_esp_devconn_dns_found_cb);
-	} else {
-		 supla_esp_devconn_dns_found_cb(supla_esp_cfg.Server, (ip_addr_t *)&_ip, NULL);
-	}
+  if (_ip == -1) {
+    supla_log(LOG_DEBUG, "Resolv %s", supla_esp_cfg.Server);
 
-
+    espconn_gethostbyname(&devconn->ESPConn, supla_esp_cfg.Server,
+                          &devconn->ipaddr, supla_esp_devconn_dns_found_cb);
+  } else {
+    supla_esp_devconn_dns_found_cb(supla_esp_cfg.Server, (ip_addr_t *)&_ip,
+                                   NULL);
+  }
 }
 
 void DEVCONN_ICACHE_FLASH supla_esp_devconn_watchdog_cb(void *timer_arg) {
@@ -1870,13 +1898,65 @@ void DEVCONN_ICACHE_FLASH supla_esp_channel_em_value_changed(unsigned char chann
 }
 #endif /*ELECTRICITY_METER_COUNT*/
 
-#ifdef BOARD_CALCFG
 void DEVCONN_ICACHE_FLASH supla_esp_calcfg_result(TDS_DeviceCalCfgResult *result) {
 	if (supla_esp_devconn_is_registered() == 1) {
 		srpc_ds_async_device_calcfg_result(devconn->srpc, result);
 	}
 }
+
+void DEVCONN_ICACHE_FLASH
+supla_esp_calcfg_request(TSD_DeviceCalCfgRequest *request) {
+  if (!request) {
+    return;
+  }
+
+  supla_log(LOG_DEBUG, "CALCFG received, cmd %d, datatype %d, datasize %d",
+            request->Command, request->DataType, request->DataSize);
+
+#ifdef BOARD_CALCFG
+  // execute board specific calcfg handling
+  supla_esp_board_calcfg_request(request);
 #endif /*BOARD_CALCFG*/
+
+#ifdef _ROLLERSHUTTER_SUPPORT
+  TDS_DeviceCalCfgResult result = {};
+  result.ReceiverID = request->SenderID;
+  result.ChannelNumber = request->ChannelNumber;
+  result.Command = request->Command;
+  result.Result = SUPLA_CALCFG_RESULT_NOT_SUPPORTED;
+
+  if (request->Command == SUPLA_CALCFG_CMD_RECALIBRATE &&
+      request->DataType == SUPLA_CALCFG_DATATYPE_RS_SETTINGS &&
+      request->DataSize == sizeof(TCalCfg_RollerShutterSettings)) {
+    for (int i = 0; i < RS_MAX_COUNT; i++) {
+      if (supla_rs_cfg[i].up != NULL && supla_rs_cfg[i].down != NULL &&
+          supla_rs_cfg[i].up->channel == request->ChannelNumber &&
+          supla_rs_cfg[i].up->channel_flags &
+              SUPLA_CHANNEL_FLAG_CALCFG_RECALIBRATE) {
+        if (!request->SuperUserAuthorized) {
+          result.Result = SUPLA_CALCFG_RESULT_UNAUTHORIZED;
+        } else {
+          result.Result = SUPLA_CALCFG_RESULT_DONE;
+
+          TCalCfg_RollerShutterSettings *rsSettings =
+            (TCalCfg_RollerShutterSettings *)(request->Data);
+
+          supla_rs_cfg[i].autoCal_step = 0;
+          *(supla_rs_cfg[i].auto_opening_time) = 0;
+          *(supla_rs_cfg[i].auto_closing_time) = 0;
+          *(supla_rs_cfg[i].position) = 0;  // not calibrated
+          supla_esp_gpio_rs_apply_new_times(i, rsSettings->FullClosingTimeMS,
+              rsSettings->FullOpeningTimeMS);
+          // trigger calibration by setting position to fully open
+          supla_esp_gpio_rs_add_task(i, 0);
+        }
+      }
+    }
+
+    supla_esp_calcfg_result(&result);
+  }
+#endif
+}
 
 #ifdef BOARD_ON_USER_LOCALTIME_RESULT
 void DEVCONN_ICACHE_FLASH supla_esp_devconn_get_user_localtime(void) {
@@ -1895,9 +1975,18 @@ supla_esp_devconn_get_channel_int_params(unsigned char channel_number) {
 }
 #endif /*BOARD_ON_CHANNEL_INT_PARAMS_RESULT*/
 
+// Method is used in tests to cleanup memory allocations
+void DEVCONN_ICACHE_FLASH supla_esp_devconn_release(void) {
+  supla_esp_devconn_stop();
+
+  free(devconn);
+  devconn = NULL;
+}
+
 #if defined(POWSENSOR2)
 void ICACHE_FLASH_ATTR supla_esp_em_extendedvalue_to_value(TElectricityMeter_ExtendedValue_V2 *ev, char *value) {
   memset(value, 0, SUPLA_CHANNELVALUE_SIZE);
+
 
   if (sizeof(TElectricityMeter_Value) > SUPLA_CHANNELVALUE_SIZE) {
     return;

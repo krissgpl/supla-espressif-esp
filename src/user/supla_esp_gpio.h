@@ -105,6 +105,9 @@ typedef struct {
   bool performAutoCalibration;
   bool autoCal_button_request;
 
+  unsigned _supla_int16_t flags;
+  unsigned _supla_int16_t last_flags;
+  bool detectedPowerConsumption;
 } supla_roller_shutter_cfg_t;
 
 extern supla_input_cfg_t supla_input_cfg[INPUT_MAX_COUNT];
@@ -144,7 +147,11 @@ void supla_esp_gpio_set_led(char r, char g, char b);
 void supla_esp_gpio_led_blinking(int led, int time);
 
 #ifdef _ROLLERSHUTTER_SUPPORT
-void supla_esp_gpio_rs_apply_new_times(int idx, int ct_ms, int ot_ms);
+void GPIO_ICACHE_FLASH supla_esp_gpio_rs_apply_new_times(int idx, int ct_ms,
+                                                         int ot_ms);
+bool GPIO_ICACHE_FLASH supla_esp_gpio_rs_apply_new__times(int idx, int ct_ms,
+                                                          int ot_ms,
+                                                          bool save);
 void supla_esp_gpio_rs_set_relay(supla_roller_shutter_cfg_t *rs_cfg,
                                  uint8 value, uint8 cancel_task,
                                  uint8 stop_delay);
@@ -155,7 +162,8 @@ supla_esp_gpio_rs_cancel_task(supla_roller_shutter_cfg_t *rs_cfg);
 void GPIO_ICACHE_FLASH supla_esp_gpio_rs_add_task(int idx, uint8 percent);
 
 supla_roller_shutter_cfg_t *supla_esp_gpio_get_rs__cfg(int port);
-sint8 supla_esp_gpio_rs_get_current_position(supla_roller_shutter_cfg_t *rs_cfg);
+sint8 supla_esp_gpio_rs_get_current_position(
+    supla_roller_shutter_cfg_t *rs_cfg);
 void supla_esp_gpio_rs_start_autoCal(supla_roller_shutter_cfg_t *rs_cfg);
 #endif /*_ROLLERSHUTTER_SUPPORT*/
 
