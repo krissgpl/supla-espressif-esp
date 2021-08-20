@@ -28,7 +28,7 @@
 
 #define RELAY_MAX_COUNT		7
 
-#define SUPLA_ESP_SOFTVER "2.8.14.0"
+#define SUPLA_ESP_SOFTVER "2.8.24.0"
 
 #ifdef __BOARD_k_sonoff_touch
 	#define AP_SSID "SONOFF-TOUCH"
