@@ -97,7 +97,7 @@ public:
 
     EXPECT_CALL(srpc, srpc_params_init(_));
     EXPECT_CALL(srpc, srpc_init(_)).WillOnce(Return((void *)1));
-    EXPECT_CALL(srpc, srpc_set_proto_version(_, 15));
+    EXPECT_CALL(srpc, srpc_set_proto_version(_, 16));
 
     regResultMotor.result_code = SUPLA_RESULTCODE_TRUE;
 
@@ -144,11 +144,13 @@ TEST_F(RollerShutterMotorProblem, MotorProblemMoveDown) {
     .WillRepeatedly(Return(0));
 
   EXPECT_CALL(srpc, 
-      valueChanged(_, 0, ElementsAreArray({53, 0, 0, 0, 0, 0, 0, 0})))
+      valueChanged(_, 0, ElementsAreArray({54, 0, 0, 
+          RS_VALUE_FLAG_MOTOR_PROBLEM, 0, 0, 0, 0})))
     .WillRepeatedly(Return(0));
 
   EXPECT_CALL(srpc, 
-      valueChanged(_, 0, ElementsAreArray({100, 0, 0, RS_VALUE_FLAG_MOTOR_PROBLEM, 0, 0, 0, 0})))
+      valueChanged(_, 0, ElementsAreArray({100, 0, 0, 
+          RS_VALUE_FLAG_MOTOR_PROBLEM, 0, 0, 0, 0})))
     .WillOnce(Return(0));
 
   supla_esp_cfg.Time1[0] = 0;
@@ -217,7 +219,8 @@ TEST_F(RollerShutterMotorProblem, MotorProblemMoveUp) {
     .WillRepeatedly(Return(0));
 
   EXPECT_CALL(srpc, 
-      valueChanged(_, 0, ElementsAreArray({47, 0, 0, 0, 0, 0, 0, 0})))
+      valueChanged(_, 0, ElementsAreArray({46, 0, 0, 
+          RS_VALUE_FLAG_MOTOR_PROBLEM, 0, 0, 0, 0})))
     .WillRepeatedly(Return(0));
 
   EXPECT_CALL(srpc,
@@ -292,7 +295,7 @@ TEST_F(RollerShutterMotorProblem, MotorProblemMoveUpCloseToFullyOpen) {
     .WillRepeatedly(Return(0));
 
   EXPECT_CALL(srpc, 
-      valueChanged(_, 0, ElementsAreArray({2, 0, 0, 0, 0, 0, 0, 0})))
+      valueChanged(_, 0, ElementsAreArray({1, 0, 0, 0, 0, 0, 0, 0})))
     .WillOnce(Return(0));
 
   EXPECT_CALL(srpc, 
@@ -365,7 +368,7 @@ TEST_F(RollerShutterMotorProblem, MotorProblemMoveDownCloseToFullyClosed) {
     .WillRepeatedly(Return(0));
 
   EXPECT_CALL(srpc, 
-      valueChanged(_, 0, ElementsAreArray({98, 0, 0, 0, 0, 0, 0, 0})))
+      valueChanged(_, 0, ElementsAreArray({99, 0, 0, 0, 0, 0, 0, 0})))
     .WillOnce(Return(0));
 
   EXPECT_CALL(srpc, 
@@ -438,7 +441,8 @@ TEST_F(RollerShutterMotorProblem, MotorProblemByTask) {
     .WillRepeatedly(Return(0));
 
   EXPECT_CALL(srpc, 
-      valueChanged(_, 0, ElementsAreArray({52, 0, 0, 0, 0, 0, 0, 0})))
+      valueChanged(_, 0, ElementsAreArray({53, 0, 0, 
+          RS_VALUE_FLAG_MOTOR_PROBLEM, 0, 0, 0, 0})))
     .WillOnce(Return(0));
 
   EXPECT_CALL(srpc, valueChanged(_, 0,
