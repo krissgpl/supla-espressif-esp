@@ -203,7 +203,7 @@ typedef struct {
 
 }devconn_smooth;
 
-devconn_smooth smooth[SMOOTH_MAX_COUNT];
+devconn_smooth smooth[SMOOTH_MAX_COUNT] = {};
 
 #endif
 #endif /*SUPLA_SMOOTH_DISABLED*/
@@ -661,7 +661,7 @@ supla_esp_channel_value_changed_delayed_cb(void *timer_arg) {
 void DEVCONN_ICACHE_FLASH
 supla_esp_channel_rgbw_value_changed(int channel_number, int color, char color_brightness, char brightness) {
 
-	if ( channel_number >= CVD_MAX_COUNT )
+	if ( !devconn || channel_number >= CVD_MAX_COUNT )
 		return;
 
 	devconn->cvd[channel_number].channel_number = channel_number;
@@ -940,7 +940,7 @@ void DEVCONN_ICACHE_FLASH supla_esp_devconn_smooth_cb(devconn_smooth *_smooth) {
 }
 
 void
-_supla_esp_devconn_smooth_cb(void) {
+_supla_esp_devconn_smooth_cb(void *ptr) {
 
 
 	int a;
@@ -969,7 +969,6 @@ supla_esp_channel_set_rgbw_value(int ChannelNumber, int Color, char ColorBrightn
 void DEVCONN_ICACHE_FLASH
 supla_esp_channel_set_rgbw_value(int ChannelNumber, int Color, char ColorBrightness, char Brightness, char smoothly, char send_value_changed) {
 #endif /*RGBW_ONOFF_SUPPORT*/
-
 	RGBW_CHANNEL_LIMIT
 
 	if ( ColorBrightness < 0 ) {
@@ -1025,7 +1024,7 @@ supla_esp_channel_set_rgbw_value(int ChannelNumber, int Color, char ColorBrightn
 	 }
      #endif /*CVD_MAX_COUNT*/
 
-	supla_esp_hw_timer_init(FRC1_SOURCE, 1, NULL, _supla_esp_devconn_smooth_cb);
+	supla_esp_hw_timer_init(FRC1_SOURCE, 1, _supla_esp_devconn_smooth_cb, NULL);
 	supla_esp_hw_timer_arm(10000);
 #endif
 
@@ -1105,12 +1104,18 @@ supla_esp_channel_set_value(TSD_SuplaChannelNewValue *new_value) {
 
 					if (ColorBrightness > 0) {
 						ColorBrightness = supla_esp_state.color_brightness[new_value->ChannelNumber];
+						if (ColorBrightness < 1) {
+							ColorBrightness = 1;
+						}
 					} else {
 						supla_esp_state.turnedOff[new_value->ChannelNumber] |= 0x1;
 					}
 
 					if ( Brightness > 0) {
 						Brightness = supla_esp_state.brightness[new_value->ChannelNumber];
+						if (Brightness < 1) {
+							Brightness = 1;
+						}
 					} else {
 						supla_esp_state.turnedOff[new_value->ChannelNumber] |= 0x2;
 					}
@@ -1124,6 +1129,9 @@ supla_esp_channel_set_value(TSD_SuplaChannelNewValue *new_value) {
 				} else {
 					if ( Brightness > 0) {
 						Brightness = supla_esp_state.brightness[new_value->ChannelNumber];
+						if (Brightness < 1) {
+							Brightness = 1;
+						}
 					} else {
 						supla_esp_state.turnedOff[new_value->ChannelNumber] |= 0x2;
 					}
@@ -1204,51 +1212,18 @@ supla_esp_channel_set_value(TSD_SuplaChannelNewValue *new_value) {
 		if ( supla_relay_cfg[a].gpio_id != 255
 			 && new_value->ChannelNumber == supla_relay_cfg[a].channel ) {
 
-			Success = _supla_esp_channel_set_value(supla_relay_cfg[a].gpio_id, v, new_value->ChannelNumber);
+      supla_esp_gpio_relay_set_duration_timer(supla_relay_cfg[a].channel, v,
+          new_value->DurationMS,
+          new_value->SenderID);
+
+      Success = _supla_esp_channel_set_value(supla_relay_cfg[a].gpio_id, v,
+          new_value->ChannelNumber);
 			break;
 		}
 
-	srpc_ds_async_set_channel_result(devconn->srpc, new_value->ChannelNumber, new_value->SenderID, Success);
+  srpc_ds_async_set_channel_result(devconn->srpc, new_value->ChannelNumber,
+      new_value->SenderID, Success);
 
-#ifndef COUNTDOWN_TIMER_DISABLED
-
-	supla_esp_countdown_timer_disarm(new_value->ChannelNumber);
-
-	if ( new_value->DurationMS > 0 ) {
-
-		for(a=0;a<RELAY_MAX_COUNT;a++)
-			if ( supla_relay_cfg[a].gpio_id != 255
-				 && new_value->ChannelNumber == supla_relay_cfg[a].channel ) {
-
-				if (v == 1
-					|| supla_relay_cfg[a].channel_flags & SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) {
-
-					char target_value[SUPLA_CHANNELVALUE_SIZE];
-					memcpy(target_value, new_value->value, SUPLA_CHANNELVALUE_SIZE);
-					target_value[0] = v ? 0 : 1;
-
-					supla_esp_countdown_timer_countdown(new_value->DurationMS,
-							supla_relay_cfg[a].gpio_id,
-							supla_relay_cfg[a].channel,
-							target_value,
-							new_value->SenderID);
-
-	                #if ESP8266_SUPLA_PROTO_VERSION >= 12
-					if (supla_relay_cfg[a].channel_flags & SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) {
-						TSuplaChannelExtendedValue *ev =
-						     (TSuplaChannelExtendedValue *)malloc(sizeof(TSuplaChannelExtendedValue));
-						if (ev != NULL) {
-							supla_esp_countdown_get_state_ev(new_value->ChannelNumber, ev);
-							supla_esp_channel_extendedvalue_changed(new_value->ChannelNumber, ev);
-							free(ev);
-						}
-					}
-	                #endif /*ESP8266_SUPLA_PROTO_VERSION >= 12*/
-				}
-				break;
-			}
-	}
-#endif /*COUNTDOWN_TIMER_DISABLED*/
 }
 
 #if ESP8266_SUPLA_PROTO_VERSION >= 13

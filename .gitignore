@@ -47,6 +47,9 @@ local.properties
 
 # acs
 /src/include/board/acs_*
+/src/build-and-sign.sh
+/supla_rsa_keys/
+/signed/
 
 # Valgring cfg
 valgrind-suppressions.cfg
