@@ -383,7 +383,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 
 void supla_gate_light() {
 	
-	if ( supla_esp_state.Relay[6] == 1 {
+	if ( supla_esp_state.Relay[6] == 1 ) {
 	
 		os_timer_disarm(&Gate_Light_ON);
 		os_timer_setfn(&Gate_Light_ON, (os_timer_func_t *)supla_gate_light_ON_cb, NULL);	
