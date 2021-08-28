@@ -24,6 +24,9 @@
 #include "supla_ds18b20.h"
 
 ETSTimer value_timer1;
+ETSTimer Gate_Light_ON;
+ETSTimer Gate_Light_OFF;
+
 int UPD_channel;
 int DIS1_CH;
 
@@ -55,6 +58,20 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	
 }
 
+void supla_gate_light_ON_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "TIMER wlaczenie swiatla posesji");
+	supla_esp_gpio_set_hi(B_RELAY3_PORT, 1);	//	wlaczenie swiatla posesji
+	
+}
+
+void supla_gate_light_OFF_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "TIMER wylaczenie swiatla posesji");
+	supla_esp_gpio_set_hi(B_RELAY3_PORT, 0);	//	wylaczenie swiatla posesji
+	
+}
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 		
 	supla_input_cfg[0].type = supla_esp_cfg.CfgButtonType == BTN_TYPE_BISTABLE ? INPUT_TYPE_BTN_BISTABLE : INPUT_TYPE_BTN_MONOSTABLE;
@@ -72,17 +89,24 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	// ---------------------------------------
 
     supla_relay_cfg[0].gpio_id = B_RELAY1_PORT;
-    supla_relay_cfg[0].flags = RELAY_FLAG_RESET;
+    supla_relay_cfg[0].flags = RELAY_FLAG_RESTORE_FORCE;
     supla_relay_cfg[0].channel = 0;
+	
+	supla_relay_cfg[1].gpio_id = B_RELAY2_PORT;
+    supla_relay_cfg[1].flags = RELAY_FLAG_RESET;
+    supla_relay_cfg[1].channel = 3;
+	
+	supla_relay_cfg[2].gpio_id = B_RELAY3_PORT;
+    supla_relay_cfg[2].flags = RELAY_FLAG_RESTORE_FORCE;
+    supla_relay_cfg[2].channel = 4;
 
 	//----------------------------------------
 	
-    supla_relay_cfg[1].gpio_id = B_UPD_PORT;	// update init channel
-    supla_relay_cfg[1].channel = 3;
+    supla_relay_cfg[3].gpio_id = B_UPD_PORT;	// update init channel
+    supla_relay_cfg[3].channel = 5;
 	
-	supla_relay_cfg[2].gpio_id = B_RELAY1_DIS;	// rel1 dis channel
-	supla_relay_cfg[2].flags = RELAY_FLAG_RESTORE_FORCE | RELAY_FLAG_VIRTUAL_GPIO;
-	supla_relay_cfg[2].channel = 4;
+	supla_relay_cfg[4].gpio_id = B_HARMONOGRAM;	// harmonogram channel
+    supla_relay_cfg[4].channel = 6;
 	
 	// ---------------------------------------
 	
@@ -92,6 +116,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTMS_U, FUNC_GPIO14);	//uzycie GPIO14
 	
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO0_U);			// pullup gpio 0
+	PIN_PULLUP_EN(PERIPHS_IO_MUX_SD_DATA3_U);		// pullup gpio 10
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTDI_U);			// pullup gpio 12
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTMS_U);			// pullup gpio 14
 
@@ -112,11 +137,11 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	
 	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 	
-		*channel_count = 6;
+		*channel_count = 8;
 		}
 	else {
 
-		*channel_count = 5;
+		*channel_count = 7;
 		}
 
 	channels[0].Number = 0;
@@ -127,7 +152,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 								| SUPLA_BIT_FUNC_CONTROLLINGTHEDOORLOCK;
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;							
 	channels[0].Default = SUPLA_CHANNELFNC_CONTROLLINGTHEGATE;
-	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
+	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY2_PORT);
 
 	channels[1].Number = 1;
 	channels[1].Type = SUPLA_CHANNELTYPE_SENSORNO;
@@ -146,28 +171,42 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[3].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[3].Default = 0;
-	channels[3].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
+	channels[3].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
 	
 	channels[4].Number = 4;
 	channels[4].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[4].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[4].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[4].Default = 0;
-	channels[4].value[0] = supla_esp_gpio_relay_on(B_RELAY1_DIS);
+	channels[4].value[0] = supla_esp_gpio_relay_on(B_RELAY3_PORT);
+	
+	channels[5].Number = 5;
+	channels[5].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[5].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[5].Default = 0;
+	channels[5].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
+	
+	channels[6].Number = 6;
+	channels[6].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[6].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[6].Default = 0;
+	channels[6].value[0] = supla_esp_gpio_relay_on(B_HARMONOGRAM);
 
 	if( supla_esp_cfg.ThermometerType == 1 ) {
-    channels[5].Number = 5;
-	channels[5].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
-	channels[5].FuncList = 0;
-	channels[5].Default = 0;
-	supla_get_temperature(channels[5].value);
+    channels[7].Number = 7;
+	channels[7].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
+	channels[7].FuncList = 0;
+	channels[7].Default = 0;
+	supla_get_temperature(channels[7].value);
    }
 
    if( supla_esp_cfg.ThermometerType == 2 ) {
-	channels[5].Number = 5;
-	channels[5].Type = SUPLA_CHANNELTYPE_DHT22;
-	channels[5].FuncList = 0;
-	channels[5].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
-	supla_get_temp_and_humidity(channels[5].value);
+	channels[7].Number = 7;
+	channels[7].Type = SUPLA_CHANNELTYPE_DHT22;
+	channels[7].FuncList = 0;
+	channels[7].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+	supla_get_temp_and_humidity(channels[7].value);
    }
 }
 
@@ -175,8 +214,10 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 
 	supla_esp_channel_value_changed(1, gpio__input_get(B_SENSOR_PORT1));
 	supla_esp_channel_value_changed(2, gpio__input_get(B_SENSOR_PORT2));
-	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_UPD_PORT));
-	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
+	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_RELAY1_PORT));
+	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY3_PORT));
+	supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_UPD_PORT));
+	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_HARMONOGRAM));
 
 }
 
@@ -340,13 +381,28 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	}
 }
 
+void supla_gate_light() {
+	
+	if ( supla_esp_state.Relay[6] == 1 {
+	
+		os_timer_disarm(&Gate_Light_ON);
+		os_timer_setfn(&Gate_Light_ON, (os_timer_func_t *)supla_gate_light_ON_cb, NULL);	
+		os_timer_arm(&Gate_Light_ON, 300, 0);
+	
+		os_timer_disarm(&Gate_Light_OFF);
+		os_timer_setfn(&Gate_Light_OFF, (os_timer_func_t *)supla_gate_light_OFF_cb, NULL);	
+		os_timer_arm(&Gate_Light_OFF, 1300, 0);
+		
+	}
+	
+}
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			
 		supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port);
 		
-		UPD_channel = 3;
-		
-		DIS1_CH = 4;
+		UPD_channel = 5;
+		DIS1_CH = 6;
 	
 if ( port == 20 ) {	
 

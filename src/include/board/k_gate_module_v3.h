@@ -21,13 +21,11 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 12
 
-#define SUPLA_ESP_SOFTVER "2.8.11.0"
+#define SUPLA_ESP_SOFTVER "2.8.27.0"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
 #define BOARD_ON_CONNECT
-
-#define RELAY_MAX_COUNT		6
 
 #define TEMP_SELECT
 
@@ -35,27 +33,27 @@
 #define AP_SSID "SUPLA-NICE-V3"
 
 #define DS18B20
-#define TEMPERATURE_CHANNEL 5
+#define TEMPERATURE_CHANNEL 8
 
 #define DHTSENSOR
-#define TEMPERATURE_HUMIDITY_CHANNEL 5
+#define TEMPERATURE_HUMIDITY_CHANNEL 8
 
 #define USE_GPIO16_OUTPUT
 
 #define B_CFG_PORT          0
 #define LED_RED_PORT  		16
-#define B_RELAY1_PORT       13
+#define B_RELAY1_PORT       13	// blokada bramy
+#define B_RELAY2_PORT       5	// sterowanie brama
+#define B_RELAY3_PORT       4	// oswietlenie posesji
 
 #define B_SENSOR_PORT1      12
 #define B_SENSOR_PORT2      14
 
 #define B_UPD_PORT		    20
-#define B_RELAY1_DIS	 	21
+#define B_HARMONOGRAM		21
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
-	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	\
-																	GPIO_OUTPUT_SET(13, 0);	\
-																	return;	}	\
+	if ( port == B_RELAY2_PORT && hi == 1)  { supla_gate_light(); }	\
 	if (supla_last_state == STATE_CONNECTED) { \
 		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
 			supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\
@@ -70,12 +68,14 @@
 	}
 
 #define BOARD_GPIO_OUTPUT_IS_HI	\
-				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
-									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}
+				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 6 = %i", supla_esp_state.Relay[6]);	\
+												return supla_esp_state.Relay[6] == 1 ? 1 : 0;	}
 									
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
+
+void supla_gate_light();
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 
