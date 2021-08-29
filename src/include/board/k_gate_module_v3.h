@@ -55,7 +55,8 @@
 #define B_HARMONOGRAM		21
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
-	if ( port == B_RELAY2_PORT && hi == 1)  { supla_gate_light(); }	\
+	if ( port == B_RELAY2_PORT && hi == 1)  { 	supla_log(LOG_DEBUG, "SUPLA gate light void");	\
+												supla_gate_light(); }	\
 	if (supla_last_state == STATE_CONNECTED) { \
 		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
 			supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\
