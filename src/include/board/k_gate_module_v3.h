@@ -23,7 +23,6 @@
 
 #define SUPLA_ESP_SOFTVER "2.8.27.1"
 
-
 #define BOARD_CFG_HTML_TEMPLATE
 
 #define BOARD_ON_CONNECT
