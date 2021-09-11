@@ -116,6 +116,12 @@ void supla_esp_board_gpio_init(void) {
 	supla_input_cfg[1].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN;
 	supla_input_cfg[1].relay_gpio_id = B_RELAY2_PORT;
 	supla_input_cfg[1].channel = 1;
+	
+   if( supla_esp_cfg.ThermometerType == 3 ) {
+	supla_input_cfg[2].type = INPUT_TYPE_SENSOR;
+	supla_input_cfg[2].gpio_id = B_SENSOR_GATE;
+	supla_input_cfg[2].channel = 5;
+   }
 
 	// ---------------------------------------
 
@@ -228,6 +234,15 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[5].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
 	supla_get_temp_and_humidity(channels[5].value);
    }
+   
+   if( supla_esp_cfg.ThermometerType == 3 ) {
+	channels[5].Number = 5;
+	channels[5].Type = SUPLA_CHANNELTYPE_SENSORNO;
+	channels[5].FuncList = 0;
+	channels[5].Flags = 0;
+	channels[5].Default = 0;
+	channels[5].value[0] = 0;
+   }
 }
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc) {
@@ -237,6 +252,9 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 	supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_UPD_PORT));
 	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_RELAY1_DIS));
 	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
+	if( supla_esp_cfg.ThermometerType == 3 ) {
+		supla_esp_channel_value_changed(5, gpio__input_get(B_SENSOR_GATE));
+	}
 }
 
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
@@ -334,7 +352,7 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       "ON<option value=\"1\" %s>LED OFF<option value=\"2\" %s>CHANNEL STATUS</select><label>Status LED</label></i>"
 	  "<i><select name=\"trm\"><option value=\"0\" %s>NONE</option>"
       "<option value=\"1\" %s>DS18B20</option><option value=\"2\" %s>DHT22</option>"
-      "</select><label>Thermometer type:</label></i>"
+      "<option value=\"3\" %s>GATE LIGHT</option></select><label>Thermometer type:</label></i>"
 	  "<i><select name=\"upd\"><option value=\"0\" "
       "%s>NO<option value=\"1\" %s>YES</select><label>Firmware "
       "update</label></i></div><button "
@@ -386,6 +404,7 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 	  supla_esp_cfg.ThermometerType == 0 ? "selected" : "",
 	  supla_esp_cfg.ThermometerType == 1 ? "selected" : "",
   	  supla_esp_cfg.ThermometerType == 2 ? "selected" : "",
+  	  supla_esp_cfg.ThermometerType == 3 ? "selected" : "",
 	  supla_esp_cfg.FirmwareUpdate == 0 ? "selected" : "",
       supla_esp_cfg.FirmwareUpdate == 1 ? "selected" : ""
       );
