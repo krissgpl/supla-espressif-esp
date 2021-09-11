@@ -30,6 +30,7 @@
 #define THERM_NONE				  0
 #define THERM_DS18B20			  1
 #define THERM_DHT22				  2
+#define THERM_GATE				  3
 
 typedef struct {
   char TAG[6];

@@ -61,14 +61,16 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 void supla_gate_light_ON_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER wlaczenie swiatla posesji");
-	supla_esp_gpio_set_hi(B_RELAY3_PORT, 1);	//	wlaczenie swiatla posesji
+	//supla_esp_gpio_set_hi(B_RELAY3_PORT, 1);		wlaczenie swiatla posesji
+	supla_esp_channel_value_changed(B_RELAY3_PORT, 1);
 	
 }
 
 void supla_gate_light_OFF_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER wylaczenie swiatla posesji");
-	supla_esp_gpio_set_hi(B_RELAY3_PORT, 0);	//	wylaczenie swiatla posesji
+	//supla_esp_gpio_set_hi(B_RELAY3_PORT, 0);		wylaczenie swiatla posesji
+	supla_esp_channel_value_changed(B_RELAY3_PORT, 0);
 	
 }
 
@@ -90,11 +92,11 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 
     supla_relay_cfg[0].gpio_id = B_RELAY1_PORT;
     supla_relay_cfg[0].flags = RELAY_FLAG_RESTORE_FORCE;
-    supla_relay_cfg[0].channel = 0;
+    supla_relay_cfg[0].channel = 3;
 	
 	supla_relay_cfg[1].gpio_id = B_RELAY2_PORT;
     supla_relay_cfg[1].flags = RELAY_FLAG_RESET;
-    supla_relay_cfg[1].channel = 3;
+    supla_relay_cfg[1].channel = 0;
 	
 	supla_relay_cfg[2].gpio_id = B_RELAY3_PORT;
     supla_relay_cfg[2].flags = RELAY_FLAG_RESTORE_FORCE;
@@ -383,7 +385,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 
 void supla_gate_light() {
 	
-	if ( supla_esp_state.Relay[6] == 1 {
+	if ( supla_esp_state.Relay[6] == 1 ) {
 	
 		os_timer_disarm(&Gate_Light_ON);
 		os_timer_setfn(&Gate_Light_ON, (os_timer_func_t *)supla_gate_light_ON_cb, NULL);	

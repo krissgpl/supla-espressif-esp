@@ -21,7 +21,8 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 12
 
-#define SUPLA_ESP_SOFTVER "2.8.28.0"
+#define SUPLA_ESP_SOFTVER "2.8.27.1"
+
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -31,6 +32,8 @@
 
 #define ESP_HOSTNAME "SUPLA-NICE_V3"
 #define AP_SSID "SUPLA-NICE-V3"
+
+#define RELAY_MAX_COUNT		7
 
 #define DS18B20
 #define TEMPERATURE_CHANNEL 8
@@ -53,7 +56,8 @@
 #define B_HARMONOGRAM		21
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
-	if ( port == B_RELAY2_PORT && hi == 1)  { supla_gate_light(); }	\
+	if ( port == B_RELAY2_PORT && hi == 1)  { 	supla_log(LOG_DEBUG, "SUPLA gate light void");	\
+												supla_gate_light(); }	\
 	if (supla_last_state == STATE_CONNECTED) { \
 		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
 			supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\
