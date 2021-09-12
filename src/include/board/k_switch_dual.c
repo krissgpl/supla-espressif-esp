@@ -254,6 +254,7 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
 	if( supla_esp_cfg.ThermometerType == 3 ) {
 		supla_esp_channel_value_changed(5, gpio__input_get(B_SENSOR_GATE));
+		supla_log(LOG_DEBUG, "ch5 gpio input get = %i", gpio__input_get(B_SENSOR_GATE));
 	}
 }
 
