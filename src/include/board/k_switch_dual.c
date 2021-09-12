@@ -460,7 +460,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg)
 				&&  input_cfg->channel != 255 ) {
 
 		supla_esp_channel_value_changed(input_cfg->channel, 1);
-		supla_log(LOG_DEBUG, "gpio input get chanel=%i, val=1", input_cfg->channel);
+		//supla_log(LOG_DEBUG, "gpio input get chanel=%i, val=1", input_cfg->channel);
 
 	}
 
@@ -481,6 +481,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 			    &&  input_cfg->channel != 255 ) {
 		supla_esp_channel_value_changed(input_cfg->channel, 0);
 		supla_log(LOG_DEBUG, "gpio input get chanel=%i, val=0", input_cfg->channel);
+		if ( input_cfg->chanel == 5 ) { supla_log(LOG_DEBUG, "wlaczenie oswietlenia posesji");	}
 
 	}
 }
