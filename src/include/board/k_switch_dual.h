@@ -55,6 +55,7 @@
 #define B_UPD_PORT		 20
 #define B_RELAY1_DIS	 21
 #define B_RELAY2_DIS	 22
+#define B_GATE_PORT      23
 #define B_SENSOR_GATE	  2
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
@@ -89,7 +90,9 @@
 				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 3 = %i", supla_esp_state.Relay[3]);	\
 									return supla_esp_state.Relay[3] == 1 ? 1 : 0;	}	\
 				if ( port == 22)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
-									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	
+									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	\
+				if ( port == 23)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 5 = %i", supla_esp_state.Relay[5]);	\
+									return supla_esp_state.Relay[5] == 1 ? 1 : 0;	}
 				
 				
 #define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\

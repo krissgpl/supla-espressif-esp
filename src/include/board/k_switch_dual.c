@@ -35,6 +35,7 @@ ETSTimer Port_OFF;
 int UPD_channel;
 int DIS1_CH;
 int DIS2_CH;
+int GATE_CH;
 unsigned int Licznik = 0;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
@@ -118,8 +119,9 @@ void supla_esp_board_gpio_init(void) {
 	supla_input_cfg[1].channel = 1;
 	
    if( supla_esp_cfg.ThermometerType == 3 ) {
-	supla_input_cfg[2].type = INPUT_TYPE_SENSOR;
+	supla_input_cfg[2].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[2].gpio_id = B_SENSOR_GATE;
+	supla_input_cfg[2].relay_gpio_id = B_GATE_PORT;
 	supla_input_cfg[2].channel = 5;
    }
 
@@ -145,6 +147,9 @@ void supla_esp_board_gpio_init(void) {
 	supla_relay_cfg[4].gpio_id = B_RELAY2_DIS;	// rel2 dis channel
 	supla_relay_cfg[4].flags = RELAY_FLAG_RESTORE_FORCE | RELAY_FLAG_VIRTUAL_GPIO;
 	supla_relay_cfg[4].channel = 4;	
+	
+	supla_relay_cfg[5].gpio_id = B_GATE_PORT;	// timer do wlaczana swiatla
+	supla_relay_cfg[5].channel = 5;
   
 	//---------------------------------------	
     
@@ -237,18 +242,11 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
    
    if( supla_esp_cfg.ThermometerType == 3 ) {
 	channels[5].Number = 5;
-	channels[5].Type = SUPLA_CHANNELTYPE_SENSORNO;
-	channels[5].FuncList = 0;
+	channels[5].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[5].FuncList = SUPLA_BIT_FUNC_STAIRCASETIMER;
 	channels[5].Flags = SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED;
 	channels[5].Default = 0;
-	channels[5].value[0] = 0;
-	
-	channels[6].Number = 6;
-	channels[6].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[6].FuncList = SUPLA_BIT_FUNC_STAIRCASETIMER;
-	channels[6].Flags = SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED;
-	channels[6].Default = 0;
-	channels[6].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
+	channels[5].value[0] = supla_esp_gpio_relay_on(B_GATE_PORT);
    }
 }
 
@@ -260,8 +258,7 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_RELAY1_DIS));
 	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
 	if( supla_esp_cfg.ThermometerType == 3 ) {
-		supla_esp_channel_value_changed(5, gpio__input_get(B_SENSOR_GATE));
-		supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_RELAY1_PORT));
+		supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_GATE_PORT));
 	}
 }
 
@@ -534,6 +531,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
 	
 	DIS1_CH = 3;
 	DIS2_CH = 4;
+	GATE_CH = 5;
 	
 	int ledblock;
 	
@@ -592,4 +590,14 @@ if ( port == 22 ) {
 		os_timer_setfn(&Port_OFF, (os_timer_func_t *)supla_esp_baord_Port_OFF_cb, (void*)ledblock);	
 		os_timer_arm(&Port_OFF, 300, 0);
 };
+
+if ( port == 23 ) {	
+			
+		supla_esp_state.Relay[GATE_CH] = hi;
+		supla_esp_save_state(SAVE_STATE_DELAY);
+		supla_esp_channel_value_changed(GATE_CH, supla_esp_state.Relay[GATE_CH]);
+		supla_esp_cfg_save(&supla_esp_cfg);
+		supla_esp_channel_value_changed(GATE_CH, hi);
+};
+
 }
