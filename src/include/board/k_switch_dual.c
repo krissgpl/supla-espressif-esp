@@ -122,7 +122,7 @@ void supla_esp_board_gpio_init(void) {
 	supla_input_cfg[2].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[2].gpio_id = B_SENSOR_GATE;
 	supla_input_cfg[2].relay_gpio_id = B_GATE_PORT;
-	supla_input_cfg[2].channel = 6;
+	supla_input_cfg[2].channel = 5;
    }
 
 	// ---------------------------------------
@@ -150,7 +150,7 @@ void supla_esp_board_gpio_init(void) {
 	
    if( supla_esp_cfg.ThermometerType == 3 ) {
 	supla_relay_cfg[5].gpio_id = B_GATE_PORT;	// timer do wlaczana swiatla
-	supla_relay_cfg[5].channel = 6;
+	supla_relay_cfg[5].channel = 5;
    }
   
 	//---------------------------------------	
@@ -180,7 +180,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 
 	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 || supla_esp_cfg.ThermometerType == 3) {
 	
-		*channel_count = 8;
+		*channel_count = 6;
 		}
 	else {
 
@@ -243,12 +243,12 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
    }
    
    if( supla_esp_cfg.ThermometerType == 3 ) {
-	channels[6].Number = 6;
-	channels[6].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[6].FuncList = SUPLA_BIT_FUNC_STAIRCASETIMER;
-	channels[6].Flags = SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED;
-	channels[6].Default = 0;
-	channels[6].value[0] = supla_esp_gpio_relay_on(B_GATE_PORT);
+	channels[5].Number = 5;
+	channels[5].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[5].FuncList = SUPLA_BIT_FUNC_STAIRCASETIMER;
+	channels[5].Flags = SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED;
+	channels[5].Default = 0;
+	channels[5].value[0] = supla_esp_gpio_relay_on(B_GATE_PORT);
    }
 }
 
@@ -260,7 +260,7 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_RELAY1_DIS));
 	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
 	if( supla_esp_cfg.ThermometerType == 3 ) {
-		supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_GATE_PORT));
+		supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_GATE_PORT));
 	}
 }
 
@@ -466,7 +466,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg)
 				&&  input_cfg->channel != 255 ) {
 
 		supla_esp_channel_value_changed(input_cfg->channel, 1);
-		//supla_log(LOG_DEBUG, "gpio input get chanel=%i, val=1", input_cfg->channel);
 
 	}
 
@@ -486,9 +485,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
     } else if ( input_cfg->type == INPUT_TYPE_SENSOR
 			    &&  input_cfg->channel != 255 ) {
 		supla_esp_channel_value_changed(input_cfg->channel, 0);
-		supla_log(LOG_DEBUG, "gpio input get chanel=%i, val=0", input_cfg->channel);
-		if ( input_cfg->channel == 5 ) { supla_log(LOG_DEBUG, "wlaczenie oswietlenia posesji");	}
-
+		
 	}
 }
 
