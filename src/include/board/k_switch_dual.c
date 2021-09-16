@@ -180,7 +180,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 
 	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 || supla_esp_cfg.ThermometerType == 3) {
 	
-		*channel_count = 7;
+		*channel_count = 8;
 		}
 	else {
 
@@ -243,12 +243,12 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
    }
    
    if( supla_esp_cfg.ThermometerType == 3 ) {
-	channels[5].Number = 5;
-	channels[5].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[5].FuncList = SUPLA_BIT_FUNC_STAIRCASETIMER;
-	channels[5].Flags = SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED;
-	channels[5].Default = 0;
-	channels[5].value[0] = supla_esp_gpio_relay_on(B_GATE_PORT);
+	channels[6].Number = 6;
+	channels[6].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[6].FuncList = SUPLA_BIT_FUNC_STAIRCASETIMER;
+	channels[6].Flags = SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED;
+	channels[6].Default = 0;
+	channels[6].value[0] = supla_esp_gpio_relay_on(B_GATE_PORT);
    }
 }
 
