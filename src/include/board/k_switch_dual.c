@@ -122,7 +122,7 @@ void supla_esp_board_gpio_init(void) {
 	supla_input_cfg[2].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[2].gpio_id = B_SENSOR_GATE;
 	supla_input_cfg[2].relay_gpio_id = B_GATE_PORT;
-	supla_input_cfg[2].channel = 5;
+	supla_input_cfg[2].channel = 6;
    }
 
 	// ---------------------------------------
@@ -150,7 +150,7 @@ void supla_esp_board_gpio_init(void) {
 	
    if( supla_esp_cfg.ThermometerType == 3 ) {
 	supla_relay_cfg[5].gpio_id = B_GATE_PORT;	// timer do wlaczana swiatla
-	supla_relay_cfg[5].channel = 5;
+	supla_relay_cfg[5].channel = 6;
    }
   
 	//---------------------------------------	
@@ -260,7 +260,7 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_RELAY1_DIS));
 	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
 	if( supla_esp_cfg.ThermometerType == 3 ) {
-		supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_GATE_PORT));
+		supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_GATE_PORT));
 	}
 }
 
