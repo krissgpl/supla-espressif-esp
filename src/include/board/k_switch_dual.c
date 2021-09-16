@@ -148,8 +148,10 @@ void supla_esp_board_gpio_init(void) {
 	supla_relay_cfg[4].flags = RELAY_FLAG_RESTORE_FORCE | RELAY_FLAG_VIRTUAL_GPIO;
 	supla_relay_cfg[4].channel = 4;	
 	
+   if( supla_esp_cfg.ThermometerType == 3 ) {
 	supla_relay_cfg[5].gpio_id = B_GATE_PORT;	// timer do wlaczana swiatla
 	supla_relay_cfg[5].channel = 5;
+   }
   
 	//---------------------------------------	
     
