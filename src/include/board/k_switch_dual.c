@@ -597,8 +597,8 @@ if ( port == 23 ) {
 		supla_esp_channel_value_changed(GATE_CH, supla_esp_state.Relay[GATE_CH]);
 		supla_esp_cfg_save(&supla_esp_cfg);
 		supla_esp_channel_value_changed(GATE_CH, hi);
-		if ( hi==1 ) { supla_log(LOG_DEBUG, "wlaczenie oswietlenia bramy") };
-		if ( hi==0 ) { supla_log(LOG_DEBUG, "wylaczenie oswietlenia bramy") };
+		if ( hi==1 ) { supla_log(LOG_DEBUG, "wlaczenie oswietlenia bramy"); };
+		if ( hi==0 ) { supla_log(LOG_DEBUG, "wylaczenie oswietlenia bramy"); };
 };
 
 }
