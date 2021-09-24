@@ -125,6 +125,7 @@ public:
     memset(&supla_esp_state, 0, sizeof(SuplaEspState));
     supla_esp_gpio_init_time = 0;
     cleanupTimers();
+    supla_esp_gpio_clear_vars();
 
     gpioInitCb = nullptr;
   }
@@ -294,10 +295,6 @@ TEST_F(RollerShutterMotorProblem, MotorProblemMoveUpCloseToFullyOpen) {
     .WillRepeatedly(Return(0));
 
   EXPECT_CALL(srpc, 
-      valueChanged(_, 0, ElementsAreArray({1, 0, 0, 0, 0, 0, 0, 0})))
-    .WillOnce(Return(0));
-
-  EXPECT_CALL(srpc, 
       valueChanged(_, 0, ElementsAreArray({0, 0, 0, 0, 0, 0, 0, 0})))
     .WillOnce(Return(0));
 
@@ -367,10 +364,6 @@ TEST_F(RollerShutterMotorProblem, MotorProblemMoveDownCloseToFullyClosed) {
     .WillRepeatedly(Return(0));
 
   EXPECT_CALL(srpc, 
-      valueChanged(_, 0, ElementsAreArray({99, 0, 0, 0, 0, 0, 0, 0})))
-    .WillOnce(Return(0));
-
-  EXPECT_CALL(srpc, 
       valueChanged(_, 0, ElementsAreArray({100, 0, 0, 0, 0, 0, 0, 0})))
     .WillOnce(Return(0));
 
@@ -438,11 +431,6 @@ TEST_F(RollerShutterMotorProblem, MotorProblemByTask) {
       valueChanged(_, 0, ElementsAreArray({50, 0, 0, 0, 0, 0, 0, 0})))
     .Times(2)
     .WillRepeatedly(Return(0));
-
-  EXPECT_CALL(srpc, 
-      valueChanged(_, 0, ElementsAreArray({53, 0, 0, 
-          RS_VALUE_FLAG_MOTOR_PROBLEM, 0, 0, 0, 0})))
-    .WillOnce(Return(0));
 
   EXPECT_CALL(srpc, valueChanged(_, 0,
         ElementsAreArray({90, 0, 0,
@@ -520,12 +508,6 @@ TEST_F(RollerShutterMotorProblem, MotorProblemWithLongStartupTime) {
       valueChanged(_, 0, ElementsAreArray({50, 0, 0, 0, 0, 0, 0, 0})))
     .Times(2)
     .WillRepeatedly(Return(0));
-
-  EXPECT_CALL(srpc, valueChanged(_, 0,
-        ElementsAreArray({53, 0, 0,
-          RS_VALUE_FLAG_MOTOR_PROBLEM, 0,
-          0, 0, 0})))
-    .WillOnce(Return(0));
 
   EXPECT_CALL(srpc, valueChanged(_, 0,
         ElementsAreArray({90, 0, 0,
