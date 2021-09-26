@@ -139,7 +139,7 @@ void supla_esp_board_gpio_init(void) {
 	supla_input_cfg[1].channel = 1;
 	
    if( supla_esp_cfg.ThermometerType == 3 ) {
-	supla_input_cfg[2].type = STAIRCASE_BTN_TYPE_TOGGLE;
+	supla_input_cfg[2].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[2].gpio_id = B_SENSOR_GATE;
 	supla_input_cfg[2].relay_gpio_id = B_GATE_PORT;
 	supla_input_cfg[2].channel = 5;
@@ -434,6 +434,9 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
   	  supla_esp_cfg.ThermometerType == 3 ? "selected" : "",
 	  supla_esp_cfg.FirmwareUpdate == 0 ? "selected" : "",
       supla_esp_cfg.FirmwareUpdate == 1 ? "selected" : ""
+	  if( supla_esp_cfg.ThermometerType == 3 ) {
+		supla_esp_cfg.StaircaseButtonType == 0 }
+	  else { supla_esp_cfg.StaircaseButtonType == 2 }
       );
 
   return buffer;
@@ -635,7 +638,7 @@ if ( port == 23 ) {
 					os_timer_arm(&CH_SW1, 10, 0);
 					os_timer_disarm(&CH_SW2);
 					os_timer_setfn(&CH_SW2, (os_timer_func_t *)supla_esp_baord_CH_SW2_cb, NULL);
-					os_timer_arm(&CH_SW2, 40, 0); };
+					os_timer_arm(&CH_SW2, 100, 0); };
 					
 		if ( hi==0 ) { supla_log(LOG_DEBUG, "wylaczenie oswietlenia bramy"); 
 						if (CH1 == 1) {
@@ -648,6 +651,6 @@ if ( port == 23 ) {
 					os_timer_arm(&CH_SW1, 10, 0);
 					os_timer_disarm(&CH_SW2);
 					os_timer_setfn(&CH_SW2, (os_timer_func_t *)supla_esp_baord_CH_SW2_cb, NULL);
-					os_timer_arm(&CH_SW2, 40, 0); };
+					os_timer_arm(&CH_SW2, 100, 0); };
 };
 }
