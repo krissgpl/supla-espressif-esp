@@ -31,6 +31,7 @@ ETSTimer Led_OFF;
 ETSTimer Led_ON2;
 ETSTimer Led_OFF2;
 ETSTimer Port_OFF;
+ETSTimer CH_SW;
 
 int UPD_channel;
 int DIS1_CH;
@@ -106,6 +107,15 @@ void supla_esp_baord_Port_OFF_cb(void *timer_arg) {
 	
 }
 
+void supla_esp_baord_CH_SW_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "TIMER CH SW");
+	
+	supla_esp_channel_value_changed(0, supla_esp_gpio_output_is_hi(B_RELAY1_PORT));
+	supla_esp_channel_value_changed(1, supla_esp_gpio_output_is_hi(B_RELAY2_PORT));
+	
+}
+
 void supla_esp_board_gpio_init(void) {
 		
 	supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
@@ -175,10 +185,6 @@ void supla_esp_board_gpio_init(void) {
 		supla_esp_gpio_set_hi(10, 1);	// ustaw gpio10 high wl zasilania DHT
 		supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
 	};
-	CH1 = supla_esp_state.Relay[5];
-	CH2	= supla_esp_state.Relay[5];
-	supla_log(LOG_DEBUG, "CH1 = %i", CH1);
-	supla_log(LOG_DEBUG, "CH2 = %i", CH2);
 }
 
 void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
@@ -435,6 +441,12 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	supla_log(LOG_DEBUG, "supla_esp_state RELAY 0 = %i", supla_esp_state.Relay[0]);
 	supla_log(LOG_DEBUG, "supla_esp_state RELAY 3 = %i", supla_esp_state.Relay[3]);
 	supla_log(LOG_DEBUG, "supla_esp_state RELAY 4 = %i", supla_esp_state.Relay[4]);
+	
+	CH1 = supla_esp_state.Relay[5];
+	CH2	= supla_esp_state.Relay[5];
+	supla_log(LOG_DEBUG, "CH1 = %i", CH1);
+	supla_log(LOG_DEBUG, "CH2 = %i", CH2);
+
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
@@ -605,21 +617,23 @@ if ( port == 23 ) {
 		if ( hi==1 ) { supla_log(LOG_DEBUG, "wlaczenie oswietlenia bramy"); 
 						if (supla_esp_gpio_output_is_hi(B_RELAY1_PORT) == 0) {
 							CH1 = 1;
-							supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
-							supla_esp_channel_value_changed(0, 1); };  
+							supla_esp_gpio_set_hi(B_RELAY1_PORT, 1); };  
 						if (supla_esp_gpio_output_is_hi(B_RELAY2_PORT) == 0) {
 							CH2 = 1;
-							supla_esp_gpio_set_hi(B_RELAY2_PORT, 1);
-							supla_esp_channel_value_changed(1, 1); };	
-					};
+							supla_esp_gpio_set_hi(B_RELAY2_PORT, 1); };
+							
+					os_timer_disarm(&CH_SW);
+					os_timer_setfn(&CH_SW, (os_timer_func_t *)supla_esp_baord_CH_SW_cb, NULL);
+					os_timer_arm(&CH_SW, 10, 0); };
+					
 		if ( hi==0 ) { supla_log(LOG_DEBUG, "wylaczenie oswietlenia bramy"); 
 						if (CH1 == 1) {
-							supla_esp_gpio_set_hi(B_RELAY1_PORT, 0);
-							supla_esp_channel_value_changed(0, 0); }; 
+							supla_esp_gpio_set_hi(B_RELAY1_PORT, 0); }; 
 						if (CH2 == 1) {
-							supla_esp_gpio_set_hi(B_RELAY2_PORT, 0);
-							supla_esp_channel_value_changed(1, 0); };
-					};
+							supla_esp_gpio_set_hi(B_RELAY2_PORT, 0); };
+							
+					os_timer_disarm(&CH_SW);
+					os_timer_setfn(&CH_SW, (os_timer_func_t *)supla_esp_baord_CH_SW_cb, NULL);
+					os_timer_arm(&CH_SW, 10, 0); };
 };
-
 }

@@ -21,7 +21,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 12
 
-#define SUPLA_ESP_SOFTVER "2.8.12.0"
+#define SUPLA_ESP_SOFTVER "2.8.36.0"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -45,6 +45,10 @@
 
 #define LED_RED_BLOCK    0x1
 #define LED_GREEN_BLOCK  0x2
+#define CH1_ON   0x3
+#define CH1_OFF  0x4
+#define CH2_ON   0x5
+#define CH2_OFF  0x6
 
 #define LED_RED_PORT     16
 #define LED_GREEN_PORT    4
