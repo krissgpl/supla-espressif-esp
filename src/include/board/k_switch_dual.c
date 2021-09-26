@@ -193,6 +193,11 @@ void supla_esp_board_gpio_init(void) {
 		supla_esp_gpio_set_hi(10, 1);	// ustaw gpio10 high wl zasilania DHT
 		supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
 	};
+	
+	if( supla_esp_cfg.ThermometerType == 3 ) {
+		supla_esp_cfg.StaircaseButtonType == 0 }
+	else { supla_esp_cfg.StaircaseButtonType == 2 };
+	
 }
 
 void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
@@ -434,9 +439,6 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
   	  supla_esp_cfg.ThermometerType == 3 ? "selected" : "",
 	  supla_esp_cfg.FirmwareUpdate == 0 ? "selected" : "",
       supla_esp_cfg.FirmwareUpdate == 1 ? "selected" : ""
-	  if( supla_esp_cfg.ThermometerType == 3 ) {
-		supla_esp_cfg.StaircaseButtonType == 0 }
-	  else { supla_esp_cfg.StaircaseButtonType == 2 }
       );
 
   return buffer;
