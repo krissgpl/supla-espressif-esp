@@ -31,7 +31,8 @@ ETSTimer Led_OFF;
 ETSTimer Led_ON2;
 ETSTimer Led_OFF2;
 ETSTimer Port_OFF;
-ETSTimer CH_SW;
+ETSTimer CH_SW1;
+ETSTimer CH_SW2;
 
 int UPD_channel;
 int DIS1_CH;
@@ -107,11 +108,18 @@ void supla_esp_baord_Port_OFF_cb(void *timer_arg) {
 	
 }
 
-void supla_esp_baord_CH_SW_cb(void *timer_arg) {
+void supla_esp_baord_CH_SW1_cb(void *timer_arg) {
 	
-	supla_log(LOG_DEBUG, "TIMER CH SW");
+	supla_log(LOG_DEBUG, "TIMER CH SW1");
 	
 	supla_esp_channel_value_changed(0, supla_esp_gpio_output_is_hi(B_RELAY1_PORT));
+	
+}
+
+void supla_esp_baord_CH_SW2_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "TIMER CH SW2");
+	
 	supla_esp_channel_value_changed(1, supla_esp_gpio_output_is_hi(B_RELAY2_PORT));
 	
 }
@@ -622,9 +630,12 @@ if ( port == 23 ) {
 							CH2 = 1;
 							supla_esp_gpio_set_hi(B_RELAY2_PORT, 1); };
 							
-					os_timer_disarm(&CH_SW);
-					os_timer_setfn(&CH_SW, (os_timer_func_t *)supla_esp_baord_CH_SW_cb, NULL);
-					os_timer_arm(&CH_SW, 10, 0); };
+					os_timer_disarm(&CH_SW1);
+					os_timer_setfn(&CH_SW1, (os_timer_func_t *)supla_esp_baord_CH_SW1_cb, NULL);
+					os_timer_arm(&CH_SW1, 10, 0);
+					os_timer_disarm(&CH_SW2);
+					os_timer_setfn(&CH_SW2, (os_timer_func_t *)supla_esp_baord_CH_SW2_cb, NULL);
+					os_timer_arm(&CH_SW2, 20, 0); };
 					
 		if ( hi==0 ) { supla_log(LOG_DEBUG, "wylaczenie oswietlenia bramy"); 
 						if (CH1 == 1) {
@@ -632,8 +643,11 @@ if ( port == 23 ) {
 						if (CH2 == 1) {
 							supla_esp_gpio_set_hi(B_RELAY2_PORT, 0); };
 							
-					os_timer_disarm(&CH_SW);
-					os_timer_setfn(&CH_SW, (os_timer_func_t *)supla_esp_baord_CH_SW_cb, NULL);
-					os_timer_arm(&CH_SW, 10, 0); };
+					os_timer_disarm(&CH_SW1);
+					os_timer_setfn(&CH_SW1, (os_timer_func_t *)supla_esp_baord_CH_SW1_cb, NULL);
+					os_timer_arm(&CH_SW1, 10, 0);
+					os_timer_disarm(&CH_SW2);
+					os_timer_setfn(&CH_SW2, (os_timer_func_t *)supla_esp_baord_CH_SW2_cb, NULL);
+					os_timer_arm(&CH_SW2, 20, 0); };
 };
 }
