@@ -195,8 +195,8 @@ void supla_esp_board_gpio_init(void) {
 	};
 	
 	if( supla_esp_cfg.ThermometerType == 3 ) {
-		supla_esp_cfg.StaircaseButtonType == 0 }
-	else { supla_esp_cfg.StaircaseButtonType == 2 };
+		supla_esp_cfg.StaircaseButtonType = 0; }
+	else { supla_esp_cfg.StaircaseButtonType = 2; };
 	
 }
 
