@@ -194,9 +194,9 @@ void supla_esp_board_gpio_init(void) {
 		supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
 	};
 	
-	if( supla_esp_cfg.ThermometerType == 3 ) {
-		supla_esp_cfg.StaircaseButtonType = 0; }
-	else { supla_esp_cfg.StaircaseButtonType = 2; };
+	//if( supla_esp_cfg.ThermometerType == 3 ) {
+		supla_esp_cfg.StaircaseButtonType = 0; 
+	//else { supla_esp_cfg.StaircaseButtonType = 2; };
 	
 }
 
@@ -640,7 +640,7 @@ if ( port == 23 ) {
 					os_timer_arm(&CH_SW1, 10, 0);
 					os_timer_disarm(&CH_SW2);
 					os_timer_setfn(&CH_SW2, (os_timer_func_t *)supla_esp_baord_CH_SW2_cb, NULL);
-					os_timer_arm(&CH_SW2, 100, 0); };
+					os_timer_arm(&CH_SW2, 200, 0); };
 					
 		if ( hi==0 ) { supla_log(LOG_DEBUG, "wylaczenie oswietlenia bramy"); 
 						if (CH1 == 1) {
@@ -653,6 +653,6 @@ if ( port == 23 ) {
 					os_timer_arm(&CH_SW1, 10, 0);
 					os_timer_disarm(&CH_SW2);
 					os_timer_setfn(&CH_SW2, (os_timer_func_t *)supla_esp_baord_CH_SW2_cb, NULL);
-					os_timer_arm(&CH_SW2, 100, 0); };
+					os_timer_arm(&CH_SW2, 200, 0); };
 };
 }
