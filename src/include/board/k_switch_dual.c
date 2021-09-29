@@ -24,7 +24,7 @@
 
 #include "supla_esp.h"
 #include "supla_esp_gpio.h"
-#include "supla_esp_countdown_timer.h"
+//#include "supla_esp_countdown_timer.h"
 
 ETSTimer value_timer1;
 ETSTimer Led_ON;
@@ -628,8 +628,8 @@ if ( port == 23 ) {
 		supla_esp_channel_value_changed(GATE_CH, supla_esp_state.Relay[GATE_CH]);
 		supla_esp_cfg_save(&supla_esp_cfg);
 		supla_esp_channel_value_changed(GATE_CH, hi);
-		supla_esp_gpio_relay_set_duration_timer(GATE_CH, hi, 0, 0);
 		if ( hi==1 ) { supla_log(LOG_DEBUG, "wlaczenie oswietlenia bramy"); 
+						supla_esp_gpio_relay_set_duration_timer(GATE_CH, hi, supla_esp_state.Time2Left[GATE_CH], 0);
 						if (supla_esp_gpio_output_is_hi(B_RELAY1_PORT) == 0) {
 							CH1 = 1;
 							supla_esp_gpio_set_hi(B_RELAY1_PORT, 1); };  
