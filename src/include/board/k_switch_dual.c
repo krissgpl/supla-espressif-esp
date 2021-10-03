@@ -463,7 +463,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 
 }
 
-/*void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
+void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
     char hi)
 {
 
@@ -486,6 +486,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg)
 {
 
     supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
+	
+  if ( input_cfg->channel == 5 ) { supla_log(LOG_DEBUG, "INPUT CH 5 Test"); };
 
   if ( input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE 	//wlaczanie przy zboczu narastajacym
 		|| input_cfg->type == INPUT_TYPE_BTN_BISTABLE ) {
@@ -518,7 +520,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 		supla_esp_channel_value_changed(input_cfg->channel, 0);
 		
 	}
-} */
+} 
 
 void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 	
