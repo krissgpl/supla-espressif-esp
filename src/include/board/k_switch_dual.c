@@ -487,7 +487,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg)
 
     supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
 	
-  if ( input_cfg->channel == 5 ) { supla_log(LOG_DEBUG, "INPUT CH 5 Test"); };
+    supla_log(LOG_DEBUG, "INPUT Test CH = ", input_cfg->channel);
 
   if ( input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE 	//wlaczanie przy zboczu narastajacym
 		|| input_cfg->type == INPUT_TYPE_BTN_BISTABLE ) {
