@@ -463,7 +463,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 
 }
 
-void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
+/*void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
     char hi)
 {
 
@@ -518,7 +518,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 		supla_esp_channel_value_changed(input_cfg->channel, 0);
 		
 	}
-}
+} */
 
 void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 	
