@@ -472,7 +472,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
     if (input_cfg->relay_gpio_id != 255) {
 
         // supla_log(LOG_DEBUG, "RELAY");
-		supla_log(LOG_DEBUG, "RELAY Test CH = ", input_cfg->relay_gpio_id);
+		supla_log(LOG_DEBUG, "RELAY Test GPIO = %i", input_cfg->relay_gpio_id);
 
         supla_esp_gpio_relay_hi(input_cfg->relay_gpio_id, hi, 0);
 		
@@ -488,7 +488,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg)
 
     supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
 	
-    supla_log(LOG_DEBUG, "INPUT Test CH = ", input_cfg->channel);
+    supla_log(LOG_DEBUG, "INPUT Test CH = %i", input_cfg->channel);
 
   if ( input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE 	//wlaczanie przy zboczu narastajacym
 		|| input_cfg->type == INPUT_TYPE_BTN_BISTABLE ) {
