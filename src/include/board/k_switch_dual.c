@@ -490,7 +490,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg)
 	
     supla_log(LOG_DEBUG, "INPUT Test CH = %i", input_cfg->channel);
 	
-	if ( input_cfg->channel == 5 && supla_esp_gpio_output_is_hi(B_GATE_PORT) == 1 ) {
+	if ( input_cfg->channel == 5 ) {
 		supla_log(LOG_DEBUG, "INPUT Timer test");
 		supla_esp_gpio_relay_set_duration_timer(5, 1, supla_esp_state.Time2Left[5], 0); };
 
