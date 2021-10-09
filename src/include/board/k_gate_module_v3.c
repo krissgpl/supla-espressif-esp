@@ -62,7 +62,7 @@ void supla_gate_light_ON_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER wlaczenie swiatla posesji");
 	//supla_esp_gpio_set_hi(B_RELAY3_PORT, 1);		wlaczenie swiatla posesji
-	supla_esp_channel_value_changed(B_RELAY3_PORT, 1);
+	//supla_esp_channel_value_changed(B_RELAY3_PORT, 1);
 	
 }
 
@@ -70,7 +70,7 @@ void supla_gate_light_OFF_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER wylaczenie swiatla posesji");
 	//supla_esp_gpio_set_hi(B_RELAY3_PORT, 0);		wylaczenie swiatla posesji
-	supla_esp_channel_value_changed(B_RELAY3_PORT, 0);
+	//supla_esp_channel_value_changed(B_RELAY3_PORT, 0);
 	
 }
 
