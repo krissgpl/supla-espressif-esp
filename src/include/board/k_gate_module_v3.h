@@ -46,7 +46,7 @@
 #define LED_RED_PORT  		16
 #define B_RELAY1_PORT       13	// blokada bramy
 #define B_RELAY2_PORT       5	// sterowanie brama
-#define B_RELAY3_PORT       4	// oswietlenie posesji
+#define B_SWP_PORT          4	// oswietlenie posesji
 
 #define B_SENSOR_PORT1      12
 #define B_SENSOR_PORT2      14

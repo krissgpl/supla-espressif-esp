@@ -88,6 +88,10 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	supla_input_cfg[2].gpio_id = B_SENSOR_PORT2;
 	supla_input_cfg[2].channel = 2;
 	
+	supla_input_cfg[3].type = INPUT_TYPE_BTN_MONOSTABLE;
+    supla_input_cfg[3].gpio_id = B_SWP_PORT;
+    supla_input_cfg[3].channel = 4;
+	
 	// ---------------------------------------
 
     supla_relay_cfg[0].gpio_id = B_RELAY1_PORT;
@@ -98,10 +102,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
     supla_relay_cfg[1].flags = RELAY_FLAG_RESET;
     supla_relay_cfg[1].channel = 0;
 	
-	supla_relay_cfg[2].gpio_id = B_RELAY3_PORT;
-    supla_relay_cfg[2].flags = RELAY_FLAG_RESTORE_FORCE;
-    supla_relay_cfg[2].channel = 4;
-
 	//----------------------------------------
 	
     supla_relay_cfg[3].gpio_id = B_UPD_PORT;	// update init channel
@@ -176,11 +176,11 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[3].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
 	
 	channels[4].Number = 4;
-	channels[4].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[4].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[4].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
+	channels[4].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
 	channels[4].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[4].Default = 0;
-	channels[4].value[0] = supla_esp_gpio_relay_on(B_RELAY3_PORT);
+	channels[4].value[0] = 0;
 	
 	channels[5].Number = 5;
 	channels[5].Type = SUPLA_CHANNELTYPE_RELAY;
@@ -217,7 +217,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 	supla_esp_channel_value_changed(1, gpio__input_get(B_SENSOR_PORT1));
 	supla_esp_channel_value_changed(2, gpio__input_get(B_SENSOR_PORT2));
 	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_RELAY1_PORT));
-	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY3_PORT));
+	supla_esp_channel_value_changed(4, gpio__input_get(B_SWP_PORT));
 	supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_UPD_PORT));
 	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_HARMONOGRAM));
 
