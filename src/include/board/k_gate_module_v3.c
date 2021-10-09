@@ -385,7 +385,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 
 void supla_gate_light() {
 	
-	if ( supla_esp_state.Relay[6] == 1 ) {
+	/*if ( supla_esp_state.Relay[6] == 1 ) {
 	
 		os_timer_disarm(&Gate_Light_ON);
 		os_timer_setfn(&Gate_Light_ON, (os_timer_func_t *)supla_gate_light_ON_cb, NULL);	
@@ -395,7 +395,8 @@ void supla_gate_light() {
 		os_timer_setfn(&Gate_Light_OFF, (os_timer_func_t *)supla_gate_light_OFF_cb, NULL);	
 		os_timer_arm(&Gate_Light_OFF, 1300, 0);
 		
-	}
+	} */
+	supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_SHORT_PRESS_x1);
 	
 }
 
