@@ -21,7 +21,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.8.27.1"
+#define SUPLA_ESP_SOFTVER "2.8.36.0"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -32,7 +32,7 @@
 #define ESP_HOSTNAME "SUPLA-NICE_V3"
 #define AP_SSID "SUPLA-NICE-V3"
 
-#define RELAY_MAX_COUNT		7
+#define RELAY_MAX_COUNT		5
 
 #define DS18B20
 #define TEMPERATURE_CHANNEL 8
@@ -46,7 +46,8 @@
 #define LED_RED_PORT  		16
 #define B_RELAY1_PORT       13	// blokada bramy
 #define B_RELAY2_PORT       5	// sterowanie brama
-#define B_SWP_PORT          4	// oswietlenie posesji
+#define B_RELAY3_PORT       4
+//#define B_SWP_PORT          22	// oswietlenie posesji
 
 #define B_SENSOR_PORT1      12
 #define B_SENSOR_PORT2      14
@@ -71,8 +72,8 @@
 	}
 
 #define BOARD_GPIO_OUTPUT_IS_HI	\
-				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 6 = %i", supla_esp_state.Relay[6]);	\
-												return supla_esp_state.Relay[6] == 1 ? 1 : 0;	}
+				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 7 = %i", supla_esp_state.Relay[7]);	\
+												return supla_esp_state.Relay[7] == 1 ? 1 : 0;	}
 									
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		
