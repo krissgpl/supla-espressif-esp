@@ -24,7 +24,6 @@
 
 #include "supla_esp.h"
 #include "supla_esp_gpio.h"
-//#include "supla_esp_countdown_timer.h"
 
 ETSTimer value_timer1;
 ETSTimer Led_ON;
@@ -488,16 +487,15 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg)
 
     supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
 	
-    supla_log(LOG_DEBUG, "INPUT Test CH = %i", input_cfg->channel);
+    /*supla_log(LOG_DEBUG, "INPUT Test CH = %i", input_cfg->channel);
 	
 	if ( input_cfg->channel == 5 ) {
 		supla_log(LOG_DEBUG, "INPUT Timer test");
-		supla_esp_gpio_relay_set_duration_timer(5, 1, supla_esp_state.Time2Left[5], 0); };
+		supla_esp_gpio_relay_set_duration_timer(5, 1, supla_esp_state.Time2Left[5], 0); }; */
 
   if ( input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE 	//wlaczanie przy zboczu narastajacym
 		|| input_cfg->type == INPUT_TYPE_BTN_BISTABLE ) {
 
-		supla_log(LOG_DEBUG, "RELAY");
 		supla_esp_board_gpio_relay_switch(input_cfg, 255);
 		
 		} else if ( input_cfg->type == INPUT_TYPE_SENSOR
@@ -532,7 +530,7 @@ void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 	Licznik = Licznik + 1;
 	supla_log(LOG_DEBUG, "Blokada board LED void !!!");
 	
-	if ( Licznik == 1)	{
+	if ( Licznik == 2)	{
 		
 		Licznik = 0;
 	
