@@ -2027,6 +2027,7 @@ void DEVCONN_ICACHE_FLASH supla_esp_devconn_send_action_trigger(
     TDS_ActionTrigger at = {};
     at.ChannelNumber = channel_number;
     at.ActionTrigger = action_trigger;
+	supla_log(LOG_DEBUG, "AT ch = %i, at = %i", channel_number, action_trigger );		// sprawdzenie dzialania AT
     srpc_ds_async_action_trigger(devconn->srpc, &at);
   }
 }
