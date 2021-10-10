@@ -90,7 +90,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	supla_input_cfg[2].gpio_id = B_SENSOR_PORT2;
 	supla_input_cfg[2].channel = 2;
 	
-	supla_input_cfg[3].type = INPUT_TYPE_BTN_MONOSTABLE;
+	supla_input_cfg[3].type = INPUT_TYPE_BTN_BISTABLE;
     supla_input_cfg[3].gpio_id = B_SWP_PORT;
     supla_input_cfg[3].channel = 4;
 	
