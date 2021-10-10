@@ -30,6 +30,8 @@ ETSTimer Gate_Light_OFF;
 int UPD_channel;
 int DIS1_CH;
 
+unsigned int Licznik = 0;
+
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
 	supla_log(LOG_DEBUG, "Termometr: %i", supla_esp_cfg.ThermometerType);
@@ -396,7 +398,14 @@ void supla_gate_light() {
 		os_timer_arm(&Gate_Light_OFF, 1300, 0);
 		
 	} */
-	supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_SHORT_PRESS_x1);
+	
+	Licznik = Licznik + 1;
+	
+	if ( Licznik == 1)	{
+		
+		Licznik = 0;
+		supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_SHORT_PRESS_x1);
+	};
 	
 }
 
