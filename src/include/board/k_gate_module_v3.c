@@ -401,7 +401,7 @@ void supla_gate_light() {
 	
 	Licznik = Licznik + 1;
 	
-	if ( Licznik == 1)	{
+	if ( Licznik == 2)	{
 		
 		Licznik = 0;
 		supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_SHORT_PRESS_x1);
