@@ -404,7 +404,7 @@ void supla_gate_light() {
 	if ( Licznik == 2)	{
 		
 		Licznik = 0;
-		supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_SHORT_PRESS_x1);
+		supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
 	};
 	
 }
