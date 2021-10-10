@@ -21,7 +21,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.8.36.0"
+#define SUPLA_ESP_SOFTVER "2.8.36.1"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -46,8 +46,7 @@
 #define LED_RED_PORT  		16
 #define B_RELAY1_PORT       13	// blokada bramy
 #define B_RELAY2_PORT       5	// sterowanie brama
-#define B_RELAY3_PORT       4
-//#define B_SWP_PORT          22	// oswietlenie posesji
+#define B_RELAY3_PORT       4	// wyjscie 2
 
 #define B_SENSOR_PORT1      12
 #define B_SENSOR_PORT2      14

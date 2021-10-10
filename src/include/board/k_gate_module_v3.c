@@ -74,7 +74,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	supla_input_cfg[2].channel = 2;
 	
 	supla_input_cfg[3].type = INPUT_TYPE_BTN_MONOSTABLE;
-    //supla_input_cfg[3].gpio_id = B_SWP_PORT;
     supla_input_cfg[3].channel = 4;
 	
 	// ---------------------------------------
@@ -213,7 +212,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 	supla_esp_channel_value_changed(1, gpio__input_get(B_SENSOR_PORT1));
 	supla_esp_channel_value_changed(2, gpio__input_get(B_SENSOR_PORT2));
 	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_RELAY1_PORT));
-	//supla_esp_channel_value_changed(4, gpio__input_get(B_SWP_PORT));
 	supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_RELAY3_PORT));
 	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_UPD_PORT));
 	supla_esp_channel_value_changed(7, supla_esp_gpio_relay_on(B_HARMONOGRAM));
