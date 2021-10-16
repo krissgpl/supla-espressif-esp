@@ -60,7 +60,7 @@
 #define B_RELAY1_DIS	 21
 #define B_RELAY2_DIS	 22
 #define B_GATE_PORT      23
-#define B_SENSOR_GATE	  2
+//#define B_SENSOR_GATE	  2
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\

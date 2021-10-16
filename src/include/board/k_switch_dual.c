@@ -138,12 +138,12 @@ void supla_esp_board_gpio_init(void) {
 	supla_input_cfg[1].relay_gpio_id = B_RELAY2_PORT;
 	supla_input_cfg[1].channel = 1;
 	
-   if( supla_esp_cfg.ThermometerType == 3 ) {
+  /* if( supla_esp_cfg.ThermometerType == 3 ) {
 	supla_input_cfg[2].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[2].gpio_id = B_SENSOR_GATE;
 	supla_input_cfg[2].relay_gpio_id = B_GATE_PORT;
 	supla_input_cfg[2].channel = 5;
-   }
+   } */
 
 	// ---------------------------------------
 
