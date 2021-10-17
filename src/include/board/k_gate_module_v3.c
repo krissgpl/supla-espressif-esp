@@ -199,7 +199,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[8].FuncList = SUPLA_BIT_FUNC_STAIRCASETIMER;
 	channels[8].Flags = SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED;
 	channels[8].Default = 0;
-	channels[8].value[0] = supla_esp_gpio_relay_on(B_GATE_PORT);
+	channels[8].value[0] = supla_esp_gpio_relay_on(B_TIMER);
 
 	if( supla_esp_cfg.ThermometerType == 1 ) {
     channels[9].Number = 9;
