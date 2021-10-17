@@ -26,7 +26,8 @@
 ETSTimer value_timer1;
 
 int UPD_channel;
-int DIS1_CH;
+int HRM_channel;
+int TMR_channel;
 
 unsigned int Licznik = 0;
 
@@ -97,6 +98,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	
 	supla_relay_cfg[4].gpio_id = B_HARMONOGRAM;	// harmonogram channel
     supla_relay_cfg[4].channel = 7;
+	
+	supla_relay_cfg[5].gpio_id = B_TIMER;		// timer channel
+    supla_relay_cfg[5].channel = 8;
 	
 	// ---------------------------------------
 	
@@ -189,21 +193,28 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[7].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[7].Default = 0;
 	channels[7].value[0] = supla_esp_gpio_relay_on(B_HARMONOGRAM);
+	
+	channels[8].Number = 8;
+	channels[8].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[8].FuncList = SUPLA_BIT_FUNC_STAIRCASETIMER;
+	channels[8].Flags = SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED;
+	channels[8].Default = 0;
+	channels[8].value[0] = supla_esp_gpio_relay_on(B_GATE_PORT);
 
 	if( supla_esp_cfg.ThermometerType == 1 ) {
-    channels[8].Number = 8;
-	channels[8].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
-	channels[8].FuncList = 0;
-	channels[8].Default = 0;
-	supla_get_temperature(channels[8].value);
+    channels[9].Number = 9;
+	channels[9].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
+	channels[9].FuncList = 0;
+	channels[9].Default = 0;
+	supla_get_temperature(channels[9].value);
    }
 
    if( supla_esp_cfg.ThermometerType == 2 ) {
-	channels[8].Number = 8;
-	channels[8].Type = SUPLA_CHANNELTYPE_DHT22;
-	channels[8].FuncList = 0;
-	channels[8].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
-	supla_get_temp_and_humidity(channels[8].value);
+	channels[9].Number = 9;
+	channels[9].Type = SUPLA_CHANNELTYPE_DHT22;
+	channels[9].FuncList = 0;
+	channels[9].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+	supla_get_temp_and_humidity(channels[9].value);
    }
 }
 
@@ -215,6 +226,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 	supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_RELAY3_PORT));
 	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_UPD_PORT));
 	supla_esp_channel_value_changed(7, supla_esp_gpio_relay_on(B_HARMONOGRAM));
+	supla_esp_channel_value_changed(8, supla_esp_gpio_relay_on(B_TIMER));
 
 }
 
@@ -378,7 +390,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	}
 }
 
-void supla_gate_light() {
+void supla_gate_light_ON() {
 	
 	if ( supla_esp_state.Relay[7] == 1 ) {
 
@@ -392,12 +404,27 @@ void supla_gate_light() {
 	};
 }
 
+void supla_gate_light_OFF() {
+	
+	if ( supla_esp_state.Relay[7] == 1 ) {
+
+		Licznik = Licznik + 1;
+	
+		if ( Licznik == 2)	{
+		
+			Licznik = 0;
+			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x2);
+		};
+	};
+}
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			
 		supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port);
 		
 		UPD_channel = 6;
-		DIS1_CH = 7;
+		HRM_channel = 7;
+		TMR_channel = 8;
 	
 if ( port == 20 ) {	
 
@@ -428,10 +455,27 @@ if ( port == 20 ) {
 
 if ( port == 21 ) {	
 			
-		supla_esp_state.Relay[DIS1_CH] = hi;
+		supla_esp_state.Relay[HRM_channel] = hi;
 		supla_esp_save_state(SAVE_STATE_DELAY);
-		supla_esp_channel_value_changed(DIS1_CH, supla_esp_state.Relay[DIS1_CH]);
+		supla_esp_channel_value_changed(HRM_channel, supla_esp_state.Relay[HRM_channel]);
 		supla_esp_cfg_save(&supla_esp_cfg);
-		supla_esp_channel_value_changed(DIS1_CH, hi);
+		supla_esp_channel_value_changed(HRM_channel, hi);
 };
+
+if ( port == 22 ) {	
+			
+		supla_esp_state.Relay[TMR_channel] = hi;
+		supla_esp_save_state(SAVE_STATE_DELAY);
+		supla_esp_channel_value_changed(TMR_channel, supla_esp_state.Relay[TMR_channel]);
+		supla_esp_cfg_save(&supla_esp_cfg);
+		supla_esp_channel_value_changed(TMR_channel, hi);
+		
+		if ( hi==1 ) { supla_log(LOG_DEBUG, "wlaczenie oswietlenia bramy"); 
+						supla_esp_gpio_relay_set_duration_timer(TMR_channel, hi, supla_esp_state.Time2Left[TMR_channel], 0);
+						supla_gate_light_ON();	};
+		if ( hi==0 ) { supla_log(LOG_DEBUG, "wylaczenie oswietlenia bramy"); 
+						supla_gate_light_OFF();	};
+						
+};
+
 }

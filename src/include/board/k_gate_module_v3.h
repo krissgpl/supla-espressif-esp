@@ -21,7 +21,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.8.36.1"
+#define SUPLA_ESP_SOFTVER "2.8.37.0"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -32,13 +32,13 @@
 #define ESP_HOSTNAME "SUPLA-NICE_V3"
 #define AP_SSID "SUPLA-NICE-V3"
 
-#define RELAY_MAX_COUNT		8
+#define RELAY_MAX_COUNT		9
 
 #define DS18B20
-#define TEMPERATURE_CHANNEL 8
+#define TEMPERATURE_CHANNEL 9
 
 #define DHTSENSOR
-#define TEMPERATURE_HUMIDITY_CHANNEL 8
+#define TEMPERATURE_HUMIDITY_CHANNEL 9
 
 #define USE_GPIO16_OUTPUT
 
@@ -53,6 +53,7 @@
 
 #define B_UPD_PORT		    20
 #define B_HARMONOGRAM		21
+#define B_TIMER				22
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY2_PORT && hi == 1)  { 	supla_log(LOG_DEBUG, "SUPLA gate light void");	\
@@ -72,13 +73,16 @@
 
 #define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 7 = %i", supla_esp_state.Relay[7]);	\
-												return supla_esp_state.Relay[7] == 1 ? 1 : 0;	}
+												return supla_esp_state.Relay[7] == 1 ? 1 : 0;	}	\
+				if ( port == B_TIMER)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 8 = %i", supla_esp_state.Relay[8]);	\
+												return supla_esp_state.Relay[8] == 1 ? 1 : 0;	}
 									
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
-void supla_gate_light();
+void supla_gate_light_ON();
+void supla_gate_light_OFF();
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 
