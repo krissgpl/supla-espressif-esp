@@ -390,7 +390,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	}
 }
 
-void supla_gate_light_ON() {
+void supla_gate_light_ON(uint8 hi) {
 	
 	if ( supla_esp_state.Relay[7] == 1 ) {
 
@@ -400,7 +400,7 @@ void supla_gate_light_ON() {
 		
 			Licznik = 0;
 			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
-			supla_esp_gpio_relay_set_duration_timer(TMR_channel, 1, supla_esp_state.Time2Left[TMR_channel], 0);
+			supla_esp_gpio_relay_set_duration_timer(TMR_channel, hi, supla_esp_state.Time2Left[TMR_channel], 0);
 		};
 	};
 }

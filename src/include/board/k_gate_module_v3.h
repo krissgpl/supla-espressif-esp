@@ -57,7 +57,7 @@
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY2_PORT && hi == 1)  { 	supla_log(LOG_DEBUG, "SUPLA gate light void");	\
-												supla_gate_light_ON(); }	\
+												supla_gate_light_ON(hi); }	\
 	if (supla_last_state == STATE_CONNECTED) { \
 		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
 			supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\
@@ -81,7 +81,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
-void supla_gate_light_ON();
+void supla_gate_light_ON(uint8 hi);
 void supla_gate_light_OFF();
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
