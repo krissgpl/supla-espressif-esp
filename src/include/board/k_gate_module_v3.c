@@ -421,7 +421,7 @@ void supla_gate_light_OFF() {
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			
-		supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port);
+		supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi port = %i, hi = %i", port, hi);
 		
 		UPD_channel = 6;
 		HRM_channel = 7;
@@ -471,8 +471,8 @@ if ( port == 22 ) {
 		supla_esp_cfg_save(&supla_esp_cfg);
 		supla_esp_channel_value_changed(TMR_channel, hi);
 		
-		if ( hi==1 ) { supla_log(LOG_DEBUG, "wlaczenie oswietlenia bramy"); 
-						supla_gate_light_ON();	};
+		if ( hi==1 ) { supla_log(LOG_DEBUG, "wlaczenie oswietlenia bramy"); };
+						//supla_gate_light_ON();	};
 		if ( hi==0 ) { supla_log(LOG_DEBUG, "wylaczenie oswietlenia bramy"); 
 						supla_gate_light_OFF();	};
 						
