@@ -392,6 +392,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 
 void supla_gate_light_ON(uint8 hi) {
 	
+	TMR_channel = 8;
+	
 	if ( supla_esp_state.Relay[7] == 1 ) {
 
 		Licznik = Licznik + 1;
@@ -400,9 +402,9 @@ void supla_gate_light_ON(uint8 hi) {
 		
 			Licznik = 0;
 			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
-			//supla_log(LOG_DEBUG, "time 2 cfg ch = %i", supla_esp_cfg.Time2[8]);
-			//supla_log(LOG_DEBUG, "Time2Left = %i", supla_esp_state.Time2Left[8]);
-			//supla_esp_gpio_relay_set_duration_timer(8, hi, supla_esp_state.Time2Left[8], 0);
+			supla_log(LOG_DEBUG, "time 2 cfg ch = %i", supla_esp_cfg.Time2[TMR_channel]);
+			supla_log(LOG_DEBUG, "Time2Left = %i", supla_esp_state.Time2Left[TMR_channel]);
+			supla_esp_gpio_relay_set_duration_timer(TMR_channel, hi, supla_esp_state.Time2Left[TMR_channel], 0);
 		};
 	};
 }
@@ -474,7 +476,6 @@ if ( port == 22 ) {
 		supla_esp_channel_value_changed(TMR_channel, hi);
 		
 		if ( hi==1 ) { supla_log(LOG_DEBUG, "wlaczenie oswietlenia bramy"); };
-						supla_esp_gpio_relay_set_duration_timer(8, hi, supla_esp_state.Time2Left[8], 0);
 						//supla_gate_light_ON();	};
 		if ( hi==0 ) { supla_log(LOG_DEBUG, "wylaczenie oswietlenia bramy"); 
 						supla_gate_light_OFF();	};
