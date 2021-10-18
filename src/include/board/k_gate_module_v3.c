@@ -131,11 +131,11 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	
 	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 	
-		*channel_count = 9;
+		*channel_count = 10;
 		}
 	else {
 
-		*channel_count = 8;
+		*channel_count = 9;
 		}
 
 	channels[0].Number = 0;
