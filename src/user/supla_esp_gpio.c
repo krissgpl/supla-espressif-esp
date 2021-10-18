@@ -1796,7 +1796,7 @@ void GPIO_ICACHE_FLASH supla_esp_gpio_relay_set_duration_timer(int channel,
 
           char target_value[SUPLA_CHANNELVALUE_SIZE] = {};
           target_value[0] = newValue ? 0 : 1;
-
+		  supla_log(LOG_DEBUG, "durationMs = %i", durationMs);	// log testowo
           supla_esp_countdown_timer_countdown(durationMs,
               supla_relay_cfg[a].gpio_id,
               channel, target_value, senderID);
