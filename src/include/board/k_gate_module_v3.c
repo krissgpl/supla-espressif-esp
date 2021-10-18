@@ -400,7 +400,9 @@ void supla_gate_light_ON(uint8 hi) {
 		
 			Licznik = 0;
 			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
-			supla_esp_gpio_relay_set_duration_timer(TMR_channel, hi, supla_esp_state.Time2Left[TMR_channel], 0);
+			supla_log(LOG_DEBUG, "time 2 cfg ch = %i", supla_esp_cfg.Time2[8]);
+			supla_log(LOG_DEBUG, "Time2Left = %i", supla_esp_state.Time2Left[8]);
+			supla_esp_gpio_relay_set_duration_timer(8, hi, supla_esp_state.Time2Left[8], 0);
 		};
 	};
 }
