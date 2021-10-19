@@ -478,7 +478,7 @@ if ( port == 22 ) {
 		if ( hi==1 ) { supla_log(LOG_DEBUG, "wlaczenie oswietlenia bramy"); };
 						//supla_gate_light_ON();	};
 		if ( hi==0 ) { supla_log(LOG_DEBUG, "wylaczenie oswietlenia bramy"); 
-						supla_gate_light_OFF();	};
+						//supla_gate_light_OFF();	};
 						
 };
 
