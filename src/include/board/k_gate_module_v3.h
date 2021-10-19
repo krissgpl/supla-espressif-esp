@@ -81,7 +81,7 @@
 
 #define	BOARD_GPIO_INPUT_IS_HI supla_log(LOG_DEBUG, "INPUT IS HI, port=%d hi=%d",port, GPIO_INPUT_GET(GPIO_ID_PIN(port)));	\
 				if ( port == B_SENSOR_PORT2 ) {	\
-					if ( GPIO_INPUT_GET(GPIO_ID_PIN(port)) == 0 ) { supla_board_input(); };
+				if ( GPIO_INPUT_GET(GPIO_ID_PIN(port)) == 0 ) { supla_board_input(); }; };
 
 
 									
