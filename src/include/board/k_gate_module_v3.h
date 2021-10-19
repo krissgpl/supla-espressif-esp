@@ -79,7 +79,11 @@
 
 #define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
 
-#define	BOARD_GPIO_INPUT_IS_HI supla_log(LOG_DEBUG, "INPUT IS HI, port=%d hi=%d",port, GPIO_INPUT_GET(GPIO_ID_PIN(port)));
+#define	BOARD_GPIO_INPUT_IS_HI supla_log(LOG_DEBUG, "INPUT IS HI, port=%d hi=%d",port, GPIO_INPUT_GET(GPIO_ID_PIN(port)));	\
+				if ( port == B_SENSOR_PORT2 ) {	\
+					if ( GPIO_INPUT_GET(GPIO_ID_PIN(port)) == 0 ) { supla_board_input(); };
+
+
 									
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		
@@ -87,6 +91,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
 void supla_gate_light_ON(uint8 hi);
 void supla_gate_light_OFF();
+void supla_board_input();
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 

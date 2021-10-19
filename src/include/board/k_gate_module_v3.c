@@ -423,30 +423,10 @@ void supla_gate_light_OFF() {
 	};
 }
 
-void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg)
-{
-	supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
+void supla_board_input() {
 	
-	  bool advanced_mode = supla_esp_input_is_advanced_mode_enabled(input_cfg);
-
-  if (((input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE &&
-        input_cfg->flags & INPUT_FLAG_TRIGGER_ON_PRESS) ||
-      input_cfg->type == INPUT_TYPE_BTN_BISTABLE ||
-      advanced_mode) &&
-      input_cfg->relay_gpio_id != 255) {
-    supla_roller_shutter_cfg_t *rs_cfg =
-      supla_esp_gpio_get_rs__cfg(input_cfg->relay_gpio_id);
-    if (rs_cfg != NULL) {
-    } else {
-      supla_esp_gpio_relay_switch_by_input(input_cfg, 255);
-    }
-  } else if (input_cfg->type == INPUT_TYPE_SENSOR && input_cfg->channel != 255) {
-
-    // TODO: add MQTT support for sensor
-    supla_esp_channel_value_changed(input_cfg->channel, 1);
-  }
-
-}
+	supla_log(LOG_DEBUG, "ESP BOARD INPUT TEST");
+};
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			
