@@ -196,8 +196,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	
 	channels[8].Number = 8;
 	channels[8].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[8].FuncList = SUPLA_BIT_FUNC_STAIRCASETIMER;
-	channels[8].Flags = SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED;
+	channels[8].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[8].Default = 0;
 	channels[8].value[0] = supla_esp_gpio_relay_on(B_TIMER);
 
@@ -430,6 +429,7 @@ void supla_board_input() {
 		
 			Licznik = 0;
 	supla_log(LOG_DEBUG, "ESP BOARD INPUT TEST");
+	supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
 	};
 };
 
@@ -485,13 +485,13 @@ if ( port == 22 ) {
 		supla_esp_cfg_save(&supla_esp_cfg);
 		supla_esp_channel_value_changed(TMR_channel, hi);
 		
-		if ( hi==1 ) { supla_log(LOG_DEBUG, "wlaczenie oswietlenia bramy"); 
-					supla_log(LOG_DEBUG, "time 2 cfg ch = %i", supla_esp_cfg.Time2[TMR_channel]);
-					supla_log(LOG_DEBUG, "Time2Left = %i", supla_esp_state.Time2Left[TMR_channel]);
-					supla_esp_gpio_relay_set_duration_timer(TMR_channel, hi, supla_esp_state.Time2Left[TMR_channel], 0);
+		if ( hi==1 ) { supla_log(LOG_DEBUG, "blokada bramy ON"); 
+					//supla_log(LOG_DEBUG, "time 2 cfg ch = %i", supla_esp_cfg.Time2[TMR_channel]);
+					//supla_log(LOG_DEBUG, "Time2Left = %i", supla_esp_state.Time2Left[TMR_channel]);
+					//supla_esp_gpio_relay_set_duration_timer(TMR_channel, hi, supla_esp_state.Time2Left[TMR_channel], 0);
 					};
 						//supla_gate_light_ON();	};
-		if ( hi==0 ) { supla_log(LOG_DEBUG, "wylaczenie oswietlenia bramy"); };
+		if ( hi==0 ) { supla_log(LOG_DEBUG, "blokada bramy OFF"); };
 						//supla_gate_light_OFF();	};
 						
 };
