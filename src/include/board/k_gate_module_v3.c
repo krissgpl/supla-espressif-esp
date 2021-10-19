@@ -481,7 +481,7 @@ if ( port == 22 ) {
 					supla_esp_gpio_relay_set_duration_timer(TMR_channel, hi, supla_esp_state.Time2Left[TMR_channel], 0);
 					};
 						//supla_gate_light_ON();	};
-		if ( hi==0 ) { supla_log(LOG_DEBUG, "wylaczenie oswietlenia bramy"); 
+		if ( hi==0 ) { supla_log(LOG_DEBUG, "wylaczenie oswietlenia bramy"); };
 						//supla_gate_light_OFF();	};
 						
 };
