@@ -78,6 +78,8 @@
 												return supla_esp_state.Relay[8] == 1 ? 1 : 0;	}
 
 #define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
+
+#define	BOARD_GPIO_INPUT_IS_HI supla_log(LOG_DEBUG, "INPUT IS HI, port=%d", port);
 									
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		
