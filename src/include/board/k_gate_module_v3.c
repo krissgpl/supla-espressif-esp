@@ -425,6 +425,8 @@ void supla_gate_light_OFF() {
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg)
 {
+	supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
+	
 	  bool advanced_mode = supla_esp_input_is_advanced_mode_enabled(input_cfg);
 
   if (((input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE &&
