@@ -425,7 +425,12 @@ void supla_gate_light_OFF() {
 
 void supla_board_input() {
 	
+	Licznik = Licznik + 1;
+	if ( Licznik == 6)	{
+		
+			Licznik = 0;
 	supla_log(LOG_DEBUG, "ESP BOARD INPUT TEST");
+	};
 };
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
