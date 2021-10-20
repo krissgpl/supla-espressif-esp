@@ -215,6 +215,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[8].Number = 8;
 	channels[8].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[8].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[8].Flags = 0;
 	channels[8].Default = 0;
 	channels[8].value[0] = supla_esp_gpio_relay_on(B_TIMER);
 
