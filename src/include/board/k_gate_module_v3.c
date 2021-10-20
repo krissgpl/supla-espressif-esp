@@ -409,7 +409,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 
 void supla_gate_light_ON(uint8 hi) {
 	
-	TMR_channel = 8;
+	/*TMR_channel = 8;
 	
 	if ( supla_esp_state.Relay[7] == 1 ) {
 
@@ -423,7 +423,7 @@ void supla_gate_light_ON(uint8 hi) {
 			supla_log(LOG_DEBUG, "Time2Left = %i", supla_esp_state.Time2Left[TMR_channel]);
 			supla_esp_gpio_relay_set_duration_timer(TMR_channel, hi, supla_esp_state.Time2Left[TMR_channel], 0);
 		};
-	};
+	};*/
 }
 
 void supla_gate_light_OFF() {
