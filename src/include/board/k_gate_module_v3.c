@@ -24,6 +24,8 @@
 #include "supla_ds18b20.h"
 
 ETSTimer value_timer1;
+ETSTimer blokada_bramy;
+ETSTimer odblokowanie_bramy;
 
 int UPD_channel;
 int HRM_channel;
@@ -59,6 +61,22 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	
 }
 
+void blokada_bramy_cb(void *timer_arg) {
+	
+	supla_esp_gpio_set_hi(B_RELAY2_PORT, 0);
+	
+}
+
+void odblokowanie_bramy_cb(void *timer_arg) {
+	
+	supla_esp_gpio_set_hi(B_RELAY1_PORT, 0);
+	supla_esp_channel_value_changed(3, 0);
+	os_delay_us(500000);
+	supla_esp_gpio_set_hi(B_RELAY2_PORT, 1);
+	os_timer_disarm(&blokada bramy);
+	os_timer_setfn(&blokada_bramy, (os_timer_func_t *)blokada_bramy_cb, NULL);
+	os_timer_arm(&blokada_bramy, 500, 0);
+}
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 		
@@ -429,7 +447,15 @@ void supla_board_input() {
 		
 			Licznik = 0;
 	supla_log(LOG_DEBUG, "ESP BOARD INPUT TEST");
-	supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
+	
+	if ( supla_esp_state.Relay[7] == 1 ) {
+		supla_log(LOG_DEBUG, "SEND AT x1");
+		supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
+	};
+	
+	if ( supla_esp_gpio_output_is_hi(B_TIMER) == 1 {
+		supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
+		supla_esp_channel_value_changed(3, 1);
 	};
 };
 
@@ -489,9 +515,19 @@ if ( port == 22 ) {
 					//supla_log(LOG_DEBUG, "time 2 cfg ch = %i", supla_esp_cfg.Time2[TMR_channel]);
 					//supla_log(LOG_DEBUG, "Time2Left = %i", supla_esp_state.Time2Left[TMR_channel]);
 					//supla_esp_gpio_relay_set_duration_timer(TMR_channel, hi, supla_esp_state.Time2Left[TMR_channel], 0);
+					supla_esp_gpio_set_hi(B_RELAY2_PORT, 1);
+					os_timer_disarm(&blokada bramy);
+					os_timer_setfn(&blokada_bramy, (os_timer_func_t *)blokada_bramy_cb, NULL);
+					os_timer_arm(&blokada_bramy, 500, 0);
 					};
 						//supla_gate_light_ON();	};
-		if ( hi==0 ) { supla_log(LOG_DEBUG, "blokada bramy OFF"); };
+		if ( hi==0 ) { supla_log(LOG_DEBUG, "blokada bramy OFF"); 
+		
+					os_timer_disarm(&odblokowanie_bramy);
+					os_timer_setfn(&odblokowanie_bramy, (os_timer_func_t *)odblokowanie_bramy_cb, NULL);
+					os_timer_arm(&odblokowanie_bramy, 500, 0);
+					
+					};
 						//supla_gate_light_OFF();	};
 						
 };
