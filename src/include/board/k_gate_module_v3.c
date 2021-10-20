@@ -445,17 +445,18 @@ void supla_board_input() {
 	Licznik = Licznik + 1;
 	if ( Licznik == 6)	{
 		
-			Licznik = 0;
-	supla_log(LOG_DEBUG, "ESP BOARD INPUT TEST");
+		Licznik = 0;
+		supla_log(LOG_DEBUG, "ESP BOARD INPUT TEST");
 	
-	if ( supla_esp_state.Relay[7] == 1 ) {
-		supla_log(LOG_DEBUG, "SEND AT x1");
-		supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
-	};
+		if ( supla_esp_state.Relay[7] == 1 ) {
+			supla_log(LOG_DEBUG, "SEND AT x1");
+			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
+		};
 	
-	if ( supla_esp_gpio_output_is_hi(B_TIMER) == 1 ) {
-		supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
-		supla_esp_channel_value_changed(3, 1);
+		if ( supla_esp_gpio_output_is_hi(B_TIMER) == 1 ) {
+			supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
+			supla_esp_channel_value_changed(3, 1);
+		};
 	};
 };
 
