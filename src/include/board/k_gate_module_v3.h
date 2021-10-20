@@ -21,7 +21,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.8.37.0"
+#define SUPLA_ESP_SOFTVER "2.8.40.0"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -53,7 +53,7 @@
 
 #define B_UPD_PORT		    20
 #define B_HARMONOGRAM		21
-#define B_TIMER				22
+#define B_BLOKADA			22
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if (supla_last_state == STATE_CONNECTED) { \
@@ -81,14 +81,10 @@
 				if ( port == B_SENSOR_PORT2 ) {	\
 				if ( GPIO_INPUT_GET(GPIO_ID_PIN(port)) == 0 ) { supla_board_input(); }; };
 
-
-									
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
-void supla_gate_light_ON(uint8 hi);
-void supla_gate_light_OFF();
 void supla_board_input();
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);

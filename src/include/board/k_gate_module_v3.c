@@ -29,7 +29,7 @@ ETSTimer odblokowanie_bramy;
 
 int UPD_channel;
 int HRM_channel;
-int TMR_channel;
+int BLK_channel;
 
 unsigned int Licznik = 0;
 
@@ -117,7 +117,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	supla_relay_cfg[4].gpio_id = B_HARMONOGRAM;	// harmonogram channel
     supla_relay_cfg[4].channel = 7;
 	
-	supla_relay_cfg[5].gpio_id = B_TIMER;		// timer channel
+	supla_relay_cfg[5].gpio_id = B_BLOKADA;		// blokada channel
     supla_relay_cfg[5].channel = 8;
 	
 	// ---------------------------------------
@@ -217,7 +217,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[8].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[8].Flags = 0;
 	channels[8].Default = 0;
-	channels[8].value[0] = supla_esp_gpio_relay_on(B_TIMER);
+	channels[8].value[0] = supla_esp_gpio_relay_on(B_BLOKADA);
 
 	if( supla_esp_cfg.ThermometerType == 1 ) {
     channels[9].Number = 9;
@@ -244,7 +244,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 	supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_RELAY3_PORT));
 	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_UPD_PORT));
 	supla_esp_channel_value_changed(7, supla_esp_gpio_relay_on(B_HARMONOGRAM));
-	supla_esp_channel_value_changed(8, supla_esp_gpio_relay_on(B_TIMER));
+	supla_esp_channel_value_changed(8, supla_esp_gpio_relay_on(B_BLOKADA));
 
 }
 
@@ -408,39 +408,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	}
 }
 
-void supla_gate_light_ON(uint8 hi) {
-	
-	/*TMR_channel = 8;
-	
-	if ( supla_esp_state.Relay[7] == 1 ) {
-
-		Licznik = Licznik + 1;
-	
-		if ( Licznik == 2)	{
-		
-			Licznik = 0;
-			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
-			supla_log(LOG_DEBUG, "time 2 cfg ch = %i", supla_esp_cfg.Time2[TMR_channel]);
-			supla_log(LOG_DEBUG, "Time2Left = %i", supla_esp_state.Time2Left[TMR_channel]);
-			supla_esp_gpio_relay_set_duration_timer(TMR_channel, hi, supla_esp_state.Time2Left[TMR_channel], 0);
-		};
-	};*/
-}
-
-void supla_gate_light_OFF() {
-	
-	if ( supla_esp_state.Relay[7] == 1 ) {
-
-		Licznik = Licznik + 1;
-	
-		if ( Licznik == 2)	{
-		
-			Licznik = 0;
-			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x2);
-		};
-	};
-}
-
 void supla_board_input() {
 	
 	Licznik = Licznik + 1;
@@ -454,7 +421,7 @@ void supla_board_input() {
 			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
 		};
 	
-		if ( supla_esp_gpio_output_is_hi(B_TIMER) == 1 ) {
+		if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
 			supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
 			supla_esp_channel_value_changed(3, 1);
 		};
@@ -467,7 +434,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		
 		UPD_channel = 6;
 		HRM_channel = 7;
-		TMR_channel = 8;
+		BLK_channel = 8;
 	
 if ( port == 20 ) {	
 
@@ -507,22 +474,19 @@ if ( port == 21 ) {
 
 if ( port == 22 ) {	
 			
-		supla_esp_state.Relay[TMR_channel] = hi;
+		supla_esp_state.Relay[BLK_channel] = hi;
 		supla_esp_save_state(SAVE_STATE_DELAY);
-		supla_esp_channel_value_changed(TMR_channel, supla_esp_state.Relay[TMR_channel]);
+		supla_esp_channel_value_changed(BLK_channel, supla_esp_state.Relay[BLK_channel]);
 		supla_esp_cfg_save(&supla_esp_cfg);
-		supla_esp_channel_value_changed(TMR_channel, hi);
+		supla_esp_channel_value_changed(BLK_channel, hi);
 		
 		if ( hi==1 ) { supla_log(LOG_DEBUG, "blokada bramy ON"); 
-					//supla_log(LOG_DEBUG, "time 2 cfg ch = %i", supla_esp_cfg.Time2[TMR_channel]);
-					//supla_log(LOG_DEBUG, "Time2Left = %i", supla_esp_state.Time2Left[TMR_channel]);
-					//supla_esp_gpio_relay_set_duration_timer(TMR_channel, hi, supla_esp_state.Time2Left[TMR_channel], 0);
 					supla_esp_gpio_set_hi(B_RELAY2_PORT, 1);
 					os_timer_disarm(&blokada_bramy);
 					os_timer_setfn(&blokada_bramy, (os_timer_func_t *)blokada_bramy_cb, NULL);
 					os_timer_arm(&blokada_bramy, 500, 0);
 					};
-						//supla_gate_light_ON();	};
+
 		if ( hi==0 ) { supla_log(LOG_DEBUG, "blokada bramy OFF"); 
 		
 					os_timer_disarm(&odblokowanie_bramy);
@@ -530,7 +494,6 @@ if ( port == 22 ) {
 					os_timer_arm(&odblokowanie_bramy, 500, 0);
 					
 					};
-						//supla_gate_light_OFF();	};
 						
 };
 
