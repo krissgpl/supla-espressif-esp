@@ -73,7 +73,7 @@ void odblokowanie_bramy_cb(void *timer_arg) {
 	supla_esp_channel_value_changed(3, 0);
 	os_delay_us(500000);
 	supla_esp_gpio_set_hi(B_RELAY2_PORT, 1);
-	os_timer_disarm(&blokada bramy);
+	os_timer_disarm(&blokada_bramy);
 	os_timer_setfn(&blokada_bramy, (os_timer_func_t *)blokada_bramy_cb, NULL);
 	os_timer_arm(&blokada_bramy, 500, 0);
 }
@@ -453,7 +453,7 @@ void supla_board_input() {
 		supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
 	};
 	
-	if ( supla_esp_gpio_output_is_hi(B_TIMER) == 1 {
+	if ( supla_esp_gpio_output_is_hi(B_TIMER) == 1 ) {
 		supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
 		supla_esp_channel_value_changed(3, 1);
 	};
@@ -516,7 +516,7 @@ if ( port == 22 ) {
 					//supla_log(LOG_DEBUG, "Time2Left = %i", supla_esp_state.Time2Left[TMR_channel]);
 					//supla_esp_gpio_relay_set_duration_timer(TMR_channel, hi, supla_esp_state.Time2Left[TMR_channel], 0);
 					supla_esp_gpio_set_hi(B_RELAY2_PORT, 1);
-					os_timer_disarm(&blokada bramy);
+					os_timer_disarm(&blokada_bramy);
 					os_timer_setfn(&blokada_bramy, (os_timer_func_t *)blokada_bramy_cb, NULL);
 					os_timer_arm(&blokada_bramy, 500, 0);
 					};
