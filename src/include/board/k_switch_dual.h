@@ -21,7 +21,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.8.36.0"
+#define SUPLA_ESP_SOFTVER "2.8.40.0"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -45,10 +45,6 @@
 
 #define LED_RED_BLOCK    0x1
 #define LED_GREEN_BLOCK  0x2
-#define CH1_ON   0x3
-#define CH1_OFF  0x4
-#define CH2_ON   0x5
-#define CH2_OFF  0x6
 
 #define LED_RED_PORT     16
 #define LED_GREEN_PORT    4
@@ -59,8 +55,6 @@
 #define B_UPD_PORT		 20
 #define B_RELAY1_DIS	 21
 #define B_RELAY2_DIS	 22
-#define B_GATE_PORT      23
-//#define B_SENSOR_GATE	  2
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
@@ -94,15 +88,12 @@
 				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 3 = %i", supla_esp_state.Relay[3]);	\
 									return supla_esp_state.Relay[3] == 1 ? 1 : 0;	}	\
 				if ( port == 22)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
-									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	\
-				if ( port == 23)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 5 = %i", supla_esp_state.Relay[5]);	\
-									return supla_esp_state.Relay[5] == 1 ? 1 : 0;	}
-				
+									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}
 				
 #define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;
 										
-#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
+//#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
 				
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
 
