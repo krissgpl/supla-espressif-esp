@@ -408,7 +408,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	supla_log(LOG_DEBUG, "supla_esp_state RELAY 4 = %i", supla_esp_state.Relay[4]);
 
 }
-
+/*
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
     char hi)
 {
@@ -467,7 +467,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
 		
 	}
 } 
-
+*/
 void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 	
 	Licznik = Licznik + 1;
