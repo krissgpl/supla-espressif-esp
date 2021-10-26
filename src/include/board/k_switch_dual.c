@@ -108,13 +108,13 @@ void supla_esp_board_gpio_init(void) {
 		
 	supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[0].gpio_id = B_BTN1_PORT;
-	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN;
+	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN | INPUT_FLAG_TRIGGER_ON_PRESS;
 	supla_input_cfg[0].relay_gpio_id = B_RELAY1_PORT;
 	supla_input_cfg[0].channel = 0;
 
 	supla_input_cfg[1].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[1].gpio_id = B_BTN2_PORT;
-	supla_input_cfg[1].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN;
+	supla_input_cfg[1].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN | INPUT_FLAG_TRIGGER_ON_PRESS;
 	supla_input_cfg[1].relay_gpio_id = B_RELAY2_PORT;
 	supla_input_cfg[1].channel = 1;
 
@@ -179,7 +179,8 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[0].FuncList = SUPLA_BIT_FUNC_POWERSWITCH \
-								| SUPLA_BIT_FUNC_LIGHTSWITCH;
+								| SUPLA_BIT_FUNC_LIGHTSWITCH \
+								| SUPLA_CHANNELFNC_ACTIONTRIGGER;
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;							
 	channels[0].Default = SUPLA_BIT_FUNC_LIGHTSWITCH;
 	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
