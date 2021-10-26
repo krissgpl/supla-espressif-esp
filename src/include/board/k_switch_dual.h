@@ -52,6 +52,7 @@
 #define B_RELAY2_PORT    13
 #define B_BTN1_PORT      14
 #define B_BTN2_PORT      12
+
 #define B_UPD_PORT		 20
 #define B_RELAY1_DIS	 21
 #define B_RELAY2_DIS	 22
