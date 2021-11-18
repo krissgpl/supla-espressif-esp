@@ -59,6 +59,15 @@ static ETSTimer supla_gpio_timer2;
 unsigned char supla_esp_restart_on_cfg_press = 0;
 
 #ifdef _ROLLERSHUTTER_SUPPORT
+
+static uint8 rs_time_margin = 110;
+
+void GPIO_ICACHE_FLASH supla_esp_gpio_rs_set_time_margin(uint8 value) {
+  if (value >= 0 && value <= 110) {
+    rs_time_margin = value;
+  }
+}
+
 void GPIO_ICACHE_FLASH supla_esp_gpio_rs_set_flag(
     supla_roller_shutter_cfg_t *rsCfg, unsigned _supla_int16_t flag) {
   if (rsCfg) {
@@ -369,7 +378,7 @@ supla_esp_gpio_rs_move_position(supla_roller_shutter_cfg_t *rs_cfg,
     // This part of code is executed only for "MOVE UP/DOWN" actions (either
     // from physical buttons or in app). It is not executed when new position
     // is given in % value.
-    if ((*time) / 1000 >= (int)(full_time * 1.1)) {
+    if ((*time) / 1000 >= (int)(full_time * (1.0 * rs_time_margin / 100.0))) {
       int idx = supla_esp_gpio_rs_get_idx_by_ptr(rs_cfg);
       if (idx >= 0) {
         if (supla_esp_gpio_rs_is_autocal_done(idx)) {
@@ -384,7 +393,7 @@ supla_esp_gpio_rs_move_position(supla_roller_shutter_cfg_t *rs_cfg,
         }
       }
       supla_esp_gpio_rs_set_relay(rs_cfg, RS_RELAY_OFF, 0, 0);
-      supla_log(LOG_DEBUG, "Timeout full_time + 10%");
+      supla_log(LOG_DEBUG, "Timeout full_time * %d%", rs_time_margin);
     }
 
     return;
@@ -476,17 +485,23 @@ void GPIO_ICACHE_FLASH supla_esp_gpio_rs_task_processing(
 				|| ( rs_cfg->task.direction == RS_DIRECTION_DOWN
 					 && position >= rs_cfg->task.percent * 100)  ) {
 
+    uint8 time_margin = 5; // default 5% margin
+    // default rs_time_margin is set to 1.1 -> 110% for button movement
+    // If it is changed to other value, then we apply it also as margin for
+    // percantage control
+    if (rs_time_margin < 110) {
+      time_margin = rs_time_margin;
+      if (isRsInMove && time_margin < 50) {
+        time_margin = 50;
+      }
+    }
+
     if (rs_cfg->task.percent == 0 &&
         1 == supla_esp_gpio_rs_time_margin(rs_cfg, full_opening_time,
-          rs_cfg->up_time, isRsInMove ? 50 : 5)) {  // margin 5%
-
-      // supla_log(LOG_DEBUG, "UP MARGIN isRsInMove %d", isRsInMove);
-
+          rs_cfg->up_time, time_margin)) {
     } else if (rs_cfg->task.percent == 100 &&
         1 == supla_esp_gpio_rs_time_margin(rs_cfg, full_closing_time,
-          rs_cfg->down_time, isRsInMove ? 50 : 5)) {
-
-      // supla_log(LOG_DEBUG, "DOWN MARGIN isRsInMove %d", isRsInMove);
+          rs_cfg->down_time, time_margin)) {
 		} else {
       int idx = supla_esp_gpio_rs_get_idx_by_ptr(rs_cfg);
       if (idx >= 0 && (rs_cfg->task.percent == 0 || rs_cfg->task.percent == 100)) {
@@ -1104,26 +1119,26 @@ void GPIO_ICACHE_FLASH supla_esp_gpio_relay_switch_by_input(
 
 void GPIO_ICACHE_FLASH supla_esp_gpio_relay_switch(int port, unsigned char hi) {
 
-	if (port != 255 ) {
+  if (port != 255) {
     int channel = -1;
     for (int i = 0; i < RELAY_MAX_COUNT; i++) {
-      if ( supla_relay_cfg[i].gpio_id == port ) {
+      if (supla_relay_cfg[i].gpio_id == port) {
         channel = supla_relay_cfg[i].channel;
       }
     }
-    
+
 #ifndef COUNTDOWN_TIMER_DISABLED
-    // If Time2 > 0 then it is configured as staircase timer. In such case 
+    // If Time2 > 0 then it is configured as staircase timer. In such case
     // button behavior depends on cfg parameter
-    if (hi != 0 && supla_esp_cfg.Time2[channel] > 0 &&
+    if (channel < CFG_TIME2_COUNT && hi != 0 &&
+        supla_esp_cfg.Time2[channel] > 0 &&
         supla_esp_cfg.StaircaseButtonType == STAIRCASE_BTN_TYPE_RESET) {
       hi = HI_VALUE;
-    } 
-    if ( hi == 255 ) {
+    }
+    if (hi == 255) {
       hi = supla_esp_gpio_relay_is_hi(port) == 1 ? LO_VALUE : HI_VALUE;
     }
-
-    if (channel >= 0) {
+    if (channel >= 0 && channel < STATE_CFG_TIME2_COUNT) {
       supla_esp_state.Time2Left[channel] = 0;
       supla_esp_gpio_relay_set_duration_timer(channel, hi, 0, 0);
     }
@@ -1402,14 +1417,15 @@ supla_esp_gpio_init(void) {
            system_get_rst_info()->reason == 0)) {
 				//supla_log(LOG_DEBUG, "RESTORE, %i, %i, %i", a, supla_relay_cfg[a].gpio_id, supla_esp_state.Relay[a]);
 #ifndef COUNTDOWN_TIMER_DISABLED
-        if (supla_relay_cfg[a].channel >= 0) {
+        int channel = supla_relay_cfg[a].channel;
+        if (channel >= 0 && channel < STATE_CFG_TIME2_COUNT) {
           supla_log(LOG_DEBUG, 
               "Restoring relay state: ch %d, value %d, duration %d",
-              supla_relay_cfg[a].channel, supla_esp_state.Relay[a],
-              supla_esp_state.Time2Left[a]);
-          supla_esp_gpio_relay_set_duration_timer(supla_relay_cfg[a].channel,
+              channel, supla_esp_state.Relay[a],
+              supla_esp_state.Time2Left[channel]);
+          supla_esp_gpio_relay_set_duration_timer(channel,
               supla_esp_state.Relay[a],
-              supla_esp_state.Time2Left[a], 0);
+              supla_esp_state.Time2Left[channel], 0);
         }
 #endif /*COUNTDOWN_TIMER_DISABLED*/
 				supla_esp_gpio_relay_hi(supla_relay_cfg[a].gpio_id, 
@@ -1765,7 +1781,8 @@ void GPIO_ICACHE_FLASH supla_esp_gpio_relay_set_duration_timer(int channel,
     int durationMs,
     int senderID) {
 #ifndef COUNTDOWN_TIMER_DISABLED
-  if (supla_esp_cfg.Time2[channel] > 0) {
+  if (channel < STATE_CFG_TIME2_COUNT && channel < CFG_TIME2_COUNT &&
+      supla_esp_cfg.Time2[channel] > 0) {
     // this is for staircase timer - we reset duration ms to the duration
     // that was configred on the server.
     // Staircase timer uses the same implementation as Countdown timer
