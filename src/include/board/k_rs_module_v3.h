@@ -22,10 +22,10 @@
 #define STATE_SECTOR_OFFSET 2		// zmiana sektora zapisu
 #define RS_SAVE_STATE_DELAY 500		// zmiana czestotliwosci zapisu
 
-#define ESP8266_SUPLA_PROTO_VERSION 12
+#define ESP8266_SUPLA_PROTO_VERSION 16
 #define BOARD_CFG_HTML_TEMPLATE
 
-#define SUPLA_ESP_SOFTVER "2.8.24.0"
+#define SUPLA_ESP_SOFTVER "2.8.42.0"
 
 #define _ROLLERSHUTTER_SUPPORT
 

@@ -286,7 +286,8 @@ char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 								  "</select><label>Thermometer type:</label></i>"
 								  "<i><select name=\"upd\"><option value=\"0\" %s>NO<option "
 								  "value=\"1\" %s>YES</select><label>Firmware update</label></i>"
-                                  "</div><button type=\"submit\">SAVE</button></form></div><br><br>";
+								  "</div><button type=\"submit\">SAVE</button><input "
+								  "type=\"hidden\" name=\"rbt\" value=\"2\" /></form></div><br><br></body></html>!";
 
     int bufflen = strlen(supla_esp_devconn_laststate()) + 
 	strlen(dev_name) + strlen(SUPLA_ESP_SOFTVER) + 
@@ -315,15 +316,21 @@ char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
         (unsigned char)supla_esp_cfg.GUID[12],
         (unsigned char)supla_esp_cfg.GUID[13],
         (unsigned char)supla_esp_cfg.GUID[14],
-        (unsigned char)supla_esp_cfg.GUID[15], (unsigned char)mac[0],
-        (unsigned char)mac[1], (unsigned char)mac[2], (unsigned char)mac[3],
-        (unsigned char)mac[4], (unsigned char)mac[5], supla_esp_cfg.WIFI_SSID,
+        (unsigned char)supla_esp_cfg.GUID[15],
+		(unsigned char)mac[0],
+        (unsigned char)mac[1], 
+		(unsigned char)mac[2], 
+		(unsigned char)mac[3],
+        (unsigned char)mac[4], 
+		(unsigned char)mac[5], 
+		supla_esp_cfg.WIFI_SSID,
         supla_esp_cfg.Server, supla_esp_cfg.Email,
 		supla_esp_cfg.ThermometerType == 0 ? "selected" : "",
 		supla_esp_cfg.ThermometerType == 1 ? "selected" : "",
 		supla_esp_cfg.ThermometerType == 2 ? "selected" : "",
 		supla_esp_cfg.FirmwareUpdate == 0 ? "selected" : "",
-        supla_esp_cfg.FirmwareUpdate == 1 ? "selected" : "");
+        supla_esp_cfg.FirmwareUpdate == 1 ? "selected" : ""
+		);
 
     return buffer;
 }
