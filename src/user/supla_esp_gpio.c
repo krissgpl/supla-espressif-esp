@@ -1244,7 +1244,6 @@ supla_esp_gpio_on_input_inactive(supla_input_cfg_t *input_cfg) {
       } else { // monostable
         if (supla_esp_gpio_rs_get_value(rs_cfg) != RS_RELAY_OFF) {
           supla_esp_gpio_rs_set_relay(rs_cfg, RS_RELAY_OFF, 1, 1);
-	supla_log(LOG_DEBUG, "v=%i", v);
 	
         } else {
           supla_esp_gpio_rs_set_relay(rs_cfg, direction, 1, 1);
