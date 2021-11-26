@@ -19,22 +19,24 @@
 #ifndef K_DIMMER_H_
 #define K_DIMMER_H_
 
-#define LED_RED_PORT     2
 #define SUPLA_PWM_COUNT  1
 #define DIMMER_CHANNEL   0
 
-#define ESP8266_SUPLA_PROTO_VERSION 12
+#define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.7.19.0"
+#define SUPLA_ESP_SOFTVER "2.8.42.0"
 #define AP_SSID "DIMMER"
 
-#define PWM_0_OUT_IO_MUX PERIPHS_IO_MUX_MTDO_U
-#define PWM_0_OUT_IO_NUM 15
-#define PWM_0_OUT_IO_FUNC  FUNC_GPIO15
+#define PWM_0_OUT_IO_MUX PERIPHS_IO_MUX_MTCK_U
+#define PWM_0_OUT_IO_NUM 13
+#define PWM_0_OUT_IO_FUNC  FUNC_GPIO13
 
-/*#define BOARD_GPIO_OUTPUT_SET_HI if (port == 4) { hi = supla_esp_gpio_output_is_hi(4);	\
-supla_log(LOG_DEBUG, "port 4, hi = %i", hi);};*/
-	
+#define B_CFG_PORT         0
+
+#define B_SENSOR_PORT1     12
+#define B_SENSOR_PORT2     14
+
+#define LED_RED_PORT       16
 
 void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void);
 char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Color, float *ColorBrightness, float *Brightness);
