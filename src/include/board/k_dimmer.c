@@ -48,6 +48,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	supla_input_cfg[3].type = INPUT_TYPE_BTN_MONOSTABLE;
     supla_input_cfg[3].channel = 4;
 	
+	supla_relay_cfg[0].gpio_id = B_RELAY1_PORT;	// relay 1 channel
+    supla_relay_cfg[0].channel = 1;
+	
 	// ---------------------------------------
 	
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_SD_DATA3_U, FUNC_GPIO10);//uzycie GPIO10
