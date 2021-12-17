@@ -89,7 +89,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[1].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
 }
 
-char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Color, float *ColorBrightness, float *Brightness) {
+char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Color, float *ColorBrightness, float *Brightness, 1) {
 
 	dimmer_brightness = *Brightness;
 	
