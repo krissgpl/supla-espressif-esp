@@ -82,6 +82,7 @@ void dimmer_timer_cb(void *timer_arg) {
 	supla_log(LOG_DEBUG, "Dimmer Timer start");
 	
 	Licznik = Licznik + 1;
+	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
 	supla_esp_pwm_set_percent_duty(Licznik, 100, 0);
 	
 	 if ( Licznik == 50 ) { 
