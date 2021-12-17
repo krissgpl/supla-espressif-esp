@@ -162,7 +162,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		
 		if( hi == 1 ) { //supla_esp_channel_set_rgbw_value(0, 0, 0, 50, 1, 1); 
 						supla_log(LOG_DEBUG, "Set dimmer 1");
-						Licznik = 0:
+						Licznik = 0;
 						os_timer_disarm(&dimmer_timer);
 						os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_cb, NULL);
 						os_timer_arm(&dimmer_timer, 20, 1);
