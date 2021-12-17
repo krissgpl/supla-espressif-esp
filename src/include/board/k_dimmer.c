@@ -22,6 +22,8 @@
 #include "k_dimmer.h"
 #include "supla_esp_devconn.h"
 
+int RLY_channel;
+
 uint8 dimmer_brightness = 0;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
@@ -127,3 +129,18 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 	
 }
 
+void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
+			
+		supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi port = %i, hi = %i", port, hi);
+		
+		RLY_channel = 1;
+		
+	if ( port == 21 ) {	
+			
+		supla_esp_state.Relay[RLY_channel] = hi;
+		supla_esp_save_state(SAVE_STATE_DELAY);
+		supla_esp_channel_value_changed(RLY_channel, supla_esp_state.Relay[RLY_channel]);
+		supla_esp_cfg_save(&supla_esp_cfg);
+		supla_esp_channel_value_changed(RLY_channel, hi);
+	};
+}

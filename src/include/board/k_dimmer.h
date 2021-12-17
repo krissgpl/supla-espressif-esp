@@ -42,9 +42,20 @@
 
 #define USE_GPIO16_OUTPUT
 
+#define BOARD_GPIO_OUTPUT_SET_HI	\
+		if (port >= 20) {supla_esp_board_gpiooutput_set_hi(port, hi); 	\
+						supla_log(LOG_DEBUG, "PORT 20 MAKRO");	\
+						return;  };	\
+						
+#define BOARD_GPIO_OUTPUT_IS_HI	\
+		if ( port == B_RELAY1_PORT)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 1 = %i", supla_esp_state.Relay[1]);	\
+								return supla_esp_state.Relay[1] == 1 ? 1 : 0;	}
+
 void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void);
 char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Color, float *ColorBrightness, float *Brightness);
 void ICACHE_FLASH_ATTR supla_esp_board_get_rgbw_value(int ChannelNumber, int *Color, float *ColorBrightness, float *Brightness);
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
+
+void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
 #endif
