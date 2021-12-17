@@ -44,7 +44,6 @@ case $1 in
 	 FLASH_SIZE="4096"
 	 FOTA=1
      DEP_LIBS="-lpwm"
-     NOSSL=1
    ;;
    "k_gniazdko_neo")
       FOTA=1
