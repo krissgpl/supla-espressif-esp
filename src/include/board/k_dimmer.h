@@ -36,6 +36,8 @@
 #define B_SENSOR_PORT1     12
 #define B_SENSOR_PORT2     14
 
+#define B_RELAY1_PORT	   21
+
 #define LED_RED_PORT       16
 
 void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void);
