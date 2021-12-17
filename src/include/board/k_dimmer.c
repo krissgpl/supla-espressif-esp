@@ -144,5 +144,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		supla_esp_channel_value_changed(RLY_channel, supla_esp_state.Relay[RLY_channel]);
 		supla_esp_cfg_save(&supla_esp_cfg);
 		supla_esp_channel_value_changed(RLY_channel, hi);
+		
+		if( hi == 1 ) { supla_esp_pwm_set_percent_duty(50, 100, 0); 
+		} else { supla_esp_pwm_set_percent_duty(0, 100, 0); };
+		
 	};
 }
