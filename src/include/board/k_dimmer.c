@@ -25,7 +25,9 @@
 int RLY_channel;
 
 uint8 dimmer_brightness = 0;
-//ETSTimer dimmer_timer;
+ETSTimer dimmer_timer;
+
+unsigned int Licznik = 0;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	ets_snprintf(buffer, buffer_size, "DIMMER");
@@ -73,6 +75,18 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 		supla_esp_gpio_set_hi(10, 1);	// ustaw gpio10 high wl zasilania DHT
 		supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
 	};
+}
+
+void dimmer_timer_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "Dimmer Timer start");
+	
+	Licznik = Licznik + 1;
+	supla_esp_pwm_set_percent_duty(50, 100, 0);
+	
+	 if ( Licznik == 50 ) { os_timer_disarm(&dimmer_timer); }
+	
+	
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void) {
@@ -146,8 +160,12 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		supla_esp_cfg_save(&supla_esp_cfg);
 		supla_esp_channel_value_changed(RLY_channel, hi);
 		
-		if( hi == 1 ) { supla_esp_channel_set_rgbw_value(0, 0, 0, 50, 1, 1); 
+		if( hi == 1 ) { //supla_esp_channel_set_rgbw_value(0, 0, 0, 50, 1, 1); 
 						supla_log(LOG_DEBUG, "Set dimmer 1");
+						Licznik = 0:
+						os_timer_disarm(&dimmer_timer);
+						os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_cb, NULL);
+						os_timer_arm(&dimmer_timer, 20, 1);
 		} else { supla_esp_channel_set_rgbw_value(0, 0, 0, 0, 1, 1); 
 						supla_log(LOG_DEBUG, "Set dimmer 0");
 						};
