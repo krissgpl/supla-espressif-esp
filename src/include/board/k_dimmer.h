@@ -50,6 +50,8 @@
 #define BOARD_GPIO_OUTPUT_IS_HI	\
 		if ( port == B_RELAY1_PORT)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 1 = %i", supla_esp_state.Relay[1]);	\
 								return supla_esp_state.Relay[1] == 1 ? 1 : 0;	}
+								
+#define BOARD_ON_INPUT_INACTIVE supla_log(LOG_DEBUG, "CHANNEL active = %i", input_cfg->channel);
 
 void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void);
 char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Color, float *ColorBrightness, float *Brightness);

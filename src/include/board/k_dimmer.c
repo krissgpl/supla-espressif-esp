@@ -85,7 +85,7 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
 	supla_esp_pwm_set_percent_duty(Licznik, 100, 0);
 	
-	 if ( Licznik == 50 ) { 
+	 if ( Licznik == 100 ) { 
 	 supla_log(LOG_DEBUG, "Dimmer Timer stop");
 	 os_timer_disarm(&dimmer_timer); }
 	
@@ -129,20 +129,12 @@ char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Co
 
 	dimmer_brightness = *Brightness;
 	
-	int hi;
-	hi = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);
-	
 	if ( dimmer_brightness > 100 )
 		dimmer_brightness = 100;
-	
-	if ( hi == 1 )
-		supla_esp_pwm_set_percent_duty(50, 100, 0);
-	
+		
 	supla_esp_pwm_set_percent_duty(dimmer_brightness, 100, 0);
 	supla_log(LOG_DEBUG, "Set dimmer : %i", dimmer_brightness);
 	
-	
-
 	return 1;
 }
 
@@ -176,18 +168,16 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		supla_esp_cfg_save(&supla_esp_cfg);
 		supla_esp_channel_value_changed(RLY_channel, hi);
 		
-		if( hi == 1 ) { //supla_esp_channel_set_rgbw_value(0, 0, 0, 50, 1, 1); 
-						supla_log(LOG_DEBUG, "Set dimmer 1");
+		if( hi == 1 ) { supla_log(LOG_DEBUG, "Set dimmer 1");
 						Licznik = 0;
 						os_timer_disarm(&dimmer_timer);
 						os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-						os_timer_arm(&dimmer_timer, 30, 1);
-		} else { // supla_esp_channel_set_rgbw_value(0, 0, 0, 0, 1, 1); 
-						supla_log(LOG_DEBUG, "Set dimmer 0");
-						Licznik = 50;
+						os_timer_arm(&dimmer_timer, 20, 1);
+		} else { 		supla_log(LOG_DEBUG, "Set dimmer 0");
+						Licznik = 100;
 						os_timer_disarm(&dimmer_timer);
 						os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_OFF_cb, NULL);
-						os_timer_arm(&dimmer_timer, 30, 1);
+						os_timer_arm(&dimmer_timer, 20, 1);
 						};
 		
 	};
