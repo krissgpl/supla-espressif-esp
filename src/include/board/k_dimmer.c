@@ -95,7 +95,7 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	
 }
 
-void ICACHE_FLASH_ATTR supla_dimmer_smooth(int hi) {
+void supla_dimmer_smooth(int hi) {
 
 if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
 	

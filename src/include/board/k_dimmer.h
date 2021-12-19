@@ -72,6 +72,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
-void ICACHE_FLASH_ATTR supla_dimmer_smooth(int hi);
+void supla_dimmer_smooth(int hi);
 
 #endif
