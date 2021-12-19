@@ -64,6 +64,8 @@
 
 #define BOARD_ON_INPUT_ACTIVE supla_log(LOG_DEBUG, "CHANNEL active = %i", input_cfg->channel);	\
 							  supla_dimmer_smooth(0);
+							  
+#define BOARD_INTR_HANDLER	supla_log(LOG_DEBUG, "Input intr test");
 
 void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void);
 char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Color, float *ColorBrightness, float *Brightness);

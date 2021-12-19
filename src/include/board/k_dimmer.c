@@ -58,13 +58,13 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
     supla_input_cfg[3].gpio_id = 4;
 	
 	supla_relay_cfg[0].gpio_id = B_HARMONOGRAM;	// harmonogram channel
-    supla_relay_cfg[0].channel = 1;
+    supla_relay_cfg[0].channel = 3;
 	
 	supla_relay_cfg[1].gpio_id = B_UPD_PORT;	// update init channel
-    supla_relay_cfg[1].channel = 2;
+    supla_relay_cfg[1].channel = 4;
 	
 	supla_relay_cfg[2].gpio_id = B_BLOKADA;		// blokada channel
-    supla_relay_cfg[2].channel = 3;
+    supla_relay_cfg[2].channel = 5;
 	
 	// ---------------------------------------
 	
