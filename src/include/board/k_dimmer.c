@@ -30,7 +30,8 @@ uint8 dimmer_brightness = 0;
 uint8 Licznik = 0;
 uint8 Jasnosc = 0;
 
-ETSTimer dimmer_timer;
+ETSTimer dimmer_timer_ON;
+ETSTimer dimmer_timer_OFF;
 ETSTimer value_timer1;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
