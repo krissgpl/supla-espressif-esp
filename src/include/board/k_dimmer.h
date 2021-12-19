@@ -19,8 +19,10 @@
 #ifndef K_DIMMER_H_
 #define K_DIMMER_H_
 
-#define SUPLA_PWM_COUNT  1
-#define DIMMER_CHANNEL   0
+#define SUPLA_PWM_COUNT    1
+#define DIMMER_CHANNEL     0
+
+#define RELAY_MAX_COUNT	   6
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
@@ -51,11 +53,11 @@
 						
 #define BOARD_GPIO_OUTPUT_IS_HI	\
 		if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 3 = %i", supla_esp_state.Relay[3]);	\
-								return supla_esp_state.Relay[3] == 1 ? 1 : 0;	}	\
+								return supla_esp_state.Relay[3] == 1 ? 1 : 0;	};	\
 		if ( port == B_UPD_PORT)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
-												return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	\
+												return supla_esp_state.Relay[4] == 1 ? 1 : 0;	};	\
 		if ( port == B_BLOKADA)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 5 = %i", supla_esp_state.Relay[5]);	\
-												return supla_esp_state.Relay[5] == 1 ? 1 : 0;	}
+												return supla_esp_state.Relay[5] == 1 ? 1 : 0;	};
 								
 #define BOARD_ON_INPUT_INACTIVE supla_log(LOG_DEBUG, "CHANNEL inactive = %i", input_cfg->channel);	\
 								supla_dimmer_smooth(0);
