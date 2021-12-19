@@ -94,7 +94,7 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	
 }
 
-void ICACHE_FLASH_ATTR supla_dimmer_smooth(int hi) (
+void ICACHE_FLASH_ATTR supla_dimmer_smooth(int hi) {
 
 if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 {
 	
@@ -110,7 +110,7 @@ if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 {
 					os_timer_arm(&dimmer_timer, 20, 1);
 					};
 };
-)
+}
 
 void dimmer_timer_ON_cb(void *timer_arg) {
 	
