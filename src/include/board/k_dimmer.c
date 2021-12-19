@@ -96,7 +96,7 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 
 void ICACHE_FLASH_ATTR supla_dimmer_smooth(int hi) {
 
-if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 {
+if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
 	
 	if( hi == 1 ) { supla_log(LOG_DEBUG, "Set dimmer 1");
 					Licznik = 0;
@@ -120,7 +120,7 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
 	supla_esp_pwm_set_percent_duty(Licznik, 100, 0);
 	
-	if ( supla_esp_gpio_output_is_hi(B_HARMONOGRAM) == 1 { Jasnosc = 100;
+	if ( supla_esp_gpio_output_is_hi(B_HARMONOGRAM) == 1 ) { Jasnosc = 100;
 	} else { Jasnosc = supla_esp_state.brightness[0] };
 	
 	 if ( Licznik == Jasnosc ) { 
