@@ -1222,7 +1222,7 @@ supla_esp_gpio_on_input_active(supla_input_cfg_t *input_cfg) {
 
 void GPIO_ICACHE_FLASH
 supla_esp_gpio_on_input_inactive(supla_input_cfg_t *input_cfg) {
-  // supla_log(LOG_DEBUG, "inactive");
+  supla_log(LOG_DEBUG, "inactive");
 
 #ifdef BOARD_ON_INPUT_INACTIVE
   BOARD_ON_INPUT_INACTIVE;
