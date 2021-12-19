@@ -22,8 +22,9 @@
 #include "k_dimmer.h"
 #include "supla_esp_devconn.h"
 
-int RLY_channel;
+int HRM_channel;
 int UPD_channel;
+int BLK_channel;
 
 uint8 dimmer_brightness = 0;
 
