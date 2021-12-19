@@ -122,7 +122,7 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 	supla_esp_pwm_set_percent_duty(Licznik, 100, 0);
 	
 	if ( supla_esp_gpio_output_is_hi(B_HARMONOGRAM) == 1 ) { Jasnosc = 100;
-	} else { Jasnosc = supla_esp_state.brightness[0] };
+	} else { Jasnosc = supla_esp_state.brightness[0]; };
 	
 	 if ( Licznik == Jasnosc ) { 
 	 supla_log(LOG_DEBUG, "Dimmer Timer stop");
