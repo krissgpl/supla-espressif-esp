@@ -36,7 +36,9 @@
 #define B_SENSOR_PORT1     12
 #define B_SENSOR_PORT2     14
 
-#define B_RELAY1_PORT	   21
+#define B_UPD_PORT		   20
+#define B_HARMONOGRAM	   21
+#define B_BLOKADA		   22
 
 #define LED_RED_PORT       16
 
@@ -48,12 +50,18 @@
 						return;  };	\
 						
 #define BOARD_GPIO_OUTPUT_IS_HI	\
-		if ( port == B_RELAY1_PORT)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 1 = %i", supla_esp_state.Relay[1]);	\
-								return supla_esp_state.Relay[1] == 1 ? 1 : 0;	}
+		if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 3 = %i", supla_esp_state.Relay[3]);	\
+								return supla_esp_state.Relay[3] == 1 ? 1 : 0;	}	\
+		if ( port == B_UPD_PORT)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
+												return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	\
+		if ( port == B_BLOKADA)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 5 = %i", supla_esp_state.Relay[5]);	\
+												return supla_esp_state.Relay[5] == 1 ? 1 : 0;	}
 								
-#define BOARD_ON_INPUT_INACTIVE supla_log(LOG_DEBUG, "CHANNEL inactive = %i", input_cfg->channel);
+#define BOARD_ON_INPUT_INACTIVE supla_log(LOG_DEBUG, "CHANNEL inactive = %i", input_cfg->channel);	\
+								supla_dimmer_smooth(0);
 
-#define BOARD_ON_INPUT_ACTIVE supla_log(LOG_DEBUG, "CHANNEL active = %i", input_cfg->channel);
+#define BOARD_ON_INPUT_ACTIVE supla_log(LOG_DEBUG, "CHANNEL active = %i", input_cfg->channel);	\
+							  supla_dimmer_smooth(1);
 
 void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void);
 char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Color, float *ColorBrightness, float *Brightness);
@@ -61,5 +69,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_get_rgbw_value(int ChannelNumber, int *Co
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
+
+void ICACHE_FLASH_ATTR supla_dimmer_smooth(int hi);
 
 #endif
