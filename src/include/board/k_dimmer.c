@@ -30,8 +30,7 @@ uint8 dimmer_brightness = 0;
 uint8 Licznik = 0;
 uint8 Jasnosc = 0;
 
-ETSTimer dimmer_timer_ON;
-ETSTimer dimmer_timer_OFF;
+ETSTimer dimmer_timer;
 ETSTimer value_timer1;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
@@ -101,14 +100,14 @@ if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
 	
 	if( hi == 1 ) { supla_log(LOG_DEBUG, "Set dimmer 1");
 					Licznik = 0;
-					os_timer_disarm(&dimmer_timer_ON);
-					os_timer_setfn(&dimmer_timer_ON, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-					os_timer_arm(&dimmer_timer_ON, 20, 1);
+					os_timer_disarm(&dimmer_timer);
+					os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
+					os_timer_arm(&dimmer_timer, 20, 1);
 	} else { 		supla_log(LOG_DEBUG, "Set dimmer 0");
 					Licznik = supla_esp_state.brightness[0];
-					os_timer_disarm(&dimmer_timer_OFF);
-					os_timer_setfn(&dimmer_timer_OFF, (os_timer_func_t *)dimmer_timer_OFF_cb, NULL);
-					os_timer_arm(&dimmer_timer_OFF, 20, 1);
+					os_timer_disarm(&dimmer_timer);
+					os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_OFF_cb, NULL);
+					os_timer_arm(&dimmer_timer, 20, 1);
 					};
 };
 }
