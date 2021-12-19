@@ -155,6 +155,7 @@ if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
 void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void) {
 	//supla_esp_channel_set_rgbw_value(0, 0, 0, supla_esp_state.brightness[0], 0, 0);
 	Jasnosc = supla_esp_state.brightness[0];
+	supla_log(LOG_DEBUG, "Jasnosc init = %i", Jasnosc);
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
