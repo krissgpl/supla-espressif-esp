@@ -31,6 +31,9 @@ uint8 dimmer_brightness = 0;
 uint8 Licznik = 0;
 uint8 Jasnosc = 0;
 
+unsigned int Wlacznik = 0;
+unsigned int Start = 0;
+
 ETSTimer dimmer_timer;
 ETSTimer value_timer1;
 ETSTimer work_timer;
@@ -123,6 +126,7 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 	
 	 if ( Licznik == 0 ) { 
 	 supla_log(LOG_DEBUG, "Dimmer Timer OFF stop");
+	 Wlacznik = 0;
 	 os_timer_disarm(&dimmer_timer); }
 	
 }
@@ -140,16 +144,36 @@ void supla_dimmer_smooth(int hi) {
 
 if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
 	
-	if( hi == 1 ) { supla_log(LOG_DEBUG, "Set dimmer 1");
+	Wlacznik = Wlacznik + 1;
+	
+	if ( Wlacznik == 1 ) {
+	
+		if( hi == 1 ) { supla_log(LOG_DEBUG, "Set dimmer 1");
 					Licznik = 0;
 					os_timer_disarm(&dimmer_timer);
 					os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
 					os_timer_arm(&dimmer_timer, 20, 1);
+					//os_timer_disarm(&work_timer);
+					//os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
+					//os_timer_arm(&work_timer, 30000, 0);
+					};
+		};
+	};
+	
+	if ( hi == 2 || Start == 0 ) { supla_log(LOG_DEBUG, "Set dimmer 1");
+					Licznik = 0;
+					Start = 1;
+					os_timer_disarm(&dimmer_timer);
+					os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
+					os_timer_arm(&dimmer_timer, 20, 1);
+					//os_timer_disarm(&work_timer);
+					//os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
+					//os_timer_arm(&work_timer, 30000, 0);
+					};
+	if ( hi == 0 ) { Wlacznik = 0;
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
-					os_timer_arm(&work_timer, 30000, 0);
-					};
-};
+					os_timer_arm(&work_timer, 30000, 0); };
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void) {
