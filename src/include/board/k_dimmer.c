@@ -145,7 +145,7 @@ void supla_dimmer_smooth(int hi) {
 if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
 	
 	Wlacznik = Wlacznik + 1;
-	
+	supla_log(LOG_DEBUG, "Wlacznik = %i", Wlacznik);
 	if ( Wlacznik == 1 ) {
 	
 		if( hi == 1 ) { supla_log(LOG_DEBUG, "Set dimmer 1");

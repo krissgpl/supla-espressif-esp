@@ -57,7 +57,8 @@
 		if ( port == B_UPD_PORT)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
 												return supla_esp_state.Relay[4] == 1 ? 1 : 0;	};	\
 		if ( port == B_BLOKADA)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 5 = %i", supla_esp_state.Relay[5]);	\
-												return supla_esp_state.Relay[5] == 1 ? 1 : 0;	};
+												return supla_esp_state.Relay[5] == 1 ? 1 : 0;	};	\
+		if ( port == B_SENSOR_PORT1)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI sensor 1");	};
 								
 #define BOARD_ON_INPUT_INACTIVE if ( input_cfg->gpio_id == 12 || input_cfg->gpio_id  == 14 ) {	\
 								supla_log(LOG_DEBUG, "CHANNEL inactive = %i", input_cfg->channel);	\
