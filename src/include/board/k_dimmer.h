@@ -68,8 +68,9 @@
 								supla_log(LOG_DEBUG, "CHANNEL active = %i", input_cfg->channel);	\
 								supla_dimmer_smooth(0); };
 							  
-#define BOARD_INTR_HANDLER	supla_log(LOG_DEBUG, "Input intr test");	\
-							supla_dimmer_smooth(2);
+#define BOARD_INTR_HANDLER	if ( gpio_status & (!BIT(0))) {	\
+							supla_log(LOG_DEBUG, "Input intr test");	\
+							supla_dimmer_smooth(2); };
 
 void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void);
 char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Color, float *ColorBrightness, float *Brightness);
