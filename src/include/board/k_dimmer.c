@@ -146,6 +146,7 @@ if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
 	
 	Wlacznik = Wlacznik + 1;
 	supla_log(LOG_DEBUG, "Wlacznik = %i", Wlacznik);
+	supla_log(LOG_DEBUG, "Hi = %i", hi);
 	
 	if ( Wlacznik == 1 && hi == 1 ) { supla_log(LOG_DEBUG, "Set dimmer 1 hi=1");
 					Licznik = 0;
@@ -156,8 +157,6 @@ if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
 					//os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 					//os_timer_arm(&work_timer, 30000, 0);
 					};
-		
-	
 	
 	if ( hi == 2 && Start == 0 ) { supla_log(LOG_DEBUG, "Set dimmer 1 hi=2");
 					Licznik = 0;
@@ -169,6 +168,7 @@ if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
 					//os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 					//os_timer_arm(&work_timer, 30000, 0);
 					};
+
 	if ( hi == 0 ) { Wlacznik = 0;
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
