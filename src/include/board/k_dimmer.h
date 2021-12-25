@@ -68,7 +68,8 @@
 								supla_log(LOG_DEBUG, "CHANNEL active = %i", input_cfg->channel);	\
 								supla_dimmer_smooth(0); };
 							  
-#define BOARD_INTR_HANDLER	if ( !gpio_status==1 ) {	\
+#define BOARD_INTR_HANDLER	supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
+							if ( !gpio_status==1 ) {	\
 							supla_log(LOG_DEBUG, "Input intr test");	\
 							supla_dimmer_smooth(2); };
 
