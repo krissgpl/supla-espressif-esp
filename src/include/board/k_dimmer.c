@@ -146,9 +146,8 @@ if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
 	
 	Wlacznik = Wlacznik + 1;
 	supla_log(LOG_DEBUG, "Wlacznik = %i", Wlacznik);
-	if ( Wlacznik == 1 ) {
 	
-		if( hi == 1 ) { supla_log(LOG_DEBUG, "Set dimmer 1");
+	if ( Wlacznik == 1 || hi == 1 ) { supla_log(LOG_DEBUG, "Set dimmer 1 hi=1");
 					Licznik = 0;
 					//os_timer_disarm(&dimmer_timer);
 					//os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
@@ -157,10 +156,10 @@ if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
 					//os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 					//os_timer_arm(&work_timer, 30000, 0);
 					};
-		};
-	};
+		
 	
-	if ( hi == 2 || Start == 0 ) { supla_log(LOG_DEBUG, "Set dimmer 1");
+	
+	if ( hi == 2 || Start == 0 ) { supla_log(LOG_DEBUG, "Set dimmer 1 hi=2");
 					Licznik = 0;
 					Start = 1;
 					//os_timer_disarm(&dimmer_timer);
@@ -174,6 +173,7 @@ if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 					os_timer_arm(&work_timer, 30000, 0); };
+};
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void) {
