@@ -64,6 +64,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
     supla_relay_cfg[0].channel = 3;
 	
 	supla_relay_cfg[1].gpio_id = B_UPD_PORT;	// update init channel
+	supla_relay_cfg[1].flags = RELAY_FLAG_RESET;
     supla_relay_cfg[1].channel = 4;
 	
 	supla_relay_cfg[2].gpio_id = B_BLOKADA;		// blokada channel
@@ -136,9 +137,9 @@ void work_timer_cb(void *timer_arg) {
 	supla_log(LOG_DEBUG, "Set dimmer 0");
 	Licznik = supla_esp_state.brightness[0];
 	Wlacznik = 0;
-	//os_timer_disarm(&dimmer_timer);
-	//os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_OFF_cb, NULL);
-	//os_timer_arm(&dimmer_timer, 20, 1);
+	os_timer_disarm(&dimmer_timer);
+	os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_OFF_cb, NULL);
+	os_timer_arm(&dimmer_timer, 20, 1);
 }
 
 void supla_dimmer_smooth(int hi) {
@@ -151,9 +152,9 @@ if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
 	
 	if ( Wlacznik == 2 && hi == 1 ) { supla_log(LOG_DEBUG, "Set dimmer 1 hi=1");
 					Licznik = 0;
-					//os_timer_disarm(&dimmer_timer);
-					//os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-					//os_timer_arm(&dimmer_timer, 20, 1);
+					os_timer_disarm(&dimmer_timer);
+					os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
+					os_timer_arm(&dimmer_timer, 20, 1);
 					//os_timer_disarm(&work_timer);
 					//os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 					//os_timer_arm(&work_timer, 30000, 0);
@@ -162,9 +163,9 @@ if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
 	if ( hi == 2 && Start == 0 ) { supla_log(LOG_DEBUG, "Set dimmer 1 hi=2");
 					Licznik = 0;
 					Start = 1;
-					//os_timer_disarm(&dimmer_timer);
-					//os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-					//os_timer_arm(&dimmer_timer, 20, 1);
+					os_timer_disarm(&dimmer_timer);
+					os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
+					os_timer_arm(&dimmer_timer, 20, 1);
 					//os_timer_disarm(&work_timer);
 					//os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 					//os_timer_arm(&work_timer, 30000, 0);
