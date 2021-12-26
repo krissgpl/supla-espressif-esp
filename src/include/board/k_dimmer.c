@@ -51,24 +51,26 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	
 	supla_input_cfg[1].type = INPUT_TYPE_SENSOR;
 	supla_input_cfg[1].gpio_id = B_SENSOR_PORT1;
-	supla_input_cfg[1].channel = 1;
+	supla_input_cfg[1].channel = 2;
 	
 	supla_input_cfg[2].type = INPUT_TYPE_SENSOR;
 	supla_input_cfg[2].gpio_id = B_SENSOR_PORT2;
-	supla_input_cfg[2].channel = 2;
+	supla_input_cfg[2].channel = 3;
 	
 	supla_input_cfg[3].type = INPUT_TYPE_BTN_MONOSTABLE;
     supla_input_cfg[3].gpio_id = 4;
 	
 	supla_relay_cfg[0].gpio_id = B_HARMONOGRAM;	// harmonogram channel
-    supla_relay_cfg[0].channel = 3;
+    supla_relay_cfg[0].channel = 4;
 	
-	supla_relay_cfg[1].gpio_id = B_UPD_PORT;	// update init channel
-	supla_relay_cfg[1].flags = RELAY_FLAG_RESET;
-    supla_relay_cfg[1].channel = 4;
+	supla_relay_cfg[1].gpio_id = B_SWITCH;		// wlacznik tasmy
+    supla_relay_cfg[1].channel = 5;
 	
-	supla_relay_cfg[2].gpio_id = B_BLOKADA;		// blokada channel
-    supla_relay_cfg[2].channel = 5;
+	supla_relay_cfg[2].gpio_id = B_UPD_PORT;	// update init channel
+	supla_relay_cfg[2].flags = RELAY_FLAG_RESET;
+    supla_relay_cfg[2].channel = 6;
+	
+
 	
 	// ---------------------------------------
 	
