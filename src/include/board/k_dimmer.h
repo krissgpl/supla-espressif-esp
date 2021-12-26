@@ -20,7 +20,7 @@
 #define K_DIMMER_H_
 
 #define SUPLA_PWM_COUNT    2
-#define DIMMER_CHANNEL     0
+#define DIMMER_CHANNEL  0
 
 #define RELAY_MAX_COUNT	   7
 
@@ -33,6 +33,10 @@
 #define PWM_0_OUT_IO_MUX PERIPHS_IO_MUX_MTCK_U
 #define PWM_0_OUT_IO_NUM 13
 #define PWM_0_OUT_IO_FUNC  FUNC_GPIO13
+
+#define PWM_1_OUT_IO_MUX PERIPHS_IO_MUX_MTDO_U
+#define PWM_1_OUT_IO_NUM 15
+#define PWM_1_OUT_IO_FUNC  FUNC_GPIO15
 
 #define B_CFG_PORT         0
 
