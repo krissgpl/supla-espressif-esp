@@ -39,7 +39,7 @@ ETSTimer value_timer1;
 ETSTimer work_timer;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
-	ets_snprintf(buffer, buffer_size, "DIMMER");
+	ets_snprintf(buffer, buffer_size, "STAIRCASE-DIMMER");
 }
 
 
@@ -81,16 +81,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTDI_U);			// pullup gpio 12
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTMS_U);			// pullup gpio 14
 
-	//----------------------------------------	wlaczenie zasilania dht z opoznieniem (zaklocenia)
-	
-	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
-	
-		supla_esp_gpio_set_hi(10, 0);	// ustaw gpio10 low wyl zasilania DHT
-		supla_log(LOG_DEBUG, "ustaw gpio10 low wyl zasilania DHT");
-		os_delay_us(500000);						// poczekaj 0,3s
-		supla_esp_gpio_set_hi(10, 1);	// ustaw gpio10 high wl zasilania DHT
-		supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
-	};
 }
 
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {
@@ -147,7 +137,7 @@ void work_timer_cb(void *timer_arg) {
 
 void supla_dimmer_smooth(int hi) {
 
-if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
+if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 ) {
 	
 	Wlacznik = Wlacznik + 1;
 	supla_log(LOG_DEBUG, "Wlacznik = %i", Wlacznik);
@@ -177,7 +167,7 @@ if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 0 ) {
 	if ( hi == 0 ) { 
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
-					os_timer_arm(&work_timer, 30000, 0); };
+					os_timer_arm(&work_timer, supla_esp_state.brightness[1], 0); };
 };
 }
 
@@ -185,49 +175,57 @@ void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void) {
 	//supla_esp_channel_set_rgbw_value(0, 0, 0, supla_esp_state.brightness[0], 0, 0);
 	Jasnosc = supla_esp_state.brightness[0];
 	supla_log(LOG_DEBUG, "Jasnosc init = %i", Jasnosc);
+	supla_log(LOG_DEBUG, "Czas init = %i", supla_esp_state.brightness[1]);
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
 
-	*channel_count = 6;
+	*channel_count = 7;
 
 	channels[0].Type = SUPLA_CHANNELTYPE_DIMMER;
 	channels[0].Number = 0;
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	supla_esp_channel_rgbw_to_value(channels[0].value, 0, 0, supla_esp_state.brightness[0]);
 	
+	channels[1].Type = SUPLA_CHANNELTYPE_DIMMER;
 	channels[1].Number = 1;
-	channels[1].Type = SUPLA_CHANNELTYPE_SENSORNO;
-	channels[1].FuncList = 0;
-	channels[1].Default = 0;
-	channels[1].value[0] = 0;
+	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	supla_esp_channel_rgbw_to_value(channels[1].value, 0, 0, supla_esp_state.brightness[1]);
 	
 	channels[2].Number = 2;
 	channels[2].Type = SUPLA_CHANNELTYPE_SENSORNO;
 	channels[2].FuncList = 0;
 	channels[2].Default = 0;
 	channels[2].value[0] = 0;
-
-	channels[3].Number = 3;
-	channels[3].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[3].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
-	channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[3].Default = SUPLA_CHANNELFNC_POWERSWITCH;
-	channels[3].value[0] = supla_esp_gpio_relay_on(B_HARMONOGRAM);
 	
+	channels[3].Number = 3;
+	channels[3].Type = SUPLA_CHANNELTYPE_SENSORNO;
+	channels[3].FuncList = 0;
+	channels[3].Default = 0;
+	channels[3].value[0] = 0;
+
 	channels[4].Number = 4;
 	channels[4].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[4].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[4].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[4].Default = 0;
-	channels[4].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
+	channels[4].Default = SUPLA_CHANNELFNC_POWERSWITCH;
+	channels[4].value[0] = supla_esp_gpio_relay_on(B_HARMONOGRAM);
 	
 	channels[5].Number = 5;
 	channels[5].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[5].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[5].Default = 0;
-	channels[5].value[0] = supla_esp_gpio_relay_on(B_BLOKADA);
+	channels[5].value[0] = supla_esp_gpio_relay_on(B_SWITCH);
+	
+	channels[6].Number = 6;
+	channels[6].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[6].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[6].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[6].Default = 0;
+	channels[6].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
+	
+	
 }
 
 char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Color, float *ColorBrightness, float *Brightness ) {
@@ -255,9 +253,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_get_rgbw_value(int ChannelNumber, int *Co
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc) {
 	
-	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_HARMONOGRAM));
-	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_UPD_PORT));
-	supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_BLOKADA));
+	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_HARMONOGRAM));
+	supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_SWITCH));
+	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_UPD_PORT));
 	
 }
 
@@ -265,9 +263,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			
 		supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi port = %i, hi = %i", port, hi);
 		
-		HRM_channel = 3;
-		UPD_channel = 4;
+		HRM_channel = 4;
 		BLK_channel = 5;
+		UPD_channel = 6;
 				
 if ( port == B_UPD_PORT ) {	
 
@@ -303,7 +301,7 @@ if ( port == B_HARMONOGRAM ) {
 				
 };
 	
-if ( port == B_BLOKADA ) {	
+if ( port == B_SWITCH ) {	
 			
 		supla_esp_state.Relay[BLK_channel] = hi;
 		supla_esp_save_state(SAVE_STATE_DELAY);
