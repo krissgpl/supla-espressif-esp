@@ -21,7 +21,6 @@
 
 #define SUPLA_PWM_COUNT    2
 #define DIMMER_CHANNEL     0
-#define DIMMER_CHANNEL     1
 
 #define RELAY_MAX_COUNT	   7
 
