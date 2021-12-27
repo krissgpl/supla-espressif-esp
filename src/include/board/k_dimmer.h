@@ -63,7 +63,7 @@
 		if ( port == B_SWITCH)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 5 = %i", supla_esp_state.Relay[5]);	\
 												return supla_esp_state.Relay[5] == 1 ? 1 : 0;	};	\
 		if ( port == B_UPD_PORT)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 6 = %i", supla_esp_state.Relay[6]);	\
-												return supla_esp_state.Relay[6] == 1 ? 1 : 0;	};	\												
+												return supla_esp_state.Relay[6] == 1 ? 1 : 0;	};	\
 								
 #define BOARD_ON_INPUT_INACTIVE if (supla_last_state == !STATE_UPDATE) { \
 								if ( input_cfg->gpio_id == 12 || input_cfg->gpio_id  == 14 ) {	\
