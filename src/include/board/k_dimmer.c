@@ -26,7 +26,7 @@ int HRM_channel;
 int UPD_channel;
 int BLK_channel;
 
-uint8 dimmer_brightness = 0;
+uint8 dimmer_brightness[2] = {0, 0};
 
 uint8 Licznik = 0;
 uint8 Jasnosc = 0;
@@ -232,7 +232,29 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 
 char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Color, float *ColorBrightness, float *Brightness ) {
 
+	uint8 n = 0;
+	
+	switch(ChannelNumber) {
+	case 0:
+		n = 0; break;
+	case 1:
+		n = 1; break;
+	default:
+		return 0;
+	}
+	
+	dimmer_brightness[n] = *Brightness;
+	
+	if ( dimmer_brightness[n] > 100 )
+		dimmer_brightness[n] = 100;
+	
 	if ( ChannelNumber == 0 ) {
+		//supla_esp_pwm_set_percent_duty(dimmer_brightness[n], 100, 0);
+	} else if ( ChannelNumber == 1 ) {
+		supla_esp_pwm_set_percent_duty(dimmer_brightness[n], 100, 1);
+	}
+	
+	/*if ( ChannelNumber == 0 ) {
 	dimmer_brightness = *Brightness;
 	
 	if ( dimmer_brightness > 100 )
@@ -252,21 +274,30 @@ char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Co
 	//supla_esp_pwm_set_percent_duty(dimmer_brightness, 100, 0);
 	supla_log(LOG_DEBUG, "Set dimmer 2 : %i", dimmer_brightness);
 	supla_esp_state.brightness[1] = dimmer_brightness;
-	}	
+	}	*/
 	
-	return 1;
+	return 1; 
 }
 
 
 void ICACHE_FLASH_ATTR supla_esp_board_get_rgbw_value(int ChannelNumber, int *Color, float *ColorBrightness, float *Brightness) {
 
 	if ( Brightness != NULL ) {
+		if ( ChannelNumber == 0 ) {
+			*Brightness = dimmer_brightness[0];
+		} else if ( ChannelNumber == 1 ) {
+			*Brightness = dimmer_brightness[1];
+		}
+	}
+	
+	
+/*	if ( Brightness != NULL ) {
 			if ( ChannelNumber == 0 ) {
 			*Brightness = supla_esp_state.brightness[0];
 		} else if ( ChannelNumber == 1 ) {
 			*Brightness = supla_esp_state.brightness[1];
 		}
-	}
+	} */
 
 }
 
