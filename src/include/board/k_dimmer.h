@@ -20,8 +20,8 @@
 #define K_DIMMER_H_
 
 #define SUPLA_PWM_COUNT    2
-#define DIMMER_CHANNEL  0
-//#define RGBWW_CONTROLLER_CHANNEL  0
+//#define DIMMER_CHANNEL  0
+#define RGBWW_CONTROLLER_CHANNEL  0
 
 #define RELAY_MAX_COUNT	   7
 
