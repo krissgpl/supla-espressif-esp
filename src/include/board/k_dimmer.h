@@ -59,25 +59,28 @@
 						
 #define BOARD_GPIO_OUTPUT_IS_HI	\
 		if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
-								return supla_esp_state.Relay[4] == 1 ? 1 : 0;	};	\
-		if ( port == B_UPD_PORT)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 6 = %i", supla_esp_state.Relay[6]);	\
-												return supla_esp_state.Relay[6] == 1 ? 1 : 0;	};	\
+											return supla_esp_state.Relay[4] == 1 ? 1 : 0;	};	\
 		if ( port == B_SWITCH)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 5 = %i", supla_esp_state.Relay[5]);	\
 												return supla_esp_state.Relay[5] == 1 ? 1 : 0;	};	\
+		if ( port == B_UPD_PORT)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 6 = %i", supla_esp_state.Relay[6]);	\
+												return supla_esp_state.Relay[6] == 1 ? 1 : 0;	};	\												
 								
-#define BOARD_ON_INPUT_INACTIVE if ( input_cfg->gpio_id == 12 || input_cfg->gpio_id  == 14 ) {	\
+#define BOARD_ON_INPUT_INACTIVE if (supla_last_state == !STATE_UPDATE) { \
+								if ( input_cfg->gpio_id == 12 || input_cfg->gpio_id  == 14 ) {	\
 								supla_log(LOG_DEBUG, "CHANNEL inactive = %i", input_cfg->channel);	\
-								supla_dimmer_smooth(1); };
+								supla_dimmer_smooth(1); }; };
 
-#define BOARD_ON_INPUT_ACTIVE if ( input_cfg->gpio_id == 12 || input_cfg->gpio_id  == 14 ) {	\
+#define BOARD_ON_INPUT_ACTIVE if (supla_last_state == !STATE_UPDATE) { \
+								if ( input_cfg->gpio_id == 12 || input_cfg->gpio_id  == 14 ) {	\
 								supla_log(LOG_DEBUG, "CHANNEL active = %i", input_cfg->channel);	\
-								supla_dimmer_smooth(0); };
+								supla_dimmer_smooth(0); }; };
 							  
-#define BOARD_INTR_HANDLER	supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
+#define BOARD_INTR_HANDLER	if (supla_last_state == !STATE_UPDATE) { \
+							supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
 							if ( gpio_status > 1 ) {	\
 							supla_log(LOG_DEBUG, "Input intr test");	\
 							supla_dimmer_smooth(2);	\
-							} else { supla_dimmer_smooth(3); };
+							} else { supla_dimmer_smooth(3); }; };
 							
 #define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;
