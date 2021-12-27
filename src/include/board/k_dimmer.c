@@ -252,7 +252,7 @@ char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Co
 		//supla_esp_pwm_set_percent_duty(dimmer_brightness[n], 100, 0);
 		supla_log(LOG_DEBUG, "Set dimmer 0 : %i", dimmer_brightness[n]);
 	} else if ( ChannelNumber == 1 ) {
-		supla_esp_pwm_set_percent_duty(dimmer_brightness[n], 100, 1);
+		//supla_esp_pwm_set_percent_duty(dimmer_brightness[n], 100, 1);
 		supla_log(LOG_DEBUG, "Set dimmer 1 : %i", dimmer_brightness[n]);
 	}
 	
