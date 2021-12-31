@@ -30,7 +30,7 @@ uint8 dimmer_brightness[2] = {0, 0};
 
 uint8 Licznik = 0;
 uint8 Jasnosc = 0;
-uint8 Czas = 0;
+int Czas;
 
 unsigned int Wlacznik = 0;
 unsigned int Start = 0;
@@ -142,8 +142,7 @@ void supla_dimmer_smooth(int hi) {
 
 if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 ) {
 	
-	Czas = supla_esp_state.brightness[1];
-	Czas = Czas * 1000;
+	Czas = supla_esp_state.brightness[1] * 1000;
 	Wlacznik = Wlacznik + 1;
 	supla_log(LOG_DEBUG, "Wlacznik = %i", Wlacznik);
 	supla_log(LOG_DEBUG, "Hi = %i", hi);
