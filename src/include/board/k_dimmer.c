@@ -140,7 +140,7 @@ void work_timer_cb(void *timer_arg) {
 
 void supla_dimmer_smooth(int hi) {
 
-if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 || supla_esp_cfg.FirmwareUpdate = 0 ) {
+if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 || supla_esp_cfg.FirmwareUpdate == 0 ) {
 	
 	Czas = supla_esp_state.brightness[1] * 1000;
 	Wlacznik = Wlacznik + 1;
