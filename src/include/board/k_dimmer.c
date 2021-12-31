@@ -146,6 +146,7 @@ if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 ) {
 	Wlacznik = Wlacznik + 1;
 	supla_log(LOG_DEBUG, "Wlacznik = %i", Wlacznik);
 	supla_log(LOG_DEBUG, "Hi = %i", hi);
+	supla_log(LOG_DEBUG, "Czas = %i", Czas);
 	
 	if ( Wlacznik == 2 && hi == 1 ) { supla_log(LOG_DEBUG, "Set dimmer 1 hi=1");
 					Licznik = 0;
@@ -252,28 +253,6 @@ char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Co
 		supla_log(LOG_DEBUG, "Set dimmer 1 : %i", dimmer_brightness[n]);
 	}
 	
-	/*if ( ChannelNumber == 0 ) {
-	dimmer_brightness = *Brightness;
-	
-	if ( dimmer_brightness > 100 )
-		dimmer_brightness = 100;
-		
-	//supla_esp_pwm_set_percent_duty(dimmer_brightness, 100, 0);
-	supla_log(LOG_DEBUG, "Set dimmer 1 : %i", dimmer_brightness);
-	supla_esp_state.brightness[0] = dimmer_brightness;
-	}
-	
-	if ( ChannelNumber == 1 ) {
-	dimmer_brightness = *Brightness;
-	
-	if ( dimmer_brightness > 100 )
-		dimmer_brightness = 100;
-		
-	//supla_esp_pwm_set_percent_duty(dimmer_brightness, 100, 0);
-	supla_log(LOG_DEBUG, "Set dimmer 2 : %i", dimmer_brightness);
-	supla_esp_state.brightness[1] = dimmer_brightness;
-	}	*/
-	
 	return 1; 
 }
 
@@ -287,16 +266,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_get_rgbw_value(int ChannelNumber, int *Co
 			*Brightness = dimmer_brightness[1];
 		}
 	}
-	
-	
-/*	if ( Brightness != NULL ) {
-			if ( ChannelNumber == 0 ) {
-			*Brightness = supla_esp_state.brightness[0];
-		} else if ( ChannelNumber == 1 ) {
-			*Brightness = supla_esp_state.brightness[1];
-		}
-	} */
-
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc) {
