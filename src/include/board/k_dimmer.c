@@ -146,7 +146,7 @@ if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 ) {
 	Wlacznik = Wlacznik + 1;
 	supla_log(LOG_DEBUG, "Wlacznik = %i", Wlacznik);
 	supla_log(LOG_DEBUG, "Hi = %i", hi);
-	supla_log(LOG_DEBUG, "Czas = %i", Czas);
+	supla_log(LOG_DEBUG, "Czas = %i ms", Czas);
 	
 	if ( Wlacznik == 2 && hi == 1 ) { supla_log(LOG_DEBUG, "Set dimmer 1 hi=1");
 					Licznik = 0;
