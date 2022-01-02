@@ -25,6 +25,8 @@
 int HRM_channel;
 int UPD_channel;
 int BLK_channel;
+int BL1_channel;
+int BL2_channel;
 
 uint8 dimmer_brightness[2] = {0, 0};
 
@@ -71,6 +73,11 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	supla_relay_cfg[2].flags = RELAY_FLAG_RESET;
     supla_relay_cfg[2].channel = 6;
 	
+	supla_relay_cfg[3].gpio_id = B_SENSOR_BLOCK1;		// wlacznik wejscia 1
+    supla_relay_cfg[3].channel = 7;
+	
+	supla_relay_cfg[4].gpio_id = B_SENSOR_BLOCK2;		// wlacznik wejscia 2
+    supla_relay_cfg[4].channel = 8;
 
 	
 	// ---------------------------------------
@@ -179,7 +186,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void) {
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
 
-	*channel_count = 7;
+	*channel_count = 9;
 
 	channels[0].Type = SUPLA_CHANNELTYPE_DIMMER;
 	channels[0].Number = 0;
@@ -224,7 +231,19 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[6].Default = 0;
 	channels[6].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
 	
+	channels[7].Number = 7;
+	channels[7].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[7].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[7].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[7].Default = 0;
+	channels[7].value[0] = supla_esp_gpio_relay_on(B_SENSOR_BLOCK1);
 	
+	channels[8].Number = 8;
+	channels[8].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[8].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[8].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[8].Default = 0;
+	channels[8].value[0] = supla_esp_gpio_relay_on(B_SENSOR_BLOCK2);
 }
 
 char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Color, float *ColorBrightness, float *Brightness ) {
@@ -270,9 +289,13 @@ void ICACHE_FLASH_ATTR supla_esp_board_get_rgbw_value(int ChannelNumber, int *Co
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc) {
 	
+	supla_esp_channel_value_changed(2, gpio__input_get(B_SENSOR_PORT1));
+	supla_esp_channel_value_changed(3, gpio__input_get(B_SENSOR_PORT2));
 	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_HARMONOGRAM));
 	supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_SWITCH));
 	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_UPD_PORT));
+	supla_esp_channel_value_changed(7, supla_esp_gpio_relay_on(B_SENSOR_BLOCK1));
+	supla_esp_channel_value_changed(8, supla_esp_gpio_relay_on(B_SENSOR_BLOCK2));
 	
 }
 
@@ -283,6 +306,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		HRM_channel = 4;
 		BLK_channel = 5;
 		UPD_channel = 6;
+		BL1_channel = 7;
+		BL2_channel = 8;
 				
 if ( port == B_UPD_PORT ) {	
 
@@ -326,4 +351,22 @@ if ( port == B_SWITCH ) {
 		supla_esp_cfg_save(&supla_esp_cfg);
 		supla_esp_channel_value_changed(BLK_channel, hi);
 	}
+	
+if ( port == B_SENSOR_BLOCK1) {	
+			
+		supla_esp_state.Relay[BL1_channel] = hi;
+		supla_esp_save_state(SAVE_STATE_DELAY);
+		supla_esp_channel_value_changed(BL1_channel, supla_esp_state.Relay[BL1_channel]);
+		supla_esp_cfg_save(&supla_esp_cfg);
+		supla_esp_channel_value_changed(BL1_channel, hi);
+	}
+	
+if ( port == B_SENSOR_BLOCK2) {	
+			
+		supla_esp_state.Relay[BL2_channel] = hi;
+		supla_esp_save_state(SAVE_STATE_DELAY);
+		supla_esp_channel_value_changed(BL2_channel, supla_esp_state.Relay[BL2_channel]);
+		supla_esp_cfg_save(&supla_esp_cfg);
+		supla_esp_channel_value_changed(BL2_channel, hi);
+	}	
 }
