@@ -88,7 +88,7 @@
 							if ( gpio_status > 1 || gpio_status < 14 || supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) ) {	\
 							supla_log(LOG_DEBUG, "Input intr test");	\
 							supla_dimmer_smooth(2);	\
-							} else ( gpio_status > 12 || supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) ) {	\
+							} else if ( gpio_status > 12 || supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) ) {	\
 							supla_log(LOG_DEBUG, "Input intr test");	\
 							supla_dimmer_smooth(2);	\
 							} else { supla_dimmer_smooth(3); }; };
