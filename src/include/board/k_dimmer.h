@@ -87,11 +87,11 @@
 							supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
 							if ( gpio_status > 1 && gpio_status < 14 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) ) {	\
 							supla_log(LOG_DEBUG, "Input intr test");	\
-							supla_dimmer_smooth(2);	\
-							} else if ( gpio_status > 12 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) ) {	\
+							supla_dimmer_smooth(2); };	\
+							if ( gpio_status > 12 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) ) {	\
 							supla_log(LOG_DEBUG, "Input intr test");	\
-							supla_dimmer_smooth(2);	\
-							} else { supla_dimmer_smooth(3); }; };
+							supla_dimmer_smooth(2);	};
+							
 							
 #define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;
