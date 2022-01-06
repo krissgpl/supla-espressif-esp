@@ -85,11 +85,11 @@
 							  
 #define BOARD_INTR_HANDLER	if (supla_last_state == STATE_CONNECTED) { \
 							supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
-							if ( gpio_status > 1 && gpio_status < 14 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) ) {	\
-							supla_log(LOG_DEBUG, "Input intr test");	\
+							if ( gpio_status > 1 && gpio_status < 16384 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) ) {	\
+							supla_log(LOG_DEBUG, "Input intr test gpio 12");	\
 							supla_dimmer_smooth(1); };	\
-							if ( gpio_status > 12 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) ) {	\
-							supla_log(LOG_DEBUG, "Input intr test");	\
+							if ( gpio_status > 4096 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) ) {	\
+							supla_log(LOG_DEBUG, "Input intr test gpio 14");	\
 							supla_dimmer_smooth(1);	} };
 							
 							
