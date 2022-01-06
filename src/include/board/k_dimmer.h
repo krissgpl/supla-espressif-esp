@@ -90,7 +90,7 @@
 							supla_dimmer_smooth(2); };	\
 							if ( gpio_status > 12 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) ) {	\
 							supla_log(LOG_DEBUG, "Input intr test");	\
-							supla_dimmer_smooth(2);	};
+							supla_dimmer_smooth(2);	} };
 							
 							
 #define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
