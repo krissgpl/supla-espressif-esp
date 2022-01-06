@@ -140,6 +140,7 @@ void work_timer_cb(void *timer_arg) {
 	} else { Licznik = supla_esp_state.brightness[0]; };
 	
 	Wlacznik = 0;
+	Start = 0;
 	os_timer_disarm(&dimmer_timer);
 	os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_OFF_cb, NULL);
 	os_timer_arm(&dimmer_timer, 20, 1);
@@ -155,20 +156,21 @@ if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 && supla_esp_cfg.FirmwareUpdate 
 	supla_log(LOG_DEBUG, "Hi = %i", hi);
 	supla_log(LOG_DEBUG, "Czas = %i ms", Czas);
 	
-	if ( Wlacznik == 2 && hi == 1 ) { supla_log(LOG_DEBUG, "Set dimmer 1 hi=1");
-					Licznik = 0;
-					os_timer_disarm(&dimmer_timer);
-					os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-					os_timer_arm(&dimmer_timer, 20, 1);
-					};
-	
-	if ( hi == 2 && Start == 0 ) { supla_log(LOG_DEBUG, "Set dimmer 1 hi=2");
+	if ( Wlacznik == 2 && hi == 1 && Start == 0 ) { supla_log(LOG_DEBUG, "Set dimmer 1 hi=1");
 					Licznik = 0;
 					Start = 1;
 					os_timer_disarm(&dimmer_timer);
 					os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
 					os_timer_arm(&dimmer_timer, 20, 1);
 					};
+	
+/*	if ( hi == 2 && Start == 0 ) { supla_log(LOG_DEBUG, "Set dimmer 1 hi=2");
+					Licznik = 0;
+					Start = 1;
+					os_timer_disarm(&dimmer_timer);
+					os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
+					os_timer_arm(&dimmer_timer, 20, 1);
+					}; */
 
 	if ( hi == 0 ) { 
 					os_timer_disarm(&work_timer);
