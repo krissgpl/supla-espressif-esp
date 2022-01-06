@@ -110,11 +110,13 @@ supla_esp_update_reboot(char uf_finish) {
 
 	if ( uf_finish ) {
 
+		supla_log(LOG_DEBUG, "supla_UPGRADE_FLAG_FINISH");
 		system_upgrade_flag_set(UPGRADE_FLAG_FINISH);
 		system_upgrade_reboot();
 
 	} else {
 
+		supla_log(LOG_DEBUG, "supla_UPGRADE_FLAG_IDLE");
 		system_upgrade_flag_set(UPGRADE_FLAG_IDLE);
 		supla_system_restart();
 	}
