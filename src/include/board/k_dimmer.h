@@ -107,4 +107,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
 void supla_dimmer_smooth(int hi);
 
+void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
+
+char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
+    char dev_name[25], const char mac[6], const char data_saved);
+
 #endif
