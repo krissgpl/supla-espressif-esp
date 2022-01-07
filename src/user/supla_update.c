@@ -111,6 +111,8 @@ supla_esp_update_reboot(char uf_finish) {
 	if ( uf_finish ) {
 
 		supla_log(LOG_DEBUG, "supla_UPGRADE_FLAG_FINISH");
+		supla_esp_cfg.UpdateStatus = 1;		// update status - udany = 1
+		supla_esp_cfg_save(&supla_esp_cfg);
 		system_upgrade_flag_set(UPGRADE_FLAG_FINISH);
 		system_upgrade_reboot();
 
@@ -307,9 +309,6 @@ supla_esp_update_verify_and_reboot (void) {
 
 
 	supla_log(LOG_DEBUG, "FINISH... %i", verified);
-	
-	//supla_esp_cfg.UpdateStatus = 1;		// update status - udany = 1
-	//supla_esp_cfg_save(&supla_esp_cfg);
 	
 	supla_esp_update_reboot(verified);
 
