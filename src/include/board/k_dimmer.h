@@ -20,14 +20,13 @@
 #define K_DIMMER_H_
 
 #define SUPLA_PWM_COUNT    2
-//#define DIMMER_CHANNEL  0
 #define RGBWW_CONTROLLER_CHANNEL  0
 
 #define RELAY_MAX_COUNT	   9
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.8.42.2"
+#define SUPLA_ESP_SOFTVER "2.8.42.3"
 #define AP_SSID "STAIRCASE_DIMMER"
 #define ESP_HOSTNAME "STAIRCASE_DIMMER"
 
@@ -50,10 +49,13 @@
 
 #define USE_GPIO16_OUTPUT
 
-#define BOARD_GPIO_OUTPUT_SET_HI	\
-		if (port >= 20) {supla_esp_board_gpiooutput_set_hi(port, hi); 	\
-						supla_log(LOG_DEBUG, "PORT 20 MAKRO");	\
-						return;  };	\
+#define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) \
+	{if (port == LED_RED_PORT) { hi =!supla_esp_gpio_output_is_hi(B_SWITCH);\
+	 } else if (port==B_SWITCH) {\
+		supla_esp_gpio_set_led(hi, 1, 1); }\
+	  else if (port == 20) { \
+		supla_esp_board_gpiooutput_set_hi(port, hi); 	\
+		return; } };
 						
 #define BOARD_GPIO_OUTPUT_IS_HI	\
 		if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
