@@ -140,7 +140,6 @@ void work_timer_cb(void *timer_arg) {
 	} else { Licznik = supla_esp_state.brightness[0]; };
 	
 	Wlacznik = 0;
-	Start = 0;
 	os_timer_disarm(&dimmer_timer);
 	os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_OFF_cb, NULL);
 	os_timer_arm(&dimmer_timer, 20, 1);
