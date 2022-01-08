@@ -89,10 +89,10 @@
 								char hi2;	\
 								if ( input_cfg->gpio_id == 12 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1 ) {	\
 									supla_log(LOG_DEBUG, "CHANNEL active = %i", input_cfg->channel);	\
-									hi1 = 0 };	\
+									hi1 = 0; };	\
 								if ( input_cfg->gpio_id == 14 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1 ) {	\
 									supla_log(LOG_DEBUG, "CHANNEL active = %i", input_cfg->channel);	\
-									hi2 = 0 };	\
+									hi2 = 0; };	\
 								if ( input_cfg->gpio_id == 12 || input_cfg->gpio_id == 14 ) supla_dimmer_smooth(hi1, hi2);	\
 									};
 							  
