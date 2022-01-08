@@ -145,9 +145,9 @@ void work_timer_cb(void *timer_arg) {
 	os_timer_arm(&dimmer_timer, 20, 1);
 }
 
-void supla_dimmer_smooth(int hi) {
+void supla_dimmer_smooth(int a, int b) {
 
-	supla_log(LOG_DEBUG, "dimmer smooth Hi = %i", hi);
+	supla_log(LOG_DEBUG, "dimmer smooth Hi1 = %i, Hi2 = %i", a, b);
 /*
 if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 && supla_esp_cfg.FirmwareUpdate == 0 ) {
 	
