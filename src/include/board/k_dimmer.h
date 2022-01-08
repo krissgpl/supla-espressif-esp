@@ -53,6 +53,9 @@
 
 #define USE_GPIO16_OUTPUT
 
+extern uint8 hi1 = 0;	
+extern uint8 hi2 = 0;
+
 #define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) {\
 									if ( port == LED_RED_PORT ) { hi = supla_esp_gpio_output_is_hi(B_SWITCH);\
 									} else if ( port==B_SWITCH ) { supla_esp_gpio_set_led(hi, 1, 1); } };	\
@@ -73,8 +76,6 @@
 												return supla_esp_state.Relay[8] == 1 ? 1 : 0;	};	\
 								
 #define BOARD_ON_INPUT_INACTIVE if (supla_last_state == STATE_CONNECTED) { \
-									uint8 hi1 = 0;	\
-									uint8 hi2 = 0;	\
 									if ( input_cfg->gpio_id == 12 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1 ) {	\
 										supla_log(LOG_DEBUG, "CHANNEL inactive = %i", input_cfg->channel);	\
 										hi1 = 1; };	\
@@ -87,10 +88,12 @@
 #define BOARD_ON_INPUT_ACTIVE if (supla_last_state == STATE_CONNECTED) { \
 								if ( input_cfg->gpio_id == 12 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1 ) {	\
 									supla_log(LOG_DEBUG, "CHANNEL active = %i", input_cfg->channel);	\
-									supla_dimmer_smooth(0, 0); };	\
+									hi1 = 0 };	\
 								if ( input_cfg->gpio_id == 14 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1 ) {	\
 									supla_log(LOG_DEBUG, "CHANNEL active = %i", input_cfg->channel);	\
-									supla_dimmer_smooth(0, 1); };	};
+									hi2 = 0 };	\
+								if ( input_cfg->gpio_id == 12 || input_cfg->gpio_id == 14 ) supla_dimmer_smooth(hi1, hi2);	\
+									};
 							  
 #define BOARD_INTR_HANDLER	if (supla_last_state == STATE_CONNECTED) { \
 							supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
