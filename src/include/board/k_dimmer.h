@@ -78,7 +78,7 @@
 										supla_dimmer_smooth(1); };	\
 									if ( input_cfg->gpio_id == 14 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1 ) {	\
 										supla_log(LOG_DEBUG, "CHANNEL inactive = %i", input_cfg->channel);	\
-										supla_dimmer_smooth(1); }; }; 
+										supla_dimmer_smooth(11); }; }; 
 
 #define BOARD_ON_INPUT_ACTIVE if (supla_last_state == STATE_CONNECTED) { \
 								if ( input_cfg->gpio_id == 12 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1 ) {	\
@@ -86,7 +86,7 @@
 									supla_dimmer_smooth(0); };	\
 								if ( input_cfg->gpio_id == 14 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1 ) {	\
 									supla_log(LOG_DEBUG, "CHANNEL active = %i", input_cfg->channel);	\
-									supla_dimmer_smooth(0); };	};
+									supla_dimmer_smooth(00); };	};
 							  
 #define BOARD_INTR_HANDLER	if (supla_last_state == STATE_CONNECTED) { \
 							supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
@@ -95,7 +95,7 @@
 							supla_dimmer_smooth(2); };	\
 							if ( gpio_status > 4096 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) ) {	\
 							supla_log(LOG_DEBUG, "Input intr test gpio 14");	\
-							supla_dimmer_smooth(2);	} };
+							supla_dimmer_smooth(22);	} };
 							
 							
 #define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
