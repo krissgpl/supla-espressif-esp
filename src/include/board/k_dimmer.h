@@ -57,7 +57,7 @@
 	{if (port == LED_RED_PORT) { hi =!supla_esp_gpio_output_is_hi(B_SWITCH);\
 	 } else if (port==B_SWITCH) {\
 		supla_esp_gpio_set_led(hi, 1, 1); }\
-	  else if (port == 20) { \
+	  else if (port >= 20) { \
 		supla_esp_board_gpiooutput_set_hi(port, hi); 	\
 		return; } };
 						
