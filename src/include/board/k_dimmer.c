@@ -91,8 +91,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTDI_U);			// pullup gpio 12
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTMS_U);			// pullup gpio 14
 	
-	supla_dimmer_smooth(0, 0);
-
 }
 
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {
@@ -147,10 +145,8 @@ void work_timer_cb(void *timer_arg) {
 	os_timer_arm(&dimmer_timer, 20, 1);
 }
 
-void supla_dimmer_smooth(int a, int b) {
+void supla_dimmer_smooth(int hi) {
 
-	supla_log(LOG_DEBUG, "dimmer smooth Hi1 = %i, Hi2 = %i", a, b);
-/*
 if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 && supla_esp_cfg.FirmwareUpdate == 0 ) {
 	
 	Czas = supla_esp_state.brightness[1] * 1000;
@@ -178,7 +174,7 @@ if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 && supla_esp_cfg.FirmwareUpdate 
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 					os_timer_arm(&work_timer, Czas, 0); };
-}; */
+}; 
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void) {
