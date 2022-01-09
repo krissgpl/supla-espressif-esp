@@ -147,7 +147,7 @@ void work_timer_cb(void *timer_arg) {
 
 void supla_dimmer_smooth(int hi) {
 
-if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 && supla_esp_cfg.FirmwareUpdate == 0 ) {
+/*if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 && supla_esp_cfg.FirmwareUpdate == 0 ) {
 	
 	Czas = supla_esp_state.brightness[1] * 1000;
 	Wlacznik = Wlacznik + 1;
@@ -174,7 +174,7 @@ if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 && supla_esp_cfg.FirmwareUpdate 
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 					os_timer_arm(&work_timer, Czas, 0); };
-}; 
+}; */
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void) {
