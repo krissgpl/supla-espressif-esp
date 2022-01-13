@@ -104,7 +104,8 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "Dimmer Timer ON start");
 	
-	Licznik = Licznik + 1;
+	Licznik ++;
+	
 	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
 	supla_esp_pwm_set_percent_duty(Licznik, 100, 0);
 	
@@ -121,7 +122,7 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "Dimmer Timer OFF start");
 	
-	Licznik = Licznik - 1;
+	Licznik --;
 	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
 	supla_esp_pwm_set_percent_duty(Licznik, 100, 0);
 	
@@ -139,16 +140,54 @@ void work_timer_cb(void *timer_arg) {
 	if ( supla_esp_gpio_output_is_hi(B_HARMONOGRAM) == 1 ) { Licznik = 100;
 	} else { Licznik = supla_esp_state.brightness[0]; };
 	
-	Wlacznik = 0;
-	os_timer_disarm(&dimmer_timer);
+	Wlacznik = 0;	// testowo
+	
+/*	os_timer_disarm(&dimmer_timer);
 	os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_OFF_cb, NULL);
-	os_timer_arm(&dimmer_timer, 20, 1);
+	os_timer_arm(&dimmer_timer, 20, 1); */
 }
 
 void supla_dimmer_smooth(int in1, int in2) {
 	
 	supla_log(LOG_DEBUG, "dimmer_smooth CH1 = %i, CH2 = %i", in1, in2);
+	
+	if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 && supla_esp_cfg.FirmwareUpdate == 0 ) {
+		
+		Czas = supla_esp_state.brightness[1] * 1000;
+		supla_log(LOG_DEBUG, "Czas = %i ms", Czas);
+		supla_log(LOG_DEBUG, "Wlacznik = %i", Wlacznik);
+		
+		if ( Wlacznik == 0 && in1 == 1 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1) { 
+			supla_log(LOG_DEBUG, "Set dimmer 1 in1=1");
+			Licznik = 0;
+			Wlacznik == 1;
+		/*	os_timer_disarm(&dimmer_timer);
+			os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
+			os_timer_arm(&dimmer_timer, 20, 1); */
+		};
+		
+		if ( Wlacznik == 0 && in2 == 1 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1) { 
+			supla_log(LOG_DEBUG, "Set dimmer 2 in2=1");
+			Licznik = 0;
+			Wlacznik == 1;
+		/*	os_timer_disarm(&dimmer_timer);
+			os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
+			os_timer_arm(&dimmer_timer, 20, 1); */
+		};
 
+		if ( Wlacznik == 1 && in1 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1) {
+			os_timer_disarm(&work_timer);
+			os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
+			os_timer_arm(&work_timer, Czas, 0); 
+		};
+		
+		if ( Wlacznik == 1 && in2 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1) {
+			os_timer_disarm(&work_timer);
+			os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
+			os_timer_arm(&work_timer, Czas, 0); 
+		};
+		
+		
 /*if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 && supla_esp_cfg.FirmwareUpdate == 0 ) {
 	
 	Czas = supla_esp_state.brightness[1] * 1000;
