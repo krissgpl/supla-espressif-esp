@@ -92,7 +92,7 @@
 									supla_log(LOG_DEBUG, "CHANNEL active = %i", input_cfg->channel);	\
 									supla_dimmer_smooth(!gpio__input_get(B_SENSOR_PORT1), !gpio__input_get(B_SENSOR_PORT2)); }; }
 */							  
-#define BOARD_INTR_HANDLER	if (supla_last_state == STATE_CONNECTED) { \
+#define BOARD_INTR_HANDLER	if ( supla_last_state == STATE_CONNECTED && gpio_status > 1 ) { \
 							supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
 							supla_dimmer_smooth(!gpio__input_get(B_SENSOR_PORT1), !gpio__input_get(B_SENSOR_PORT2)); } 
 							
