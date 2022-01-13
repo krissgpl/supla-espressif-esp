@@ -160,7 +160,7 @@ void supla_dimmer_smooth(int in1, int in2) {
 		if ( Wlacznik == 0 && in1 == 1 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1) { 
 			supla_log(LOG_DEBUG, "Set dimmer 1 in1=1");
 			Licznik = 0;
-			Wlacznik == 1;
+			Wlacznik = 1;
 		/*	os_timer_disarm(&dimmer_timer);
 			os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
 			os_timer_arm(&dimmer_timer, 20, 1); */
@@ -169,7 +169,7 @@ void supla_dimmer_smooth(int in1, int in2) {
 		if ( Wlacznik == 0 && in2 == 1 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1) { 
 			supla_log(LOG_DEBUG, "Set dimmer 2 in2=1");
 			Licznik = 0;
-			Wlacznik == 1;
+			Wlacznik = 1;
 		/*	os_timer_disarm(&dimmer_timer);
 			os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
 			os_timer_arm(&dimmer_timer, 20, 1); */
