@@ -3,13 +3,13 @@
 HEIGHT=15
 WIDTH=40
 CHOICE_HEIGHT=4
-BACKTITLE="Backtitle here"
-TITLE="Title here"
-MENU="Choose one of the following options:"
+BACKTITLE="SUPLA FIRMWARE COMPILER"
+TITLE="PŁYTKI"
+MENU="Wybierz płytkę:"
 
-OPTIONS=(1 "Option 1"
-         2 "Option 2"
-         3 "Option 3")
+OPTIONS=(1 "k_rs_module_v3"
+         2 "k_dimmer"
+         3 "k_switch_dual")
 
 CHOICE=$(dialog --clear \
                 --backtitle "$BACKTITLE" \
@@ -22,12 +22,14 @@ CHOICE=$(dialog --clear \
 clear
 case $CHOICE in
         1)
-            echo "You chose Option 1"
+            BOARD=k_rs_module_v3
             ;;
         2)
-            echo "You chose Option 2"
+            BOARD=k_dimmer
             ;;
         3)
-            echo "You chose Option 3"
+            BOARD=k_switch_dual
             ;;
 esac
+
+./build.sh "$BOARD"
