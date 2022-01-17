@@ -33,3 +33,4 @@ case $CHOICE in
 esac
 
 ./build.sh "$BOARD"
+echo "gotowe"
