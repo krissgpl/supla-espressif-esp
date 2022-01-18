@@ -7,9 +7,17 @@ BACKTITLE="SUPLA FIRMWARE COMPILER"
 TITLE="PLYTKI"
 MENU="Wybierz plytke:"
 
+DIALOG_CANCEL=1
+DIALOG_ESC=255
+
 OPTIONS=(1 "k_rs_module_v3"
          2 "k_dimmer"
          3 "k_switch_dual")
+
+while true
+do
+
+  exec 3>&1
 
 CHOICE=$(dialog --clear \
                 --backtitle "$BACKTITLE" \
@@ -17,9 +25,22 @@ CHOICE=$(dialog --clear \
                 --menu "$MENU" \
                 $HEIGHT $WIDTH $CHOICE_HEIGHT \
                 "${OPTIONS[@]}" \
-                2>&1 >/dev/tty)
+                2>&1 1>&3)
+  exit_status=$?
+  exec 3>&-
+  case $exit_status in
+    $DIALOG_CANCEL)
+      clear
+      echo "Program terminated."
+      exit
+      ;;
+    $DIALOG_ESC)
+      clear
+      echo "Program aborted." >&2
+      exit 1
+      ;;
+  esac
 
-clear
 case $CHOICE in
         1)
             BOARD=k_rs_module_v3
@@ -32,11 +53,13 @@ case $CHOICE in
             ;;
 esac
 
+done
+
 ./build.sh "$BOARD"
 
 echo "gotowe"
 
-dialog --clear --title "Czy skompilowac USER2 Tak/nie" --backtitle "USER2" --yesno "Twój wybór:" 10 40
+dialog --clear --title "Czy skompilowac USER2 Tak/nie" --backtitle "USER2" --yesno "Twoj wybor:" 10 40
     YOUR_CHOOSE=$?;
     if [ "$YOUR_CHOOSE" == 0 ];
     then
