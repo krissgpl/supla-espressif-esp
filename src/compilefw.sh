@@ -40,20 +40,20 @@ while true; do
   case $CHOICE in
         1)
             BOARD=k_rs_module_v3
-			./build.sh "$BOARD"
+			break
             ;;
         2)
             BOARD=k_dimmer
-			./build.sh "$BOARD"
+			break
             ;;
         3)
             BOARD=k_switch_dual
-			./build.sh "$BOARD"
+			break
             ;;
   esac
 done
 
-
+./build.sh "$BOARD"
 
 echo "gotowe"
 
