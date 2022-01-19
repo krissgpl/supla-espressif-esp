@@ -79,8 +79,13 @@ dialog --clear --backtitle "Podpisanie firmware dla $BOARD" --yesno "Czy podpisa
     if [ "$YOUR_CHOOSE" == 0 ];
     then
         echo "Podpisanie firmware dla $BOARD";
-		PLIK="$BOARD"_user1."FLASH_SIZE"_DIO.new.6.sdk3x.bin;
+		PLIK="$BOARD"_user1."$FLASH_SIZE"_DIO.new.6.sdk3x.bin;
+		PLIK2="$BOARD"_user2."$FLASH_SIZE"_DIO.new.6.sdk3x.bin;
 		echo "Firmware : $PLIK";
+		echo "Firmware2 : $PLIK2";
+		cd  /CProjects/supla-espressif-esp/firmware
+		supla-esp-sigtool -k klucz -s $PLIK
+		supla-esp-sigtool -k klucz -s $PLIK2
     elif [ "$YOUR_CHOOSE" == 1 ];
     then
         echo "Wybrałeś Nie";
