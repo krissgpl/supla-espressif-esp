@@ -56,41 +56,60 @@ while true; do
   esac
 done
 
+PLIK="$BOARD"_user1."$FLASH_SIZE"_DIO.new.6.sdk3x.bin;
+PLIK2="$BOARD"_user2."$FLASH_SIZE"_DIO.new.6.sdk3x.bin;
+
+rm -f /CProjects/supla-espressif-esp/firmware/$PLIK
+rm -f /CProjects/supla-espressif-esp/firmware/$PLIK2
+	
+
 ./build.sh "$BOARD"
 
-echo "gotowe"
+if [ -e /CProjects/supla-espressif-esp/firmware/$PLIK ]
+then
 
-dialog --clear --backtitle "USER2 dla $BOARD" --yesno "Czy skompilowac USER2 dla plytki $BOARD ?" 10 40
-    YOUR_CHOOSE=$?;
-    if [ "$YOUR_CHOOSE" == 0 ];
-    then
-        ./build.sh "$BOARD" user2
-    elif [ "$YOUR_CHOOSE" == 1 ];
-    then
-        echo "Wybrałeś Nie";
-		exit;
-    else
-        echo "Niczego nie wybrałeś";
-		exit;
-    fi
+	echo "gotowe"
 
-dialog --clear --backtitle "Podpisanie firmware dla $BOARD" --yesno "Czy podpisac firmware dla plytki $BOARD ?" 10 40
-    YOUR_CHOOSE=$?;
-    if [ "$YOUR_CHOOSE" == 0 ];
-    then
-        echo "Podpisanie firmware dla $BOARD";
-		PLIK="$BOARD"_user1."$FLASH_SIZE"_DIO.new.6.sdk3x.bin;
-		PLIK2="$BOARD"_user2."$FLASH_SIZE"_DIO.new.6.sdk3x.bin;
-		echo "Firmware : $PLIK";
-		echo "Firmware2 : $PLIK2";
-		cd  /CProjects/supla-espressif-esp/firmware
-		supla-esp-sigtool -k klucz -s $PLIK
-		supla-esp-sigtool -k klucz -s $PLIK2
-    elif [ "$YOUR_CHOOSE" == 1 ];
-    then
-        echo "Wybrałeś Nie";
-		exit;
-    else
-        echo "Niczego nie wybrałeś";
-		exit;
-    fi
+	dialog --clear --backtitle "USER2 dla $BOARD" --yesno "Czy skompilowac USER2 dla plytki $BOARD ?" 10 40
+		YOUR_CHOOSE=$?;
+		if [ "$YOUR_CHOOSE" == 0 ];
+		then
+			./build.sh "$BOARD" user2
+		elif [ "$YOUR_CHOOSE" == 1 ];
+		then
+			echo "Wybrałeś Nie";
+			exit;
+		else
+			echo "Niczego nie wybrałeś";
+			exit;
+		fi
+		
+	if [ -e /CProjects/supla-espressif-esp/firmware/$PLIK2 ]
+	then	
+
+	dialog --clear --backtitle "Podpisanie firmware dla $BOARD" --yesno "Czy podpisac firmware dla plytki $BOARD ?" 10 40
+		YOUR_CHOOSE=$?;
+		if [ "$YOUR_CHOOSE" == 0 ];
+		then
+			echo "Podpisanie firmware dla $BOARD";
+			echo "Firmware : $PLIK";
+			echo "Firmware2 : $PLIK2";
+			cd  /CProjects/supla-espressif-esp/firmware
+			supla-esp-sigtool -k klucz -s $PLIK
+			supla-esp-sigtool -k klucz -s $PLIK2
+		elif [ "$YOUR_CHOOSE" == 1 ];
+		then
+			echo "Wybrałeś Nie";
+			exit;
+		else
+			echo "Niczego nie wybrałeś";
+			exit;
+		fi
+	else
+		dialog --clear --msgbox "Nie udalo sie skompilowac $BOARD user2 ! Sprawdz log." 10 40
+		exit
+	fi
+		
+else
+	dialog --clear --msgbox "Nie udalo sie skompilowac $BOARD user1 ! Sprawdz log." 10 40
+fi
