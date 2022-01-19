@@ -57,7 +57,7 @@ done
 
 echo "gotowe"
 
-dialog --clear --title "Czy skompilowac USER2 Tak/nie" --backtitle "USER2" --yesno "Twoj wybor:" 10 40
+dialog --clear --backtitle "USER2 dla $BOARD" --yesno "Czy skompilowac USER2 dla plytki $BOARD ?" 10 40
     YOUR_CHOOSE=$?;
     if [ "$YOUR_CHOOSE" == 0 ];
     then
