@@ -40,14 +40,17 @@ while true; do
   case $CHOICE in
         1)
             BOARD=k_rs_module_v3
+			FLASH_SIZE=4096
 			break
             ;;
         2)
             BOARD=k_dimmer
+			FLASH_SIZE=4096
 			break
             ;;
         3)
             BOARD=k_switch_dual
+			FLASH_SIZE=4096
 			break
             ;;
   esac
@@ -76,7 +79,8 @@ dialog --clear --backtitle "Podpisanie firmware dla $BOARD" --yesno "Czy podpisa
     if [ "$YOUR_CHOOSE" == 0 ];
     then
         echo "Podpisanie firmware dla $BOARD";
-		echo "Firmware : $BOARD_user1.4096_DIO.new.6.sdk3x.bin";
+		PLIK="$BOARD"_user1."FLASH_SIZE"_DIO.new.6.sdk3x.bin;
+		echo "Firmware : $PLIK";
     elif [ "$YOUR_CHOOSE" == 1 ];
     then
         echo "Wybrałeś Nie";
