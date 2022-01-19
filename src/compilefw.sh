@@ -71,11 +71,12 @@ dialog --clear --backtitle "USER2 dla $BOARD" --yesno "Czy skompilowac USER2 dla
 		exit;
     fi
 
-dialog --clear --title "Czy podpisac firmware Tak/nie" --backtitle "USER2" --yesno "Twoj wybor:" 10 40
+dialog --clear --backtitle "Podpisanie firmware dla $BOARD" --yesno "Czy podpisac firmware dla plytki $BOARD ?" 10 40
     YOUR_CHOOSE=$?;
     if [ "$YOUR_CHOOSE" == 0 ];
     then
-        ./build.sh "$BOARD" user2
+        echo "Podpisanie firmware dla $BOARD";
+		echo "Firmware : $BOARD_user1.4096_DIO.new.6.sdk3x.bin";
     elif [ "$YOUR_CHOOSE" == 1 ];
     then
         echo "Wybrałeś Nie";
