@@ -216,7 +216,7 @@ while true; do
   esac
 done
 
-if [ NOSSL == 1 ]
+if [ $NOSSL == 1 ]
 then
 	PLIK="$BOARD"_nossl_user1."$FLASH_SIZE"_DIO.new.6.sdk3x.bin;
 	PLIK2="$BOARD"_nossl_user2."$FLASH_SIZE"_DIO.new.6.sdk3x.bin;
