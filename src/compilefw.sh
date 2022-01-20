@@ -110,6 +110,7 @@ then
 				cp /CProjects/supla-espressif-esp/firmware/$PLIK /CProjects/supla-espressif-esp/firmware/signed/$PLIK
 				rm -f /CProjects/supla-espressif-esp/firmware/$PLIK
 				rm -f /CProjects/supla-espressif-esp/firmware/result.txt
+				pause 1
 				dialog --clear --msgbox "Firmware $PLIK podpisane i przeniesione do firmware/signed." 10 40
 			else
 				echo "Nie udalo sie podpisac firmware $PLIK !";
@@ -122,6 +123,7 @@ then
 				cp /CProjects/supla-espressif-esp/firmware/$PLIK2 /CProjects/supla-espressif-esp/firmware/signed/$PLIK2
 				rm -f /CProjects/supla-espressif-esp/firmware/$PLIK2
 				rm -f /CProjects/supla-espressif-esp/firmware/result2.txt
+				pause 1
 				dialog --clear --msgbox "Firmware $PLIK2 podpisane i przeniesione do firmware/signed." 10 40
 			else
 				echo "Nie udalo sie podpisac firmware $PLIK2 !";
