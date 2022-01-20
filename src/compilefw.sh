@@ -78,7 +78,7 @@ while true; do
 			break
             ;;
         3)
-            BOARD=k_dimmer
+            BOARD=k_dimmer_nossl
 			FLASH_SIZE=4096
 			break
             ;;
