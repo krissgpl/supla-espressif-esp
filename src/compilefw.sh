@@ -105,6 +105,7 @@ then
 			if  grep -q 'verified' result.txt
 			then
 				echo "Firmware $PLIK podpisane prawidlowo";
+				mkdir -p /CProjects/supla-espressif-esp/firmware/signed
 				rm -f /CProjects/supla-espressif-esp/firmware/signed/$PLIK
 				cp /CProjects/supla-espressif-esp/firmware/$PLIK /CProjects/supla-espressif-esp/firmware/signed/$PLIK
 				rm -f /CProjects/supla-espressif-esp/firmware/$PLIK
@@ -116,6 +117,7 @@ then
 			if  grep -q 'verified' result2.txt
 			then
 				echo "Firmware $PLIK2 podpisane prawidlowo";
+				mkdir -p /CProjects/supla-espressif-esp/firmware/signed
 				rm -f /CProjects/supla-espressif-esp/firmware/signed/$PLIK2
 				cp /CProjects/supla-espressif-esp/firmware/$PLIK2 /CProjects/supla-espressif-esp/firmware/signed/$PLIK2
 				rm -f /CProjects/supla-espressif-esp/firmware/$PLIK2
