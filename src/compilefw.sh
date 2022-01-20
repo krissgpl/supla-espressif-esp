@@ -2,16 +2,42 @@
 
 DIALOG_CANCEL=1
 DIALOG_ESC=255
-HEIGHT=15
+HEIGHT=30
 WIDTH=40
-CHOICE_HEIGHT=4
+CHOICE_HEIGHT=29
 BACKTITLE="SUPLA FIRMWARE COMPILER"
 TITLE="PLYTKI"
 MENU="Wybierz plytke:"
 
-OPTIONS=(1 "k_rs_module_v3"
-         2 "k_dimmer"
-         3 "k_switch_dual")
+OPTIONS=(1 "k_gate_module"
+		 2 "k_gate_module_v3"
+		 3 "k_dimmer"
+		 4 "k_gniazdko_neo"
+		 5 "k_rs_module_v3"
+		 6 "k_socket_v2"
+		 7 "k_socket_dual_v2"
+		 8 "k_switch_dual"
+		 9 "k_socket_SSR"
+		 10 "k_yunschan"
+		 11 "k_socket_01"
+		 12 "k_smoke_module"
+		 13 "k_smoke_module_ds18b20"
+		 14 "k_smoke_module_DHT22"
+		 15 "k_socket"
+		 16 "k_socket_ds18b20"
+		 17 "k_socket_DHT22"
+		 18 "k_socket_dual"
+		 19 "k_socket_dual_ds18b20"
+		 20 "k_socket_dual_DHT22"
+		 21 "k_sonoff"
+		 22 "k_sonoff_ds18b20"
+		 23 "k_sonoff_DHT22"
+		 24 "k_sonoff_touch"
+		 25 "k_sonoff_touch_dual"
+		 26 "k_sonoff_touch_triple"
+		 27 "k_sonoff_pow_R2"
+		 28 "k_impulse_counter"
+		 29 "k_impulse_counter_3")
 
 rm -f /CProjects/supla-espressif-esp/firmware/result.txt
 rm -f /CProjects/supla-espressif-esp/firmware/result2.txt
@@ -42,18 +68,148 @@ while true; do
   esac
   case $CHOICE in
         1)
-            BOARD=k_rs_module_v3
+            BOARD=k_gate_module
 			FLASH_SIZE=4096
 			break
             ;;
         2)
-            BOARD=k_dimmer
+            BOARD=k_gate_module_v3
 			FLASH_SIZE=4096
 			break
             ;;
         3)
+            BOARD=k_dimmer
+			FLASH_SIZE=4096
+			break
+            ;;
+		4)
+            BOARD=k_gniazdko_neo
+			FLASH_SIZE=1024
+			break
+            ;;
+		5)
+            BOARD=k_rs_module_v3
+			FLASH_SIZE=4096
+			break
+            ;;
+		6)
+            BOARD=k_socket_v2
+			FLASH_SIZE=4096
+			break
+            ;;
+		7)
+            BOARD=k_socket_dual_v2
+			FLASH_SIZE=4096
+			break
+            ;;
+		8)
             BOARD=k_switch_dual
 			FLASH_SIZE=4096
+			break
+            ;;
+		9)
+            BOARD=k_socket_SSR
+			FLASH_SIZE=4096
+			break
+            ;;
+		10)
+            BOARD=k_yunschan
+			FLASH_SIZE=4096
+			break
+            ;;
+		11)
+            BOARD=k_socket_01
+			FLASH_SIZE=1024
+			break
+            ;;
+		12)
+            BOARD=k_smoke_module
+			FLASH_SIZE=4096
+			break
+            ;;
+		13)
+            BOARD=k_smoke_module_ds18b20
+			FLASH_SIZE=4096
+			break
+            ;;
+		14)
+            BOARD=k_smoke_module_DHT22
+			FLASH_SIZE=4096
+			break
+            ;;
+		15)
+            BOARD=k_socket
+			FLASH_SIZE=4096
+			break
+            ;;
+		16)
+            BOARD=k_socket_ds18b20
+			FLASH_SIZE=4096
+			break
+            ;;
+		17)
+            BOARD=k_socket_DHT22
+			FLASH_SIZE=4096
+			break
+            ;;
+		18)
+            BOARD=k_socket_dual
+			FLASH_SIZE=4096
+			break
+            ;;
+		19)
+            BOARD=k_socket_dual_ds18b20
+			FLASH_SIZE=4096
+			break
+            ;;
+		20)
+            BOARD=k_socket_dual_DHT22
+			FLASH_SIZE=4096
+			break
+            ;;
+		21)
+            BOARD=k_sonoff
+			FLASH_SIZE=1024
+			break
+            ;;
+		22)
+            BOARD=k_sonoff_ds18b20
+			FLASH_SIZE=1024
+			break
+            ;;
+		23)
+            BOARD=k_sonoff_DHT22
+			FLASH_SIZE=1024
+			break
+            ;;
+		24)
+            BOARD=k_sonoff_touch
+			FLASH_SIZE=1024
+			break
+            ;;
+		25)
+            BOARD=k_sonoff_touch_dual
+			FLASH_SIZE=1024
+			break
+            ;;
+		26)
+            BOARD=k_sonoff_touch_triple
+			FLASH_SIZE=1024
+			break
+            ;;
+		27)
+            BOARD=k_sonoff_pow_R2
+			FLASH_SIZE=2048
+			break
+            ;;
+		28)
+            BOARD=k_impulse_counter
+			FLASH_SIZE=2048
+			break
+            ;;
+		28)
+            BOARD=k_impulse_counter_3
+			FLASH_SIZE=2048
 			break
             ;;
   esac
@@ -110,7 +266,7 @@ then
 				cp /CProjects/supla-espressif-esp/firmware/$PLIK /CProjects/supla-espressif-esp/firmware/signed/$PLIK
 				rm -f /CProjects/supla-espressif-esp/firmware/$PLIK
 				rm -f /CProjects/supla-espressif-esp/firmware/result.txt
-				pause 1
+				pause 2
 				dialog --clear --msgbox "Firmware $PLIK podpisane i przeniesione do firmware/signed." 10 40
 			else
 				echo "Nie udalo sie podpisac firmware $PLIK !";
@@ -123,7 +279,7 @@ then
 				cp /CProjects/supla-espressif-esp/firmware/$PLIK2 /CProjects/supla-espressif-esp/firmware/signed/$PLIK2
 				rm -f /CProjects/supla-espressif-esp/firmware/$PLIK2
 				rm -f /CProjects/supla-espressif-esp/firmware/result2.txt
-				pause 1
+				pause 2
 				dialog --clear --msgbox "Firmware $PLIK2 podpisane i przeniesione do firmware/signed." 10 40
 			else
 				echo "Nie udalo sie podpisac firmware $PLIK2 !";
