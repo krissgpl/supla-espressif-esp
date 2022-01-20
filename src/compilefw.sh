@@ -97,8 +97,8 @@ then
 			cd  /CProjects/supla-espressif-esp/firmware
 			supla-esp-sigtool -k klucz -s $PLIK
 			supla-esp-sigtool -k klucz -s $PLIK2
-		#	supla-esp-sigtool -k klucz -v $PLIK &> result.txt
-			if  command | grep -q verified 
+			supla-esp-sigtool -k klucz -v $PLIK &> result.txt
+			if  grep -q 'verified' result.txt
 			then
 				echo "Firmware $PLIK podpisane prawidlowo";
 			else
