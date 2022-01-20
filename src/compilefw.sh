@@ -98,7 +98,7 @@ then
 			supla-esp-sigtool -k klucz -s $PLIK
 			supla-esp-sigtool -k klucz -s $PLIK2
 			supla-esp-sigtool -k klucz -v $PLIK
-			if [ command | grep -q verified ];
+			if [ command | grep -q "verified" ]
 			then
 				echo "Firmware $PLIK podpisane prawidlowo";
 			else
