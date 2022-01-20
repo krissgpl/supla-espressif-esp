@@ -78,8 +78,9 @@ while true; do
 			break
             ;;
         3)
-            BOARD=k_dimmer_nossl
+            BOARD=k_dimmer
 			FLASH_SIZE=4096
+			NOSSL=1
 			break
             ;;
 		4)
@@ -215,8 +216,14 @@ while true; do
   esac
 done
 
-PLIK="$BOARD"_user1."$FLASH_SIZE"_DIO.new.6.sdk3x.bin;
-PLIK2="$BOARD"_user2."$FLASH_SIZE"_DIO.new.6.sdk3x.bin;
+if [ NOSSL == 1 ]
+then
+	PLIK="$BOARD"_nossl_user1."$FLASH_SIZE"_DIO.new.6.sdk3x.bin;
+	PLIK2="$BOARD"_nossl_user2."$FLASH_SIZE"_DIO.new.6.sdk3x.bin;
+else
+	PLIK="$BOARD"_user1."$FLASH_SIZE"_DIO.new.6.sdk3x.bin;
+	PLIK2="$BOARD"_user2."$FLASH_SIZE"_DIO.new.6.sdk3x.bin;
+fi
 
 rm -f /CProjects/supla-espressif-esp/firmware/$PLIK
 rm -f /CProjects/supla-espressif-esp/firmware/$PLIK2
