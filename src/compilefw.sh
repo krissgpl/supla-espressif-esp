@@ -97,13 +97,13 @@ then
 			cd  /CProjects/supla-espressif-esp/firmware
 			supla-esp-sigtool -k klucz -s $PLIK
 			supla-esp-sigtool -k klucz -s $PLIK2
-			supla-esp-sigtool -k klucz -v $PLIK &> result.txt
-		#	if [ command | grep -q "verified" ]
-		#	then
-		#		echo "Firmware $PLIK podpisane prawidlowo";
-		#	else
-		#		echo "Nie udalo sie podpisac firmware $PLIK !";
-		#	fi
+		#	supla-esp-sigtool -k klucz -v $PLIK &> result.txt
+			if  command | grep -q "verified" 
+			then
+				echo "Firmware $PLIK podpisane prawidlowo";
+			else
+				echo "Nie udalo sie podpisac firmware $PLIK !";
+			fi
 		elif [ "$YOUR_CHOOSE" == 1 ];
 		then
 			echo "Wybrałeś Nie";
