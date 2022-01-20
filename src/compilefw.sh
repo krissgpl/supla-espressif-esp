@@ -13,6 +13,9 @@ OPTIONS=(1 "k_rs_module_v3"
          2 "k_dimmer"
          3 "k_switch_dual")
 
+rm -f /CProjects/supla-espressif-esp/firmware/result.txt
+rm -f /CProjects/supla-espressif-esp/firmware/result2.txt
+
 while true; do
 	exec 3>&1
 
@@ -98,11 +101,28 @@ then
 			supla-esp-sigtool -k klucz -s $PLIK
 			supla-esp-sigtool -k klucz -s $PLIK2
 			supla-esp-sigtool -k klucz -v $PLIK &> result.txt
+			supla-esp-sigtool -k klucz -v $PLIK2 &> result2.txt
 			if  grep -q 'verified' result.txt
 			then
 				echo "Firmware $PLIK podpisane prawidlowo";
+				rm -f /CProjects/supla-espressif-esp/firmware/signed/$PLIK
+				cp /CProjects/supla-espressif-esp/firmware/$PLIK /CProjects/supla-espressif-esp/firmware/signed/$PLIK
+				rm -f /CProjects/supla-espressif-esp/firmware/$PLIK
+				rm -f /CProjects/supla-espressif-esp/firmware/result.txt
+				dialog --clear --msgbox "Firmware $PLIK podpisane i przeniesione do firmware/signed." 10 40
 			else
 				echo "Nie udalo sie podpisac firmware $PLIK !";
+			fi
+			if  grep -q 'verified' result2.txt
+			then
+				echo "Firmware $PLIK2 podpisane prawidlowo";
+				rm -f /CProjects/supla-espressif-esp/firmware/signed/$PLIK2
+				cp /CProjects/supla-espressif-esp/firmware/$PLIK2 /CProjects/supla-espressif-esp/firmware/signed/$PLIK2
+				rm -f /CProjects/supla-espressif-esp/firmware/$PLIK2
+				rm -f /CProjects/supla-espressif-esp/firmware/result2.txt
+				dialog --clear --msgbox "Firmware $PLIK2 podpisane i przeniesione do firmware/signed." 10 40
+			else
+				echo "Nie udalo sie podpisac firmware $PLIK2 !";
 			fi
 		elif [ "$YOUR_CHOOSE" == 1 ];
 		then
