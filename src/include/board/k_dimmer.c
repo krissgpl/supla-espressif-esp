@@ -34,8 +34,9 @@ uint8 Licznik = 0;
 uint8 Jasnosc = 0;
 int Czas;
 
-unsigned int Wlacznik1 = 0;
-unsigned int Wlacznik2 = 0;
+uint8 Wlacznik1 = 0;
+uint8 Wlacznik2 = 0;
+uint8 Work = 0;
 
 ETSTimer dimmer_timer;
 ETSTimer value_timer1;
@@ -137,6 +138,7 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 void work_timer_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "Set dimmer 0");
+	Work = 1;
 	
 	if ( supla_esp_gpio_output_is_hi(B_HARMONOGRAM) == 1 ) { Licznik = 100;
 	} else { Licznik = supla_esp_state.brightness[0]; };
@@ -187,6 +189,7 @@ void supla_dimmer_smooth(int in1, int in2) {
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 					os_timer_arm(&work_timer, Czas, 0); }; }
 			
+			if ( Work == 1 && in1 == 1 ) { os_timer_disarm(&work_timer); };
 		};
 	
 		if ( supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1 ) {
@@ -213,6 +216,8 @@ void supla_dimmer_smooth(int in1, int in2) {
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 					os_timer_arm(&work_timer, Czas, 0); }; }
+					
+			if ( Work == 1 && in2 == 1 ) { os_timer_disarm(&work_timer); };
 
 		};
 	};
