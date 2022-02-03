@@ -127,6 +127,20 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
 	supla_esp_pwm_set_percent_duty(Licznik, 100, 0);
 	
+	if ( gpio__input_get(B_SENSOR_PORT1) == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1 ) {
+		supla_log(LOG_DEBUG, "Set dimmer 1 przerwanie");
+		Wlacznik1 = 1;
+		os_timer_disarm(&dimmer_timer);
+		os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
+		os_timer_arm(&dimmer_timer, 20, 1);  };
+		
+	if ( gpio__input_get(B_SENSOR_PORT2) == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1 ) {
+		supla_log(LOG_DEBUG, "Set dimmer 2 przerwanie");
+		Wlacznik2 = 1;
+		os_timer_disarm(&dimmer_timer);
+		os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
+		os_timer_arm(&dimmer_timer, 20, 1);  };
+	
 	 if ( Licznik == 0 ) { 
 	 supla_log(LOG_DEBUG, "Dimmer Timer OFF stop");
 	 Wlacznik1 = 0;
