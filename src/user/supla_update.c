@@ -473,8 +473,8 @@ supla_esp_update_connect_cb(void *arg) {
 			     update->url->url.path,
 			     update->url->url.host);
 
-	/*int s =*/ espconn_sent(&update->conn, (unsigned char*)request, strlen(request));
-	//supla_log(LOG_DEBUG, "espconn_sent %i, %i", s, strlen(request));
+	int s = espconn_sent(&update->conn, (unsigned char*)request, strlen(request));
+	supla_log(LOG_DEBUG, "espconn_sent %i, %i", s, strlen(request));
 }
 
 void ICACHE_FLASH_ATTR
