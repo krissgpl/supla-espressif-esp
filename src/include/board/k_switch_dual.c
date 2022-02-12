@@ -109,9 +109,9 @@ void supla_esp_board_gpio_init(void) {
 	supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[0].gpio_id = B_BTN1_PORT;
 	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN;
-	supla_input_cfg[0].action_trigger_cap = SUPLA_ACTION_CAP_HOLD |
+	/*supla_input_cfg[0].action_trigger_cap = SUPLA_ACTION_CAP_HOLD |
 											SUPLA_ACTION_CAP_SHORT_PRESS_x2 |
-											SUPLA_ACTION_CAP_SHORT_PRESS_x3;
+											SUPLA_ACTION_CAP_SHORT_PRESS_x3; */
 	supla_input_cfg[0].relay_gpio_id = B_RELAY1_PORT;
 	supla_input_cfg[0].channel = 0;
 
@@ -180,22 +180,13 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 		}
 
 	channels[0].Number = 0;
-	channels[0].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
+	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[0].FuncList = SUPLA_BIT_FUNC_POWERSWITCH \
 								| SUPLA_BIT_FUNC_LIGHTSWITCH;
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;							
 	channels[0].Default = SUPLA_CHANNELFNC_LIGHTSWITCH;
 	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
-	channels[0].ConfigSize = sizeof(TSD_ChannelConfig_ActionTrigger);
 	
-	 TSD_ChannelConfig_ActionTrigger atSettings = {};
-	atSettings.ActiveActions = SUPLA_ACTION_CAP_TOGGLE_x2 |
-								SUPLA_ACTION_CAP_TOGGLE_x5;
-	memcpy(configResult.Config, &atSettings,
-    sizeof(TSD_ChannelConfig_ActionTrigger));
-
-  supla_esp_channel_config_result(&configResult);
-
 	channels[1].Number = 1;
 	channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH \
