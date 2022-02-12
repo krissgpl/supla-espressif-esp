@@ -97,7 +97,7 @@
 										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;\
 										if ( ChannelNumber == 2 ) {	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_BATTERYHEALTH;	\
-											state->BatteryHealth = SUPLA_ESP_SOFTVER;
+											state->BatteryHealth = 80;
 										
 //#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
 				
