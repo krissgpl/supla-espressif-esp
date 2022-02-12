@@ -186,6 +186,15 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;							
 	channels[0].Default = SUPLA_CHANNELFNC_LIGHTSWITCH;
 	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
+	channels[0].ConfigSize = sizeof(TSD_ChannelConfig_ActionTrigger);
+	
+	 TSD_ChannelConfig_ActionTrigger atSettings = {};
+	atSettings.ActiveActions = SUPLA_ACTION_CAP_TOGGLE_x2 |
+								SUPLA_ACTION_CAP_TOGGLE_x5;
+	memcpy(configResult.Config, &atSettings,
+    sizeof(TSD_ChannelConfig_ActionTrigger));
+
+  supla_esp_channel_config_result(&configResult);
 
 	channels[1].Number = 1;
 	channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
