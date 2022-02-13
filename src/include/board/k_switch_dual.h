@@ -97,7 +97,8 @@
 										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
 										if ( ChannelNumber == 2 ) {	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LIGHTSOURCELIFESPAN;	\
-										    state->IPv4 = "2.8.48.0"; };
+										    state->IPv4 = ipconfig.ip.addr;	\
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipconfig.ip.addr); };
 										
 //#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
 				
