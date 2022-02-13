@@ -1311,9 +1311,15 @@ supla_esp_get_channel_state(_supla_int_t ChannelNumber, _supla_int_t ReceiverID,
   state->Uptime = uptime_sec();
   state->ConnectionUptime = uptime_sec() - devconn->register_time_sec;
 
+  #ifdef BOARD_SOFTWARE_VER_FIELD
+	BOARD_SOFTWARE_VER_FIELD;
+  #else
+
   if (wifi_get_macaddr(STATION_IF, (unsigned char *)state->MAC)) {
     state->Fields |= SUPLA_CHANNELSTATE_FIELD_MAC;
   }
+  
+  #endif // BOARD_SOFTWARE_VER_FIELD
 
   sint8 rssi = wifi_station_get_rssi();
   if (rssi < 10) {
