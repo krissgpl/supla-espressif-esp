@@ -96,8 +96,8 @@
 #define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;\
 										if ( ChannelNumber == 2 ) {	\
-											state->Fields |= SUPLA_CHANNELSTATE_FIELD_BATTERYHEALTH;	\
-										    state->BatteryHealth = 48.0; };
+											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LIGHTSOURCELIFESPAN;	\
+										    state->LightSourceLifespanLeft = 48.0; };
 										
 //#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
 				
