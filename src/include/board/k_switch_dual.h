@@ -96,7 +96,6 @@
 #define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
 										if ( ChannelNumber == 2 ) {	\
-											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LIGHTSOURCELIFESPAN;	\
 										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
 											supla_log(LOG_DEBUG, "IP FIELD = %i", ipconfig.ip.addr); };
 										
