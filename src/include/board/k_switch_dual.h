@@ -20,6 +20,7 @@
 #define K_SWITCH_DUAL_H_
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
+#define RETREIVE_CHANNEL_CONFIG
 
 #define SUPLA_ESP_SOFTVER "2.8.48.0"
 
@@ -97,7 +98,7 @@
 										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
 										if ( ChannelNumber == 2 ) {	\
 										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
-											supla_log(LOG_DEBUG, "IP FIELD = %i", ipconfig.ip.addr); };
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };
 										
 //#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
 				
