@@ -174,11 +174,11 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 
 	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 || supla_esp_cfg.ThermometerType == 3) {
 	
-		*channel_count = 6;
+		*channel_count = 7;
 		}
 	else {
 
-		*channel_count = 5;
+		*channel_count = 6;
 		}
 
 	channels[0].Number = 0;
