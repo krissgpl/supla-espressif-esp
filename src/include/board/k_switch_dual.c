@@ -108,12 +108,7 @@ void supla_esp_board_gpio_init(void) {
 		
 	supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[0].gpio_id = B_BTN1_PORT;
-	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN;
-	supla_input_cfg[0].action_trigger_cap = SUPLA_ACTION_CAP_HOLD |
-											SUPLA_ACTION_CAP_SHORT_PRESS_x2 |
-											SUPLA_ACTION_CAP_SHORT_PRESS_x3;
-    supla_input_cfg[0].flags = INPUT_FLAG_TRIGGER_ON_PRESS;
-
+	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN | INPUT_FLAG_TRIGGER_ON_PRESS;
 	supla_input_cfg[0].relay_gpio_id = B_RELAY1_PORT;
 	supla_input_cfg[0].channel = 0;
 
@@ -174,11 +169,11 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 
 	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 || supla_esp_cfg.ThermometerType == 3) {
 	
-		*channel_count = 7;
+		*channel_count = 6;
 		}
 	else {
 
-		*channel_count = 6;
+		*channel_count = 5;
 		}
 
 	channels[0].Number = 0;
@@ -218,29 +213,22 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[4].Default = 0;
 	channels[4].value[0] = supla_esp_gpio_relay_on(B_RELAY2_DIS);
 	
-	channels[5].Number = 5;
-	channels[5].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
-	channels[5].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+   if( supla_esp_cfg.ThermometerType == 1 ) {
+    channels[5].Number = 5;
+	channels[5].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
+	channels[5].FuncList = 0;
 	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[5].Default = 0;
-	channels[5].value[0] = 0;
-
-   if( supla_esp_cfg.ThermometerType == 1 ) {
-    channels[6].Number = 6;
-	channels[6].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
-	channels[6].FuncList = 0;
-	channels[6].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[6].Default = 0;
-	supla_get_temperature(channels[6].value);
+	supla_get_temperature(channels[5].value);
    }
 
    if( supla_esp_cfg.ThermometerType == 2 ) {
-	channels[6].Number = 6;
-	channels[6].Type = SUPLA_CHANNELTYPE_DHT22;
-	channels[6].FuncList = 0;
-	channels[6].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[6].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
-	supla_get_temp_and_humidity(channels[6].value);
+	channels[5].Number = 5;
+	channels[5].Type = SUPLA_CHANNELTYPE_DHT22;
+	channels[5].FuncList = 0;
+	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[5].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+	supla_get_temp_and_humidity(channels[5].value);
    }
 }
 
