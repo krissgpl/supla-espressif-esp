@@ -1220,7 +1220,7 @@ supla_esp_gpio_on_input_inactive(supla_input_cfg_t *input_cfg) {
         !(input_cfg->flags & INPUT_FLAG_TRIGGER_ON_PRESS)) ||
       input_cfg->type == INPUT_TYPE_BTN_BISTABLE) &&
       input_cfg->relay_gpio_id != 255) {
-	supla_log(LOG_DEBUG, "INPUT_FLAG_TRIGGER_ON_PRESS inactive");
+	supla_log(LOG_DEBUG, "!INPUT_FLAG_TRIGGER_ON_PRESS inactive");
     supla_roller_shutter_cfg_t *rs_cfg =
       supla_esp_gpio_get_rs__cfg(input_cfg->relay_gpio_id);
     if (rs_cfg != NULL) {
