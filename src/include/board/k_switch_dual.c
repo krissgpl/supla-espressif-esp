@@ -110,6 +110,7 @@ void supla_esp_board_gpio_init(void) {
 	supla_input_cfg[0].gpio_id = B_BTN1_PORT;
 	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN | INPUT_FLAG_TRIGGER_ON_PRESS;
 	supla_input_cfg[0].action_trigger_cap = SUPLA_ACTION_CAP_SHORT_PRESS_x2;
+	supla_input_cfg[0].active_triggers = SUPLA_ACTION_CAP_SHORT_PRESS_x2;
 	supla_input_cfg[0].relay_gpio_id = B_RELAY1_PORT;
 	supla_input_cfg[0].channel = 0;
 
