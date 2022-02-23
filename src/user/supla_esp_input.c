@@ -134,6 +134,7 @@ void GPIO_ICACHE_FLASH supla_esp_input_notify_state_change(
 #endif
 
   if (supla_esp_input_is_advanced_mode_enabled(input_cfg)) {
+	supla_log(LOG_DEBUG, "advanced mode enabled !");
     os_timer_setfn(&input_cfg->timer, supla_esp_input_advanced_timer_cb,
         input_cfg);
     supla_esp_input_advanced_state_change_handling(input_cfg, new_state);
