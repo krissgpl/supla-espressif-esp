@@ -30,8 +30,6 @@
 
 #define RELAY_MAX_COUNT		8
 
-#define SUPLA_DEBUG
-
 #define TEMP_SELECT
 
 //#define BTN_MODE_PUBLISH_AT
