@@ -446,6 +446,7 @@ void GPIO_ICACHE_FLASH supla_esp_input_advanced_state_change_handling(
         (input_cfg->type & INPUT_TYPE_BTN_BISTABLE)) {
 
       input_cfg->click_counter++;
+	  supla_log(LOG_DEBUG, "click_counter : %d", input_cfg->click_counter);	// moje
 
       if (input_cfg->type == INPUT_TYPE_BTN_BISTABLE) {
         if (new_state == INPUT_STATE_ACTIVE) {
