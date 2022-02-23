@@ -569,6 +569,7 @@ supla_esp_input_send_action_trigger(supla_input_cfg_t *input_cfg, int action) {
          break;
        case 2:
          action = SUPLA_ACTION_CAP_SHORT_PRESS_x2;
+		 supla_log(LOG_DEBUG, "action = SUPLA_ACTION_CAP_SHORT_PRESS_x2;");
          break;
        case 3:
          action = SUPLA_ACTION_CAP_SHORT_PRESS_x3;
