@@ -134,7 +134,7 @@ void GPIO_ICACHE_FLASH supla_esp_input_notify_state_change(
 #endif
 
   if (supla_esp_input_is_advanced_mode_enabled(input_cfg)) {
-	supla_log(LOG_DEBUG, "advanced mode enabled !");
+	supla_log(LOG_DEBUG, "advanced mode enabled !");			//	moje
     os_timer_setfn(&input_cfg->timer, supla_esp_input_advanced_timer_cb,
         input_cfg);
     supla_esp_input_advanced_state_change_handling(input_cfg, new_state);
@@ -537,6 +537,7 @@ void GPIO_ICACHE_FLASH supla_esp_input_advanced_timer_cb(void *timer_arg) {
 void GPIO_ICACHE_FLASH
 supla_esp_input_send_action_trigger(supla_input_cfg_t *input_cfg, int action) {
   if (action == 0) {
+	  supla_log(LOG_DEBUG, "send_action_trigger, action == 0");	// moje
     if (input_cfg->click_counter == -1) {
       return;
     }
@@ -569,7 +570,7 @@ supla_esp_input_send_action_trigger(supla_input_cfg_t *input_cfg, int action) {
          break;
        case 2:
          action = SUPLA_ACTION_CAP_SHORT_PRESS_x2;
-		 supla_log(LOG_DEBUG, "action = SUPLA_ACTION_CAP_SHORT_PRESS_x2;");
+		 supla_log(LOG_DEBUG, "action = SUPLA_ACTION_CAP_SHORT_PRESS_x2;");	// moje
          break;
        case 3:
          action = SUPLA_ACTION_CAP_SHORT_PRESS_x3;
