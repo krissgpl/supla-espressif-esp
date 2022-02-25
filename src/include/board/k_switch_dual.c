@@ -446,7 +446,7 @@ void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 	}
 }
 
-void supla_send_at(void) {
+void supla_send_at(supla_input_cfg_t *input_cfg) {
 
 	supla_log(LOG_DEBUG, "AT Wykonanie blokady kanalu, gpio = %d", input_cfg->gpio_id );
 	
