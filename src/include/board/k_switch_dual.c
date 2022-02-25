@@ -165,9 +165,8 @@ void supla_esp_board_gpio_init(void) {
 		supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
 	};
 	
-	TSD_ChannelConfig_ActionTrigger atSettings = {};
-	atSettings.ActiveActions = SUPLA_ACTION_CAP_SHORT_PRESS_x2);
-
+	supla_esp_input_set_active_triggers(supla_input_cfg[0],SUPLA_ACTION_CAP_SHORT_PRESS_x2);
+	
 }
 
 void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
