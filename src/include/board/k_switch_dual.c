@@ -446,6 +446,12 @@ void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 	}
 }
 
+void supla_send_at(supla_input_cfg_t *input_cfg) {
+
+	supla_log(LOG_DEBUG, "AT Wykonanie blokady kanalu, gpio = %d", input_cfg->gpio_id );
+	
+}
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
 	
 	supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port);
