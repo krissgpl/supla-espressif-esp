@@ -166,12 +166,8 @@ void supla_esp_board_gpio_init(void) {
 	};
 	
 	TSD_ChannelConfig_ActionTrigger atSettings = {};
-	atSettings.ActiveActions = SUPLA_ACTION_CAP_SHORT_PRESS_x2;
-	memcpy(configResult.Config, &atSettings,
-      sizeof(TSD_ChannelConfig_ActionTrigger));
+	atSettings.ActiveActions = SUPLA_ACTION_CAP_SHORT_PRESS_x2);
 
-	supla_esp_channel_config_result(&configResult);
-	
 }
 
 void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
