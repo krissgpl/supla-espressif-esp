@@ -24,6 +24,7 @@
 
 #include "supla_esp.h"
 #include "supla_esp_gpio.h"
+#include "supla_esp_input.h"
 
 ETSTimer value_timer1;
 ETSTimer Led_ON;
@@ -163,6 +164,12 @@ void supla_esp_board_gpio_init(void) {
 		supla_esp_gpio_set_hi(10, 1);	// ustaw gpio10 high wl zasilania DHT
 		supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
 	};
+	
+	TSD_ChannelConfig_ActionTrigger atSettings = {};
+	atSettings.ActiveActions = SUPLA_ACTION_CAP_SHORT_PRESS_x2;
+	
+	//memcpy(configResult.Config, &atSettings, sizeof(TSD_ChannelConfig_ActionTrigger));
+	//supla_esp_channel_config_result(&configResult);
 	
 }
 
