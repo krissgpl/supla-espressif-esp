@@ -165,7 +165,7 @@ void supla_esp_board_gpio_init(void) {
 		supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
 	};
 	
-	supla_esp_input_set_active_triggers(supla_input_cfg[0],SUPLA_ACTION_CAP_SHORT_PRESS_x2);
+	supla_esp_input_set_active_triggers(supla_input_cfg, SUPLA_ACTION_CAP_SHORT_PRESS_x2);
 	
 }
 
