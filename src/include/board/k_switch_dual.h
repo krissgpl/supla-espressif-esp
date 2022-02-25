@@ -104,7 +104,7 @@
 
 #define BOARD_SEND_AT supla_send_at;
 
-void supla_send_at(supla_input_cfg_t *input_cfg);
+void supla_send_at(void);
 				
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
 
