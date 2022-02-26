@@ -466,7 +466,7 @@ void supla_send_at(uint8 gpio, int action) {
 			os_timer_arm(&Port_OFF, 300, 0);
 			
 			supla_esp_gpio_set_hi(LED_RED_PORT, 0);
-			s_timer_disarm(&Led_ON);
+			os_timer_disarm(&Led_ON);
 			os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
 			os_timer_arm(&Led_ON, 400, 0);
 			
