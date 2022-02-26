@@ -450,6 +450,10 @@ void supla_send_at(uint8 gpio, int action) {
 
 	supla_log(LOG_DEBUG, "AT Wykonanie blokady kanalu, gpio = %d, action = %d", gpio, action );
 	
+	if ( gpio == 14 || action == SUPLA_ACTION_CAP_SHORT_PRESS_x2 ) {
+		supla_log(LOG_DEBUG, "Blokada kanalu 0 !!!");
+	};
+	
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
