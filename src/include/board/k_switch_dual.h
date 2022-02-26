@@ -102,9 +102,9 @@
 										
 //#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
 
-#define BOARD_SEND_AT supla_send_at(input_cfg);
+#define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
 
-void supla_send_at(supla_input_cfg_t *input_cfg);
+void supla_send_at(uint8 gpio, int action);
 				
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
 
