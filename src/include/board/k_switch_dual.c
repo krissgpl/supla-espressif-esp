@@ -475,7 +475,7 @@ void supla_send_at(uint8 gpio, int action) {
 			os_timer_arm(&Led_OFF, 1000, 0); 
 		};
 		
-		if ( supla_esp_state.Relay[3] == 1 ) {
+		else {
 			
 			supla_esp_gpio_set_hi(B_RELAY1_DIS, 0);
 			supla_esp_channel_value_changed(3, 0);
