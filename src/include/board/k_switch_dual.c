@@ -473,10 +473,7 @@ void supla_send_at(uint8 gpio, int action) {
 			os_timer_disarm(&Led_OFF);
 			os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
 			os_timer_arm(&Led_OFF, 1000, 0); 
-		};
-		
-		else {
-			
+		} else {	
 			supla_esp_gpio_set_hi(B_RELAY1_DIS, 0);
 			supla_esp_channel_value_changed(3, 0);
 			
