@@ -629,7 +629,7 @@ supla_esp_input_send_action_trigger(supla_input_cfg_t *input_cfg, int action) {
 #endif /*MQTT_HA_ACTION_TRIGGER_SUPPORT*/
 #endif /*MQTT_SUPPORT_ENABLED*/
 
-#ifdef BOARD_SEND_AT		// moje do lokalnego wykorzystania multiclicow
+#ifdef BOARD_SEND_AT		// moje do lokalnego wykorzystania multiclikow
 	BOARD_SEND_AT;
 #endif
 

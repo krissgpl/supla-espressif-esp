@@ -451,8 +451,45 @@ void supla_send_at(uint8 gpio, int action) {
 
 	supla_log(LOG_DEBUG, "AT Wykonanie blokady kanalu, gpio = %d, action = %d", gpio, action );
 	
+	int ledblock;
+	
 	if ( gpio == 14 && action == SUPLA_ACTION_CAP_SHORT_PRESS_x2 ) {
 		supla_log(LOG_DEBUG, "Blokada kanalu 0 !!!");
+		if ( supla_esp_state.Relay[3] == 0 ) {
+			
+			supla_esp_gpio_set_hi(B_RELAY1_DIS, 1);
+			supla_esp_channel_value_changed(3, 1);
+			
+			ledblock=LED_RED_BLOCK;
+			os_timer_disarm(&Port_OFF);
+			os_timer_setfn(&Port_OFF, (os_timer_func_t *)supla_esp_baord_Port_OFF_cb, (void*)ledblock);	
+			os_timer_arm(&Port_OFF, 300, 0);
+			
+			supla_esp_gpio_set_hi(LED_RED_PORT, 0);
+			s_timer_disarm(&Led_ON);
+			os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+			os_timer_arm(&Led_ON, 400, 0);
+			
+			os_timer_disarm(&Led_OFF);
+			os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
+			os_timer_arm(&Led_OFF, 1000, 0); 
+		};
+		
+		if ( supla_esp_state.Relay[3] == 1 ) {
+			
+			supla_esp_gpio_set_hi(B_RELAY1_DIS, 0);
+			supla_esp_channel_value_changed(3, 0);
+			
+			ledblock=LED_RED_BLOCK;
+			supla_esp_gpio_set_hi(LED_RED_PORT, 0);
+			s_timer_disarm(&Led_ON);
+			os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+			os_timer_arm(&Led_ON, 500, 0);
+			
+			os_timer_disarm(&Led_OFF);
+			os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
+			os_timer_arm(&Led_OFF, 1000, 0);
+		};
 	};
 	
 	if ( gpio == 14 && action == SUPLA_ACTION_CAP_SHORT_PRESS_x3 ) {
