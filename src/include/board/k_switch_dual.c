@@ -489,8 +489,48 @@ void supla_send_at(uint8 gpio, int action) {
 		};
 	};
 	
+	if ( gpio == 12 && action == SUPLA_ACTION_CAP_SHORT_PRESS_x2 ) {
+		supla_log(LOG_DEBUG, "Blokada kanalu 1 !!!");
+		if ( supla_esp_state.Relay[4] == 0 ) {
+			
+			supla_esp_gpio_set_hi(B_RELAY2_DIS, 1);
+			supla_esp_channel_value_changed(4, 1);
+			
+			ledblock=LED_GREEN_BLOCK;
+			os_timer_disarm(&Port_OFF);
+			os_timer_setfn(&Port_OFF, (os_timer_func_t *)supla_esp_baord_Port_OFF_cb, (void*)ledblock);	
+			os_timer_arm(&Port_OFF, 300, 0);
+			
+			supla_esp_gpio_set_hi(LED_GREEN_PORT, 0);
+			os_timer_disarm(&Led_ON);
+			os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+			os_timer_arm(&Led_ON, 400, 0);
+			
+			os_timer_disarm(&Led_OFF);
+			os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
+			os_timer_arm(&Led_OFF, 1000, 0); 
+		} else {	
+			supla_esp_gpio_set_hi(B_RELAY2_DIS, 0);
+			supla_esp_channel_value_changed(4, 0);
+			
+			ledblock=LED_GREEN_BLOCK;
+			supla_esp_gpio_set_hi(LED_GREEN_PORT, 0);
+			os_timer_disarm(&Led_ON);
+			os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+			os_timer_arm(&Led_ON, 500, 0);
+			
+			os_timer_disarm(&Led_OFF);
+			os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
+			os_timer_arm(&Led_OFF, 1000, 0);
+		};
+	};	
+	
 	if ( gpio == 14 && action == SUPLA_ACTION_CAP_SHORT_PRESS_x3 ) {
-		supla_log(LOG_DEBUG, "AT press x3 !!!");
+		supla_log(LOG_DEBUG, "CH=0 AT press x3 !!!");
+	};
+	
+	if ( gpio == 12 && action == SUPLA_ACTION_CAP_SHORT_PRESS_x3 ) {
+		supla_log(LOG_DEBUG, "CH=1 AT press x3 !!!");
 	};
 	
 }
