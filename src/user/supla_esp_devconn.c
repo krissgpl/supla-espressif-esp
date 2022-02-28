@@ -505,6 +505,7 @@ void DEVCONN_ICACHE_FLASH supla_esp_on_register_result(
       {
         TDS_GetChannelConfigRequest request = {};
         for (uint8 a = 0; a < CHANNEL_CONFIG_LIMIT; a++) {
+			supla_log(LOG_DEBUG, "GetChannelConfigReques: %i", (1 << a));
           if (RETREIVE_CHANNEL_CONFIG & (1 << a)) {
             request.ChannelNumber = a;
             srpc_ds_async_get_channel_config(devconn->srpc, &request);
