@@ -188,7 +188,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 								| SUPLA_BIT_FUNC_LIGHTSWITCH;
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;							
 	channels[0].Default = SUPLA_CHANNELFNC_LIGHTSWITCH;
-	channels[0].action_trigger_cap = supla_input_cfg[0].action_trigger_cap;
+	channels[0].ActionTriggerCaps = supla_input_cfg[0].action_trigger_cap;
 	channels[0].actionTriggerProperties.disablesLocalOperation = SUPLA_ACTION_CAP_TOGGLE_x1 | SUPLA_ACTION_CAP_SHORT_PRESS_x1;
 	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
 	
