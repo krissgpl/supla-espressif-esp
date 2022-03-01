@@ -18,15 +18,12 @@
 
 #include "public_key_in_c_code" 
 
-#include "supla_BME280.h"
-#include "supla_i2c.h"
-
 ETSTimer value_timer1;
 
 void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 		ets_snprintf(buffer, buffer_size, "SOCKET-01");
 }
-
+/*
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	
 	sint32 temperature;
@@ -38,7 +35,7 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 		else
 			supla_log(LOG_DEBUG, "BME280: Temperature =  %d *C, Humidity = %d %%\r\n", temperature, humidity );
 }
-
+*/
 
 void supla_esp_board_gpio_init(void) {
 		
@@ -50,8 +47,8 @@ void supla_esp_board_gpio_init(void) {
 
 	// ---------------------------------------
 	
-	//supla_input_cfg[1].type = INPUT_TYPE_BTN_MONOSTABLE;	//jest potrzebne zeby gpio0 dzialalo
-	//supla_input_cfg[1].gpio_id = 5;
+	supla_input_cfg[1].type = INPUT_TYPE_BTN_MONOSTABLE;	//jest potrzebne zeby gpio0 dzialalo
+	supla_input_cfg[1].gpio_id = 5;
 	
 	// ---------------------------------------
 

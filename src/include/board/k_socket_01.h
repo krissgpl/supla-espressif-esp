@@ -19,16 +19,18 @@
 #ifndef K_SOCKET_01_H_
 #define K_SOCKET_01_H_
 
-#define ESP8266_SUPLA_PROTO_VERSION 12
+#define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.7.24.0"
+#define SUPLA_ESP_SOFTVER "2.8.48.0"
 
 #define USE_GPIO3
 
 #define AP_SSID "SOCKET-01"
+#define ESP_HOSTNAME "SOCKET-01"
+#define CFGMODE_SSID_LIMIT_MACLEN
 
 #define LED_RED_PORT      2
-#define B_RELAY1_PORT     12	// bylo 3
+#define B_RELAY1_PORT     3	// bylo 3
 #define B_CFG_PORT        0
 
 
