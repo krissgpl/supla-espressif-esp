@@ -227,17 +227,17 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[5].actionTriggerProperties.relatedChannelNumber = 0;
 	channels[5].actionTriggerProperties.disablesLocalOperation =
-    SUPLA_ACTION_CAP_TOGGLE_x1 | SUPLA_ACTION_CAP_SHORT_PRESS_x1;
+    SUPLA_ACTION_CAP_SHORT_PRESS_x2 | SUPLA_ACTION_CAP_SHORT_PRESS_x1;
 	
 	channels[6].Number = 6;
 	channels[6].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
 	channels[6].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
 	channels[6].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
-	channels[6].ActionTriggerCaps = supla_input_cfg[0].action_trigger_cap;
+	channels[6].ActionTriggerCaps = supla_input_cfg[1].action_trigger_cap;
 	channels[6].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[6].actionTriggerProperties.relatedChannelNumber = 1;
 	channels[6].actionTriggerProperties.disablesLocalOperation =
-    SUPLA_ACTION_CAP_TOGGLE_x1 | SUPLA_ACTION_CAP_SHORT_PRESS_x1;
+    SUPLA_ACTION_CAP_SHORT_PRESS_x2 | SUPLA_ACTION_CAP_SHORT_PRESS_x1;
 	
    if( supla_esp_cfg.ThermometerType == 1 ) {
     channels[7].Number = 7;
