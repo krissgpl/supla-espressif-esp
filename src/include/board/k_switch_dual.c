@@ -110,14 +110,22 @@ void supla_esp_board_gpio_init(void) {
 	supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[0].gpio_id = B_BTN1_PORT;
 	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN | INPUT_FLAG_TRIGGER_ON_PRESS;
-	supla_input_cfg[0].action_trigger_cap = SUPLA_ACTION_CAP_SHORT_PRESS_x2 | SUPLA_ACTION_CAP_SHORT_PRESS_x3;
+	supla_input_cfg[0].action_trigger_cap = SUPLA_ACTION_CAP_HOLD |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x2 |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x3 |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x4 |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x5;
 	supla_input_cfg[0].relay_gpio_id = B_RELAY1_PORT;
 	supla_input_cfg[0].channel = 0;
 
 	supla_input_cfg[1].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[1].gpio_id = B_BTN2_PORT;
 	supla_input_cfg[1].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN | INPUT_FLAG_TRIGGER_ON_PRESS;
-	supla_input_cfg[1].action_trigger_cap = SUPLA_ACTION_CAP_SHORT_PRESS_x2 | SUPLA_ACTION_CAP_SHORT_PRESS_x3;
+	supla_input_cfg[1].action_trigger_cap = SUPLA_ACTION_CAP_HOLD |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x2 |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x3 |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x4 |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x5;
 	supla_input_cfg[1].relay_gpio_id = B_RELAY2_PORT;
 	supla_input_cfg[1].channel = 1;
 
@@ -165,7 +173,7 @@ void supla_esp_board_gpio_init(void) {
 		supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
 	};
 	
-	//supla_esp_input_set_active_triggers(&(supla_input_cfg[0]), SUPLA_ACTION_CAP_SHORT_PRESS_x2 | SUPLA_ACTION_CAP_SHORT_PRESS_x3);
+	//supla_esp_input_set_active_triggers(&(supla_input_cfg[0]), SUPLA_ACTION_CAP_SHORT_PRESS_x2 | SUPLA_ACTION_CAP_SHORT_PRESS_x3);	juz zbedne
 	//supla_esp_input_set_active_triggers(&(supla_input_cfg[1]), SUPLA_ACTION_CAP_SHORT_PRESS_x2 | SUPLA_ACTION_CAP_SHORT_PRESS_x3);
 	
 }
@@ -205,9 +213,9 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[2].ActionTriggerCaps = supla_input_cfg[0].action_trigger_cap;
 	channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[2].actionTriggerProperties.relatedChannelNumber = 1;
-	channels[2].actionTriggerProperties.disablesLocalOperation =
+	channels[2].actionTriggerProperties.disablesLocalOperation = 
     SUPLA_ACTION_CAP_SHORT_PRESS_x2 | SUPLA_ACTION_CAP_SHORT_PRESS_x1;
-	
+    
 	channels[3].Number = 3;
 	channels[3].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
 	channels[3].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
@@ -545,13 +553,13 @@ void supla_send_at(uint8 gpio, int action) {
 		};
 	};	
 	
-	if ( gpio == 14 && action == SUPLA_ACTION_CAP_SHORT_PRESS_x3 ) {
+/*	if ( gpio == 14 && action == SUPLA_ACTION_CAP_SHORT_PRESS_x3 ) {
 		supla_log(LOG_DEBUG, "CH=0 AT press x3 !!!");
 	};
 	
 	if ( gpio == 12 && action == SUPLA_ACTION_CAP_SHORT_PRESS_x3 ) {
 		supla_log(LOG_DEBUG, "CH=1 AT press x3 !!!");
-	};
+	};*/ //Realizowane po stronie serwera
 	
 }
 
