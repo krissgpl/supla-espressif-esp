@@ -204,7 +204,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[2].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
 	channels[2].ActionTriggerCaps = supla_input_cfg[0].action_trigger_cap;
 	channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[2].actionTriggerProperties.relatedChannelNumber = 1;
+	channels[2].actionTriggerProperties.relatedChannelNumber = 0;
 	channels[2].actionTriggerProperties.disablesLocalOperation =
     SUPLA_ACTION_CAP_SHORT_PRESS_x2 | SUPLA_ACTION_CAP_SHORT_PRESS_x1;
 	
@@ -214,7 +214,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[3].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
 	channels[3].ActionTriggerCaps = supla_input_cfg[1].action_trigger_cap;
 	channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[3].actionTriggerProperties.relatedChannelNumber = 2;
+	channels[3].actionTriggerProperties.relatedChannelNumber = 1;
 	channels[3].actionTriggerProperties.disablesLocalOperation =
     SUPLA_ACTION_CAP_SHORT_PRESS_x2 | SUPLA_ACTION_CAP_SHORT_PRESS_x1;
 	
