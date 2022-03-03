@@ -1987,6 +1987,8 @@ supla_esp_channel_config_result(TSD_ChannelConfig *result) {
             (TSD_ChannelConfig_ActionTrigger *)(result->Config);
             supla_esp_input_set_active_triggers(&(supla_input_cfg[i]),
                 actionTriggerCfg->ActiveActions);
+			supla_log(LOG_DEBUG, "Set active action channel = %d ,active action = %d",
+            result->ChannelNumber, actionTriggerCfg->ActiveActions);	
         }
       }
     }
