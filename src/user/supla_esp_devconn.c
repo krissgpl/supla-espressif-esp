@@ -1980,6 +1980,7 @@ supla_esp_channel_config_result(TSD_ChannelConfig *result) {
     // TODO
   } else if (result->Func == SUPLA_CHANNELFNC_ACTIONTRIGGER) {
 	  supla_log(LOG_DEBUG, "Config result channel = %d", result->ChannelNumber);
+	  supla_log(LOG_DEBUG, "sizeof(TSD_ChannelConfig_ActionTrigger) = %d", sizeof(TSD_ChannelConfig_ActionTrigger));
     if (result->ConfigType == 0 &&
         result->ConfigSize == sizeof(TSD_ChannelConfig_ActionTrigger)) {
       for (int i = 0; i < INPUT_MAX_COUNT; i++) {
