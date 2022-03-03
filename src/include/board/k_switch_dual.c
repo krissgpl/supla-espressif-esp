@@ -229,42 +229,42 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[4].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[4].Default = 0;
 	channels[4].value[0] = supla_esp_gpio_relay_on(B_RELAY2_DIS);
+	    
+    channels[5].Number = 5;
+	channels[5].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
+	channels[5].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+	channels[5].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+	channels[5].ActionTriggerCaps = supla_input_cfg[0].action_trigger_cap;
+	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[5].actionTriggerProperties.relatedChannelNumber = 1;
+	channels[5].actionTriggerProperties.disablesLocalOperation = SUPLA_ACTION_CAP_SHORT_PRESS_x1;
+	
+	channels[6].Number = 6;
+	channels[6].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
+	channels[6].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+	channels[6].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+	channels[6].ActionTriggerCaps = supla_input_cfg[1].action_trigger_cap;
+	channels[6].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[6].actionTriggerProperties.relatedChannelNumber = 2;
+	channels[6].actionTriggerProperties.disablesLocalOperation = SUPLA_ACTION_CAP_SHORT_PRESS_x1;
 	
    if( supla_esp_cfg.ThermometerType == 1 ) {
-    channels[5].Number = 5;
-	channels[5].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
-	channels[5].FuncList = 0;
-	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[5].Default = 0;
-	supla_get_temperature(channels[5].value);
+    channels[7].Number = 7;
+	channels[7].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
+	channels[7].FuncList = 0;
+	channels[7].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[7].Default = 0;
+	supla_get_temperature(channels[7].value);
    }
 
    if( supla_esp_cfg.ThermometerType == 2 ) {
-	channels[5].Number = 5;
-	channels[5].Type = SUPLA_CHANNELTYPE_DHT22;
-	channels[5].FuncList = 0;
-	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[5].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
-	supla_get_temp_and_humidity(channels[5].value);
-   }
-    
-    channels[chnl].Number = chnl;
-	channels[chnl].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
-	channels[chnl].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
-	channels[chnl].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
-	channels[chnl].ActionTriggerCaps = supla_input_cfg[0].action_trigger_cap;
-	channels[chnl].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[chnl].actionTriggerProperties.relatedChannelNumber = 1;
-	channels[chnl].actionTriggerProperties.disablesLocalOperation = SUPLA_ACTION_CAP_SHORT_PRESS_x1;
-	
-	channels[chnl+1].Number = chnl+1;
-	channels[chnl+1].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
-	channels[chnl+1].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
-	channels[chnl+1].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
-	channels[chnl+1].ActionTriggerCaps = supla_input_cfg[1].action_trigger_cap;
-	channels[chnl+1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[chnl+1].actionTriggerProperties.relatedChannelNumber = 2;
-	channels[chnl+1].actionTriggerProperties.disablesLocalOperation = SUPLA_ACTION_CAP_SHORT_PRESS_x1;
+	channels[7].Number = 7;
+	channels[7].Type = SUPLA_CHANNELTYPE_DHT22;
+	channels[7].FuncList = 0;
+	channels[7].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[7].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+	supla_get_temp_and_humidity(channels[7].value);
+   }	
 }
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc) {
