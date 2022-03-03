@@ -1979,6 +1979,7 @@ supla_esp_channel_config_result(TSD_ChannelConfig *result) {
   } else if (result->Func == SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER) {
     // TODO
   } else if (result->Func == SUPLA_CHANNELFNC_ACTIONTRIGGER) {
+	  supla_log(LOG_DEBUG, "Config result channel = %d", i);
     if (result->ConfigType == 0 &&
         result->ConfigSize == sizeof(TSD_ChannelConfig_ActionTrigger)) {
       for (int i = 0; i < INPUT_MAX_COUNT; i++) {
