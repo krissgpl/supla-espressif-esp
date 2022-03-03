@@ -179,18 +179,14 @@ void supla_esp_board_gpio_init(void) {
 }
 
 void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
-	
-	unsigned char chnl;
-	
+		
 	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2) {
 	
 		*channel_count = 8;
-		chnl = 6;
 		}
 	else {
 
 		*channel_count = 7;
-		chnl = 5;
 		}
 
 	channels[0].Number = 0;
