@@ -269,4 +269,5 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels,
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc) {
   supla_esp_channel_value_changed(0, supla_esp_gpio_relay_on(B_RELAY1_PORT));
+  supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_RELAY2_PORT));
 }
