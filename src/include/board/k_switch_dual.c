@@ -107,9 +107,9 @@ void supla_esp_baord_Port_OFF_cb(void *timer_arg) {
 
 void supla_esp_board_gpio_init(void) {
 	
-	unsigned char chnl
+	unsigned char chnl;
 	
-	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2) {
+	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2) {
 		chnl = 6;
 		}
 	else {
@@ -191,7 +191,7 @@ void supla_esp_board_gpio_init(void) {
 
 void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
 	
-	unsigned char chnl
+	unsigned char chnl;
 	
 	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2) {
 	
