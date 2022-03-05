@@ -77,11 +77,13 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
 */
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
-#define B_RELAY1_PORT	5
-#define B_BTN1_PORT	14
-#define RETREIVE_CHANNEL_CONFIG 0b10
+#define B_RELAY1_PORT	 5
+#define B_RELAY2_PORT    13
+#define B_BTN1_PORT		 14
+#define B_BTN2_PORT      12
+#define RETREIVE_CHANNEL_CONFIG 0b1100
 
-#define CFGBTN_TYPE_SELECTION
+
 #define LED_RED_PORT    4
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc);

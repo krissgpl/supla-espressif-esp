@@ -193,32 +193,36 @@ void supla_esp_board_gpio_init(void) {
   supla_input_cfg[0].gpio_id = B_BTN1_PORT;
   supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN;
   supla_input_cfg[0].relay_gpio_id = B_RELAY1_PORT;
-  supla_input_cfg[0].channel = 1;
-
-  if (supla_esp_cfg.CfgButtonType == BTN_TYPE_MONOSTABLE) {
-    supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
-    supla_input_cfg[0].action_trigger_cap =
+  supla_input_cfg[0].channel = 2;
+  supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
+  supla_input_cfg[0].action_trigger_cap =
       SUPLA_ACTION_CAP_HOLD |
       SUPLA_ACTION_CAP_SHORT_PRESS_x1 |
       SUPLA_ACTION_CAP_SHORT_PRESS_x2 |
       SUPLA_ACTION_CAP_SHORT_PRESS_x3 |
       SUPLA_ACTION_CAP_SHORT_PRESS_x4 |
       SUPLA_ACTION_CAP_SHORT_PRESS_x5;
-  } else {
-    supla_input_cfg[0].type = INPUT_TYPE_BTN_BISTABLE;
-    supla_input_cfg[0].action_trigger_cap =
-      SUPLA_ACTION_CAP_TURN_ON   |
-      SUPLA_ACTION_CAP_TURN_OFF  |
-      SUPLA_ACTION_CAP_TOGGLE_x1 |
-      SUPLA_ACTION_CAP_TOGGLE_x2 |
-      SUPLA_ACTION_CAP_TOGGLE_x3 |
-      SUPLA_ACTION_CAP_TOGGLE_x4 |
-      SUPLA_ACTION_CAP_TOGGLE_x5;
-  }
+  
+  supla_input_cfg[1].gpio_id = B_BTN2_PORT;
+  supla_input_cfg[1].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN;
+  supla_input_cfg[1].relay_gpio_id = B_RELAY2_PORT;
+  supla_input_cfg[1].channel = 3;
+  supla_input_cfg[1].type = INPUT_TYPE_BTN_MONOSTABLE;
+  supla_input_cfg[1].action_trigger_cap =
+      SUPLA_ACTION_CAP_HOLD |
+      SUPLA_ACTION_CAP_SHORT_PRESS_x1 |
+      SUPLA_ACTION_CAP_SHORT_PRESS_x2 |
+      SUPLA_ACTION_CAP_SHORT_PRESS_x3 |
+      SUPLA_ACTION_CAP_SHORT_PRESS_x4 |
+      SUPLA_ACTION_CAP_SHORT_PRESS_x5;
 
   supla_relay_cfg[0].gpio_id = B_RELAY1_PORT;
   supla_relay_cfg[0].flags = RELAY_FLAG_RESTORE_FORCE;
   supla_relay_cfg[0].channel = 0;
+  
+  supla_relay_cfg[1].gpio_id = B_RELAY2_PORT;
+  supla_relay_cfg[1].flags = RELAY_FLAG_RESTORE_FORCE;
+  supla_relay_cfg[1].channel = 1;
 
 }
 
@@ -233,15 +237,32 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels,
   channels[0].FuncList = SUPLA_BIT_FUNC_LIGHTSWITCH;
   channels[0].Default = SUPLA_CHANNELFNC_LIGHTSWITCH;
   channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
-
+  
   channels[1].Number = 1;
-  channels[1].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
-  channels[1].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
-  channels[1].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
-  channels[1].ActionTriggerCaps = supla_input_cfg[0].action_trigger_cap;
+  channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
   channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-  channels[1].actionTriggerProperties.relatedChannelNumber = 1;
-  channels[1].actionTriggerProperties.disablesLocalOperation =
+  channels[1].FuncList = SUPLA_BIT_FUNC_LIGHTSWITCH;
+  channels[1].Default = SUPLA_CHANNELFNC_LIGHTSWITCH;
+  channels[1].value[0] = supla_esp_gpio_relay_on(B_RELAY2_PORT);
+
+  channels[2].Number = 2;
+  channels[2].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
+  channels[2].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+  channels[2].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+  channels[2].ActionTriggerCaps = supla_input_cfg[0].action_trigger_cap;
+  channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+  channels[2].actionTriggerProperties.relatedChannelNumber = 1;
+  channels[2].actionTriggerProperties.disablesLocalOperation =
+    SUPLA_ACTION_CAP_TOGGLE_x1 | SUPLA_ACTION_CAP_SHORT_PRESS_x1;
+	
+  channels[3].Number = 3;
+  channels[3].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
+  channels[3].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+  channels[3].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+  channels[3].ActionTriggerCaps = supla_input_cfg[0].action_trigger_cap;
+  channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+  channels[3].actionTriggerProperties.relatedChannelNumber = 2;
+  channels[3].actionTriggerProperties.disablesLocalOperation =
     SUPLA_ACTION_CAP_TOGGLE_x1 | SUPLA_ACTION_CAP_SHORT_PRESS_x1;
 
 }
