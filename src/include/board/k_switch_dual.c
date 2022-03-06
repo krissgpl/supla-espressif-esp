@@ -501,8 +501,8 @@ void supla_send_at(uint8 gpio, int action) {
 		supla_log(LOG_DEBUG, "Blokada kanalu 0 !!!");
 		if ( supla_esp_state.Relay[3] == 0 ) {
 			
-			supla_esp_gpio_set_hi(B_RELAY1_DIS, 1);
-			supla_esp_channel_value_changed(3, 1);
+			//supla_esp_gpio_set_hi(B_RELAY1_DIS, 1);
+			//supla_esp_channel_value_changed(3, 1);
 			
 			ledblock=LED_RED_BLOCK;
 			os_timer_disarm(&Port_OFF);
@@ -518,8 +518,8 @@ void supla_send_at(uint8 gpio, int action) {
 			os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
 			os_timer_arm(&Led_OFF, 1000, 0); 
 		} else {	
-			supla_esp_gpio_set_hi(B_RELAY1_DIS, 0);
-			supla_esp_channel_value_changed(3, 0);
+			//supla_esp_gpio_set_hi(B_RELAY1_DIS, 0);
+			//supla_esp_channel_value_changed(3, 0);
 			
 			ledblock=LED_RED_BLOCK;
 			supla_esp_gpio_set_hi(LED_RED_PORT, 0);
@@ -537,8 +537,8 @@ void supla_send_at(uint8 gpio, int action) {
 		supla_log(LOG_DEBUG, "Blokada kanalu 1 !!!");
 		if ( supla_esp_state.Relay[4] == 0 ) {
 			
-			supla_esp_gpio_set_hi(B_RELAY2_DIS, 1);
-			supla_esp_channel_value_changed(4, 1);
+			//supla_esp_gpio_set_hi(B_RELAY2_DIS, 1);
+			//supla_esp_channel_value_changed(4, 1);
 			
 			ledblock=LED_GREEN_BLOCK;
 			os_timer_disarm(&Port_OFF);
@@ -554,8 +554,8 @@ void supla_send_at(uint8 gpio, int action) {
 			os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
 			os_timer_arm(&Led_OFF, 1000, 0); 
 		} else {	
-			supla_esp_gpio_set_hi(B_RELAY2_DIS, 0);
-			supla_esp_channel_value_changed(4, 0);
+			//supla_esp_gpio_set_hi(B_RELAY2_DIS, 0);
+			//supla_esp_channel_value_changed(4, 0);
 			
 			ledblock=LED_GREEN_BLOCK;
 			supla_esp_gpio_set_hi(LED_GREEN_PORT, 0);
