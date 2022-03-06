@@ -185,7 +185,7 @@ void supla_esp_board_gpio_init(void) {
 	};
 	
 	//supla_esp_input_set_active_triggers(&(supla_input_cfg[0]), SUPLA_ACTION_CAP_SHORT_PRESS_x2 | SUPLA_ACTION_CAP_SHORT_PRESS_x3);
-	//supla_esp_input_set_active_triggers(&(supla_input_cfg[1]), SUPLA_ACTION_CAP_SHORT_PRESS_x2 | SUPLA_ACTION_CAP_SHORT_PRESS_x3);
+	supla_esp_input_set_active_triggers(&(supla_input_cfg[1]), supla_input_cfg[1].action_trigger_cap);	// uaktywnienie AT dla channel 1, bo serwer nie wysyła config dla tego kanału
 	
 }
 
