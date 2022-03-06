@@ -184,8 +184,11 @@ void supla_esp_board_gpio_init(void) {
 		supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
 	};
 	
+	supla_log(LOG_DEBUG, "AT 1 ch = %i", supla_input_cfg[0].channel);
+	supla_log(LOG_DEBUG, "AT 2 ch = %i", supla_input_cfg[1].channel);
+	
 	//supla_esp_input_set_active_triggers(&(supla_input_cfg[0]), SUPLA_ACTION_CAP_SHORT_PRESS_x2 | SUPLA_ACTION_CAP_SHORT_PRESS_x3);
-	supla_esp_input_set_active_triggers(&(supla_input_cfg[chnl+1]), supla_input_cfg[1].action_trigger_cap);	// uaktywnienie AT dla channel 5(6), bo serwer nie wysyła config dla tego kanału
+	supla_esp_input_set_active_triggers(&(supla_input_cfg[1]), supla_input_cfg[1].action_trigger_cap);	// uaktywnienie AT dla channel 5(6), bo serwer nie wysyła config dla tego kanału
 	
 }
 
