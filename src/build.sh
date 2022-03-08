@@ -124,6 +124,7 @@ case $1 in
    "k_switch_dual")
       FOTA=1
       FLASH_SIZE="4096"
+	  EXTRA_CCFLAGS="-DSRPC_WITHOUT_OUT_QUEUE -DSRPC_WITHOUT_IN_QUEUE -DSPROTO_WITHOUT_OUT_BUFFER"
    ;;
     "k_socket_SSR")
       FOTA=1
