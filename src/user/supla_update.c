@@ -149,7 +149,7 @@ supla_esp_check_updates(void *srpc) {
 		params.Param3 = UPDATE_PARAM3;
 		params.Param4 = UPDATE_PARAM4;
 
-		//supla_log(LOG_DEBUG, "get_firmware_update_url");
+		supla_log(LOG_DEBUG, "get_firmware_update_url");
 		srpc_sd_async_get_firmware_update_url(srpc, &params);
 	}
 }

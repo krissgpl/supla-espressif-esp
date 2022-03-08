@@ -273,6 +273,10 @@ case $1 in
    "inCanRS_DHT22")
     SPI_MODE="QIO"
     FLASH_SIZE="4096"
+   ;;
+   "lightswitch_at")
+     FOTA=1
+     FLASH_SIZE="2048"
   ;;
     
    *)
@@ -301,6 +305,7 @@ case $1 in
    echo "              dimmer";
    echo "              rgbw_wroom";
    echo "              h801";
+   echo "              lightswitch_at";
    echo "              lightswitch_x2";
    echo "              lightswitch_x2_54";
    echo "              lightswitch_x2_DHT11";
