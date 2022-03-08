@@ -27,6 +27,7 @@
 // used for Button1Type, Button2Type, BtnType[x]
 #define BTN_TYPE_MONOSTABLE       0
 #define BTN_TYPE_BISTABLE         1
+#define BTN_TYPE_MOTION_SENSOR    2
 
 #define THERM_NONE		  0
 #define THERM_DS18B20		  1
