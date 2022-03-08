@@ -132,6 +132,7 @@ case $1 in
    ;;
    "k_sonoff")
       FOTA=1
+	  EXTRA_CCFLAGS="-DSRPC_WITHOUT_OUT_QUEUE -DSRPC_WITHOUT_IN_QUEUE -DSPROTO_WITHOUT_OUT_BUFFER"
    ;;
    "k_sonoff_ds18b20")
       FOTA=1
