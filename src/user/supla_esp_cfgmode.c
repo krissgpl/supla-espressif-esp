@@ -1081,7 +1081,7 @@ void ICACHE_FLASH_ATTR supla_esp_cfgmode_enter_ap_mode(void *ptr) {
     os_timer_disarm(&cfgmode_vars.timer);
     os_timer_setfn(&cfgmode_vars.timer,
         (os_timer_func_t *)supla_esp_cfgmode_timeout_exit, NULL);
-    os_timer_arm(&cfgmode_vars.timer, 5*60*1000, 0); // 5 min, don't repeat
+    os_timer_arm(&cfgmode_vars.timer, 60*1000, 0); // 5 min, don't repeat --- zmienilem na 1 minute
   }
 }
 
