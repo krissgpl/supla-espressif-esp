@@ -22,10 +22,12 @@
 #define STATE_SECTOR_OFFSET 2		// zmiana sektora zapisu
 #define RS_SAVE_STATE_DELAY 500		// zmiana czestotliwosci zapisu
 
+#define RETREIVE_CHANNEL_CONFIG 0b11000
+
 #define ESP8266_SUPLA_PROTO_VERSION 16
 #define BOARD_CFG_HTML_TEMPLATE
 
-#define SUPLA_ESP_SOFTVER "2.8.42.0"
+#define SUPLA_ESP_SOFTVER "2.8.49.0"
 
 #define _ROLLERSHUTTER_SUPPORT
 
@@ -69,8 +71,11 @@
 				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 2 = %i", supla_esp_state.Relay[2]);	\
 									return supla_esp_state.Relay[2] == 1 ? 1 : 0;	}
 
-#define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
-										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;									
+#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 1 ) {	\
+											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
+										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };									
 		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
@@ -80,7 +85,7 @@ char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved);
 void ICACHE_FLASH_ATTR
 supla_esp_board_send_channel_values_with_delay(void* srpc);
-
+/*
 #define BOARD_ON_INPUT_ACTIVE                        \
     supla_esp_board_gpio_on_input_active(input_cfg); \
     return;
@@ -89,5 +94,5 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg);
 #define BOARD_ON_INPUT_INACTIVE                        \
     supla_esp_board_gpio_on_input_inactive(input_cfg); \
     return;
-void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
+void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);*/
 #endif
