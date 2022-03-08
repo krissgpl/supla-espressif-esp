@@ -389,7 +389,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg) {
 				// supla_esp_gpio_rs_set_relay(rs_cfg, RS_RELAY_OFF, 1, 1);
 				// supla_esp_gpio_rs_set_relay(rs_cfg, RS_RELAY_OFF, 0, 0);
 			//}
-		#endif /*_ROLLERSHUTTER_SUPPORT 
+		#endif //_ROLLERSHUTTER_SUPPORT 
 
     } else if (input_cfg->type == INPUT_TYPE_BTN_BISTABLE || input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE) {
 
@@ -436,7 +436,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
 			}
 		}
 
-	#endif /*_ROLLERSHUTTER_SUPPORT
+	#endif //_ROLLERSHUTTER_SUPPORT
  
 	} else if (input_cfg->type == INPUT_TYPE_BTN_BISTABLE) {
 
