@@ -132,7 +132,7 @@ void supla_esp_board_gpio_init(void) {
 	supla_input_cfg[1].gpio_id = B_BTN2_PORT;
 	supla_input_cfg[1].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN | INPUT_FLAG_TRIGGER_ON_PRESS;
 	supla_input_cfg[1].action_trigger_cap = SUPLA_ACTION_CAP_HOLD |
-											//SUPLA_ACTION_CAP_SHORT_PRESS_x1 |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x1 |
 											SUPLA_ACTION_CAP_SHORT_PRESS_x2 |
 											SUPLA_ACTION_CAP_SHORT_PRESS_x3 |
 											SUPLA_ACTION_CAP_SHORT_PRESS_x4 |
@@ -588,7 +588,7 @@ if ( port == 20 ) {
 	
 		supla_log(LOG_DEBUG, "update, port = %i", port);
 		
-		//if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
+		if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
 			
 			supla_esp_state.Relay[UPD_channel] = 1;
 			supla_log(LOG_DEBUG, "value_changed upd - 1");
@@ -597,15 +597,15 @@ if ( port == 20 ) {
 			os_timer_disarm(&value_timer1);
 			os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
 			os_timer_arm(&value_timer1, 4000, 0);
-		//};
+		};
 		
-		/*if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
+		if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
 			
 			supla_esp_cfg.FirmwareUpdate = 1; 
 			supla_esp_cfg_save(&supla_esp_cfg);
 			supla_esp_channel_value_changed(UPD_channel, 1);
 			supla_log(LOG_DEBUG, "value_changed upd - 0");
-		};*/
+		};
 	}; 
 };
 
