@@ -61,12 +61,12 @@
 #define B_RELAY2_DIS	 22
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
-	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[5] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
+	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
 																	supla_block_channel(LED_RED_BLOCK);	\
 																	if (supla_esp_gpio_output_is_hi(B_RELAY1_PORT) == 0) {\
 																	supla_log(LOG_DEBUG, "Blokada GPIO5 !!! po");	\
 																	return;	} 	}	\
-	if ( port == B_RELAY2_PORT && supla_esp_state.Relay[6] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	\
+	if ( port == B_RELAY2_PORT && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	\
 																	supla_block_channel(LED_GREEN_BLOCK);	\
 																	if (supla_esp_gpio_output_is_hi(B_RELAY2_PORT) == 0) {\
 																	supla_log(LOG_DEBUG, "Blokada GPIO13 !!! po");	\
