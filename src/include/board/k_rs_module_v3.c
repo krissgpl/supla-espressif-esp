@@ -489,6 +489,25 @@ void GPIO_ICACHE_FLASH supla_block_channel(void) {
 	
 }
 
+void supla_send_at(uint8 gpio, int action) {
+
+	supla_log(LOG_DEBUG, "AT Wykonanie blokady kanalu, gpio = %d, action = %d", gpio, action );
+		
+	if ( action == SUPLA_ACTION_CAP_SHORT_PRESS_x2 ) {
+			
+			supla_esp_gpio_set_hi(LED_RED_PORT, 0);
+			os_timer_disarm(&Led_ON);
+			os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, NULL);	
+			os_timer_arm(&Led_ON, 400, 0);
+			
+			os_timer_disarm(&Led_OFF);
+			os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
+			os_timer_arm(&Led_OFF, 1000, 0); 
+		
+	};	
+	
+}
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
 	UPD_channel = 1;
