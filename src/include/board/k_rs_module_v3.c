@@ -98,7 +98,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 											SUPLA_ACTION_CAP_SHORT_PRESS_x4 |
 											SUPLA_ACTION_CAP_SHORT_PRESS_x5;
 	supla_input_cfg[1].relay_gpio_id = B_RELAY2_PORT;
-	supla_input_cfg[0].channel = 4;
+	supla_input_cfg[1].channel = 4;
 
 	// ---------------------------------------
 	// ---------------------------------------
