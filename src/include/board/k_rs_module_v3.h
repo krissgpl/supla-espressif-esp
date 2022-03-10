@@ -78,6 +78,8 @@
 											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };									
 
 #define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
+
+void supla_send_at(uint8 gpio, int action);
 		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
