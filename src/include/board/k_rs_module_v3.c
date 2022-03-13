@@ -78,13 +78,27 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 				
 	supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[0].gpio_id = B_BTN1_PORT;
-	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN;
+	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN | INPUT_FLAG_TRIGGER_ON_PRESS;
+	supla_input_cfg[0].action_trigger_cap = SUPLA_ACTION_CAP_HOLD |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x1 |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x2 |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x3 |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x4 |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x5;
     supla_input_cfg[0].relay_gpio_id = B_RELAY1_PORT;
+	supla_input_cfg[0].channel = 3;
 
 	supla_input_cfg[1].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[1].gpio_id = B_BTN2_PORT;
-	supla_input_cfg[1].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN;
+	supla_input_cfg[1].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN | INPUT_FLAG_TRIGGER_ON_PRESS;
+	supla_input_cfg[1].action_trigger_cap = SUPLA_ACTION_CAP_HOLD |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x1 |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x2 |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x3 |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x4 |
+											SUPLA_ACTION_CAP_SHORT_PRESS_x5;
 	supla_input_cfg[1].relay_gpio_id = B_RELAY2_PORT;
+	supla_input_cfg[1].channel = 4;
 
 	// ---------------------------------------
 	// ---------------------------------------
@@ -137,13 +151,17 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 void ICACHE_FLASH_ATTR
    supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
 	
+	unsigned char chnl;
+	
    if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 	
-    *channel_count = 4;
+    *channel_count = 6;
+	chnl = 4;
     }
    else {
 
-    *channel_count = 3;
+    *channel_count = 5;
+	chnl = 3;
     }
 
 	channels[0].Number = 0;
@@ -184,6 +202,25 @@ void ICACHE_FLASH_ATTR
 	channels[3].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
 	supla_get_temp_and_humidity(channels[3].value);
    }
+   
+    channels[chnl].Number = chnl;
+	channels[chnl].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
+	channels[chnl].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+	channels[chnl].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+	channels[chnl].ActionTriggerCaps = supla_input_cfg[0].action_trigger_cap;
+	channels[chnl].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[chnl].actionTriggerProperties.relatedChannelNumber = 1;
+	channels[chnl].actionTriggerProperties.disablesLocalOperation = SUPLA_ACTION_CAP_SHORT_PRESS_x1;
+   
+	channels[chnl+1].Number = chnl+1;
+	channels[chnl+1].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
+	channels[chnl+1].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+	channels[chnl+1].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+	channels[chnl+1].ActionTriggerCaps = supla_input_cfg[1].action_trigger_cap;
+	channels[chnl+1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[chnl+1].actionTriggerProperties.relatedChannelNumber = 1;
+	channels[chnl+1].actionTriggerProperties.disablesLocalOperation = SUPLA_ACTION_CAP_SHORT_PRESS_x1;
+   
 }
 
 void ICACHE_FLASH_ATTR
@@ -335,99 +372,6 @@ char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     return buffer;
 }
 
-void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
-    char hi)
-{
-
-    supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
-
-    if (input_cfg->relay_gpio_id != 255) {
-
-        // supla_log(LOG_DEBUG, "RELAY");
-
-        supla_esp_gpio_relay_hi(input_cfg->relay_gpio_id, hi, 0);
-
-        if (input_cfg->channel != 255)
-            supla_esp_channel_value_changed(
-                input_cfg->channel,
-                supla_esp_gpio_relay_is_hi(input_cfg->relay_gpio_id));
-    }
-}
-
-void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg) {
-
-    supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
-
-    if (input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE) {
-
-    supla_log(LOG_DEBUG, "RELAY HI RS");
-	
-		#ifdef _ROLLERSHUTTER_SUPPORT
-			//supla_roller_shutter_cfg_t *rs_cfg = supla_esp_gpio_get_rs__cfg(input_cfg->relay_gpio_id);
-			//if ( rs_cfg != NULL ) {
-				// supla_esp_gpio_rs_set_relay(rs_cfg, RS_RELAY_OFF, 1, 1);
-				// supla_esp_gpio_rs_set_relay(rs_cfg, RS_RELAY_OFF, 0, 0);
-			//}
-		#endif /*_ROLLERSHUTTER_SUPPORT */ 
-
-    } else if (input_cfg->type == INPUT_TYPE_BTN_BISTABLE || input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE) {
-
-        supla_log(LOG_DEBUG, "RELAY");
-        supla_esp_board_gpio_relay_switch(input_cfg, 255);
-
-    } else if (input_cfg->type == INPUT_TYPE_SENSOR && input_cfg->channel != 255) {
-
-        supla_esp_channel_value_changed(input_cfg->channel, 1);
-    }
-
-    input_cfg->last_state = 1;
-}
-
-void ICACHE_FLASH_ATTR
-supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
-
-    supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
-
-    if (input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE) {
-
-		supla_log(LOG_DEBUG, "RELAY LO RS");
-	
-    #ifdef _ROLLERSHUTTER_SUPPORT
-		supla_roller_shutter_cfg_t *rs_cfg = supla_esp_gpio_get_rs__cfg(input_cfg->relay_gpio_id);
-		if ( rs_cfg != NULL ) {
-			
-			supla_log(LOG_DEBUG, "rs btn up = %i", __supla_esp_gpio_relay_is_hi(rs_cfg->up)); 
-			supla_log(LOG_DEBUG, "rs btn down = %i", __supla_esp_gpio_relay_is_hi(rs_cfg->down));
-			
-			if ( 1 == __supla_esp_gpio_relay_is_hi(rs_cfg->up) || 1 == __supla_esp_gpio_relay_is_hi(rs_cfg->down)) {
-				supla_esp_gpio_rs_set_relay(rs_cfg, RS_RELAY_OFF, 1, 1);
-
-				supla_log(LOG_DEBUG, "if 1 rs btn up = %i", __supla_esp_gpio_relay_is_hi(rs_cfg->up)); 
-				supla_log(LOG_DEBUG, "if 1 rs btn down = %i", __supla_esp_gpio_relay_is_hi(rs_cfg->down));
-			}
-				  
-		else {
-
-			supla_esp_gpio_rs_set_relay(rs_cfg, rs_cfg->up->gpio_id == input_cfg->relay_gpio_id ? RS_RELAY_UP : RS_RELAY_DOWN, 1, 1);
-		
-			supla_log(LOG_DEBUG, "set rs btn up = %i", __supla_esp_gpio_relay_is_hi(rs_cfg->up)); 
-			supla_log(LOG_DEBUG, "set rs btn down = %i", __supla_esp_gpio_relay_is_hi(rs_cfg->down));
-			}
-		}
-
-	#endif /*_ROLLERSHUTTER_SUPPORT*/ 
- 
-	} else if (input_cfg->type == INPUT_TYPE_BTN_BISTABLE) {
-
-        supla_esp_board_gpio_relay_switch(input_cfg, 255);
-
-    } else if (input_cfg->type == INPUT_TYPE_SENSOR && input_cfg->channel != 255) {
-        supla_esp_channel_value_changed(input_cfg->channel, 0);
-    }
-
-    input_cfg->last_state = 0;
-}
-
 void GPIO_ICACHE_FLASH supla_block_channel(void) {
 
 	supla_log(LOG_DEBUG, "Blokada board LED void !!!");
@@ -449,6 +393,25 @@ void GPIO_ICACHE_FLASH supla_block_channel(void) {
 	os_timer_disarm(&Led_OFF2);
 	os_timer_setfn(&Led_OFF2, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
 	os_timer_arm(&Led_OFF2, 1200, 0);
+	
+}
+
+void supla_send_at(uint8 gpio, int action) {
+
+	supla_log(LOG_DEBUG, "AT Wykonanie blokady kanalu, gpio = %d, action = %d", gpio, action );
+		
+	if ( action == SUPLA_ACTION_CAP_SHORT_PRESS_x2 ) {
+			
+			supla_esp_gpio_set_hi(LED_RED_PORT, 0);
+			os_timer_disarm(&Led_ON);
+			os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, NULL);	
+			os_timer_arm(&Led_ON, 400, 0);
+			
+			os_timer_disarm(&Led_OFF);
+			os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
+			os_timer_arm(&Led_OFF, 1000, 0); 
+		
+	};	
 	
 }
 
