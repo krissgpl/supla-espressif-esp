@@ -406,6 +406,12 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	}
 }
 
+void supla_board_input(int in1, int in2) {
+	
+	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i", in1, in2);
+	
+}
+/*
 void supla_board_input() {
 	
 	Licznik = Licznik + 1;
@@ -425,7 +431,7 @@ void supla_board_input() {
 		};
 	};
 };
-
+*/
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			
 		supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi port = %i, hi = %i", port, hi);
