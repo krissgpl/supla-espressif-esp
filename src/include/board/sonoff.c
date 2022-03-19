@@ -123,9 +123,9 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       "value=\"%s\"><label>Server</label></i><i><input name=\"eml\" "
       "value=\"%s\"><label>E-mail</label></i></div><div "
       "class=\"w\"><h3>Additional Settings</h3><i><input name=\"t10\" "
-      "type=\"number\" value=\"%i\"><label>HOLD TIME (700ms) : "
+      "type=\"number\" value=\"%i\"><label>HOLD TIME (700ms) "
       "</label></i><i><input name=\"t11\" type=\"number\" "
-      "value=\"%i\"><label>MULTICLICK TIME (300ms) : </label></i>"
+      "value=\"%i\"><label>MULTICLICK TIME (300ms) </label></i>"
 	  "<i><select name=\"led\"><option "
       "value=\"0\" %s>LED "
       "ON<option value=\"1\" %s>LED OFF</select><label>Status - " 
@@ -167,8 +167,8 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       (unsigned char)mac[1], (unsigned char)mac[2], (unsigned char)mac[3],
       (unsigned char)mac[4], (unsigned char)mac[5], supla_esp_cfg.WIFI_SSID,
       supla_esp_cfg.Server, supla_esp_cfg.Email,
-	  supla_esp_cfg.Time1[0] > 0 ? supla_esp_cfg.Time1[0] : 1000,
-      supla_esp_cfg.Time1[1] > 0 ? supla_esp_cfg.Time1[1] : 1000,
+	  supla_esp_cfg.Time1[0] > 0 ? supla_esp_cfg.Time1[0] : 700,
+      supla_esp_cfg.Time1[1] > 0 ? supla_esp_cfg.Time1[1] : 300,
       supla_esp_cfg.StatusLedOff == 0 ? "selected" : "",
       supla_esp_cfg.StatusLedOff == 1 ? "selected" : ""); 
   
