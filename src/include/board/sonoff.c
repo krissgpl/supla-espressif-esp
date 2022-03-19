@@ -256,7 +256,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {     // LED CFG zgaszona podczas normalnej pracy
   supla_esp_gpio_set_led(supla_esp_cfg.StatusLedOff, 0, 0);   // LED CFG zgaszona podczas normalnej pracy
 															  // LED CFG zgaszona podczas normalnej pracy
-  
+	supla_esp_input_set_hold_time_ms(supla_esp_cfg.Time1[0]);
+	supla_esp_input_set_multiclick_time_ms(supla_esp_cfg.Time1[1]);
   
   }                                                            
   
