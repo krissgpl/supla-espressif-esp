@@ -77,15 +77,22 @@
 
 #define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
 
-#define	BOARD_GPIO_INPUT_IS_HI supla_log(LOG_DEBUG, "INPUT IS HI, port=%d hi=%d",port, GPIO_INPUT_GET(GPIO_ID_PIN(port)));	\
-				if ( port == B_SENSOR_PORT2 ) {	\
-				if ( GPIO_INPUT_GET(GPIO_ID_PIN(port)) == 0 ) { supla_board_input(); }; };
+#define BOARD_INTR_HANDLER	if ( supla_last_state == STATE_CONNECTED && gpio_status > 1 ) { \
+							supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
+							supla_board_input(!gpio__input_get(B_SENSOR_PORT1), !gpio__input_get(B_SENSOR_PORT2)); } 
+							
+							
+#define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
+										if ( ChannelNumber == 6 ) {	\
+											state->Fields |= SUPLA_CHANNELSTATE_FIELD_BATTERYHEALTH;	\
+											state->BatteryHealth = SUPLA_ESP_SOFTVER;
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
-void supla_board_input();
+void supla_board_input(int in1, int in2);
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 
