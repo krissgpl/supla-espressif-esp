@@ -122,7 +122,11 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       "class=\"w\"><h3>Supla Settings</h3><i><input name=\"svr\" "
       "value=\"%s\"><label>Server</label></i><i><input name=\"eml\" "
       "value=\"%s\"><label>E-mail</label></i></div><div "
-      "class=\"w\"><h3>Additional Settings</h3><i><select name=\"led\"><option "
+      "class=\"w\"><h3>Additional Settings</h3><i><input name=\"t10\" "
+      "type=\"number\" value=\"%i\"><label>HOLD TIME : "
+      "</label></i><i><input name=\"t11\" type=\"number\" "
+      "value=\"%i\"><label>MULTICLICK TIME : </label></i>"
+	  "<i><select name=\"led\"><option "
       "value=\"0\" %s>LED "
       "ON<option value=\"1\" %s>LED OFF</select><label>Status - " 
     //  "connected</label></i><i><select name=\"upd\"><option value=\"0\" "
@@ -163,6 +167,8 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       (unsigned char)mac[1], (unsigned char)mac[2], (unsigned char)mac[3],
       (unsigned char)mac[4], (unsigned char)mac[5], supla_esp_cfg.WIFI_SSID,
       supla_esp_cfg.Server, supla_esp_cfg.Email,
+	  supla_esp_cfg.Time1[0],
+      supla_esp_cfg.Time1[1],
       supla_esp_cfg.StatusLedOff == 0 ? "selected" : "",
       supla_esp_cfg.StatusLedOff == 1 ? "selected" : ""); 
   
@@ -248,5 +254,11 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 
 }
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {     // LED CFG zgaszona podczas normalnej pracy
-  supla_esp_gpio_set_led(supla_esp_cfg.StatusLedOff, 0, 0);  // LED CFG zgaszona podczas normalnej pracy
-  }                                                            // LED CFG zgaszona podczas normalnej pracy
+  supla_esp_gpio_set_led(supla_esp_cfg.StatusLedOff, 0, 0);   // LED CFG zgaszona podczas normalnej pracy
+															  // LED CFG zgaszona podczas normalnej pracy
+  
+  
+  }                                                            
+  
+  
+  
