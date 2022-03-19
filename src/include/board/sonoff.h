@@ -19,22 +19,22 @@
 #ifndef SONOFF_H_
 #define SONOFF_H_
 
-#define ESP8266_SUPLA_PROTO_VERSION 7
-
-#ifdef __BOARD_sonoff_ds18b20
-	#define DS18B20
-	#define TEMPERATURE_CHANNEL 1
-
-    // Sonoff TH (v1)
-	//#define W1_GPIO3
-
-    // Sonoff TH (v2)
-    #define W1_GPIO14
-
-#endif
-
+#define ESP8285 // nowy
+#define ESP8266_SUPLA_PROTO_VERSION 16 // 12
+#define RETREIVE_CHANNEL_CONFIG 0b10 // AT
 #define LED_RED_PORT    13
 
-void supla_esp_board_send_channel_values_with_delay(void *srpc);
+// #define AP_SSID "S_Basic" // nowy, ale wtedy nie dziala kreator dodawania z apki
+
+#define BOARD_ON_CONNECT  // LED CFG zgaszona przy normalnej pracy
+#define BOARD_CFG_HTML_TEMPLATE // nowy config z LED ON/OFF
+
+// #define INPUT_MIN_CYCLE_COUNT 6 // nowy czas
+// #define INPUT_CYCLE_TIME 21 // nowy czas
+
+char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
+char dev_name[25], const char mac[6], const char data_saved); // nowy config z LED ON/OFF
+void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void); //LED CFG zgaszona podczas normalnej pracy
+void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 
 #endif
