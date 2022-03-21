@@ -86,7 +86,7 @@
 										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
 										if ( ChannelNumber == 6 ) {	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_BATTERYHEALTH;	\
-											state->BatteryHealth = SUPLA_ESP_SOFTVER;
+										    state->BatteryHealth = SUPLA_ESP_SOFTVER; };
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		
