@@ -82,11 +82,11 @@
 							supla_board_input(!gpio__input_get(B_SENSOR_PORT1), !gpio__input_get(B_SENSOR_PORT2)); } 
 							
 							
-#define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
-										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
-										if ( ChannelNumber == 6 ) {	\
-											state->Fields |= SUPLA_CHANNELSTATE_FIELD_BATTERYHEALTH;	\
-										    state->BatteryHealth = SUPLA_ESP_SOFTVER; };
+#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 6 ) {	\
+											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
+										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };;
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		
