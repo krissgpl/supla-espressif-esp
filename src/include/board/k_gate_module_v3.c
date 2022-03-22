@@ -26,12 +26,13 @@
 ETSTimer value_timer1;
 ETSTimer blokada_bramy;
 ETSTimer odblokowanie_bramy;
+ETSTimer board_input_timer;
 
 int UPD_channel;
 int HRM_channel;
 int BLK_channel;
 
-unsigned int Licznik = 0;
+unsigned int Stan_Bramy = 0;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
@@ -76,6 +77,15 @@ void odblokowanie_bramy_cb(void *timer_arg) {
 	os_timer_disarm(&blokada_bramy);
 	os_timer_setfn(&blokada_bramy, (os_timer_func_t *)blokada_bramy_cb, NULL);
 	os_timer_arm(&blokada_bramy, 500, 0);
+}
+
+void board_input_timer_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "board_input_timer_cb");
+	
+	if ( Stan_Bramy == 2 ) Stan_Bramy = 0;
+	if ( Stan_Bramy == 1 ) Stan_Bramy = 2;
+	
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
@@ -410,6 +420,22 @@ void supla_board_input(int in1, int in2) {
 	
 	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i", in1, in2);
 	
+	if ( Stan_Bramy == 0 && in1 == 1 )	{
+			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
+			Stan_Bramy = 1; 
+			};
+	
+	if ( in1 == 1 ) {
+			os_timer_disarm(&board_input_timer);
+			os_timer_setfn(&board_input_timer, (os_timer_func_t *)board_input_timer_cb, NULL);
+			os_timer_arm(&board_input_timer, 1000, 0); };
+	
+	if ( Stan_Bramy == 2 && in1 == 0 )	{
+			os_timer_disarm(&board_input_timer);
+			os_timer_setfn(&board_input_timer, (os_timer_func_t *)board_input_timer_cb, NULL);
+			os_timer_arm(&board_input_timer, 1000, 0); };
+			
+	supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
 }
 /*
 void supla_board_input() {
