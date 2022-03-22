@@ -82,9 +82,12 @@ void odblokowanie_bramy_cb(void *timer_arg) {
 void board_input_timer_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "board_input_timer_cb");
+	supla_log(LOG_DEBUG, "Stan_Bramy timer przed = %i", Stan_Bramy);
 	
 	if ( Stan_Bramy == 2 ) Stan_Bramy = 0;
 	if ( Stan_Bramy == 1 ) Stan_Bramy = 2;
+	
+	supla_log(LOG_DEBUG, "Stan_Bramy timer po = %i", Stan_Bramy);
 	
 }
 
@@ -426,11 +429,13 @@ void supla_board_input(int in1, int in2) {
 			};
 	
 	if ( in1 == 1 ) {
+			supla_log(LOG_DEBUG, "in1=1, board_input_timer" );
 			os_timer_disarm(&board_input_timer);
 			os_timer_setfn(&board_input_timer, (os_timer_func_t *)board_input_timer_cb, NULL);
 			os_timer_arm(&board_input_timer, 1000, 0); };
 	
 	if ( Stan_Bramy == 2 && in1 == 0 )	{
+			supla_log(LOG_DEBUG, "in1=0, Stan_Bramy=2, board_input_timer" );
 			os_timer_disarm(&board_input_timer);
 			os_timer_setfn(&board_input_timer, (os_timer_func_t *)board_input_timer_cb, NULL);
 			os_timer_arm(&board_input_timer, 1000, 0); };
