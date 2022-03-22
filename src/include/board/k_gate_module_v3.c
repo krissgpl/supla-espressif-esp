@@ -85,7 +85,12 @@ void board_input_timer_cb(void *timer_arg) {
 	supla_log(LOG_DEBUG, "Stan_Bramy timer przed = %i", Stan_Bramy);
 	
 	if ( Stan_Bramy == 2 ) Stan_Bramy = 0;
-	if ( Stan_Bramy == 1 ) Stan_Bramy = 2;
+	if ( Stan_Bramy == 1 ) {
+			Stan_Bramy = 2;
+			if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
+				supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
+				supla_esp_channel_value_changed(3, 1); };
+	};
 	
 	supla_log(LOG_DEBUG, "Stan_Bramy timer po = %i", Stan_Bramy);
 	
