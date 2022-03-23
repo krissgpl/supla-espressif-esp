@@ -30,7 +30,7 @@
 
 #define BOARD_ON_CONNECT
 
-#define SUPLA_ESP_SOFTVER "2.8.42.4"
+#define SUPLA_ESP_SOFTVER "2.8.49.0"
 #define AP_SSID "STAIRCASE_DIMMER"
 #define ESP_HOSTNAME "STAIRCASE_DIMMER"
 
@@ -77,11 +77,11 @@
 							supla_dimmer_smooth(!gpio__input_get(B_SENSOR_PORT1), !gpio__input_get(B_SENSOR_PORT2)); } 
 							
 							
-#define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
-										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
-										if ( ChannelNumber == 6 ) {	\
-											state->Fields |= SUPLA_CHANNELSTATE_FIELD_BATTERYHEALTH;	\
-											state->BatteryHealth = SUPLA_ESP_SOFTVER;
+#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 6 ) {	\
+											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
+										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };
 											
 void ICACHE_FLASH_ATTR supla_esp_board_pwm_init(void);
 char ICACHE_FLASH_ATTR supla_esp_board_set_rgbw_value(int ChannelNumber, int *Color, float *ColorBrightness, float *Brightness);
