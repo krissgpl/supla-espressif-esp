@@ -48,7 +48,7 @@ void supla_esp_board_gpio_init(void) {
 		
 	supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[0].gpio_id = B_CFG_PORT;
-	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN;
+	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN | INPUT_FLAG_TRIGGER_ON_PRESS;
 	supla_input_cfg[0].relay_gpio_id = B_RELAY1_PORT;
 	supla_input_cfg[0].channel = 0;
 
@@ -97,13 +97,14 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[1].Number = 1;
 	channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[1].Default = 0;
 	channels[1].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
 
 	#ifdef __BOARD_k_socket_ds18b20
 		channels[2].Number = 2;
 		channels[2].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
-
+		channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 		channels[2].FuncList = 0;
 		channels[2].Default = 0;
 
@@ -113,7 +114,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	#ifdef __BOARD_k_socket_DHT22
 		channels[2].Number = 2;
 		channels[2].Type = SUPLA_CHANNELTYPE_DHT22;
-
+		channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 		channels[2].FuncList = 0;
 		channels[2].Default = 0;
 
@@ -222,10 +223,11 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       "value=\"%s\"><label>E-mail</label></i></div><div "
       "class=\"w\"><h3>Additional Settings</h3>"
 	  "<i><select name=\"led\"><option value=\"0\" %s>LED "
-      "ON<option value=\"1\" %s>LED OFF</select><label>Status - connected</label></i>"
+      "ON<option value=\"1\" %s>LED OFF<option value=\"2\" %s>CHANNEL STATUS</select><label>Status LED</label></i>"
 	  "<i><select name=\"upd\"><option value=\"0\" "
       "%s>NO<option value=\"1\" %s>YES</select><label>Firmware "
-      "update</label></i></div><button type=\"submit\">SAVE</button></form></div><br><br>";
+      "update</label></i></div><button type=\"submit\">SAVE</button><input "
+	  "type=\"hidden\" name=\"rbt\" value=\"2\" /></form></div><br><br></body></html>";
 
   int bufflen = strlen(supla_esp_devconn_laststate())
 				+strlen(dev_name)
@@ -269,6 +271,7 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       supla_esp_cfg.Server, supla_esp_cfg.Email,
 	  supla_esp_cfg.StatusLedOff == 0 ? "selected" : "",
       supla_esp_cfg.StatusLedOff == 1 ? "selected" : "",
+	  supla_esp_cfg.StatusLedOff == 2 ? "selected" : "",
 	  supla_esp_cfg.FirmwareUpdate == 0 ? "selected" : "",
       supla_esp_cfg.FirmwareUpdate == 1 ? "selected" : ""
       );
@@ -278,67 +281,12 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	
-	supla_esp_gpio_set_led(supla_esp_cfg.StatusLedOff, 0, 0);
+	if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {
+		supla_esp_gpio_set_led(supla_esp_cfg.StatusLedOff, 0, 0);
+	} else {
+		supla_esp_gpio_set_led(supla_esp_gpio_output_is_hi(B_RELAY1_PORT), 0, 0);
+	}
   
-}
-
-void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
-    char hi)
-{
-
-    supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
-
-    if (input_cfg->relay_gpio_id != 255) {
-
-        //supla_log(LOG_DEBUG, "RELAY");
-
-        supla_esp_gpio_relay_hi(input_cfg->relay_gpio_id, hi, 0);
-
-        if (input_cfg->channel != 255)
-            supla_esp_channel_value_changed(
-                input_cfg->channel,
-                supla_esp_gpio_relay_is_hi(input_cfg->relay_gpio_id));
-    }
-}
-
-void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg)
-{
-
-    supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
-
-  if ( input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE 	//wlaczanie przy zboczu narastajacym
-		|| input_cfg->type == INPUT_TYPE_BTN_BISTABLE ) {
-
-		supla_log(LOG_DEBUG, "RELAY");
-		supla_esp_board_gpio_relay_switch(input_cfg, 255);
-		
-		} else if ( input_cfg->type == INPUT_TYPE_SENSOR
-				&&  input_cfg->channel != 255 ) {
-
-		supla_esp_channel_value_changed(input_cfg->channel, 1);
-
-	}
-
-    input_cfg->last_state = 1;
-}
-
-void ICACHE_FLASH_ATTR
-supla_esp_board_gpio_on_input_inactive(void* _input_cfg)
-{
-
-    supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
-
-    if ( input_cfg->type == INPUT_TYPE_BTN_BISTABLE ) {		//wlaczanie przy zboczu narastajacym
-
-		supla_esp_board_gpio_relay_switch(input_cfg, 255);
-
-    } else if ( input_cfg->type == INPUT_TYPE_SENSOR
-			    &&  input_cfg->channel != 255 ) {
-		supla_esp_channel_value_changed(input_cfg->channel, 0);
-
-	}
-
-    input_cfg->last_state = 0;
 }
 
 void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
