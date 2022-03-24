@@ -84,7 +84,7 @@ void board_input_timer_cb(void *timer_arg) {
 	supla_log(LOG_DEBUG, "board_input_timer_cb");
 	supla_log(LOG_DEBUG, "Stan_Bramy timer przed = %i", Stan_Bramy);
 	
-	if ( Stan_Bramy == 2 ) Stan_Bramy = 0;
+	if ( Stan_Bramy == 2 && gpio__input_get(B_SENSOR_PORT1) == 1 ) Stan_Bramy = 0;
 	if ( Stan_Bramy == 1 ) {
 			Stan_Bramy = 2;
 			if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
@@ -428,7 +428,7 @@ void supla_board_input(int in1, int in2) {
 	
 	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i", in1, in2);
 	
-	if ( Stan_Bramy == 0 && in1 == 1 )	{
+	if ( Stan_Bramy == 0 && in1 == 1 && supla_esp_state.Relay[7] == 1)	{
 			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
 			Stan_Bramy = 1; 
 			};
