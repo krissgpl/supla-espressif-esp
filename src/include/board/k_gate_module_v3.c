@@ -33,6 +33,7 @@ int HRM_channel;
 int BLK_channel;
 
 unsigned int Stan_Bramy = 0;
+unsigned int Licznik = 0;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
@@ -476,7 +477,15 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		HRM_channel = 7;
 		BLK_channel = 8;
 		
-if ( port == B_RELAY2_PORT && hi==1 && supla_esp_state.Relay[7] == 1) supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1); 
+if ( port == B_RELAY2_PORT && hi==1 && supla_esp_state.Relay[7] == 1) {
+	
+	Licznik++;
+	if ( Licznik == 2) {
+		supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1); 
+		supla_log(LOG_DEBUG, "supla_esp_board send AT (gate)");
+		Licznik = 0;
+	};
+};
 	
 if ( port == 20 ) {	
 
