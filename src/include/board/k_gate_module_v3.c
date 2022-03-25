@@ -480,6 +480,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 if ( port == B_RELAY2_PORT && hi==1 && supla_esp_state.Relay[7] == 1) {
 	
 	Licznik++;
+	supla_log(LOG_DEBUG, "Licznik = %i", Licznik);
 	if ( Licznik == 2) {
 		supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1); 
 		supla_log(LOG_DEBUG, "supla_esp_board send AT (gate)");
