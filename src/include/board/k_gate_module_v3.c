@@ -429,7 +429,7 @@ void supla_board_input(int in1, int in2) {
 	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i", in1, in2);
 	
 	if ( Stan_Bramy == 0 && in1 == 1 && supla_esp_state.Relay[7] == 1)	{
-			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
+			//supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
 			Stan_Bramy = 1; 
 			};
 	
@@ -475,6 +475,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		UPD_channel = 6;
 		HRM_channel = 7;
 		BLK_channel = 8;
+		
+if ( port == B_RELAY2_PORT && hi==1 && supla_esp_state.Relay[7] == 1) supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1); 
 	
 if ( port == 20 ) {	
 

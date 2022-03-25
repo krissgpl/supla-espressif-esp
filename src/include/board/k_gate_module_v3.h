@@ -56,6 +56,7 @@
 #define B_BLOKADA			22
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
+	if ( port == B_RELAY2_PORT ) supla_esp_board_gpiooutput_set_hi(port, hi);	\
 	if (supla_last_state == STATE_CONNECTED) { \
 		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
 			supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\
@@ -75,7 +76,7 @@
 				if ( port == B_BLOKADA)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 8 = %i", supla_esp_state.Relay[8]);	\
 												return supla_esp_state.Relay[8] == 1 ? 1 : 0;	}
 
-#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
+//#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
 
 #define BOARD_INTR_HANDLER	if ( supla_last_state == STATE_CONNECTED && gpio_status > 1 ) { \
 							supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
