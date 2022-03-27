@@ -56,7 +56,9 @@
 #define B_BLOKADA			22
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
-	if ( port == B_RELAY2_PORT ) supla_esp_board_gpiooutput_set_hi(port, hi);	\
+	if ( port == B_RELAY2_PORT ) {	\
+		supla_log(LOG_DEBUG, "PORT B_RELAY2 MAKRO");	\
+		supla_esp_board_gpiooutput_set_hi(port, hi); };	\
 	if (supla_last_state == STATE_CONNECTED) { \
 		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
 			supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\
