@@ -444,8 +444,10 @@ void supla_board_input(int in1, int in2) {
 			os_timer_arm(&board_input_timer, 1000, 0); };
 			
 	if ( in1 == 1 && Licznik == 1) {
-			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1); 
-			supla_log(LOG_DEBUG, "supla_esp_board send AT (gate)"); };
+			if ( supla_esp_state.Relay[7] == 1) {
+				supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1); 
+				supla_log(LOG_DEBUG, "supla_esp_board send AT (gate)"); }; 
+	};
 				
 	supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
 }
