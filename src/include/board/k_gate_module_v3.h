@@ -21,7 +21,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.8.40.1"
+#define SUPLA_ESP_SOFTVER "2.8.49.2"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -56,6 +56,7 @@
 #define B_BLOKADA			22
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
+	if ( port == B_RELAY2_PORT ) supla_esp_board_gpiooutput_set_hi(port, hi);	\
 	if (supla_last_state == STATE_CONNECTED) { \
 		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
 			supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\
@@ -75,18 +76,18 @@
 				if ( port == B_BLOKADA)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 8 = %i", supla_esp_state.Relay[8]);	\
 												return supla_esp_state.Relay[8] == 1 ? 1 : 0;	}
 
-#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
+//#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
 
 #define BOARD_INTR_HANDLER	if ( supla_last_state == STATE_CONNECTED && gpio_status > 1 ) { \
 							supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
 							supla_board_input(!gpio__input_get(B_SENSOR_PORT1), !gpio__input_get(B_SENSOR_PORT2)); } 
 							
 							
-#define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
-										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
-										if ( ChannelNumber == 6 ) {	\
-											state->Fields |= SUPLA_CHANNELSTATE_FIELD_BATTERYHEALTH;	\
-											state->BatteryHealth = SUPLA_ESP_SOFTVER;
+#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 6 ) {	\
+											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
+										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };;
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		

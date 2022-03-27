@@ -26,11 +26,15 @@
 ETSTimer value_timer1;
 ETSTimer blokada_bramy;
 ETSTimer odblokowanie_bramy;
+ETSTimer board_input_timer;
 
 int UPD_channel;
 int HRM_channel;
 int BLK_channel;
 
+unsigned int Stan_Bramy = 0;	// 0 - zamknieta
+								// 1 - otwiera sie lub zamyka sie
+								// 2 - otwarta
 unsigned int Licznik = 0;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
@@ -78,9 +82,26 @@ void odblokowanie_bramy_cb(void *timer_arg) {
 	os_timer_arm(&blokada_bramy, 500, 0);
 }
 
+void board_input_timer_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "board_input_timer_cb");
+	supla_log(LOG_DEBUG, "Stan_Bramy timer przed = %i", Stan_Bramy);
+	
+	if ( gpio__input_get(B_SENSOR_PORT1) == 1 ) Stan_Bramy = 0;		// gdy na input napiecie to 0, gdy brak napiecia to 1
+	if ( gpio__input_get(B_SENSOR_PORT1) == 0 ) {
+			Stan_Bramy = 2;
+			if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
+				supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
+				supla_esp_channel_value_changed(3, 1); };
+	};
+	
+	supla_log(LOG_DEBUG, "Stan_Bramy timer po = %i", Stan_Bramy);
+	
+}
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 		
-	supla_input_cfg[0].type = supla_esp_cfg.CfgButtonType == BTN_TYPE_BISTABLE ? INPUT_TYPE_BTN_BISTABLE : INPUT_TYPE_BTN_MONOSTABLE;
+	supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[0].gpio_id = B_CFG_PORT;
 	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN;
 	
@@ -347,7 +368,7 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 	  "<i><select name=\"upd\"><option value=\"0\" "
       "%s>NO<option value=\"1\" %s>YES</select><label>Firmware "
       "update</label></i></div><button type=\"submit\">SAVE</button><input "
-	  "type=\"hidden\" name=\"rbt\" value=\"2\" /></form></div><br><br></body></html>!";
+	  "type=\"hidden\" name=\"rbt\" value=\"2\" /></form></div><br><br></body></html>";
 
   int bufflen = strlen(supla_esp_get_laststate()) + strlen(dev_name) +
                 strlen(SUPLA_ESP_SOFTVER) + strlen(supla_esp_cfg.WIFI_SSID) +
@@ -404,34 +425,24 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	} else {
 		supla_esp_gpio_set_led(supla_esp_gpio_output_is_hi(B_RELAY1_PORT), 0, 0);
 	}
+  supla_log(LOG_DEBUG, "Stan Bramy = %i", Stan_Bramy);
+	
 }
 
 void supla_board_input(int in1, int in2) {
 	
 	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i", in1, in2);
 	
+	if ( in1 == 1 ) {
+			Stan_Bramy = 1;
+			supla_log(LOG_DEBUG, "in1=1, board_input_timer" );
+			os_timer_disarm(&board_input_timer);
+			os_timer_setfn(&board_input_timer, (os_timer_func_t *)board_input_timer_cb, NULL);
+			os_timer_arm(&board_input_timer, 1000, 0); };
+				
+	supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
 }
-/*
-void supla_board_input() {
-	
-	Licznik = Licznik + 1;
-	if ( Licznik == 6)	{
-		
-		Licznik = 0;
-		supla_log(LOG_DEBUG, "ESP BOARD INPUT TEST");
-	
-		if ( supla_esp_state.Relay[7] == 1 ) {
-			supla_log(LOG_DEBUG, "SEND AT x1");
-			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
-		};
-	
-		if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
-			supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
-			supla_esp_channel_value_changed(3, 1);
-		};
-	};
-};
-*/
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			
 		supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi port = %i, hi = %i", port, hi);
@@ -439,6 +450,17 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		UPD_channel = 6;
 		HRM_channel = 7;
 		BLK_channel = 8;
+		
+if ( port == B_RELAY2_PORT && hi==1 && supla_esp_state.Relay[7] == 1) {
+	
+	Licznik++;
+	supla_log(LOG_DEBUG, "Licznik = %i", Licznik);
+	if ( Licznik == 2) {
+		supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1); 
+		supla_log(LOG_DEBUG, "supla_esp_board send AT (gate)");
+		Licznik = 0;
+	};
+};
 	
 if ( port == 20 ) {	
 

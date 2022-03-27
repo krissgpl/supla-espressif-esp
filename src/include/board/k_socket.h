@@ -19,12 +19,13 @@
 #ifndef K_SOCKET_H_
 #define K_SOCKET_H_
 
-#define ESP8266_SUPLA_PROTO_VERSION 12
+#define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.7.24.2"
+#define SUPLA_ESP_SOFTVER "2.8.49.0"
 
 #define BOARD_CFG_HTML_TEMPLATE
 #define BOARD_ON_CONNECT
+#define CFGMODE_SSID_LIMIT_MACLEN
 
 #ifdef __BOARD_k_socket_ds18b20
 	#define DS18B20
@@ -55,6 +56,12 @@
 
 #define BOARD_GPIO_OUTPUT_SET_HI if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
 
+#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 1 ) {	\
+											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
+										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };
+
 void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
 
@@ -64,15 +71,5 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc);
-
-#define BOARD_ON_INPUT_ACTIVE                        \
-    supla_esp_board_gpio_on_input_active(input_cfg); \
-    return;
-void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg);
-
-#define BOARD_ON_INPUT_INACTIVE                        \
-    supla_esp_board_gpio_on_input_inactive(input_cfg); \
-    return;
-void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
 
 #endif

@@ -28,6 +28,7 @@
 
 #define BOARD_ON_CONNECT  // LED CFG zgaszona przy normalnej pracy
 #define BOARD_CFG_HTML_TEMPLATE // nowy config z LED ON/OFF
+#define CFG_TIME_VARIABLES
 
 // #define INPUT_MIN_CYCLE_COUNT 6 // nowy czas
 // #define INPUT_CYCLE_TIME 21 // nowy czas
