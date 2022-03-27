@@ -266,7 +266,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_UPD_PORT));
 	supla_esp_channel_value_changed(7, supla_esp_gpio_relay_on(B_HARMONOGRAM));
 	supla_esp_channel_value_changed(8, supla_esp_gpio_relay_on(B_BLOKADA));
-	supla_log(LOG_DEBUG, "Stan Bramy = %i", Stan_Bramy);
+
 }
 
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
@@ -433,21 +433,13 @@ void supla_board_input(int in1, int in2) {
 	
 	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i", in1, in2);
 	
-	//if ( Stan_Bramy == 0 && in1 == 1 )	Stan_Bramy = 1; 
-	
 	if ( in1 == 1 ) {
 			Stan_Bramy = 1;
 			supla_log(LOG_DEBUG, "in1=1, board_input_timer" );
 			os_timer_disarm(&board_input_timer);
 			os_timer_setfn(&board_input_timer, (os_timer_func_t *)board_input_timer_cb, NULL);
 			os_timer_arm(&board_input_timer, 1000, 0); };
-	
-/*	if ( Stan_Bramy == 2 && in1 == 0 )	{
-			supla_log(LOG_DEBUG, "in1=0, Stan_Bramy=2, board_input_timer" );
-			os_timer_disarm(&board_input_timer);
-			os_timer_setfn(&board_input_timer, (os_timer_func_t *)board_input_timer_cb, NULL);
-			os_timer_arm(&board_input_timer, 1000, 0); }; */
-			
+				
 	supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
 }
 
