@@ -33,7 +33,7 @@ int HRM_channel;
 int BLK_channel;
 
 unsigned int Stan_Bramy = 0;	// 0 - zamknieta
-								// 1 - otwiera sie
+								// 1 - otwiera sie lub zamyka sie
 								// 2 - otwarta
 unsigned int Licznik = 0;
 
@@ -433,9 +433,10 @@ void supla_board_input(int in1, int in2) {
 	
 	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i", in1, in2);
 	
-	if ( Stan_Bramy == 0 && in1 == 1 )	Stan_Bramy = 1; 
+	//if ( Stan_Bramy == 0 && in1 == 1 )	Stan_Bramy = 1; 
 	
 	if ( in1 == 1 ) {
+			Stan_Bramy = 1;
 			supla_log(LOG_DEBUG, "in1=1, board_input_timer" );
 			os_timer_disarm(&board_input_timer);
 			os_timer_setfn(&board_input_timer, (os_timer_func_t *)board_input_timer_cb, NULL);
