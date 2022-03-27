@@ -32,7 +32,9 @@ int UPD_channel;
 int HRM_channel;
 int BLK_channel;
 
-unsigned int Stan_Bramy = 0;
+unsigned int Stan_Bramy = 0;	// 0 - zamknieta
+								// 1 - otwiera sie
+								// 2 - otwarta
 unsigned int Licznik = 0;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
@@ -85,8 +87,8 @@ void board_input_timer_cb(void *timer_arg) {
 	supla_log(LOG_DEBUG, "board_input_timer_cb");
 	supla_log(LOG_DEBUG, "Stan_Bramy timer przed = %i", Stan_Bramy);
 	
-	if ( Stan_Bramy == 2 && gpio__input_get(B_SENSOR_PORT1) == 1 ) Stan_Bramy = 0;
-	if ( Stan_Bramy == 1 ) {
+	if ( gpio__input_get(B_SENSOR_PORT1) == 1 ) Stan_Bramy = 0;		// gdy na input napiecie to 0, gdy brak napiecia to 1
+	if ( gpio__input_get(B_SENSOR_PORT1) == 0 ) {
 			Stan_Bramy = 2;
 			if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
 				supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
@@ -264,7 +266,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_UPD_PORT));
 	supla_esp_channel_value_changed(7, supla_esp_gpio_relay_on(B_HARMONOGRAM));
 	supla_esp_channel_value_changed(8, supla_esp_gpio_relay_on(B_BLOKADA));
-
+	supla_log(LOG_DEBUG, "Stan Bramy = %i", Stan_Bramy);
 }
 
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
@@ -423,16 +425,15 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	} else {
 		supla_esp_gpio_set_led(supla_esp_gpio_output_is_hi(B_RELAY1_PORT), 0, 0);
 	}
+  supla_log(LOG_DEBUG, "Stan Bramy = %i", Stan_Bramy);
+	
 }
 
 void supla_board_input(int in1, int in2) {
 	
 	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i", in1, in2);
 	
-	if ( Stan_Bramy == 0 && in1 == 1 && supla_esp_state.Relay[7] == 1)	{
-			//supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
-			Stan_Bramy = 1; 
-			};
+	if ( Stan_Bramy == 0 && in1 == 1 )	Stan_Bramy = 1; 
 	
 	if ( in1 == 1 ) {
 			supla_log(LOG_DEBUG, "in1=1, board_input_timer" );
@@ -440,11 +441,11 @@ void supla_board_input(int in1, int in2) {
 			os_timer_setfn(&board_input_timer, (os_timer_func_t *)board_input_timer_cb, NULL);
 			os_timer_arm(&board_input_timer, 1000, 0); };
 	
-	if ( Stan_Bramy == 2 && in1 == 0 )	{
+/*	if ( Stan_Bramy == 2 && in1 == 0 )	{
 			supla_log(LOG_DEBUG, "in1=0, Stan_Bramy=2, board_input_timer" );
 			os_timer_disarm(&board_input_timer);
 			os_timer_setfn(&board_input_timer, (os_timer_func_t *)board_input_timer_cb, NULL);
-			os_timer_arm(&board_input_timer, 1000, 0); };
+			os_timer_arm(&board_input_timer, 1000, 0); }; */
 			
 	supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
 }
