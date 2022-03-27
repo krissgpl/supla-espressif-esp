@@ -87,7 +87,9 @@ void board_input_timer_cb(void *timer_arg) {
 	supla_log(LOG_DEBUG, "board_input_timer_cb");
 	supla_log(LOG_DEBUG, "Stan_Bramy timer przed = %i", Stan_Bramy);
 	
-	if ( gpio__input_get(B_SENSOR_PORT1) == 1 ) Stan_Bramy = 0;		// gdy na input napiecie to 0, gdy brak napiecia to 1
+	if ( gpio__input_get(B_SENSOR_PORT1) == 1 ) {
+		Stan_Bramy = 0;		// gdy na input napiecie to 0, gdy brak napiecia to 1
+		Licznik = 0; };
 	if ( gpio__input_get(B_SENSOR_PORT1) == 0 ) {
 			Stan_Bramy = 2;
 			if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
@@ -432,13 +434,18 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 void supla_board_input(int in1, int in2) {
 	
 	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i", in1, in2);
-	
+	Licznik++;
+	supla_log(LOG_DEBUG, "Licznik = %i", Licznik);
 	if ( in1 == 1 ) {
 			Stan_Bramy = 1;
 			supla_log(LOG_DEBUG, "in1=1, board_input_timer" );
 			os_timer_disarm(&board_input_timer);
 			os_timer_setfn(&board_input_timer, (os_timer_func_t *)board_input_timer_cb, NULL);
 			os_timer_arm(&board_input_timer, 1000, 0); };
+			
+	if ( in1 == 1 && Licznik == 1) {
+			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1); 
+			supla_log(LOG_DEBUG, "supla_esp_board send AT (gate)"); };
 				
 	supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
 }
@@ -450,7 +457,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		UPD_channel = 6;
 		HRM_channel = 7;
 		BLK_channel = 8;
-		
+/*		
 if ( port == B_RELAY2_PORT ) {
 	supla_log(LOG_DEBUG, "AT port B_RELAY2_PORT ");
 	if ( hi==1 ) {
@@ -467,7 +474,7 @@ if ( port == B_RELAY2_PORT ) {
 		};
 	};
 };
-	
+*/	
 if ( port == 20 ) {	
 
 	if ( hi == 1 ) {
