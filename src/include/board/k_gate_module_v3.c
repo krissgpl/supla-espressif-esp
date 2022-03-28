@@ -104,7 +104,7 @@ void board_input_timer_cb(void *timer_arg) {
 	supla_log(LOG_DEBUG, "Stan_Bramy timer Low przed = %i", Low);
 	supla_log(LOG_DEBUG, "Stan_Bramy timer High przed = %i", High);
 	
-	if ( Stan_Bramy = 2; ) os_timer_disarm(&board_input_timer);
+	if ( Stan_Bramy == 2 ) os_timer_disarm(&board_input_timer;
 	
 	if ( gpio__input_get(B_SENSOR_PORT1) == 0 ) { // gdy na input napiecie to 0
 		High++;
