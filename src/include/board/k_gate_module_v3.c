@@ -36,6 +36,8 @@ unsigned int Stan_Bramy = 0;	// 0 - zamknieta
 								// 1 - otwiera sie lub zamyka sie
 								// 2 - otwarta
 unsigned int Licznik = 0;
+unsigned int Low = 0;
+unsigned int High = 0;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
@@ -85,7 +87,7 @@ void odblokowanie_bramy_cb(void *timer_arg) {
 void board_input_timer_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "board_input_timer_cb");
-	supla_log(LOG_DEBUG, "Stan_Bramy timer przed = %i", Stan_Bramy);
+	/*supla_log(LOG_DEBUG, "Stan_Bramy timer przed = %i", Stan_Bramy);
 	
 	if ( gpio__input_get(B_SENSOR_PORT1) == 1 ) {
 		Stan_Bramy = 0;		// gdy na input napiecie to 0, gdy brak napiecia to 1
@@ -97,8 +99,39 @@ void board_input_timer_cb(void *timer_arg) {
 				supla_esp_channel_value_changed(3, 1); };
 	};
 	
-	supla_log(LOG_DEBUG, "Stan_Bramy timer po = %i", Stan_Bramy);
+	supla_log(LOG_DEBUG, "Stan_Bramy timer po = %i", Stan_Bramy);*/
 	
+	supla_log(LOG_DEBUG, "Stan_Bramy timer Low przed = %i", Low);
+	supla_log(LOG_DEBUG, "Stan_Bramy timer High przed = %i", High);
+	
+	if ( Stan_Bramy = 2; ) os_timer_disarm(&board_input_timer);
+	
+	if ( gpio__input_get(B_SENSOR_PORT1) == 0 ) { // gdy na input napiecie to 0
+		High++;
+		Low=0; };
+		
+	if ( High >= 7 ) {
+		Stan_Bramy = 2;
+			if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
+				supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
+				supla_esp_channel_value_changed(3, 1); };
+		Low=0;
+		High=0;
+		os_timer_disarm(&board_input_timer); };
+		
+	if ( gpio__input_get(B_SENSOR_PORT1) == 1 ) { // gdy na input brak napiecia to 1
+		High=0;
+		Low=++; };
+		
+	if ( Low >= 7 ) {
+		Stan_Bramy = 0;
+		Licznik = 0;
+		Low=0;
+		High=0;
+		os_timer_disarm(&board_input_timer); };
+		
+	supla_log(LOG_DEBUG, "Stan_Bramy timer Low po = %i", Low);
+	supla_log(LOG_DEBUG, "Stan_Bramy timer High po = %i", High);
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
@@ -436,12 +469,12 @@ void supla_board_input(int in1, int in2) {
 	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i", in1, in2);
 	Licznik++;
 	supla_log(LOG_DEBUG, "Licznik = %i", Licznik);
-	if ( in1 == 1 ) {
+	if ( in1 == 1 && Stan_Bramy != 1) {
 			Stan_Bramy = 1;
 			supla_log(LOG_DEBUG, "in1=1, board_input_timer" );
 			os_timer_disarm(&board_input_timer);
 			os_timer_setfn(&board_input_timer, (os_timer_func_t *)board_input_timer_cb, NULL);
-			os_timer_arm(&board_input_timer, 1000, 0); };
+			os_timer_arm(&board_input_timer, 100, 1); };
 			
 	if ( in1 == 1 && Licznik == 1) {
 			if ( supla_esp_state.Relay[7] == 1) {
