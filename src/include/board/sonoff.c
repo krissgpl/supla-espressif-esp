@@ -27,6 +27,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffe
 	
 		ets_snprintf(buffer, buffer_size, "S_Basic_T_AT v1.1");
 }
+
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved) {
   static char html_template_header[] =
@@ -123,14 +124,14 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       "value=\"%s\"><label>Server</label></i><i><input name=\"eml\" "
       "value=\"%s\"><label>E-mail</label></i></div><div "
       "class=\"w\"><h3>Additional Settings</h3><i><input name=\"t10\" "
-      "type=\"number\" value=\"%i\"><label>HOLD TIME (700ms) "
+	  "type=\"number\" value=\"%i\"><label>HOLD TIME (700ms) "
       "</label></i><i><input name=\"t11\" type=\"number\" "
-      "value=\"%i\"><label>MULTICLICK TIME (300ms) </label></i>"
+	   "value=\"%i\"><label>MULTICLICK TIME (300ms) </label></i>"
 	  "<i><select name=\"led\"><option "
       "value=\"0\" %s>LED "
       "ON<option value=\"1\" %s>LED OFF</select><label>Status - " 
-    //  "connected</label></i><i><select name=\"upd\"><option value=\"0\" "
-   //   "%s>NO<option value=\"1\" %s>YES</select><label>Firmware "
+      "connected</label></i><i><select name=\"upd\"><option value=\"0\" "
+      "%s>NO<option value=\"1\" %s>YES</select><label>Firmware "
       "LED</label></i></div><button "
       "type=\"submit\">SAVE</button><br><br>"
       "<button type=\"button\" onclick=\"saveAndReboot();\">SAVE &amp; " 
@@ -253,6 +254,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 	supla_esp_channel_value_changed(0, supla_esp_gpio_relay_on(B_RELAY1_PORT));
 
 }
+
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {     // LED CFG zgaszona podczas normalnej pracy
   supla_esp_gpio_set_led(supla_esp_cfg.StatusLedOff, 0, 0);   // LED CFG zgaszona podczas normalnej pracy
 															  // LED CFG zgaszona podczas normalnej pracy
@@ -261,16 +263,5 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {     // LED CFG zgaszon
 	supla_log(LOG_DEBUG, "Set multiclick time = %i", supla_esp_cfg.Time1[1]);
 	supla_esp_input_set_hold_time_ms(supla_esp_cfg.Time1[0]);
 	supla_esp_input_set_multiclick_time_ms(supla_esp_cfg.Time1[1]);
-  channels[1].ActionTriggerCaps = supla_input_cfg[0].action_trigger_cap;
-  channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-  channels[1].actionTriggerProperties.relatedChannelNumber = 1;
-  channels[1].actionTriggerProperties.disablesLocalOperation =
-   // SUPLA_ACTION_CAP_TOGGLE_x1 | SUPLA_ACTION_CAP_SHORT_PRESS_x1;
-  SUPLA_ACTION_CAP_SHORT_PRESS_x1; // tylko monostabilny
   
-  }                                                            
-  
-  
-  
-  supla_esp_gpio_set_led(supla_esp_cfg.StatusLedOff, 0, 0);  // LED CFG zgaszona podczas normalnej pracy
-  }                                                            // LED CFG zgaszona podczas normalnej pracy
+}                
