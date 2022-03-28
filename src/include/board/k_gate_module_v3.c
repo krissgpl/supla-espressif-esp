@@ -121,7 +121,7 @@ void board_input_timer_cb(void *timer_arg) {
 		
 	if ( gpio__input_get(B_SENSOR_PORT1) == 1 ) { // gdy na input brak napiecia to 1
 		High=0;
-		Low=++; };
+		Low++; };
 		
 	if ( Low >= 7 ) {
 		Stan_Bramy = 0;
