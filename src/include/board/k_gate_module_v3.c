@@ -112,6 +112,7 @@ void board_input_timer_cb(void *timer_arg) {
 		
 	if ( High >= 7 ) {
 		Stan_Bramy = 2;
+		supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
 			if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
 				supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
 				supla_esp_channel_value_changed(3, 1); };
@@ -128,6 +129,7 @@ void board_input_timer_cb(void *timer_arg) {
 		Licznik = 0;
 		Low=0;
 		High=0;
+		supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
 		os_timer_disarm(&board_input_timer); };
 		
 	supla_log(LOG_DEBUG, "Stan_Bramy timer Low po = %i", Low);
