@@ -32,7 +32,7 @@ int UPD_channel;
 int HRM_channel;
 int BLK_channel;
 
-//unsigned int Stan_Bramy = 0;	// 0 - zamknieta
+unsigned int Stan_Bramy = 0;	// 0 - zamknieta
 								// 1 - otwiera sie lub zamyka sie
 								// 2 - otwarta
 unsigned int Licznik = 0;
@@ -58,6 +58,10 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffe
 	   supla_log(LOG_DEBUG, "else if name: %i", supla_esp_cfg.ThermometerType);
 		ets_snprintf(buffer, buffer_size, "SUPLA-NICE_V3");
 	}
+}
+
+uint8 supla_board_gate(void) {
+    return Stan_Bramy;
 }
 
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {

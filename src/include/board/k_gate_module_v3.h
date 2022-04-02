@@ -42,10 +42,6 @@
 
 #define USE_GPIO16_OUTPUT
 
-unsigned int Stan_Bramy = 0;	// 0 - zamknieta
-								// 1 - otwiera sie lub zamyka sie
-								// 2 - otwarta
-
 #define B_CFG_PORT          0
 #define LED_RED_PORT  		16
 #define B_RELAY1_PORT       13	// blokada bramy
@@ -96,13 +92,15 @@ unsigned int Stan_Bramy = 0;	// 0 - zamknieta
 											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };	\
 										if ( ChannelNumber == 0 ) {	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
-											state->LastConnectionResetCause = Stan_Bramy; };	\
+											state->LastConnectionResetCause = supla_board_gate; };	\
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
 void supla_board_input(int in1, int in2);
+
+uint8 supla_board_gate(void);
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 
