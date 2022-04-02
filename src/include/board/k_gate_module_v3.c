@@ -32,7 +32,7 @@ int UPD_channel;
 int HRM_channel;
 int BLK_channel;
 
-unsigned int Stan_Bramy = 0;	// 0 - zamknieta
+//unsigned int Stan_Bramy = 0;	// 0 - zamknieta
 								// 1 - otwiera sie lub zamyka sie
 								// 2 - otwarta
 unsigned int Licznik = 0;

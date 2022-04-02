@@ -42,6 +42,10 @@
 
 #define USE_GPIO16_OUTPUT
 
+unsigned int Stan_Bramy = 0;	// 0 - zamknieta
+								// 1 - otwiera sie lub zamyka sie
+								// 2 - otwarta
+
 #define B_CFG_PORT          0
 #define LED_RED_PORT  		16
 #define B_RELAY1_PORT       13	// blokada bramy
