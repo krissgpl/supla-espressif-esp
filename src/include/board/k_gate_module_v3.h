@@ -92,7 +92,7 @@
 											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };	\
 										if ( ChannelNumber == 0 ) {	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
-											state->LastConnectionResetCause = supla_board_gate; };	\
+											state->LastConnectionResetCause = &supla_board_gate; };	\
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		
