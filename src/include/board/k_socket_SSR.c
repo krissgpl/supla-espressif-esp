@@ -65,11 +65,8 @@ void supla_esp_board_gpio_init(void) {
 	//---------------------------------------
 
 	supla_relay_cfg[1].gpio_id = B_UPD_PORT;
-  if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
-	supla_relay_cfg[1].channel = 2;
-  } else {
 	supla_relay_cfg[1].channel = 1;  
-  }
+  
 	//---------------------------------------
 	
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_SD_DATA3_U, FUNC_GPIO10); 	//ustawienie funkcji GPIO10
