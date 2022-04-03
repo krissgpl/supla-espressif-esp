@@ -61,6 +61,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffe
 }
 
 uint8 supla_board_gate(void) {
+	supla_log(LOG_DEBUG, "supla_board_gate Stan_Bramy = %i", Stan_Bramy);
     return Stan_Bramy;
 }
 
@@ -473,7 +474,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 void supla_board_input(int in1, int in2) {
 	
 	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i", in1, in2);
-	Licznik++;
+	
+	if ( in1 == 1 ) Licznik++;
+	
 	supla_log(LOG_DEBUG, "Licznik = %i", Licznik);
 	if ( in1 == 1 && Stan_Bramy != 1) {
 			Stan_Bramy = 1;

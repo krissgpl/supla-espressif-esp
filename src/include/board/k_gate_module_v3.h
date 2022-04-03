@@ -95,6 +95,7 @@ uint8 supla_board_gate(void);
 										if ( ChannelNumber == 0 ) {	\
 											int gate_status;	\
 											gate_status = (int)supla_board_gate;	\
+											supla_log(LOG_DEBUG, "gate_status = %i", gate_status);	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 											state->LastConnectionResetCause = gate_status; };	\
 
