@@ -94,7 +94,7 @@ char supla_board_gate(void);
 											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };	\
 										if ( ChannelNumber == 0 ) {	\
 											char gate_status;	\
-											gate_status = (char)supla_board_gate;	\
+											gate_status = supla_board_gate;	\
 											supla_log(LOG_DEBUG, "gate_status = %i", gate_status);	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 											state->LastConnectionResetCause = gate_status; };	\
