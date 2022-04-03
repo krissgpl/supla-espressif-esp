@@ -60,8 +60,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffe
 	}
 }
 
-char supla_board_gate {
-	supla_log(LOG_DEBUG, "supla_board_gate Stan_Bramy = %i", Stan_Bramy);
+char supla_board_gate(int in) {
+	supla_log(LOG_DEBUG, "supla_board_gate Stan_Bramy = %i, in = %i", Stan_Bramy, in);
     return Stan_Bramy;
 }
 
