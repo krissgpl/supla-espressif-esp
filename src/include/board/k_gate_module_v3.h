@@ -72,7 +72,7 @@
 						return;  };	\
 	}
 	
-uint8 supla_board_gate(void);
+char supla_board_gate(void);
 
 #define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 7 = %i", supla_esp_state.Relay[7]);	\
@@ -93,8 +93,8 @@ uint8 supla_board_gate(void);
 										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
 											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };	\
 										if ( ChannelNumber == 0 ) {	\
-											int gate_status;	\
-											gate_status = (int)supla_board_gate;	\
+											char gate_status;	\
+											gate_status = (char)supla_board_gate;	\
 											supla_log(LOG_DEBUG, "gate_status = %i", gate_status);	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 											state->LastConnectionResetCause = gate_status; };	\
