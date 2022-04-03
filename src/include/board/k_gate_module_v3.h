@@ -72,7 +72,7 @@
 						return;  };	\
 	}
 	
-char supla_board_gate(void);
+char supla_board_gate;
 
 #define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 7 = %i", supla_esp_state.Relay[7]);	\
@@ -95,7 +95,7 @@ char supla_board_gate(void);
 										if ( ChannelNumber == 0 ) {	\
 											char gate_status;	\
 											gate_status = supla_board_gate;	\
-											supla_log(LOG_DEBUG, "gate_status = %i", gate_status);	\
+											supla_log(LOG_DEBUG, "gate_status = %s", gate_status);	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 											state->LastConnectionResetCause = gate_status; };	\
 
