@@ -91,8 +91,10 @@
 										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
 											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };	\
 										if ( ChannelNumber == 0 ) {	\
+											int gate_status;	\
+											gate_status = supla_board_gate;	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
-											state->LastConnectionResetCause = &supla_board_gate; };	\
+											state->LastConnectionResetCause = gate_status; };	\
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		
