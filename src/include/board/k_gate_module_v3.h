@@ -71,6 +71,8 @@
 						supla_log(LOG_DEBUG, "PORT 20 MAKRO");	\
 						return;  };	\
 	}
+	
+uint8 supla_board_gate(void);
 
 #define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 7 = %i", supla_esp_state.Relay[7]);	\
@@ -101,8 +103,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
 void supla_board_input(int in1, int in2);
-
-uint8 supla_board_gate(void);
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 
