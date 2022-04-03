@@ -92,22 +92,9 @@ void odblokowanie_bramy_cb(void *timer_arg) {
 void board_input_timer_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "board_input_timer_cb");
-	/*supla_log(LOG_DEBUG, "Stan_Bramy timer przed = %i", Stan_Bramy);
 	
-	if ( gpio__input_get(B_SENSOR_PORT1) == 1 ) {
-		Stan_Bramy = 0;		// gdy na input napiecie to 0, gdy brak napiecia to 1
-		Licznik = 0; };
-	if ( gpio__input_get(B_SENSOR_PORT1) == 0 ) {
-			Stan_Bramy = 2;
-			if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
-				supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
-				supla_esp_channel_value_changed(3, 1); };
-	};
-	
-	supla_log(LOG_DEBUG, "Stan_Bramy timer po = %i", Stan_Bramy);*/
-	
-	supla_log(LOG_DEBUG, "Stan_Bramy timer Low przed = %i", Low);
-	supla_log(LOG_DEBUG, "Stan_Bramy timer High przed = %i", High);
+	//supla_log(LOG_DEBUG, "Stan_Bramy timer Low przed = %i", Low);
+	//supla_log(LOG_DEBUG, "Stan_Bramy timer High przed = %i", High);
 	
 	if ( Stan_Bramy == 2 ) os_timer_disarm(&board_input_timer);
 	
@@ -137,8 +124,8 @@ void board_input_timer_cb(void *timer_arg) {
 		supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
 		os_timer_disarm(&board_input_timer); };
 		
-	supla_log(LOG_DEBUG, "Stan_Bramy timer Low po = %i", Low);
-	supla_log(LOG_DEBUG, "Stan_Bramy timer High po = %i", High);
+	//supla_log(LOG_DEBUG, "Stan_Bramy timer Low po = %i", Low);
+	//supla_log(LOG_DEBUG, "Stan_Bramy timer High po = %i", High);
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
@@ -480,7 +467,7 @@ void supla_board_input(int in1, int in2) {
 	supla_log(LOG_DEBUG, "Licznik = %i", Licznik);
 	if ( in1 == 1 && Stan_Bramy != 1) {
 			Stan_Bramy = 1;
-			supla_log(LOG_DEBUG, "in1=1, board_input_timer" );
+			//supla_log(LOG_DEBUG, "in1=1, board_input_timer" );
 			os_timer_disarm(&board_input_timer);
 			os_timer_setfn(&board_input_timer, (os_timer_func_t *)board_input_timer_cb, NULL);
 			os_timer_arm(&board_input_timer, 100, 1); };
@@ -501,24 +488,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		UPD_channel = 6;
 		HRM_channel = 7;
 		BLK_channel = 8;
-/*		
-if ( port == B_RELAY2_PORT ) {
-	supla_log(LOG_DEBUG, "AT port B_RELAY2_PORT ");
-	if ( hi==1 ) {
-		supla_log(LOG_DEBUG, "AT port B_RELAY2_PORT hi=1 ");
-		if ( supla_esp_state.Relay[7] == 1) {
-		supla_log(LOG_DEBUG, "AT port B_RELAY2_PORT hi=1 Relay[7] = 1 ");
-		Licznik++;
-		supla_log(LOG_DEBUG, "Licznik = %i", Licznik);
-		if ( Licznik == 2) {
-			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1); 
-			supla_log(LOG_DEBUG, "supla_esp_board send AT (gate)");
-			Licznik = 0;
-			};
-		};
-	};
-};
-*/	
+
 if ( port == 20 ) {	
 
 	if ( hi == 1 ) {
