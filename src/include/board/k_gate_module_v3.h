@@ -72,7 +72,7 @@
 						return;  };	\
 	}
 	
-char supla_board_gate(int in);
+//char supla_board_gate(int in);
 
 #define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 7 = %i", supla_esp_state.Relay[7]);	\
@@ -91,13 +91,13 @@ char supla_board_gate(int in);
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
 										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
-											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };	\
-										if ( ChannelNumber == 0 ) {	\
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };	
+										/*if ( ChannelNumber == 0 ) {	\
 											char gate_status;	\
 											gate_status = supla_board_gate(1);	\
 											supla_log(LOG_DEBUG, "gate_status = %s", gate_status);	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
-											state->LastConnectionResetCause = gate_status; };	\
+											state->LastConnectionResetCause = gate_status; };	\ */
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		

@@ -59,11 +59,11 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffe
 		ets_snprintf(buffer, buffer_size, "SUPLA-NICE_V3");
 	}
 }
-
+/*
 char supla_board_gate(int in) {
 	supla_log(LOG_DEBUG, "supla_board_gate Stan_Bramy = %i, in = %i", Stan_Bramy, in);
     return Stan_Bramy;
-}
+}*/
 
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	
