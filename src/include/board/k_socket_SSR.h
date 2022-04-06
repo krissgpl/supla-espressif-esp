@@ -21,7 +21,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.8.49.0"
+#define SUPLA_ESP_SOFTVER "2.8.49.1"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -47,7 +47,7 @@
 #define B_UPD_PORT		 20
 
 #define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) \
-	{if (port == LED_RED_PORT) { hi =!supla_esp_gpio_output_is_hi(B_RELAY1_PORT);\
+	{if (port == LED_RED_PORT) { hi =supla_esp_gpio_output_is_hi(B_RELAY1_PORT);\
 	 } else if (port==B_RELAY1_PORT) {\
 		supla_esp_gpio_set_led(hi, 1, 1); }\
 	  else if (port == 20) { \

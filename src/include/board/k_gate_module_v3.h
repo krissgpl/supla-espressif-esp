@@ -21,7 +21,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.8.49.6"
+#define SUPLA_ESP_SOFTVER "2.8.49.7"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -71,6 +71,8 @@
 						supla_log(LOG_DEBUG, "PORT 20 MAKRO");	\
 						return;  };	\
 	}
+	
+//char supla_board_gate(int in);
 
 #define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 7 = %i", supla_esp_state.Relay[7]);	\
@@ -89,7 +91,13 @@
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
 										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
-											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };;
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };	
+										/*if ( ChannelNumber == 0 ) {	\
+											char gate_status;	\
+											gate_status = supla_board_gate(1);	\
+											supla_log(LOG_DEBUG, "gate_status = %s", gate_status);	\
+											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+											state->LastConnectionResetCause = gate_status; };	\ */
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		
