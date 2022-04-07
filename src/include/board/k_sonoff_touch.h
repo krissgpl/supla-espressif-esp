@@ -24,25 +24,28 @@
 #define BOARD_CFG_HTML_TEMPLATE
 #define BOARD_ON_CONNECT
 
-#define ESP8266_SUPLA_PROTO_VERSION 12
+#define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define RELAY_MAX_COUNT		7
+#define RELAY_MAX_COUNT		11
 
-#define SUPLA_ESP_SOFTVER "2.8.24.0"
+#define SUPLA_ESP_SOFTVER "2.8.49.0"
 
 #ifdef __BOARD_k_sonoff_touch
 	#define AP_SSID "SONOFF-TOUCH"
 	#define ESP_HOSTNAME "SONOFF-TOUCH"
+	#define RETREIVE_CHANNEL_CONFIG 0b1000
 #endif
 
 #ifdef __BOARD_k_sonoff_touch_dual
 	#define AP_SSID "TOUCH-DUAL"
 	#define ESP_HOSTNAME "SONOFF-TOUCH-DUAL"
+	#define RETREIVE_CHANNEL_CONFIG 0b1100000
 #endif
 
 #ifdef __BOARD_k_sonoff_touch_triple
 	#define AP_SSID "TOUCH-TRIPLE"
 	#define ESP_HOSTNAME "SONOFF-TOUCH-TRIPLE"
+	#define RETREIVE_CHANNEL_CONFIG 0b1110000000
 #endif
 
 #define CFGMODE_SSID_LIMIT_MACLEN
@@ -128,6 +131,9 @@
 #define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;
 
+#define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
+
+void supla_send_at(uint8 gpio, int action);
 		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
@@ -139,15 +145,5 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
-
-#define BOARD_ON_INPUT_ACTIVE                        \
-    supla_esp_board_gpio_on_input_active(input_cfg); \
-    return;
-void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg);
-
-#define BOARD_ON_INPUT_INACTIVE                        \
-    supla_esp_board_gpio_on_input_inactive(input_cfg); \
-    return;
-void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
 
 #endif
