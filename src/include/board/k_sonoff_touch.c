@@ -591,23 +591,23 @@ void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 		
 		Licznik = 0;
 	
-		supla_esp_gpio_set_hi(LED_RED_PORT, 0);
+		supla_esp_gpio_set_hi(LED_RED_PORT, 1);
 
-		os_timer_disarm(&Led_ON);
-		os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
-		os_timer_arm(&Led_ON, 200, 0);
-	
 		os_timer_disarm(&Led_OFF);
 		os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
-		os_timer_arm(&Led_OFF, 400, 0);	
+		os_timer_arm(&Led_OFF, 200, 0);
 	
-		os_timer_disarm(&Led_ON2);
-		os_timer_setfn(&Led_ON2, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
-		os_timer_arm(&Led_ON2, 800, 0);
+		os_timer_disarm(&Led_ON);
+		os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+		os_timer_arm(&Led_ON, 400, 0);	
 	
 		os_timer_disarm(&Led_OFF2);
 		os_timer_setfn(&Led_OFF2, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
-		os_timer_arm(&Led_OFF2, 1200, 0);	
+		os_timer_arm(&Led_OFF2, 800, 0);
+	
+		os_timer_disarm(&Led_ON2);
+		os_timer_setfn(&Led_ON2, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+		os_timer_arm(&Led_ON2, 1200, 0);	
 	}
 }
 
@@ -615,14 +615,14 @@ void supla_send_at(uint8 gpio, int action) {
 
 	supla_log(LOG_DEBUG, "AT Wykonanie wykonanie akcji, gpio = %d, action = %d", gpio, action );
 			
-	supla_esp_gpio_set_hi(LED_RED_PORT, 0);
-	os_timer_disarm(&Led_ON);
-	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, NULL);	
-	os_timer_arm(&Led_ON, 400, 0);
-			
+	supla_esp_gpio_set_hi(LED_RED_PORT, 1);
 	os_timer_disarm(&Led_OFF);
 	os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, NULL);	
-	os_timer_arm(&Led_OFF, 1000, 0);
+	os_timer_arm(&Led_OFF, 400, 0);
+			
+	os_timer_disarm(&Led_ON);
+	os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, NULL);	
+	os_timer_arm(&Led_ON, 1000, 0);
 	
 };
 
