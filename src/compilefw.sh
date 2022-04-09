@@ -71,12 +71,14 @@ while true; do
             BOARD=k_gate_module
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
         2)
             BOARD=k_gate_module_v3
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
         3)
@@ -84,162 +86,189 @@ while true; do
 			FLASH_SIZE=4096
 			NOSSL=1
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		4)
             BOARD=k_gniazdko_neo
 			FLASH_SIZE=1024
 			SPI=DIO
+			PARAM=2
 			break
             ;;
 		5)
             BOARD=k_rs_module_v3
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		6)
             BOARD=k_socket_v2
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		7)
             BOARD=k_socket_dual_v2
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		8)
             BOARD=k_switch_dual
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		9)
             BOARD=k_socket_SSR
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		10)
             BOARD=k_yunschan
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		11)
             BOARD=k_socket_01
 			FLASH_SIZE=1024
 			SPI=DIO
+			PARAM=2
 			break
             ;;
 		12)
             BOARD=k_smoke_module
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		13)
             BOARD=k_smoke_module_ds18b20
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		14)
             BOARD=k_smoke_module_DHT22
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		15)
             BOARD=k_socket
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		16)
             BOARD=k_socket_ds18b20
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		17)
             BOARD=k_socket_DHT22
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		18)
             BOARD=k_socket_dual
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		19)
             BOARD=k_socket_dual_ds18b20
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		20)
             BOARD=k_socket_dual_DHT22
 			FLASH_SIZE=4096
 			SPI=DIO
+			PARAM=6
 			break
             ;;
 		21)
             BOARD=k_sonoff
 			FLASH_SIZE=1024
 			SPI=DIO
+			PARAM=2
 			break
             ;;
 		22)
             BOARD=k_sonoff_ds18b20
 			FLASH_SIZE=1024
 			SPI=DIO
+			PARAM=2
 			break
             ;;
 		23)
             BOARD=k_sonoff_DHT22
 			FLASH_SIZE=1024
 			SPI=DIO
+			PARAM=2
 			break
             ;;
 		24)
             BOARD=k_sonoff_touch
 			FLASH_SIZE=1024
 			SPI=DOUT
+			PARAM=2
 			break
             ;;
 		25)
             BOARD=k_sonoff_touch_dual
 			FLASH_SIZE=1024
 			SPI=DOUT
+			PARAM=2
 			break
             ;;
 		26)
             BOARD=k_sonoff_touch_triple
 			FLASH_SIZE=1024
 			SPI=DOUT
+			PARAM=2
 			break
             ;;
 		27)
             BOARD=k_sonoff_pow_R2
 			FLASH_SIZE=2048
 			SPI=DIO
+			PARAM=5
 			break
             ;;
 		28)
             BOARD=k_impulse_counter
 			FLASH_SIZE=2048
 			SPI=DIO
+			PARAM=5
 			break
             ;;
 		28)
             BOARD=k_impulse_counter_3
 			FLASH_SIZE=2048
 			SPI=DIO
+			PARAM=5
 			break
             ;;
   esac
@@ -247,11 +276,11 @@ done
 
 if [ $NOSSL == 1 ]
 then
-	PLIK="$BOARD"_nossl_user1."$FLASH_SIZE"_"$SPI".new.6.sdk3x.bin;
-	PLIK2="$BOARD"_nossl_user2."$FLASH_SIZE"_"$SPI".new.6.sdk3x.bin;
+	PLIK="$BOARD"_nossl_user1."$FLASH_SIZE"_"$SPI".new."$PARAM".sdk3x.bin;
+	PLIK2="$BOARD"_nossl_user2."$FLASH_SIZE"_"$SPI".new."$PARAM".sdk3x.bin;
 else
-	PLIK="$BOARD"_user1."$FLASH_SIZE"_"$SPI".new.6.sdk3x.bin;
-	PLIK2="$BOARD"_user2."$FLASH_SIZE"_"$SPI".new.6.sdk3x.bin;
+	PLIK="$BOARD"_user1."$FLASH_SIZE"_"$SPI".new."$PARAM".sdk3x.bin;
+	PLIK2="$BOARD"_user2."$FLASH_SIZE"_"$SPI".new."$PARAM".sdk3x.bin;
 fi
 
 echo "PLIK : $PLIK";
