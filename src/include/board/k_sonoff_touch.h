@@ -93,6 +93,13 @@
 									return supla_esp_state.Relay[5] == 1 ? 1 : 0;	}	\
 				if ( port == 23)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 6 = %i", supla_esp_state.Relay[6]);	\
 									return supla_esp_state.Relay[6] == 1 ? 1 : 0;	}	
+
+	#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 3 ) {	\
+											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
+										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };
+
 #endif
 									
 #ifdef __BOARD_k_sonoff_touch_dual
@@ -113,6 +120,13 @@
 									return supla_esp_state.Relay[3] == 1 ? 1 : 0;	}	\
 				if ( port == 22)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
 									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	
+
+	#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 2 ) {	\
+											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
+										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };
+
 #endif
 
 #ifdef __BOARD_k_sonoff_touch
@@ -126,10 +140,16 @@
 	#define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 2 = %i", supla_esp_state.Relay[2]);	\
 									return supla_esp_state.Relay[2] == 1 ? 1 : 0;	}	
+
+	#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 1 ) {	\
+											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
+										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };
+
 #endif
 
-#define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
-										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;
+
 
 #define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
 
