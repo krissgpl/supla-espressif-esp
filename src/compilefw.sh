@@ -254,6 +254,9 @@ else
 	PLIK2="$BOARD"_user2."$FLASH_SIZE"_"$SPI".new.6.sdk3x.bin;
 fi
 
+echo "PLIK : $PLIK";
+echo "PLIK2 : $PLIK2";
+
 rm -f /CProjects/supla-espressif-esp/firmware/$PLIK
 rm -f /CProjects/supla-espressif-esp/firmware/$PLIK2
 	
