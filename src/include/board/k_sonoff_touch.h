@@ -28,7 +28,7 @@
 
 #define RELAY_MAX_COUNT		11
 
-#define SUPLA_ESP_SOFTVER "2.8.49.0"
+#define SUPLA_ESP_SOFTVER "2.8.49.1"
 
 #ifdef __BOARD_k_sonoff_touch
 	#define AP_SSID "SONOFF-TOUCH"
@@ -45,6 +45,7 @@
 #ifdef __BOARD_k_sonoff_touch_triple
 	#define AP_SSID "TOUCH-TRIPLE"
 	#define ESP_HOSTNAME "SONOFF-TOUCH-TRIPLE"
+	#define CHANNEL_CONFIG_LIMIT 10
 	#define RETREIVE_CHANNEL_CONFIG 0b1110000000
 #endif
 
