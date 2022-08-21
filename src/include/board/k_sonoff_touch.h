@@ -24,25 +24,29 @@
 #define BOARD_CFG_HTML_TEMPLATE
 #define BOARD_ON_CONNECT
 
-#define ESP8266_SUPLA_PROTO_VERSION 12
+#define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define RELAY_MAX_COUNT		7
+#define RELAY_MAX_COUNT		11
 
-#define SUPLA_ESP_SOFTVER "2.8.24.0"
+#define SUPLA_ESP_SOFTVER "2.8.49.1"
 
 #ifdef __BOARD_k_sonoff_touch
 	#define AP_SSID "SONOFF-TOUCH"
 	#define ESP_HOSTNAME "SONOFF-TOUCH"
+	#define RETREIVE_CHANNEL_CONFIG 0b1000
 #endif
 
 #ifdef __BOARD_k_sonoff_touch_dual
 	#define AP_SSID "TOUCH-DUAL"
 	#define ESP_HOSTNAME "SONOFF-TOUCH-DUAL"
+	#define RETREIVE_CHANNEL_CONFIG 0b1100000
 #endif
 
 #ifdef __BOARD_k_sonoff_touch_triple
 	#define AP_SSID "TOUCH-TRIPLE"
 	#define ESP_HOSTNAME "SONOFF-TOUCH-TRIPLE"
+	#define CHANNEL_CONFIG_LIMIT 10
+	#define RETREIVE_CHANNEL_CONFIG 0b1110000000
 #endif
 
 #define CFGMODE_SSID_LIMIT_MACLEN
@@ -90,6 +94,13 @@
 									return supla_esp_state.Relay[5] == 1 ? 1 : 0;	}	\
 				if ( port == 23)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 6 = %i", supla_esp_state.Relay[6]);	\
 									return supla_esp_state.Relay[6] == 1 ? 1 : 0;	}	
+
+	#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 3 ) {	\
+											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
+										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };
+
 #endif
 									
 #ifdef __BOARD_k_sonoff_touch_dual
@@ -110,6 +121,13 @@
 									return supla_esp_state.Relay[3] == 1 ? 1 : 0;	}	\
 				if ( port == 22)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
 									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	
+
+	#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 2 ) {	\
+											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
+										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };
+
 #endif
 
 #ifdef __BOARD_k_sonoff_touch
@@ -123,11 +141,20 @@
 	#define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 2 = %i", supla_esp_state.Relay[2]);	\
 									return supla_esp_state.Relay[2] == 1 ? 1 : 0;	}	
+
+	#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 1 ) {	\
+											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
+										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };
+
 #endif
 
-#define BOARD_ON_CHANNEL_STATE_PREPARE	state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
-										state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;
 
+
+#define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
+
+void supla_send_at(uint8 gpio, int action);
 		
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
@@ -139,15 +166,5 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
-
-#define BOARD_ON_INPUT_ACTIVE                        \
-    supla_esp_board_gpio_on_input_active(input_cfg); \
-    return;
-void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg);
-
-#define BOARD_ON_INPUT_INACTIVE                        \
-    supla_esp_board_gpio_on_input_inactive(input_cfg); \
-    return;
-void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
 
 #endif
