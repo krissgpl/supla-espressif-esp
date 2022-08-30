@@ -104,6 +104,7 @@ supla_esp_wifi_station_connect(_wifi_void_status status_cb) {
   stationConf.ssid[31] = 0;
   stationConf.password[63] = 0;
   stationConf.threshold.rssi = -127;
+  stationConf.all_channel_scan = true;
   
 #ifdef ESP_HOSTNAME
 	wifi_station_set_hostname(ESP_HOSTNAME);
