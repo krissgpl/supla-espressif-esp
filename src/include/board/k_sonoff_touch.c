@@ -171,7 +171,8 @@ void supla_esp_board_gpio_init(void) {
 	
 	#if defined __BOARD_k_sonoff_touch_triple
 	
-		supla_relay_cfg[3].gpio_id = B_UPD_PORT;	
+		supla_relay_cfg[3].gpio_id = B_UPD_PORT;
+		supla_relay_cfg[3].flags = RELAY_FLAG_RESET;
 		supla_relay_cfg[3].channel = 3;
 
 		supla_relay_cfg[4].gpio_id = B_RELAY1_DIS;	// rel1 dis channel
@@ -188,7 +189,8 @@ void supla_esp_board_gpio_init(void) {
 	
 	#elif defined __BOARD_k_sonoff_touch_dual
 	
-		supla_relay_cfg[2].gpio_id = B_UPD_PORT;	
+		supla_relay_cfg[2].gpio_id = B_UPD_PORT;
+		supla_relay_cfg[2].flags = RELAY_FLAG_RESET;
 		supla_relay_cfg[2].channel = 2;
 		
 		supla_relay_cfg[3].gpio_id = B_RELAY1_DIS;	// rel1 dis channel
@@ -201,7 +203,8 @@ void supla_esp_board_gpio_init(void) {
 		
 	#else
 	
-		supla_relay_cfg[1].gpio_id = B_UPD_PORT;	
+		supla_relay_cfg[1].gpio_id = B_UPD_PORT;
+		supla_relay_cfg[1].flags = RELAY_FLAG_RESET;
 		supla_relay_cfg[1].channel = 1;
 		
 		supla_relay_cfg[2].gpio_id = B_RELAY1_DIS;	// rel1 dis channel
