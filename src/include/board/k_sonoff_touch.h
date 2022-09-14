@@ -28,7 +28,7 @@
 
 #define RELAY_MAX_COUNT		11
 
-#define SUPLA_ESP_SOFTVER "2.8.49.1"
+#define SUPLA_ESP_SOFTVER "2.8.51.0"
 
 #ifdef __BOARD_k_sonoff_touch
 	#define AP_SSID "SONOFF-TOUCH"
@@ -88,12 +88,14 @@
 																	return;	}	}	\
 				if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
 	#define BOARD_GPIO_OUTPUT_IS_HI	\
-				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
-									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	\
-				if ( port == 22)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 5 = %i", supla_esp_state.Relay[5]);	\
-									return supla_esp_state.Relay[5] == 1 ? 1 : 0;	}	\
-				if ( port == 23)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 6 = %i", supla_esp_state.Relay[6]);	\
-									return supla_esp_state.Relay[6] == 1 ? 1 : 0;	}	
+				if ( port == B_UPD_PORT)  	{  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 3 = %i", supla_esp_state.Relay[3]);	\
+												return supla_esp_state.Relay[3] == 1 ? 1 : 0;	};	\
+				if ( port == B_RELAY1_DIS)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
+												return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	\
+				if ( port == B_RELAY2_DIS)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 5 = %i", supla_esp_state.Relay[5]);	\
+												return supla_esp_state.Relay[5] == 1 ? 1 : 0;	}	\
+				if ( port == B_RELAY3_DIS)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 6 = %i", supla_esp_state.Relay[6]);	\
+												return supla_esp_state.Relay[6] == 1 ? 1 : 0;	}	
 
 	#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 3 ) {	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
@@ -117,10 +119,12 @@
 																	return;	}	}	\
 				if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
 	#define BOARD_GPIO_OUTPUT_IS_HI	\
-				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 3 = %i", supla_esp_state.Relay[3]);	\
-									return supla_esp_state.Relay[3] == 1 ? 1 : 0;	}	\
-				if ( port == 22)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
-									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	
+				if ( port == B_UPD_PORT)  	{  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 2 = %i", supla_esp_state.Relay[2]);	\
+												return supla_esp_state.Relay[2] == 1 ? 1 : 0;	};	\
+				if ( port == B_RELAY1_DIS)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 3 = %i", supla_esp_state.Relay[3]);	\
+												return supla_esp_state.Relay[3] == 1 ? 1 : 0;	}	\
+				if ( port == B_RELAY2_DIS)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
+												return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	
 
 	#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 2 ) {	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
@@ -139,8 +143,10 @@
 																	return;	} 	}	\
 				if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
 	#define BOARD_GPIO_OUTPUT_IS_HI	\
-				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 2 = %i", supla_esp_state.Relay[2]);	\
-									return supla_esp_state.Relay[2] == 1 ? 1 : 0;	}	
+				if ( port == B_UPD_PORT)  	{  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 1 = %i", supla_esp_state.Relay[1]);	\
+												return supla_esp_state.Relay[1] == 1 ? 1 : 0;	};	\
+				if ( port == B_RELAY1_DIS)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 2 = %i", supla_esp_state.Relay[2]);	\
+												return supla_esp_state.Relay[2] == 1 ? 1 : 0;	}
 
 	#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 1 ) {	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
