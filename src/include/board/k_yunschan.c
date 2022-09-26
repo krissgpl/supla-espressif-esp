@@ -51,7 +51,7 @@ void supla_esp_board_gpio_init(void) {
 	//---------------------------------------
 
 	supla_relay_cfg[1].gpio_id = B_UPD_PORT;	// update init channel
-	supla_relay_cfg[1].flags = RELAY_FLAG_VIRTUAL_GPIO;
+	supla_relay_cfg[1].flags = RELAY_FLAG_RESET;
 	supla_relay_cfg[1].channel = 1;
     
 
@@ -97,7 +97,25 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		
 	UPD_channel = 1;
 	
+	supla_esp_state.Relay[UPD_channel] = hi;
+	supla_esp_save_state(SAVE_STATE_DELAY);
+	supla_esp_channel_value_changed(UPD_channel, supla_esp_state.Relay[UPD_channel]);
+	supla_esp_cfg_save(&supla_esp_cfg);
+	supla_esp_channel_value_changed(UPD_channel, hi);
+
 	if ( hi == 1 ) {
+	
+		supla_log(LOG_DEBUG, "update, port = %i", port);
+		
+		supla_esp_cfg.FirmwareUpdate = 1; 
+		supla_esp_cfg_save(&supla_esp_cfg);
+
+		os_timer_disarm(&value_timer1);
+		os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
+		os_timer_arm(&value_timer1, 4000, 0);
+		};
+			
+/*	if ( hi == 1 ) {
 	
 		supla_log(LOG_DEBUG, "update, port = %i", port);
 		
@@ -121,5 +139,5 @@ void supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			supla_log(LOG_DEBUG, "value_changed upd - 0");
 				
 		};
-	};
+	}; */
 }
