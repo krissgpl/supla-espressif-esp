@@ -56,6 +56,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	// ---------------------------------------
     
     supla_relay_cfg[1].gpio_id = B_UPD_PORT;
+	supla_relay_cfg[1].flags = RELAY_FLAG_RESET;
 	
 	#if defined( __BOARD_k_smoke_module_ds18b20) || defined(__BOARD_k_smoke_module_DHT22)
     supla_relay_cfg[1].channel = 2;
@@ -292,36 +293,31 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	
-		#if defined( __BOARD_k_smoke_module_ds18b20) || defined(__BOARD_k_smoke_module_DHT22)
+	#if defined( __BOARD_k_smoke_module_ds18b20) || defined(__BOARD_k_smoke_module_DHT22)
 		
-			UPD_channel = 2;
+		UPD_channel = 2;
 			
-		#else
+	#else
 		
-			UPD_channel = 1;
+		UPD_channel = 1;
 			
-		#endif
+	#endif
 		
-		if ( hi == 1 ) {
+	supla_esp_state.Relay[UPD_channel] = hi;
+	supla_esp_save_state(SAVE_STATE_DELAY);
+	supla_esp_channel_value_changed(UPD_channel, supla_esp_state.Relay[UPD_channel]);
+	supla_esp_cfg_save(&supla_esp_cfg);
+	supla_esp_channel_value_changed(UPD_channel, hi);
+
+	if ( hi == 1 ) {
 	
-			supla_log(LOG_DEBUG, "update, port = %i", port);
+		supla_log(LOG_DEBUG, "update, port = %i", port);
 		
-			if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
-			
-				supla_esp_state.Relay[UPD_channel] = 1;
-				supla_log(LOG_DEBUG, "value_changed upd - 1");
-				supla_esp_save_state(SAVE_STATE_DELAY);
-				supla_esp_channel_value_changed(UPD_channel, supla_esp_state.Relay[UPD_channel]);
-				os_timer_disarm(&value_timer1);
-				os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
-				os_timer_arm(&value_timer1, 4000, 0);
-			};
-		
-			if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
-				supla_esp_cfg.FirmwareUpdate = 1; 
-				supla_esp_cfg_save(&supla_esp_cfg);
-				supla_esp_channel_value_changed(UPD_channel, 1);
-				supla_log(LOG_DEBUG, "value_changed upd - 0");
-			};
-		};
+		supla_esp_cfg.FirmwareUpdate = 1; 
+		supla_esp_cfg_save(&supla_esp_cfg);
+
+		os_timer_disarm(&value_timer1);
+		os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
+		os_timer_arm(&value_timer1, 4000, 0);
+	};
 }
