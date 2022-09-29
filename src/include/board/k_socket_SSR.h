@@ -21,7 +21,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.8.49.1"
+#define SUPLA_ESP_SOFTVER "2.8.51.0"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -53,6 +53,10 @@
 	  else if (port == 20) { \
 		supla_esp_board_gpiooutput_set_hi(port, hi); 	\
 		return; } };
+
+#define BOARD_GPIO_OUTPUT_IS_HI	\
+				if ( port == B_UPD_PORT)  	{  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 1 = %i", supla_esp_state.Relay[1]);	\
+												return supla_esp_state.Relay[1] == 1 ? 1 : 0;	};
 
 #define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 1 ) {	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
