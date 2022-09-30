@@ -507,7 +507,8 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       "</label></i><i><select name=\"upd\"><option value=\"0\" "
       "%s>NO<option value=\"1\" %s>YES</select><label>Firmware "
       "update</label></i></div><button "
-      "type=\"submit\">SAVE</button></form></div><br><br>";
+      "type=\"submit\">SAVE</button><input type=\"hidden\" name=\"rbt\" "
+	  "value=\"2\" /></form></div><br><br></body></html>";
 
   int bufflen = strlen(supla_esp_devconn_laststate()) + strlen(dev_name) +
                 strlen(SUPLA_ESP_SOFTVER) + strlen(supla_esp_cfg.WIFI_SSID) +
