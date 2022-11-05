@@ -334,7 +334,7 @@ void supla_board_input(int in1) {
 			os_timer_arm(&board_input_timer, 100, 1); };
 			
 	if ( in1 == 1 && Licznik == 1) {
-			if ( supla_esp_state.Relay[7] == 1) {
+			if ( supla_esp_state.Relay[3] == 1) {
 				supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1); 
 				supla_log(LOG_DEBUG, "supla_esp_board send AT (gate)"); }; 
 	};
