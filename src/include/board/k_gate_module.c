@@ -23,7 +23,17 @@
 //#include "supla_ds18b20.h"
 
 ETSTimer value_timer1;
+ETSTimer board_input_timer;
+
 int UPD_channel;
+int HRM_channel;
+
+unsigned int Stan_Bramy = 0;	// 0 - zamknieta
+								// 1 - otwiera sie lub zamyka sie
+								// 2 - otwarta
+unsigned int Licznik = 0;
+unsigned int Low = 0;
+unsigned int High = 0;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
@@ -38,6 +48,42 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	
 }
 
+void board_input_timer_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "board_input_timer_cb");
+	
+	//supla_log(LOG_DEBUG, "Stan_Bramy timer Low przed = %i", Low);
+	//supla_log(LOG_DEBUG, "Stan_Bramy timer High przed = %i", High);
+	
+	if ( Stan_Bramy == 2 ) os_timer_disarm(&board_input_timer);
+	
+	if ( gpio__input_get(B_SENSOR_PORT1) == 0 ) { // gdy na input napiecie to 0
+		High++;
+		Low=0; };
+		
+	if ( High >= 7 ) {
+		Stan_Bramy = 2;
+		supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
+		Low=0;
+		High=0;
+		os_timer_disarm(&board_input_timer); };
+		
+	if ( gpio__input_get(B_SENSOR_PORT1) == 1 ) { // gdy na input brak napiecia to 1
+		High=0;
+		Low++; };
+		
+	if ( Low >= 7 ) {
+		Stan_Bramy = 0;
+		Licznik = 0;
+		Low=0;
+		High=0;
+		supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
+		os_timer_disarm(&board_input_timer); };
+		
+	//supla_log(LOG_DEBUG, "Stan_Bramy timer Low po = %i", Low);
+	//supla_log(LOG_DEBUG, "Stan_Bramy timer High po = %i", High);
+}
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 		
 	supla_input_cfg[0].type = supla_esp_cfg.CfgButtonType == BTN_TYPE_BISTABLE ? INPUT_TYPE_BTN_BISTABLE : INPUT_TYPE_BTN_MONOSTABLE;
@@ -47,6 +93,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	supla_input_cfg[1].type = INPUT_TYPE_SENSOR;
 	supla_input_cfg[1].gpio_id = B_SENSOR_PORT1;
 	supla_input_cfg[1].channel = 1;
+	
+	supla_input_cfg[2].type = INPUT_TYPE_BTN_MONOSTABLE;
+    supla_input_cfg[2].channel = 4;
 	
 	// ---------------------------------------
 
@@ -59,6 +108,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
     supla_relay_cfg[1].gpio_id = B_UPD_PORT;	// update init channel
     supla_relay_cfg[1].channel = 2;
 	
+	supla_relay_cfg[2].gpio_id = B_HARMONOGRAM;	// harmonogram channel
+    supla_relay_cfg[2].channel = 3;
 	
 	// ---------------------------------------
 	
@@ -69,7 +120,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
 	
-    *channel_count = 2;
+    *channel_count = 5;
 
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
@@ -92,6 +143,19 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[2].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[2].Default = 0;
 	channels[2].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
+	
+	channels[3].Number = 3;
+	channels[3].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[3].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[3].Default = 0;
+	channels[3].value[0] = supla_esp_gpio_relay_on(B_HARMONOGRAM);	
+	
+	channels[4].Number = 4;
+	channels[4].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
+	channels[4].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+	channels[4].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[4].Default = 0;
+	channels[4].value[0] = 0;
 
 }
 
@@ -99,6 +163,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 
 	supla_esp_channel_value_changed(1, gpio__input_get(B_SENSOR_PORT1));
 	supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_UPD_PORT));
+	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_HARMONOGRAM));
 
 }
 
@@ -197,7 +262,8 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       "ON<option value=\"1\" %s>LED OFF</select><label>Status - connected</label></i>"
 	  "<i><select name=\"upd\"><option value=\"0\" "
       "%s>NO<option value=\"1\" %s>YES</select><label>Firmware "
-      "update</label></i></div><button type=\"submit\">SAVE</button></form></div><br><br>";
+      "update</label></i></div><button type=\"submit\">SAVE</button><input "
+	  "type=\"hidden\" name=\"rbt\" value=\"2\" /></form></div><br><br></body></html>";
 
   int bufflen = strlen(supla_esp_devconn_laststate())
 				+strlen(dev_name)
@@ -250,11 +316,38 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
   supla_esp_gpio_set_led(supla_esp_cfg.StatusLedOff, 0, 0);
+    supla_log(LOG_DEBUG, "Stan Bramy = %i", Stan_Bramy);
+}
+
+void supla_board_input(int in1) {
+	
+	supla_log(LOG_DEBUG, "board_input CH1 = %i", in1);
+	
+	if ( in1 == 1 ) Licznik++;
+	
+	supla_log(LOG_DEBUG, "Licznik = %i", Licznik);
+	if ( in1 == 1 && Stan_Bramy != 1) {
+			Stan_Bramy = 1;
+			//supla_log(LOG_DEBUG, "in1=1, board_input_timer" );
+			os_timer_disarm(&board_input_timer);
+			os_timer_setfn(&board_input_timer, (os_timer_func_t *)board_input_timer_cb, NULL);
+			os_timer_arm(&board_input_timer, 100, 1); };
+			
+	if ( in1 == 1 && Licznik == 1) {
+			if ( supla_esp_state.Relay[7] == 1) {
+				supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1); 
+				supla_log(LOG_DEBUG, "supla_esp_board send AT (gate)"); }; 
+	};
+				
+	supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			
-		UPD_channel = 2;
+	UPD_channel = 2;
+	HRM_channel = 3;
+	
+	if ( port == 20 ) {	
 	
 		if ( hi == 1 ) {
 	
@@ -278,4 +371,14 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 				supla_log(LOG_DEBUG, "value_changed upd - 0");
 			};
 		};
+	};
+	
+	if ( port == 21 ) {	
+			
+		supla_esp_state.Relay[HRM_channel] = hi;
+		supla_esp_save_state(SAVE_STATE_DELAY);
+		supla_esp_channel_value_changed(HRM_channel, supla_esp_state.Relay[HRM_channel]);
+		supla_esp_cfg_save(&supla_esp_cfg);
+		supla_esp_channel_value_changed(HRM_channel, hi);
+	};
 }

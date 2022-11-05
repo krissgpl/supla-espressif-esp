@@ -21,7 +21,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.8.48.0"
+#define SUPLA_ESP_SOFTVER "2.8.51.0"
 
 #define ESP_HOSTNAME "SUPLA-NICE"
 #define AP_SSID "SUPLA-NICE"
@@ -37,12 +37,29 @@
 
 #define B_SENSOR_PORT1      5
 #define B_UPD_PORT		    20
+#define B_HARMONOGRAM		21
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 
 #define BOARD_GPIO_OUTPUT_SET_HI if ( port >= 20 ) { supla_esp_board_gpiooutput_set_hi(port, hi); return; };
-		
+
+#define BOARD_GPIO_OUTPUT_IS_HI	\
+				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 3 = %i", supla_esp_state.Relay[3]);	\
+												return supla_esp_state.Relay[3] == 1 ? 1 : 0;	}
+
+#define BOARD_INTR_HANDLER	if ( supla_last_state == STATE_CONNECTED && gpio_status > 1 ) { \
+							supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
+							supla_board_input(!gpio__input_get(B_SENSOR_PORT1)); }
+
+#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 6 ) {	\
+											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
+											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
+										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
+											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
+
+void supla_board_input(int in1);
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 
