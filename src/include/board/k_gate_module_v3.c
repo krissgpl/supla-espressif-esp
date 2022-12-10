@@ -475,7 +475,10 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 		supla_esp_gpio_set_led(supla_esp_gpio_output_is_hi(B_RELAY1_PORT), 0, 0);
 	}
   supla_log(LOG_DEBUG, "Stan Bramy = %i", Stan_Bramy);
-  supla_esp_channel_value__changed(9, Stan_Bramy);
+  char value[SUPLA_CHANNELVALUE_SIZE];
+  memset(value, 0, sizeof(SUPLA_CHANNELVALUE_SIZE));
+  supla_get_StanBramy(value);
+  supla_esp_channel_value__changed(9, value);
 	
 }
 
