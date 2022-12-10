@@ -68,6 +68,8 @@ char supla_board_gate(int in) {
 void ICACHE_FLASH_ATTR supla_get_StanBramy(char value[SUPLA_CHANNELVALUE_SIZE]) {
 	
 	memcpy(value, &Stan_Bramy, sizeof(double));
+	supla_log(LOG_DEBUG, "Stan_Bramy memcpy value = %i", value);
+	supla_log(LOG_DEBUG, "Stan_Bramy supla_get = %i", Stan_Bramy);
 }
 
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {
