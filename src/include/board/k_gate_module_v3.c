@@ -104,7 +104,9 @@ void board_input_timer_cb(void *timer_arg) {
 		
 	if ( High >= 7 ) {
 		Stan_Bramy = 2;
-		supla_esp_channel_value__changed(9, Stan_Bramy);
+		char value[SUPLA_CHANNELVALUE_SIZE];
+		value = Stan_Bramy;
+		supla_esp_channel_value__changed(9, value);
 		supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
 			if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
 				supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
@@ -122,7 +124,9 @@ void board_input_timer_cb(void *timer_arg) {
 		Licznik = 0;
 		Low=0;
 		High=0;
-		supla_esp_channel_value__changed(9, Stan_Bramy);
+		char value[SUPLA_CHANNELVALUE_SIZE];
+		value = Stan_Bramy;
+		supla_esp_channel_value__changed(9, value);
 		supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
 		os_timer_disarm(&board_input_timer); };
 		
@@ -477,7 +481,9 @@ void supla_board_input(int in1, int in2) {
 	supla_log(LOG_DEBUG, "Licznik = %i", Licznik);
 	if ( in1 == 1 && Stan_Bramy != 1) {
 			Stan_Bramy = 1;
-			supla_esp_channel_value__changed(9, Stan_Bramy);
+			char value[SUPLA_CHANNELVALUE_SIZE];
+			value = Stan_Bramy;
+			supla_esp_channel_value__changed(9, value);
 			//supla_log(LOG_DEBUG, "in1=1, board_input_timer" );
 			os_timer_disarm(&board_input_timer);
 			os_timer_setfn(&board_input_timer, (os_timer_func_t *)board_input_timer_cb, NULL);
