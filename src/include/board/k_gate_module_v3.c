@@ -65,6 +65,11 @@ char supla_board_gate(int in) {
     return Stan_Bramy;
 }*/
 
+void ICACHE_FLASH_ATTR supla_get_StanBramy(char value[SUPLA_CHANNELVALUE_SIZE]) {
+	
+	memcpy(value, &Stan_Bramy, sizeof(double));
+}
+
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER update - restart");
@@ -93,6 +98,8 @@ void board_input_timer_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "board_input_timer_cb");
 	
+	char value[SUPLA_CHANNELVALUE_SIZE];
+	
 	//supla_log(LOG_DEBUG, "Stan_Bramy timer Low przed = %i", Low);
 	//supla_log(LOG_DEBUG, "Stan_Bramy timer High przed = %i", High);
 	
@@ -104,8 +111,8 @@ void board_input_timer_cb(void *timer_arg) {
 		
 	if ( High >= 7 ) {
 		Stan_Bramy = 2;
-		char value[SUPLA_CHANNELVALUE_SIZE];
-		char value = Stan_Bramy;
+		memset(value, 0, sizeof(SUPLA_CHANNELVALUE_SIZE));
+    	supla_get_StanBramy(value);
 		supla_esp_channel_value__changed(9, value);
 		supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
 			if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
@@ -124,8 +131,8 @@ void board_input_timer_cb(void *timer_arg) {
 		Licznik = 0;
 		Low=0;
 		High=0;
-		char value[SUPLA_CHANNELVALUE_SIZE];
-		char value = Stan_Bramy;
+		memset(value, 0, sizeof(SUPLA_CHANNELVALUE_SIZE));
+    	supla_get_StanBramy(value);
 		supla_esp_channel_value__changed(9, value);
 		supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
 		os_timer_disarm(&board_input_timer); };
@@ -482,7 +489,8 @@ void supla_board_input(int in1, int in2) {
 	if ( in1 == 1 && Stan_Bramy != 1) {
 			Stan_Bramy = 1;
 			char value[SUPLA_CHANNELVALUE_SIZE];
-			char value = Stan_Bramy;
+			memset(value, 0, sizeof(SUPLA_CHANNELVALUE_SIZE));
+			supla_get_StanBramy(value);
 			supla_esp_channel_value__changed(9, value);
 			//supla_log(LOG_DEBUG, "in1=1, board_input_timer" );
 			os_timer_disarm(&board_input_timer);
