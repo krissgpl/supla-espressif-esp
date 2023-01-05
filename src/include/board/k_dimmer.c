@@ -119,8 +119,8 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 	Licznik ++;
 	
 	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
-	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik]);
-	supla_esp_pwm_set_percent_duty(brightness_log[Licznik], 100, 0);
+	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik-1]);
+	supla_esp_pwm_set_percent_duty(brightness_log[Licznik-1], 100, 0);
 	
 	if ( supla_esp_gpio_output_is_hi(B_HARMONOGRAM) == 1 ) { Jasnosc = 100;
 	} else { Jasnosc = supla_esp_state.brightness[0]; };
@@ -137,8 +137,8 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 	
 	Licznik --;
 	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
-	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik]);
-	supla_esp_pwm_set_percent_duty(brightness_log[Licznik], 100, 0);
+	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik-1]);
+	supla_esp_pwm_set_percent_duty(brightness_log[Licznik-1], 100, 0);
 	
 	if ( gpio__input_get(B_SENSOR_PORT1) == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1 ) {
 		supla_log(LOG_DEBUG, "Set dimmer 1 przerwanie");
@@ -261,29 +261,29 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 
 	*channel_count = 9;
 
-	channels[0].Type = SUPLA_CHANNELTYPE_DIMMER;
+	channels[0].Type = SUPLA_CHANNELTYPE_DIMMER;		// jasnosc w trybie nocnym
 	channels[0].Number = 0;
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	supla_esp_channel_rgbw_to_value(channels[0].value, 0, 0, supla_esp_state.brightness[0]);
 	
-	channels[1].Type = SUPLA_CHANNELTYPE_DIMMER;
+	channels[1].Type = SUPLA_CHANNELTYPE_DIMMER;		// czas swiecenia
 	channels[1].Number = 1;
 	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	supla_esp_channel_rgbw_to_value(channels[1].value, 0, 0, supla_esp_state.brightness[1]);
 	
 	channels[2].Number = 2;
-	channels[2].Type = SUPLA_CHANNELTYPE_SENSORNO;
+	channels[2].Type = SUPLA_CHANNELTYPE_SENSORNO;		// IN 1
 	channels[2].FuncList = 0;
 	channels[2].Default = 0;
 	channels[2].value[0] = 0;
 	
 	channels[3].Number = 3;
-	channels[3].Type = SUPLA_CHANNELTYPE_SENSORNO;
+	channels[3].Type = SUPLA_CHANNELTYPE_SENSORNO;		// IN 2
 	channels[3].FuncList = 0;
 	channels[3].Default = 0;
 	channels[3].value[0] = 0;
 
-	channels[4].Number = 4;
+	channels[4].Number = 4;								// Harmonogram
 	channels[4].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[4].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[4].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
@@ -291,27 +291,27 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[4].value[0] = supla_esp_gpio_relay_on(B_HARMONOGRAM);
 	
 	channels[5].Number = 5;
-	channels[5].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[5].Type = SUPLA_CHANNELTYPE_RELAY;			// Wlaczenie tasmy LED
 	channels[5].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[5].Default = 0;
 	channels[5].value[0] = supla_esp_gpio_relay_on(B_SWITCH);
 	
 	channels[6].Number = 6;
-	channels[6].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[6].Type = SUPLA_CHANNELTYPE_RELAY;			// Update
 	channels[6].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[6].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[6].Default = 0;
 	channels[6].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
 	
 	channels[7].Number = 7;
-	channels[7].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[7].Type = SUPLA_CHANNELTYPE_RELAY;			// Blokada IN 1
 	channels[7].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[7].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[7].Default = 0;
 	channels[7].value[0] = supla_esp_gpio_relay_on(B_SENSOR_BLOCK1);
 	
-	channels[8].Number = 8;
+	channels[8].Number = 8;								// Blokada IN 2
 	channels[8].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[8].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[8].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
