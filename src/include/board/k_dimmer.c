@@ -135,7 +135,6 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "Dimmer Timer OFF start");
 	
-	Licznik --;
 	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
 	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik-1]);
 	supla_esp_pwm_set_percent_duty(brightness_log[Licznik-1], 100, 0);
@@ -154,11 +153,13 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 		os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
 		os_timer_arm(&dimmer_timer, 20, 1);  };
 	
-	 if ( Licznik == 0 ) { 
-	 supla_log(LOG_DEBUG, "Dimmer Timer OFF stop");
-	 Wlacznik1 = 0;
-	 Wlacznik2 = 0;
-	 os_timer_disarm(&dimmer_timer); }
+	Licznik --;
+	
+	if ( Licznik == 0 ) { 
+		supla_log(LOG_DEBUG, "Dimmer Timer OFF stop");
+		Wlacznik1 = 0;
+		Wlacznik2 = 0;
+		os_timer_disarm(&dimmer_timer); }
 	
 }
 
