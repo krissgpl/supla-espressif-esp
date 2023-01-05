@@ -272,14 +272,14 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	supla_esp_channel_rgbw_to_value(channels[1].value, 0, 0, supla_esp_state.brightness[1]);
 	
-	channels[2].Number = 2;
-	channels[2].Type = SUPLA_CHANNELTYPE_SENSORNO;		// IN 1
+	channels[2].Number = 2;								// IN 1
+	channels[2].Type = SUPLA_CHANNELTYPE_SENSORNO;
 	channels[2].FuncList = 0;
 	channels[2].Default = 0;
 	channels[2].value[0] = 0;
 	
-	channels[3].Number = 3;
-	channels[3].Type = SUPLA_CHANNELTYPE_SENSORNO;		// IN 2
+	channels[3].Number = 3;								// IN 2
+	channels[3].Type = SUPLA_CHANNELTYPE_SENSORNO;
 	channels[3].FuncList = 0;
 	channels[3].Default = 0;
 	channels[3].value[0] = 0;
@@ -291,22 +291,22 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[4].Default = SUPLA_CHANNELFNC_POWERSWITCH;
 	channels[4].value[0] = supla_esp_gpio_relay_on(B_HARMONOGRAM);
 	
-	channels[5].Number = 5;
-	channels[5].Type = SUPLA_CHANNELTYPE_RELAY;			// Wlaczenie tasmy LED
+	channels[5].Number = 5;								// Wlaczenie tasmy LED
+	channels[5].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[5].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[5].Default = 0;
 	channels[5].value[0] = supla_esp_gpio_relay_on(B_SWITCH);
 	
-	channels[6].Number = 6;
-	channels[6].Type = SUPLA_CHANNELTYPE_RELAY;			// Update
+	channels[6].Number = 6;								// Update
+	channels[6].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[6].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[6].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[6].Default = 0;
 	channels[6].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
 	
-	channels[7].Number = 7;
-	channels[7].Type = SUPLA_CHANNELTYPE_RELAY;			// Blokada IN 1
+	channels[7].Number = 7;								// Blokada IN 1
+	channels[7].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[7].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[7].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[7].Default = 0;
