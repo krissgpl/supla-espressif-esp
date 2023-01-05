@@ -214,11 +214,11 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	
 	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 	
-		*channel_count = 11;
+		*channel_count = 10;
 		}
 	else {
 
-		*channel_count = 10;
+		*channel_count = 9;
 		}
 
 	channels[0].Number = 0;
@@ -283,27 +283,21 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[8].Flags = 0;
 	channels[8].Default = 0;
 	channels[8].value[0] = supla_esp_gpio_relay_on(B_BLOKADA);
-	
-	channels[9].Number = 9;
+
+	if( supla_esp_cfg.ThermometerType == 1 ) {
+    channels[9].Number = 9;
 	channels[9].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
 	channels[9].FuncList = 0;
 	channels[9].Default = 0;
-	channels[9].value[0] = Stan_Bramy;
-
-	if( supla_esp_cfg.ThermometerType == 1 ) {
-    channels[10].Number = 10;
-	channels[10].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
-	channels[10].FuncList = 0;
-	channels[10].Default = 0;
-	supla_get_temperature(channels[10].value);
+	supla_get_temperature(channels[9].value);
    }
 
    if( supla_esp_cfg.ThermometerType == 2 ) {
-	channels[10].Number = 10;
-	channels[10].Type = SUPLA_CHANNELTYPE_DHT22;
-	channels[10].FuncList = 0;
-	channels[10].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
-	supla_get_temp_and_humidity(channels[10].value);
+	channels[9].Number = 9;
+	channels[9].Type = SUPLA_CHANNELTYPE_DHT22;
+	channels[9].FuncList = 0;
+	channels[9].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+	supla_get_temp_and_humidity(channels[9].value);
    }
 }
 
@@ -316,7 +310,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_UPD_PORT));
 	supla_esp_channel_value_changed(7, supla_esp_gpio_relay_on(B_HARMONOGRAM));
 	supla_esp_channel_value_changed(8, supla_esp_gpio_relay_on(B_BLOKADA));
-	supla_esp_channel_value_changed(9, Stan_Bramy);
 
 }
 
