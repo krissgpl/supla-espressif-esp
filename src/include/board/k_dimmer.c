@@ -49,6 +49,7 @@ int brightness_log[200] = {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 						  85, 87, 89, 91, 93, 96, 98, 100};
 
 uint8 Licznik = 0;
+uint8 Licznik2 = 0;
 uint8 Jasnosc = 0;
 int Czas;
 
@@ -134,6 +135,8 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 	
 	 if ( brightness_log[Licznik] == Jasnosc ) { 
 	 supla_log(LOG_DEBUG, "Dimmer Timer ON stop");
+	 Licznik2 = Licznik;
+	 supla_log(LOG_DEBUG, "Licznik2 : %i", Licznik2);
 	 os_timer_disarm(&dimmer_timer); }
 	
 }
@@ -141,10 +144,10 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 void dimmer_timer_OFF_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "Dimmer Timer OFF start");
-	
+	supla_log(LOG_DEBUG, "Licznik2 : %i", Licznik2);
 	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
-	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik-1]);
-	supla_esp_pwm_set_percent_duty(brightness_log[Licznik-1], 100, 0);
+	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik2-1]);
+	supla_esp_pwm_set_percent_duty(brightness_log[Licznik2-1], 100, 0);
 	
 	if ( gpio__input_get(B_SENSOR_PORT1) == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1 ) {
 		supla_log(LOG_DEBUG, "Set dimmer 1 przerwanie");
@@ -160,7 +163,7 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 		os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
 		os_timer_arm(&dimmer_timer, 10, 1);  };
 	
-	Licznik --;
+	Licznik2 --;
 	
 	if ( Licznik == 0 ) { 
 		supla_log(LOG_DEBUG, "Dimmer Timer OFF stop");
