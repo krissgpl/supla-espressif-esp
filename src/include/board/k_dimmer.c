@@ -127,8 +127,8 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 	Licznik ++;
 	
 	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
-	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik-1]);
-	supla_esp_pwm_set_percent_duty(brightness_log[Licznik-1], 100, 0);
+	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik]);
+	supla_esp_pwm_set_percent_duty(brightness_log[Licznik], 100, 0);
 	
 	if ( supla_esp_gpio_output_is_hi(B_HARMONOGRAM) == 1 ) { Jasnosc = 100;
 	} else { Jasnosc = supla_esp_state.brightness[0]; };
@@ -163,14 +163,13 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 		os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
 		os_timer_arm(&dimmer_timer, 10, 1);  };
 	
-	Licznik2 --;
-	
-	if ( Licznik == 0 ) { 
+	if ( Licznik2 == 0 ) { 
 		supla_log(LOG_DEBUG, "Dimmer Timer OFF stop");
 		Wlacznik1 = 0;
 		Wlacznik2 = 0;
 		os_timer_disarm(&dimmer_timer); }
-	
+		
+	Licznik2 --;
 }
 
 void work_timer_cb(void *timer_arg) {
