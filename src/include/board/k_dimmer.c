@@ -30,16 +30,40 @@ int BL2_channel;
 
 uint8 dimmer_brightness[2] = {0, 0};
 
-int brightness_log[100] = {0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-						   0,   0,   0,   0,   1,   1,   1,   1,   1,   1,
-						   1,   1,   1,   2,   2,   2,   2,   2,   2,   3,
-						   3,   3,   3,   3,   4,   4,   4,   4,   5,   5,
-						   5,   5,   6,   6,   7,   7,   7,   8,   8,   9,
-						   9,  10,  10,  11,  11,  12,  12,  13,  14,  15,
-						  15,  16,  17,  18,  19,  20,  21,  22,  23,  24,
-						  25,  26,  28,  29,  31,  32,  34,  35,  37,  39,
-						  41,  43,  45,  47,  49,  52,  54,  57,  60,  63,
-						  66,  69,  72,  75,  79,  83,  87,  91,  96, 100};
+int brightness_log[338] = {0,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+						   1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+						   1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+						   1,  1,  1,  1,  1,  1,  1,  2,  2,  2,
+						   2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+						   2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+						   2,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+						   3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+						   4,  4,  4,  4,  4,  4,  4,  4,  4,  4,
+						   4,  4,  4,  4,  4,  4,  5,  5,  5,  5,
+						   5,  5,  5,  5,  5,  5,  5,  5,  5,  6,
+						   6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
+						   7,  7,  7,  7,  7,  7,  7,  7,  7,  7,
+						   7,  8,  8,  8,  8,  8,  8,  8,  8,  9,
+						   9,  9,  9,  9,  9,  9,  9,  9, 10, 10,
+						  10, 10, 10, 10, 10, 11, 11, 11, 11, 11,
+						  11, 11, 12, 12, 12, 12, 12, 12, 13, 13,
+						  13, 13, 13, 13, 14, 14, 14, 14, 14, 15,
+						  15, 15, 15, 15, 15, 16, 16, 16, 16, 16,
+						  17, 17, 17, 17, 18, 18, 18, 18, 19, 19,
+						  19, 19, 19, 20, 20, 20, 20, 21, 21, 21,
+						  22, 22, 22, 22, 23, 23, 23, 24, 24, 24,
+						  24, 25, 25, 25, 26, 26, 26, 27, 27, 27,
+						  28, 28, 28, 29, 29, 29, 30, 30, 31, 31,
+						  31, 32, 32, 32, 33, 33, 34, 34, 34, 35,
+						  35, 36, 36, 37, 37, 38, 38, 39, 39, 39,
+						  40, 40, 41, 41, 42, 42, 43, 43, 44, 45,
+						  45, 46, 46, 47, 47, 48, 49, 49, 50, 50,
+						  51, 52, 52, 53, 53, 54, 55, 55, 56, 57,
+						  57, 58, 59, 60, 60, 61, 62, 63, 63, 64,
+						  65, 66, 66, 67, 68, 69, 70, 70, 71, 72,
+						  73, 74, 75, 76, 77, 78, 79, 79, 80, 81,
+						  82, 83, 84, 85, 86, 87, 88, 90, 91, 92,
+						  93, 94, 95, 96, 97, 98, 99,100};
 
 uint8 Licznik = 0;
 uint8 Jasnosc = 0;
@@ -125,7 +149,7 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 	if ( supla_esp_gpio_output_is_hi(B_HARMONOGRAM) == 1 ) { Jasnosc = 100;
 	} else { Jasnosc = supla_esp_state.brightness[0]; };
 	
-	 if ( Licznik == Jasnosc ) { 
+	 if ( brightness_log[Licznik] == Jasnosc ) { 
 	 supla_log(LOG_DEBUG, "Dimmer Timer ON stop");
 	 os_timer_disarm(&dimmer_timer); }
 	
@@ -144,14 +168,14 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 		Wlacznik1 = 1;
 		os_timer_disarm(&dimmer_timer);
 		os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-		os_timer_arm(&dimmer_timer, 20, 1);  };
+		os_timer_arm(&dimmer_timer, 6, 1);  };
 		
 	if ( gpio__input_get(B_SENSOR_PORT2) == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1 ) {
 		supla_log(LOG_DEBUG, "Set dimmer 2 przerwanie");
 		Wlacznik2 = 1;
 		os_timer_disarm(&dimmer_timer);
 		os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-		os_timer_arm(&dimmer_timer, 20, 1);  };
+		os_timer_arm(&dimmer_timer, 6, 1);  };
 	
 	Licznik --;
 	
@@ -176,7 +200,7 @@ void work_timer_cb(void *timer_arg) {
 	
 	os_timer_disarm(&dimmer_timer);
 	os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_OFF_cb, NULL);
-	os_timer_arm(&dimmer_timer, 20, 1); 
+	os_timer_arm(&dimmer_timer, 6, 1); 
 }
 
 void supla_dimmer_smooth(int in1, int in2) {
@@ -200,7 +224,7 @@ void supla_dimmer_smooth(int in1, int in2) {
 				Wlacznik1 = 1;
 				os_timer_disarm(&dimmer_timer);
 				os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-				os_timer_arm(&dimmer_timer, 20, 1); 
+				os_timer_arm(&dimmer_timer, 6, 1); 
 			};
 		
 			if ( Wlacznik1 == 1 && in1 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1) {
@@ -228,7 +252,7 @@ void supla_dimmer_smooth(int in1, int in2) {
 				Wlacznik2 = 1;
 				os_timer_disarm(&dimmer_timer);
 				os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-				os_timer_arm(&dimmer_timer, 20, 1); 
+				os_timer_arm(&dimmer_timer, 6, 1); 
 			};
 
 			if ( Wlacznik2 == 1 && in2 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1) {
