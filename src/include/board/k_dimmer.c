@@ -163,7 +163,7 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 		os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
 		os_timer_arm(&dimmer_timer, 10, 1);  };
 	
-	if ( Licznik2 == 0 ) { 
+	if ( Licznik2 == 1 ) { 
 		supla_log(LOG_DEBUG, "Dimmer Timer OFF stop");
 		Wlacznik1 = 0;
 		Wlacznik2 = 0;
