@@ -21,6 +21,7 @@
  
 #include "k_dimmer.h"
 #include "supla_esp_devconn.h"
+#include <pwm.h>
 
 int HRM_channel;
 int UPD_channel;
@@ -120,6 +121,22 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	
 }
 
+void ICACHE_FLASH_ATTR board_esp_pwm_set_percent_duty(uint8 percent, uint8 channel) {
+	
+	if ( percent > 200 )
+		percent = 200;
+		
+	uint32 duty = ((PWM_PERIOD * 1000 / 45) * percent) / 100;
+	duty = (duty * 50) / 100;
+	
+	supla_log(LOG_DEBUG, "DUTY: %i, CHANNEL: %i", duty, channel);
+
+	pwm_set_duty(duty, channel);
+	os_delay_us(1000);
+	pwm_start();
+
+}
+
 void dimmer_timer_ON_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "Dimmer Timer ON start");
@@ -128,12 +145,12 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
 	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik]);
-	supla_esp_pwm_set_percent_duty(brightness_log[Licznik], 100, 0);
+	board_esp_pwm_set_percent_duty(brightness_log[Licznik], 0);
 	
-	if ( supla_esp_gpio_output_is_hi(B_HARMONOGRAM) == 1 ) { Jasnosc = 100;
-	} else { Jasnosc = supla_esp_state.brightness[0]; };
+	if ( supla_esp_gpio_output_is_hi(B_HARMONOGRAM) == 1 ) { Jasnosc = 200;
+	} else { Jasnosc = supla_esp_state.brightness[0] * 2; };
 	
-	 if ( brightness_log[Licznik] == Jasnosc ) { 
+	 if ( Licznik == Jasnosc ) { 
 	 supla_log(LOG_DEBUG, "Dimmer Timer ON stop");
 	 Licznik2 = Licznik+1;
 	 supla_log(LOG_DEBUG, "Licznik2 : %i", Licznik2);
@@ -147,7 +164,7 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 	supla_log(LOG_DEBUG, "Licznik2 : %i", Licznik2);
 	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
 	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik2-1]);
-	supla_esp_pwm_set_percent_duty(brightness_log[Licznik2-1], 100, 0);
+	board_esp_pwm_set_percent_duty(brightness_log[Licznik2-1], 0);
 	
 	if ( gpio__input_get(B_SENSOR_PORT1) == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1 ) {
 		supla_log(LOG_DEBUG, "Set dimmer 1 przerwanie");
@@ -179,8 +196,8 @@ void work_timer_cb(void *timer_arg) {
 	supla_log(LOG_DEBUG, "Set dimmer 0");
 	Work = 1;
 	
-	if ( supla_esp_gpio_output_is_hi(B_HARMONOGRAM) == 1 ) { Licznik = 100;
-	} else { Licznik = supla_esp_state.brightness[0]; };
+	if ( supla_esp_gpio_output_is_hi(B_HARMONOGRAM) == 1 ) { Licznik = 200;
+	} else { Licznik = supla_esp_state.brightness[0] * 2; };
 	
 	//Wlacznik1 = 0;	// testowo
 	//Wlacznik2 = 0;	// testowo
@@ -211,7 +228,7 @@ void supla_dimmer_smooth(int in1, int in2) {
 				Wlacznik1 = 1;
 				os_timer_disarm(&dimmer_timer);
 				os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-				os_timer_arm(&dimmer_timer, 6, 1); 
+				os_timer_arm(&dimmer_timer, 10, 1); 
 			};
 		
 			if ( Wlacznik1 == 1 && in1 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1) {
@@ -239,7 +256,7 @@ void supla_dimmer_smooth(int in1, int in2) {
 				Wlacznik2 = 1;
 				os_timer_disarm(&dimmer_timer);
 				os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-				os_timer_arm(&dimmer_timer, 6, 1); 
+				os_timer_arm(&dimmer_timer, 10, 1); 
 			};
 
 			if ( Wlacznik2 == 1 && in2 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1) {
