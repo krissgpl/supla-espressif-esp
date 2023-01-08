@@ -31,23 +31,23 @@ int BL2_channel;
 
 uint8 dimmer_brightness[2] = {0, 0};
 
-int brightness_log[200] = {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-						   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-						   0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,
-						   1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  2,
-						   2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  3,
-						   3,  3,  3,  3,  3,  3,  3,  3,  3,  4,  4,  4,
-						   4,  4,  4,  4,  4,  5,  5,  5,  5,  5,  5,  5,
-						   6,  6,  6,  6,  6,  7,  7,  7,  7,  7,  7,  8,
-						   8,  8,  8,  9,  9,  9,  9, 10, 10, 10, 10, 11,
-						  11, 11, 11, 12, 12, 12, 13, 13, 13, 14, 14, 15,
-						  15, 15, 16, 16, 16, 17, 17, 18, 18, 19, 19, 20,
-						  20, 21, 21, 22, 22, 23, 23, 24, 24, 25, 26, 26,
-						  27, 28, 28, 29, 30, 31, 31, 32, 33, 34, 34, 35,
-						  36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
-						  48, 49, 50, 52, 53, 54, 56, 57, 58, 60, 61, 63,
-						  64, 66, 67, 69, 70, 72, 74, 75, 77, 79, 81, 83,
-						  85, 87, 89, 91, 93, 96, 98, 100};
+int brightness_log[200] = { 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+							1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+							1,  1,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+							2,  2,  2,  2,  2,  3,  3,  3,  3,  3,  3,  3,
+							3,  3,  3,  3,  4,  4,  4,  4,  4,  4,  4,  4,
+							5,  5,  5,  5,  5,  5,  5,  6,  6,  6,  6,  6,
+							6,  7,  7,  7,  7,  7,  8,  8,  8,  8,  9,  9,
+							9,  9, 10, 10, 10, 10, 11, 11, 11, 12, 12, 12,
+						   13, 13, 13, 14, 14, 14, 15, 15, 16, 16, 17, 17,
+						   17, 18, 18, 19, 19, 20, 21, 21, 22, 22, 23, 24,
+						   24, 25, 26, 26, 27, 28, 28, 29, 30, 31, 32, 33,
+						   33, 34, 35, 36, 37, 38, 39, 40, 41, 43, 44, 45,
+						   46, 47, 49, 50, 51, 53, 54, 56, 57, 59, 60, 62,
+						   64, 65, 67, 69, 71, 73, 75, 77, 79, 81, 83, 85,
+						   88, 90, 93, 95, 98,100,103,106,109,111,114,118,
+						  121,124,127,131,134,138,142,145,149,153,158,162,
+						  166,171,175,180,185,190,195,200};
 
 uint8 Licznik = 0;
 //uint8 Licznik2 = 0;
@@ -164,7 +164,7 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 	//supla_log(LOG_DEBUG, "Licznik2 : %i", Licznik2);
 	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
 	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik]);
-	board_esp_pwm_set_percent_duty(brightness_log[Licznik], 0);
+	board_esp_pwm_set_percent_duty(brightness_log[Licznik-1], 0);
 	
 	if ( gpio__input_get(B_SENSOR_PORT1) == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1 ) {
 		supla_log(LOG_DEBUG, "Set dimmer 1 przerwanie");
@@ -182,7 +182,7 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 		os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
 		os_timer_arm(&dimmer_timer, 10, 1);  };
 	
-	if ( Licznik == 0 ) { 
+	if ( Licznik == 1 ) { 
 		supla_log(LOG_DEBUG, "Dimmer Timer OFF stop");
 		Wlacznik1 = 0;
 		Wlacznik2 = 0;
