@@ -148,7 +148,6 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 	if ( brightness_log[Licznik] == Jasnosc ) { 
 		supla_log(LOG_DEBUG, "Dimmer Timer ON stop");
 		supla_log(LOG_DEBUG, "stop - Licznik : %i", Licznik);
-		Start=0;
 		os_timer_disarm(&dimmer_timer);
 	} else {
 		Licznik ++;
