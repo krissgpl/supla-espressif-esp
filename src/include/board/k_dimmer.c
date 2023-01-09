@@ -149,14 +149,14 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 	//} else { Jasnosc = supla_esp_state.brightness[0] * 2; };
 	
 	 if ( brightness_log[Licznik] == Jasnosc ) { 
-	 supla_log(LOG_DEBUG, "Dimmer Timer ON stop");
-	 supla_log(LOG_DEBUG, "stop - Licznik : %i", Licznik);
-	 //Licznik2 = Licznik+1;
-	 //supla_log(LOG_DEBUG, "Licznik2 : %i", Licznik2);
-	 os_timer_disarm(&dimmer_timer); }
-	
-	Licznik ++;
-	
+		supla_log(LOG_DEBUG, "Dimmer Timer ON stop");
+		supla_log(LOG_DEBUG, "stop - Licznik : %i", Licznik);
+		//Licznik2 = Licznik+1;
+		//supla_log(LOG_DEBUG, "Licznik2 : %i", Licznik2);
+		os_timer_disarm(&dimmer_timer);
+	 } else {
+		Licznik ++;
+		supla_log(LOG_DEBUG, "Licznik++ : %i", Licznik); };
 }
 
 void dimmer_timer_OFF_cb(void *timer_arg) {
@@ -187,9 +187,10 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 		supla_log(LOG_DEBUG, "Dimmer Timer OFF stop");
 		Wlacznik1 = 0;
 		Wlacznik2 = 0;
-		os_timer_disarm(&dimmer_timer); }
-		
-	Licznik --;
+		os_timer_disarm(&dimmer_timer); 
+	} else {
+		Licznik --;
+		supla_log(LOG_DEBUG, "Licznik-- : %i", Licznik); };
 }
 
 void work_timer_cb(void *timer_arg) {
