@@ -148,7 +148,7 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 	//if ( supla_esp_gpio_output_is_hi(B_HARMONOGRAM) == 1 ) { Jasnosc = 199;
 	//} else { Jasnosc = supla_esp_state.brightness[0] * 2; };
 	
-	 if ( brightness_log[Licznik] == Jasnosc ) { 
+	 if ( brightness_log[Licznik] == Jasnosc+1 ) { 
 		supla_log(LOG_DEBUG, "Dimmer Timer ON stop");
 		supla_log(LOG_DEBUG, "stop - Licznik : %i", Licznik);
 		//Licznik2 = Licznik+1;
