@@ -140,7 +140,7 @@ void ICACHE_FLASH_ATTR board_esp_pwm_set_percent_duty(uint8 percent, uint8 chann
 void dimmer_timer_ON_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "Dimmer Timer ON start");
-	
+	supla_log(LOG_DEBUG, "Jasnosc (2x) = %i", Jasnosc);
 	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
 	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik]);
 	board_esp_pwm_set_percent_duty(brightness_log[Licznik], 0);
@@ -162,7 +162,7 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 void dimmer_timer_OFF_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "Dimmer Timer OFF start");
-	//supla_log(LOG_DEBUG, "Licznik2 : %i", Licznik2);
+	supla_log(LOG_DEBUG, "Jasnosc (2x) = %i", Jasnosc);
 	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
 	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik]);
 	board_esp_pwm_set_percent_duty(brightness_log[Licznik], 0);
@@ -215,10 +215,10 @@ void supla_dimmer_smooth(int in1, int in2) {
 	supla_log(LOG_DEBUG, "dimmer_smooth B_SWITCH = %i", supla_esp_gpio_output_is_hi(B_SWITCH));
 	supla_log(LOG_DEBUG, "dimmer_smooth FirmwareUpdate = %i", supla_esp_cfg.FirmwareUpdate);
 	
-	if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 && supla_esp_cfg.FirmwareUpdate == 0 ) {
-		
-		if ( supla_esp_gpio_output_is_hi(B_HARMONOGRAM) == 1 ) { Jasnosc = 199;
+	if ( supla_esp_gpio_output_is_hi(B_HARMONOGRAM) == 1 ) { Jasnosc = 199;
 		} else { Jasnosc = supla_esp_state.brightness[0] * 2; };
+	
+	if ( supla_esp_gpio_output_is_hi(B_SWITCH) == 1 && supla_esp_cfg.FirmwareUpdate == 0 ) {
 		
 		Czas = supla_esp_state.brightness[1] * 1000;
 		supla_log(LOG_DEBUG, "Czas = %i ms", Czas);
