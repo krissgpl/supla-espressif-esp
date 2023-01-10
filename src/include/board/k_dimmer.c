@@ -50,7 +50,7 @@ int brightness_log[200] = { 0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
 						  166,171,175,180,185,190,195,200};
 
 uint8 Licznik = 0;
-//uint8 Start   = 0;
+uint8 Step    = 8; // czas (ms) &dimmer_timer
 uint8 Jasnosc = 0;
 int Czas;
 
@@ -169,14 +169,14 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 		Wlacznik1 = 1;
 		os_timer_disarm(&dimmer_timer);
 		os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-		os_timer_arm(&dimmer_timer, 10, 1);  };
+		os_timer_arm(&dimmer_timer, Step, 1);  };
 		
 	if ( gpio__input_get(B_SENSOR_PORT2) == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1 ) {
 		supla_log(LOG_DEBUG, "Set dimmer 2 przerwanie");
 		Wlacznik2 = 1;
 		os_timer_disarm(&dimmer_timer);
 		os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-		os_timer_arm(&dimmer_timer, 10, 1);  };
+		os_timer_arm(&dimmer_timer, Step, 1);  };
 	
 	if ( Licznik == 0 ) { 
 		supla_log(LOG_DEBUG, "Dimmer Timer OFF stop");
@@ -196,7 +196,7 @@ void work_timer_cb(void *timer_arg) {
 	
 	os_timer_disarm(&dimmer_timer);
 	os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_OFF_cb, NULL);
-	os_timer_arm(&dimmer_timer, 10, 1); 
+	os_timer_arm(&dimmer_timer, Step, 1); 
 }
 
 void supla_dimmer_smooth(int in1, int in2) {
@@ -224,7 +224,7 @@ void supla_dimmer_smooth(int in1, int in2) {
 				Wlacznik1 = 2;
 				os_timer_disarm(&dimmer_timer);
 				os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-				os_timer_arm(&dimmer_timer, 10, 1); 
+				os_timer_arm(&dimmer_timer, Step, 1); 
 			};
 		
 			if ( Wlacznik1 == 1 && in1 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1) {
@@ -252,7 +252,7 @@ void supla_dimmer_smooth(int in1, int in2) {
 				Wlacznik2 = 2;
 				os_timer_disarm(&dimmer_timer);
 				os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-				os_timer_arm(&dimmer_timer, 10, 1); 
+				os_timer_arm(&dimmer_timer, Step, 1); 
 			};
 
 			if ( Wlacznik2 == 1 && in2 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1) {
