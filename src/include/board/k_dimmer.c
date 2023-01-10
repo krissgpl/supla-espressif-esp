@@ -50,7 +50,7 @@ int brightness_log[200] = { 0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
 						  166,171,175,180,185,190,195,200};
 
 uint8 Licznik = 0;
-uint8 Step    = 8; // czas (ms) &dimmer_timer
+uint8 Step    = 7; // czas (ms) &dimmer_timer
 uint8 Jasnosc = 0;
 int Czas;
 
@@ -139,10 +139,10 @@ void ICACHE_FLASH_ATTR board_esp_pwm_set_percent_duty(uint8 percent, uint8 chann
 
 void dimmer_timer_ON_cb(void *timer_arg) {
 	
-	supla_log(LOG_DEBUG, "Dimmer Timer ON start");
-	supla_log(LOG_DEBUG, "Jasnosc (2x) = %i", Jasnosc);
-	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
-	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik]);
+	//supla_log(LOG_DEBUG, "Dimmer Timer ON start");
+	//supla_log(LOG_DEBUG, "Jasnosc (2x) = %i", Jasnosc);
+	//supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
+	//supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik]);
 	board_esp_pwm_set_percent_duty(brightness_log[Licznik], 0);
 	
 	if ( brightness_log[Licznik] == Jasnosc ) { 
@@ -158,10 +158,10 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 
 void dimmer_timer_OFF_cb(void *timer_arg) {
 	
-	supla_log(LOG_DEBUG, "Dimmer Timer OFF start");
-	supla_log(LOG_DEBUG, "Jasnosc (2x) = %i", Jasnosc);
-	supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
-	supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik]);
+	//supla_log(LOG_DEBUG, "Dimmer Timer OFF start");
+	//supla_log(LOG_DEBUG, "Jasnosc (2x) = %i", Jasnosc);
+	//supla_log(LOG_DEBUG, "Licznik : %i", Licznik);
+	//supla_log(LOG_DEBUG, "brightness_log : %i", brightness_log[Licznik]);
 	board_esp_pwm_set_percent_duty(brightness_log[Licznik], 0);
 	
 	if ( gpio__input_get(B_SENSOR_PORT1) == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1 ) {
