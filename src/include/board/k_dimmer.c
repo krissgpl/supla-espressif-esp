@@ -151,15 +151,15 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 		os_timer_disarm(&dimmer_timer);
 		if ( Wlacznik1 == 1 ) Wlacznik1 = 2;
 		if ( Wlacznik1 == 3 ) {
-			os_timer_disarm(&dimmer_timer);
-			os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-			os_timer_arm(&dimmer_timer, 10, 1); };
+			os_timer_disarm(&work_timer);
+			os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
+			os_timer_arm(&work_timer, Czas, 0); };
 			
 		if ( Wlacznik2 == 1 ) Wlacznik2 = 2;
 		if ( Wlacznik2 == 3 ) {
-			os_timer_disarm(&dimmer_timer);
-			os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
-			os_timer_arm(&dimmer_timer, 10, 1); };
+			os_timer_disarm(&work_timer);
+			os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
+			os_timer_arm(&work_timer, Czas, 0); };
 		
 	} else {
 		Licznik ++;
