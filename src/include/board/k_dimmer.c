@@ -137,6 +137,17 @@ void ICACHE_FLASH_ATTR board_esp_pwm_set_percent_duty(uint8 percent, uint8 chann
 
 }
 
+void work_timer_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "Set dimmer 0");
+	Work = 1;
+	supla_log(LOG_DEBUG, "work_timer - Licznik : %i", Licznik);
+	
+	os_timer_disarm(&dimmer_timer);
+	os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_OFF_cb, NULL);
+	os_timer_arm(&dimmer_timer, 10, 1); 
+}
+
 void dimmer_timer_ON_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "Dimmer Timer ON start");
@@ -196,17 +207,6 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 	} else {
 		Licznik --;
 		supla_log(LOG_DEBUG, "Licznik-- : %i", Licznik); };
-}
-
-void work_timer_cb(void *timer_arg) {
-	
-	supla_log(LOG_DEBUG, "Set dimmer 0");
-	Work = 1;
-	supla_log(LOG_DEBUG, "work_timer - Licznik : %i", Licznik);
-	
-	os_timer_disarm(&dimmer_timer);
-	os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_OFF_cb, NULL);
-	os_timer_arm(&dimmer_timer, 10, 1); 
 }
 
 void supla_dimmer_smooth(int in1, int in2) {
