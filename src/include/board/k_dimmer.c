@@ -148,6 +148,13 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 	if ( brightness_log[Licznik] == Jasnosc ) { 
 		supla_log(LOG_DEBUG, "Dimmer Timer ON stop");
 		supla_log(LOG_DEBUG, "stop - Licznik : %i", Licznik);
+		if ( Wlacznik1 = 1 ) Wlacznik1 = 2;
+		if ( Wlacznik1 = 3 ) {
+			os_timer_disarm(&dimmer_timer);
+			os_timer_setfn(&dimmer_timer, (os_timer_func_t *)dimmer_timer_ON_cb, NULL);
+			os_timer_arm(&dimmer_timer, 10, 1); };
+			
+		if ( Wlacznik2 = 1 ) Wlacznik2 = 2;
 		os_timer_disarm(&dimmer_timer);
 	} else {
 		Licznik ++;
@@ -225,14 +232,16 @@ void supla_dimmer_smooth(int in1, int in2) {
 				os_timer_arm(&dimmer_timer, 10, 1); 
 			};
 		
-			if ( Wlacznik1 == 1 && in1 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1) {
+			if ( Wlacznik1 == 1 && in1 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1) Wlacznik1 == 3;
+		
+			if ( Wlacznik1 == 2 && in1 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1) {
 				
 				if ( in1 == 0 && in2 == 0 ) {
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 				os_timer_arm(&work_timer, Czas, 0); }; }
 				
-			if ( Wlacznik1 == 1 && in1 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 0) {	
+			if ( Wlacznik1 == 2 && in1 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 0) {	
 				
 				if (  in1 == 0 ) {
 					os_timer_disarm(&work_timer);
@@ -253,14 +262,14 @@ void supla_dimmer_smooth(int in1, int in2) {
 				os_timer_arm(&dimmer_timer, 10, 1); 
 			};
 
-			if ( Wlacznik2 == 1 && in2 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1) {
+			if ( Wlacznik2 == 2 && in2 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1) {
 				
 				if ( in1 == 0 && in2 == 0 ) {
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 				os_timer_arm(&work_timer, Czas, 0); }; }
 				
-			if ( Wlacznik2 == 1 && in2 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 0) {	
+			if ( Wlacznik2 == 2 && in2 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 0) {	
 				
 				if (  in2 == 0 ) {
 					os_timer_disarm(&work_timer);
