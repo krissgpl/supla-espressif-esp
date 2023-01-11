@@ -503,7 +503,8 @@ void supla_board_input(int in1, int in2) {
 					os_timer_disarm(&value_timer2);
 					os_timer_setfn(&value_timer2, (os_timer_func_t *)supla_esp_baord_value_timer2_cb, NULL);
 					os_timer_arm(&value_timer2, 100, 0);
-					};
+				};
+			};
 	};
 				
 	supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
