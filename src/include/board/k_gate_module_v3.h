@@ -32,13 +32,13 @@
 #define ESP_HOSTNAME "SUPLA-NICE_V3"
 #define AP_SSID "SUPLA-NICE-V3"
 
-#define RELAY_MAX_COUNT		10
+#define RELAY_MAX_COUNT		11
 
 #define DS18B20
-#define TEMPERATURE_CHANNEL 9
+#define TEMPERATURE_CHANNEL 10
 
 #define DHTSENSOR
-#define TEMPERATURE_HUMIDITY_CHANNEL 9
+#define TEMPERATURE_HUMIDITY_CHANNEL 10
 
 #define USE_GPIO16_OUTPUT
 
@@ -54,6 +54,7 @@
 #define B_UPD_PORT		    20
 #define B_HARMONOGRAM		21
 #define B_BLOKADA			22
+#define B_LIGHT				23
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY2_PORT ) {	\
@@ -72,13 +73,13 @@
 						return;  };	\
 	}
 	
-//char supla_board_gate(int in);
-
 #define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 7 = %i", supla_esp_state.Relay[7]);	\
 												return supla_esp_state.Relay[7] == 1 ? 1 : 0;	}	\
 				if ( port == B_BLOKADA)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 8 = %i", supla_esp_state.Relay[8]);	\
-												return supla_esp_state.Relay[8] == 1 ? 1 : 0;	}
+												return supla_esp_state.Relay[8] == 1 ? 1 : 0;	}	\
+				if ( port == B_LIGHT)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 9 = %i", supla_esp_state.Relay[9]);	\
+												return supla_esp_state.Relay[9] == 1 ? 1 : 0;	}
 
 //#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
 
@@ -92,12 +93,6 @@
 											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
 										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
 											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };	
-										/*if ( ChannelNumber == 0 ) {	\
-											char gate_status;	\
-											gate_status = supla_board_gate(1);	\
-											supla_log(LOG_DEBUG, "gate_status = %s", gate_status);	\
-											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
-											state->LastConnectionResetCause = gate_status; };	\ */
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
 		
