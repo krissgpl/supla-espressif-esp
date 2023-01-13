@@ -48,7 +48,6 @@
 
 #define LED_RED_BLOCK    0x1
 #define LED_GREEN_BLOCK  0x2
-#define LED_BLUE_BLOCK   0x3
 
 #define LED_RED_PORT     16
 #define LED_GREEN_PORT    4
@@ -67,13 +66,11 @@
 																	if (supla_esp_gpio_output_is_hi(B_RELAY1_PORT) == 0) {\
 																	supla_log(LOG_DEBUG, "Blokada GPIO5 !!! po");	\
 																	return;	} 	}	\
-	if ( port == B_RELAY1_PORT && supla_esp_gpio_output_is_hi(B_RELAY1_PORT) == 1) supla_block_channel(LED_BLUE_BLOCK);	\
 	if ( port == B_RELAY2_PORT && supla_esp_state.Relay[4] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO13 !!!");	\
 																	supla_block_channel(LED_GREEN_BLOCK);	\
 																	if (supla_esp_gpio_output_is_hi(B_RELAY2_PORT) == 0) {\
 																	supla_log(LOG_DEBUG, "Blokada GPIO13 !!! po");	\
 																	return;	}	}	\
-	if ( port == B_RELAY2_PORT && supla_esp_gpio_output_is_hi(B_RELAY2_PORT) == 1) supla_block_channel(LED_BLUE_BLOCK);	\
 	if (supla_last_state == STATE_CONNECTED) { \
 		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
 			supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\
@@ -107,7 +104,13 @@
 
 #define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
 
+#define BOARD_INTR_HANDLER	if ( supla_last_state == STATE_CONNECTED && gpio_status > 1 ) { \
+							supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
+							supla_board_input(!gpio__input_get(B_BTN1_PORT), !gpio__input_get(B_BTN2_PORT)); } 
+
 void supla_send_at(uint8 gpio, int action);
+
+void supla_board_input(int in1, int in2);
 				
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
 
