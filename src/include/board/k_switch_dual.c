@@ -469,7 +469,7 @@ void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 		Licznik = 0;
 	
 		if ( ledblock == LED_BLUE_BLOCK ) {
-			supla_esp_devconn_send_action_trigger(chnl, SUPLA_ACTION_CAP_SHORT_PRESS_x5;); 
+			supla_esp_devconn_send_action_trigger(chnl, SUPLA_ACTION_CAP_SHORT_PRESS_x5); 
 			supla_log(LOG_DEBUG, "supla_esp_board send AT 1 (gate)"); 
 		} else {
 		
