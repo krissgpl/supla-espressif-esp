@@ -1,27 +1,23 @@
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
-
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or (at your option) any later version.
-
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
-
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
 #ifndef K_SUPLA_GATE_MODULE_V3_H_
 #define K_SUPLA_GATE_MODULE_V3_H_
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.8.51.0"
+#define SUPLA_ESP_SOFTVER "2.8.51.1"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -32,13 +28,13 @@
 #define ESP_HOSTNAME "SUPLA-NICE_V3"
 #define AP_SSID "SUPLA-NICE-V3"
 
-#define RELAY_MAX_COUNT		10
+#define RELAY_MAX_COUNT		11
 
 #define DS18B20
-#define TEMPERATURE_CHANNEL 9
+#define TEMPERATURE_CHANNEL 10
 
 #define DHTSENSOR
-#define TEMPERATURE_HUMIDITY_CHANNEL 9
+#define TEMPERATURE_HUMIDITY_CHANNEL 10
 
 #define USE_GPIO16_OUTPUT
 
@@ -47,13 +43,12 @@
 #define B_RELAY1_PORT       13	// blokada bramy
 #define B_RELAY2_PORT       5	// sterowanie brama
 #define B_RELAY3_PORT       4	// wyjscie 2
-
 #define B_SENSOR_PORT1      12
 #define B_SENSOR_PORT2      14
-
 #define B_UPD_PORT		    20
 #define B_HARMONOGRAM		21
 #define B_BLOKADA			22
+#define B_LIGHT				23
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY2_PORT ) {	\
@@ -71,14 +66,14 @@
 						supla_log(LOG_DEBUG, "PORT 20 MAKRO");	\
 						return;  };	\
 	}
-	
-//char supla_board_gate(int in);
 
 #define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 7 = %i", supla_esp_state.Relay[7]);	\
 												return supla_esp_state.Relay[7] == 1 ? 1 : 0;	}	\
-				if ( port == B_BLOKADA)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 8 = %i", supla_esp_state.Relay[8]);	\
-												return supla_esp_state.Relay[8] == 1 ? 1 : 0;	}
+				if ( port == B_BLOKADA)      {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 8 = %i", supla_esp_state.Relay[8]);	\
+												return supla_esp_state.Relay[8] == 1 ? 1 : 0;	}	\
+				if ( port == B_LIGHT)        {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 9 = %i", supla_esp_state.Relay[9]);	\
+												return supla_esp_state.Relay[9] == 1 ? 1 : 0;	}
 
 //#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
 
@@ -92,15 +87,10 @@
 											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
 										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
 											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };	
-										/*if ( ChannelNumber == 0 ) {	\
-											char gate_status;	\
-											gate_status = supla_board_gate(1);	\
-											supla_log(LOG_DEBUG, "gate_status = %s", gate_status);	\
-											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
-											state->LastConnectionResetCause = gate_status; };	\ */
+
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc);
-		
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
 void supla_board_input(int in1, int in2);
@@ -109,5 +99,5 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 
 char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved);
-
+	
 #endif
