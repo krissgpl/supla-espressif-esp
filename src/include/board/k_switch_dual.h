@@ -104,13 +104,7 @@
 
 #define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
 
-#define BOARD_INTR_HANDLER	if ( supla_last_state == STATE_CONNECTED && gpio_status > 1 ) { \
-							supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
-							supla_board_input(!gpio__input_get(B_BTN1_PORT), !gpio__input_get(B_BTN2_PORT)); } 
-
 void supla_send_at(uint8 gpio, int action);
-
-void supla_board_input(int in1, int in2);
 				
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
 

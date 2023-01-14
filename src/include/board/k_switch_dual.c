@@ -38,7 +38,6 @@ int DIS1_CH;
 int DIS2_CH;
 
 unsigned int Licznik = 0;
-unsigned char chnl;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
@@ -195,7 +194,7 @@ void supla_esp_board_gpio_init(void) {
 
 void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
 	
-	//unsigned char chnl;
+	unsigned char chnl;
 	
 	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2) {
 	
@@ -468,41 +467,29 @@ void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
 		
 		Licznik = 0;
 	
-	/*	if ( ledblock == LED_BLUE_BLOCK ) {
-			supla_esp_devconn_send_action_trigger(chnl, SUPLA_ACTION_CAP_SHORT_PRESS_x5); 
-			supla_log(LOG_DEBUG, "supla_esp_board send AT 1 (gate)"); 
-		} else { */
-		
-			if ( ledblock == LED_RED_BLOCK )
-				supla_esp_gpio_set_hi(LED_RED_PORT, 0);
+		if ( ledblock == LED_RED_BLOCK )
+			supla_esp_gpio_set_hi(LED_RED_PORT, 0);
 			
-			if ( ledblock == LED_GREEN_BLOCK )
-				supla_esp_gpio_set_hi(LED_GREEN_PORT, 0);
+		if ( ledblock == LED_GREEN_BLOCK )
+			supla_esp_gpio_set_hi(LED_GREEN_PORT, 0);
 		
-			os_timer_disarm(&Led_ON);
-			os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
-			os_timer_arm(&Led_ON, 200, 0);
+		os_timer_disarm(&Led_ON);
+		os_timer_setfn(&Led_ON, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+		os_timer_arm(&Led_ON, 200, 0);
 	
-			os_timer_disarm(&Led_OFF);
-			os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
-			os_timer_arm(&Led_OFF, 400, 0);	
+		os_timer_disarm(&Led_OFF);
+		os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
+		os_timer_arm(&Led_OFF, 400, 0);	
 	
-			os_timer_disarm(&Led_ON2);
-			os_timer_setfn(&Led_ON2, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
-			os_timer_arm(&Led_ON2, 800, 0);
+		os_timer_disarm(&Led_ON2);
+		os_timer_setfn(&Led_ON2, (os_timer_func_t *)supla_esp_baord_Led_ON_cb, (void*)ledblock);	
+		os_timer_arm(&Led_ON2, 800, 0);
 	
-			os_timer_disarm(&Led_OFF2);
-			os_timer_setfn(&Led_OFF2, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
-			os_timer_arm(&Led_OFF2, 1200, 0);
-		//};
-	};
+		os_timer_disarm(&Led_OFF2);
+		os_timer_setfn(&Led_OFF2, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
+		os_timer_arm(&Led_OFF2, 1200, 0);	
+	}
 }
-
-void supla_board_input(int in1, int in2) {
-	
-	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i", in1, in2);
-	
-};
 
 void supla_send_at(uint8 gpio, int action) {
 
