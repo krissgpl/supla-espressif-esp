@@ -587,7 +587,7 @@ void supla_board_input(void) {
 		Licznik2 = 1;
 		os_timer_disarm(&value_timer2);
 		os_timer_setfn(&value_timer2, (os_timer_func_t *)supla_esp_baord_value_timer2_cb, NULL);
-		os_timer_arm(&value_timer2, 2500, 0); };
+		os_timer_arm(&value_timer2, 4000, 0); };
 	
 }
 
