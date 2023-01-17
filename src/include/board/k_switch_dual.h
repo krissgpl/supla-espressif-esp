@@ -28,6 +28,8 @@
 
 #define BOARD_ON_CONNECT
 
+#define BOARD_ESP_ON_STATE_CHANGED
+
 #define RELAY_MAX_COUNT		9
 
 #define TEMP_SELECT
@@ -117,6 +119,8 @@ void supla_block_channel(int ledblock);
 	
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved);
+
+void supla_esp_board_on_state_changed(char supla_last_state);
 	
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 
