@@ -579,15 +579,15 @@ void supla_send_at(uint8 gpio, int action) {
 	
 }
 
-void supla_board_input(int in1, int in2) {
+void supla_board_input(void) {
 	
-	supla_log(LOG_DEBUG, "board_input BTN1 = %i, BTN2 = %i", in1, in2);
+	supla_log(LOG_DEBUG, "board_input");
 	//supla_log(LOG_DEBUG, "board_output RELAY1 = %i, RELAY2 = %i", supla_esp_gpio_output_is_hi(B_RELAY1_PORT), supla_esp_gpio_output_is_hi(B_RELAY2_PORT));
 	if ( Licznik2 == 0 ) {
 		Licznik2 = 1;
 		os_timer_disarm(&value_timer2);
 		os_timer_setfn(&value_timer2, (os_timer_func_t *)supla_esp_baord_value_timer2_cb, NULL);
-		os_timer_arm(&value_timer2, 1000, 0); };
+		os_timer_arm(&value_timer2, 2000, 0); };
 	
 }
 
