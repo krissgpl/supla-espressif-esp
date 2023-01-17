@@ -571,6 +571,12 @@ void supla_send_at(uint8 gpio, int action) {
 	
 }
 
+void supla_board_input(int in1, int in2) {
+	
+	supla_log(LOG_DEBUG, "board_input BTN1 = %i, BTN2 = %i", in1, in2);
+	
+}
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
 	
 	supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port);
