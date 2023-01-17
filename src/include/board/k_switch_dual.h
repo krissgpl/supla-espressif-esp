@@ -102,8 +102,7 @@
 										
 //#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
 
-#define BOARD_ON_INPUT_ACTIVE	if ( supla_last_state == STATE_CONNECTED && gpio_status > 1 ) { \
-								supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
+#define BOARD_ON_INPUT_ACTIVE	if ( supla_last_state == STATE_CONNECTED ) { \
 								supla_board_input(!gpio__input_get(B_BTN1_PORT), !gpio__input_get(B_BTN2_PORT)); }
 							
 #define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
