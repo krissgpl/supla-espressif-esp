@@ -574,6 +574,7 @@ void supla_send_at(uint8 gpio, int action) {
 void supla_board_input(int in1, int in2) {
 	
 	supla_log(LOG_DEBUG, "board_input BTN1 = %i, BTN2 = %i", in1, in2);
+	supla_log(LOG_DEBUG, "board_output RELAY1 = %i, RELAY2 = %i", supla_esp_gpio_output_is_hi(B_RELAY1_PORT), supla_esp_gpio_output_is_hi(B_RELAY2_PORT));
 	
 }
 
