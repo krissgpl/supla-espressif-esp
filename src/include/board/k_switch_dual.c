@@ -73,13 +73,13 @@ void supla_esp_baord_value_timer2_cb(void *timer_arg) {
 
 	supla_log(LOG_DEBUG, "board_output RELAY");
 	
-	if ( supla_esp_state.Relay[0] == 1 && supla_esp_state.Relay[1] == 0 && supla_last_state == STATE_CONNECTED ) {
+	if ( supla_esp_state.Relay[0] == 1 && supla_esp_state.Relay[1] == 0 ) {
 		if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2) {
 			supla_esp_devconn_send_action_trigger(6, SUPLA_ACTION_CAP_SHORT_PRESS_x5);
 		} else { supla_esp_devconn_send_action_trigger(5, SUPLA_ACTION_CAP_SHORT_PRESS_x5); }
 	};
 	
-	if ( supla_esp_state.Relay[1] == 1 && supla_esp_state.Relay[0] == 0 && supla_last_state == STATE_CONNECTED ) {
+	if ( supla_esp_state.Relay[1] == 1 && supla_esp_state.Relay[0] == 0 ) {
 		if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2) {
 			supla_esp_devconn_send_action_trigger(6, SUPLA_ACTION_CAP_SHORT_PRESS_x5);
 		} else { supla_esp_devconn_send_action_trigger(5, SUPLA_ACTION_CAP_SHORT_PRESS_x5); }
