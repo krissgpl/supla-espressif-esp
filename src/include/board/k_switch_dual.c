@@ -27,6 +27,7 @@
 #include "supla_esp_input.h"
 
 ETSTimer value_timer1;
+ETSTimer value_timer2;
 ETSTimer Led_ON;
 ETSTimer Led_OFF;
 ETSTimer Led_ON2;
@@ -38,6 +39,7 @@ int DIS1_CH;
 int DIS2_CH;
 
 unsigned int Licznik = 0;
+unsigned int Licznik2 = 0;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
@@ -65,6 +67,12 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	supla_log(LOG_DEBUG, "TIMER update - restart");
 	supla_system_restart();
 	
+}
+
+void supla_esp_baord_value_timer2_cb(void *timer_arg) {
+
+	supla_log(LOG_DEBUG, "board_output RELAY1 = %i, RELAY2 = %i", supla_esp_gpio_output_is_hi(B_RELAY1_PORT), supla_esp_gpio_output_is_hi(B_RELAY2_PORT));
+	Licznik2 = 0;
 }
 
 void supla_esp_baord_Led_ON_cb(void *timer_arg) {
@@ -574,7 +582,12 @@ void supla_send_at(uint8 gpio, int action) {
 void supla_board_input(int in1, int in2) {
 	
 	supla_log(LOG_DEBUG, "board_input BTN1 = %i, BTN2 = %i", in1, in2);
-	supla_log(LOG_DEBUG, "board_output RELAY1 = %i, RELAY2 = %i", supla_esp_gpio_output_is_hi(B_RELAY1_PORT), supla_esp_gpio_output_is_hi(B_RELAY2_PORT));
+	//supla_log(LOG_DEBUG, "board_output RELAY1 = %i, RELAY2 = %i", supla_esp_gpio_output_is_hi(B_RELAY1_PORT), supla_esp_gpio_output_is_hi(B_RELAY2_PORT));
+	if ( Licznik2 == 0 ) {
+		Licznik2 = 1;
+		os_timer_disarm(&value_timer2);
+		os_timer_setfn(&value_timer2, (os_timer_func_t *)supla_esp_baord_value_timer2_cb, NULL);
+		os_timer_arm(&value_timer2, 1000, 0); };
 	
 }
 
