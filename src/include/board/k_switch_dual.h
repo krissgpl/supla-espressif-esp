@@ -108,7 +108,7 @@
 							
 #define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
 
-#define BOARD_INPUT_STATE_CHANGE_SEND if ( supla_last_state == STATE_CONNECTED ) supla_esp_board_input_state_change(input_cfg->gpio_id, new_state);
+#define BOARD_INPUT_STATE_CHANGE_SEND supla_esp_board_input_state_change(input_cfg->gpio_id, new_state);
 
 void supla_esp_board_input_state_change(uint8 gpio, int state);
 
