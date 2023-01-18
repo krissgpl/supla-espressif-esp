@@ -300,12 +300,12 @@ void GPIO_ICACHE_FLASH supla_esp_input_legacy_state_change_handling(
     }
     if (! supla_esp_input_can_button_exit_cfgmode(input_cfg) ) {
       supla_esp_gpio_on_input_inactive(input_cfg);
-	  
+/*	  
 	  supla_log(LOG_DEBUG, "supla_esp_input_legacy_state_change_handling - BOARD_ON_INPUT_NOTIF, ch=%i, ", input_cfg->channel );	// moje
 #ifdef BOARD_ON_INPUT_NOTIF
   BOARD_ON_INPUT_ACTIVE_NONAT;
 #endif		// moje
-	  
+*/	  
     }
   }
 
@@ -598,10 +598,12 @@ supla_esp_input_send_action_trigger(supla_input_cfg_t *input_cfg, int action) {
         // in advanvced mode, inputs which are not controlling roller
         // shutter, should call only input active method
         supla_esp_gpio_on_input_active(input_cfg);
+/*
 		supla_log(LOG_DEBUG, "supla_esp_input_send_action_trigger - BOARD_ON_INPUT_ACTIVE_AT, ch=%i, ", input_cfg->channel );	// moje
 #ifdef BOARD_ON_INPUT_ACTIVE_AT
   BOARD_ON_INPUT_ACTIVE_AT;
 #endif		// moje
+*/
       }
       return;
     }
