@@ -100,7 +100,7 @@ void supla_esp_baord_value_timer2_cb(void *timer_arg) {
 void supla_esp_board_input_state_change(uint8 gpio, int state) {
 
 	supla_log(LOG_DEBUG, "BOARD notify input %d change: %d", gpio, state);
-	supla_log(LOG_DEBUG, "BOARD notify currentDeviceState : %s", currentDeviceState);
+	if ( currentDeviceState == STATE_CONNECTED) supla_log(LOG_DEBUG, "BOARD notify currentDeviceState : STATE_CONNECTED");
 	
 	if ( state == 0 && Licznik == 0 && currentDeviceState == STATE_CONNECTED) {
 		Licznik2 = 1;
