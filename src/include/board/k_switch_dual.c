@@ -68,6 +68,12 @@ void supla_esp_board_on_state_changed(char supla_last_state) {
   currentDeviceState = supla_last_state;
 }
 
+void supla_esp_board_input_state_change(input_cfg) {
+
+	supla_log(LOG_DEBUG, "BOARD notify input %d change: %d", input_cfg->gpio_id, new_state);
+	
+}
+
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER update - restart");

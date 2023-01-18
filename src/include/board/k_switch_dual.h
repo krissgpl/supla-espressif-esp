@@ -34,7 +34,7 @@
 
 #define TEMP_SELECT
 
-#define SUPLA_DEBUG
+#define BOARD_INPUT_STATE_CHANGE_NOTIF
 
 //#define BTN_MODE_PUBLISH_AT
 
@@ -109,6 +109,8 @@
 //#define BOARD_ON_INPUT_INACTIVE	if ( supla_last_state == STATE_CONNECTED ) supla_board_input();
 							
 #define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
+
+void supla_esp_board_input_state_change(input_cfg);
 
 void supla_board_input(void);
 
