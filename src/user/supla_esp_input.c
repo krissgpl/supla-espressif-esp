@@ -592,7 +592,7 @@ supla_esp_input_send_action_trigger(supla_input_cfg_t *input_cfg, int action) {
         // in advanvced mode, inputs which are not controlling roller
         // shutter, should call only input active method
         supla_esp_gpio_on_input_active(input_cfg);
-		supla_log(LOG_DEBUG, "supla_esp_input_send_action_trigger - supla_esp_gpio_on_input_active");	// moje
+		supla_log(LOG_DEBUG, "supla_esp_input_send_action_trigger - supla_esp_gpio_on_input_active, ch=%i, ", input_cfg->channel );	// moje
       }
       return;
     }
