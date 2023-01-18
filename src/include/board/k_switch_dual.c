@@ -39,6 +39,7 @@ unsigned char chnl;
 uint8 UPD_channel;
 uint8 DIS1_CH;
 uint8 DIS2_CH;
+uint8 HRM_CH;
 
 uint8 Licznik = 0;
 uint8 Licznik2 = 0;
