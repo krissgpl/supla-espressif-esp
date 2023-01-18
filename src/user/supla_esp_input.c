@@ -132,6 +132,10 @@ void GPIO_ICACHE_FLASH supla_esp_input_notify_state_change(
   supla_esp_board_input_state_change(input_cfg);
 #endif
 
+#ifdef BOARD_INPUT_STATE_CHANGE_SEND
+  BOARD_INPUT_STATE_CHANGE_SEND
+#endif	// moje
+
   if (supla_esp_input_is_advanced_mode_enabled(input_cfg)) {
     os_timer_setfn(&input_cfg->timer, supla_esp_input_advanced_timer_cb,
         input_cfg);
