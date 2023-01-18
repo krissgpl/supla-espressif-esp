@@ -98,13 +98,13 @@ void supla_esp_board_input_state_change(uint8 gpio, int state) {
 
 	supla_log(LOG_DEBUG, "BOARD notify input %d change: %d", gpio, state);
 	
-	if ( supla_esp_state.Relay[0] == 1 && state == 0 && Licznik == 0 ) {
+	if ( supla_esp_state.Relay[0] == 1 && state == 0 && Licznik == 0 && currentDeviceState == STATE_CONNECTED) {
 		Licznik2 = 1;
 		os_timer_disarm(&value_timer2);
 		os_timer_setfn(&value_timer2, (os_timer_func_t *)supla_esp_baord_value_timer2_cb, NULL);
 		os_timer_arm(&value_timer2, 2000, 0); }
 		
-	if ( supla_esp_state.Relay[1] == 1 && state == 0 && Licznik == 0 ) {
+	if ( supla_esp_state.Relay[1] == 1 && state == 0 && Licznik == 0 && currentDeviceState == STATE_CONNECTED) {
 		Licznik2 = 1;
 		os_timer_disarm(&value_timer2);
 		os_timer_setfn(&value_timer2, (os_timer_func_t *)supla_esp_baord_value_timer2_cb, NULL);
