@@ -22,7 +22,7 @@
 #define ESP8266_SUPLA_PROTO_VERSION 16
 #define RETREIVE_CHANNEL_CONFIG 0b11100000
 
-#define SUPLA_ESP_SOFTVER "2.8.51.0"
+#define SUPLA_ESP_SOFTVER "2.8.51.1"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -33,8 +33,6 @@
 #define RELAY_MAX_COUNT		9
 
 #define TEMP_SELECT
-
-//#define BTN_MODE_PUBLISH_AT
 
 #define AP_SSID "SWITCH_DUAL"
 #define ESP_HOSTNAME "SUPLA-SWITCH-DUAL"
@@ -103,16 +101,12 @@
 											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };
 										
 //#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
-
-//#define BOARD_ON_INPUT_INACTIVE	if ( supla_last_state == STATE_CONNECTED ) supla_board_input();
 							
 #define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
 
 #define BOARD_INPUT_STATE_CHANGE_SEND supla_esp_board_input_state_change(input_cfg->gpio_id, new_state);
 
 void supla_esp_board_input_state_change(uint8 gpio, int state);
-
-//void supla_board_input(void);
 
 void supla_send_at(uint8 gpio, int action);
 				
