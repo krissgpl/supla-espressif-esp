@@ -30,7 +30,7 @@
 
 #define BOARD_ESP_ON_STATE_CHANGED
 
-#define RELAY_MAX_COUNT		9
+#define RELAY_MAX_COUNT		10
 
 #define TEMP_SELECT
 
@@ -59,6 +59,7 @@
 #define B_UPD_PORT		 20
 #define B_RELAY1_DIS	 21
 #define B_RELAY2_DIS	 22
+#define B_HARMONOGRAM	 23
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
@@ -89,10 +90,14 @@
 }
 
 #define BOARD_GPIO_OUTPUT_IS_HI	\
-				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 3 = %i", supla_esp_state.Relay[3]);	\
+				if ( port == B_RELAY1_DIS)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 3 = %i", supla_esp_state.Relay[3]);	\
 									return supla_esp_state.Relay[3] == 1 ? 1 : 0;	}	\
-				if ( port == 22)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
-									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}
+				if ( port == B_RELAY2_DIS)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
+									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	\
+				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 8 = %i", supla_esp_state.Relay[8]);	\
+												return supla_esp_state.Relay[8] == 1 ? 1 : 0;	\
+												supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 9 = %i", supla_esp_state.Relay[9]);	\
+												return supla_esp_state.Relay[9] == 1 ? 1 : 0;	}
 				
 #define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 2 ) {	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
