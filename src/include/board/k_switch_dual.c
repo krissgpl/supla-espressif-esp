@@ -95,14 +95,16 @@ void supla_esp_baord_value_timer2_cb(void *timer_arg) {
 	};
 	*/
 	Licznik2 = 0;
+	supla_log(LOG_DEBUG, "board_output RELAY - Licznik2 : %d", Licznik2);
 }
 
 void supla_esp_board_input_state_change(uint8 gpio, int state) {
 
 	supla_log(LOG_DEBUG, "BOARD notify input %d change: %d", gpio, state);
+	supla_log(LOG_DEBUG, "BOARD notify input - Licznik2 : %d", Licznik2);
 	if ( currentDeviceState == STATE_CONNECTED) supla_log(LOG_DEBUG, "BOARD notify currentDeviceState : STATE_CONNECTED");
 	
-	if ( state == 0 && Licznik == 0 && currentDeviceState == STATE_CONNECTED) {
+	if ( state == 0 && Licznik2 == 0 && currentDeviceState == STATE_CONNECTED) {
 		Licznik2 = 1;
 		os_timer_disarm(&value_timer2);
 		os_timer_setfn(&value_timer2, (os_timer_func_t *)supla_esp_baord_value_timer2_cb, NULL);
