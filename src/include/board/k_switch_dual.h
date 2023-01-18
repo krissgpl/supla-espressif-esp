@@ -110,7 +110,7 @@
 							
 #define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
 
-void supla_esp_board_input_state_change(input_cfg);
+void supla_esp_board_input_state_change(input_cfg->gpio_id, input_cfg->last_state);
 
 void supla_board_input(void);
 
