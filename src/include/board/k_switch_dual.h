@@ -94,10 +94,8 @@
 									return supla_esp_state.Relay[3] == 1 ? 1 : 0;	}	\
 				if ( port == B_RELAY2_DIS)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
 									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	\
-				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 8 = %i", supla_esp_state.Relay[8]);	\
-												return supla_esp_state.Relay[8] == 1 ? 1 : 0;	\
-												supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 9 = %i", supla_esp_state.Relay[9]);	\
-												return supla_esp_state.Relay[9] == 1 ? 1 : 0;	}
+				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 5 = %i", supla_esp_state.Relay[5]);	\
+												return supla_esp_state.Relay[5] == 1 ? 1 : 0; }
 				
 #define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 2 ) {	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\

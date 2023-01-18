@@ -100,7 +100,7 @@ void supla_esp_board_input_state_change(uint8 gpio, int state) {
 	//supla_log(LOG_DEBUG, "BOARD notify input - Licznik2 : %d", Licznik2);
 	//if ( currentDeviceState == STATE_CONNECTED) supla_log(LOG_DEBUG, "BOARD notify currentDeviceState : STATE_CONNECTED");
 	
-	if ( state == 0 && Licznik2 == 0 && currentDeviceState == STATE_CONNECTED && supla_esp_state.Relay[chnl+1] == 1 ) {
+	if ( state == 0 && Licznik2 == 0 && currentDeviceState == STATE_CONNECTED && supla_esp_state.Relay[5] == 1 ) {
 		Licznik2 = 1;
 		os_timer_disarm(&value_timer2);
 		os_timer_setfn(&value_timer2, (os_timer_func_t *)supla_esp_baord_value_timer2_cb, NULL);
@@ -151,10 +151,10 @@ void supla_esp_board_gpio_init(void) {
 	unsigned char chnl;
 	
 	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2) {
-		chnl = 6;
+		chnl = 7;
 		}
 	else {
-		chnl = 5;
+		chnl = 6;
 		}
 		
 	supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
@@ -206,7 +206,7 @@ void supla_esp_board_gpio_init(void) {
 	
 	supla_relay_cfg[5].gpio_id = B_HARMONOGRAM;	// harmonogram channel
 	supla_relay_cfg[5].flags = RELAY_FLAG_RESTORE_FORCE | RELAY_FLAG_VIRTUAL_GPIO;
-	supla_relay_cfg[5].channel = chnl+2;
+	supla_relay_cfg[5].channel = 5;
 	  
 	//---------------------------------------	
     
@@ -237,7 +237,7 @@ void supla_esp_board_gpio_init(void) {
 void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
 	
 	
-	*channel_count = chnl+3;
+	*channel_count = chnl+2;
 
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
@@ -275,23 +275,30 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[4].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[4].Default = 0;
 	channels[4].value[0] = supla_esp_gpio_relay_on(B_RELAY2_DIS);
-	    
-   if( supla_esp_cfg.ThermometerType == 1 ) {
-    channels[5].Number = 5;
-	channels[5].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
-	channels[5].FuncList = 0;
+	
+	channels[5].Number = 5;
+	channels[5].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[5].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[5].Default = 0;
-	supla_get_temperature(channels[5].value);
+	channels[5].value[0] = supla_esp_gpio_relay_on(B_HARMONOGRAM);
+	    
+   if( supla_esp_cfg.ThermometerType == 1 ) {
+    channels[6].Number = 6;
+	channels[6].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
+	channels[6].FuncList = 0;
+	channels[6].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[6].Default = 0;
+	supla_get_temperature(channels[6].value);
    }
 
    if( supla_esp_cfg.ThermometerType == 2 ) {
-	channels[5].Number = 5;
-	channels[5].Type = SUPLA_CHANNELTYPE_DHT22;
-	channels[5].FuncList = 0;
-	channels[5].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[5].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
-	supla_get_temp_and_humidity(channels[5].value);
+	channels[6].Number = 6;
+	channels[6].Type = SUPLA_CHANNELTYPE_DHT22;
+	channels[6].FuncList = 0;
+	channels[6].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[6].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+	supla_get_temp_and_humidity(channels[6].value);
    }
 
 	channels[chnl].Number = chnl;
@@ -311,13 +318,6 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[chnl+1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[chnl+1].actionTriggerProperties.relatedChannelNumber = 2;
 	channels[chnl+1].actionTriggerProperties.disablesLocalOperation = SUPLA_ACTION_CAP_SHORT_PRESS_x1; 
-	
-	channels[chnl+2].Number = chnl+2;
-	channels[chnl+2].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[chnl+2].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
-	channels[chnl+2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[chnl+2].Default = 0;
-	channels[chnl+2].value[0] = supla_esp_gpio_relay_on(B_HARMONOGRAM);
    
 }
 
@@ -328,7 +328,7 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 	supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_UPD_PORT));
 	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_RELAY1_DIS));
 	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
-	supla_esp_channel_value_changed(chnl+2, supla_esp_gpio_relay_on(B_HARMONOGRAM));
+	supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_HARMONOGRAM));
 }
 
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
@@ -619,6 +619,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
 	
 	DIS1_CH = 3;
 	DIS2_CH = 4;
+	HRM_CH  = 5;
 	
 	int ledblock;
 	
@@ -680,11 +681,11 @@ if ( port == 22 ) {
 
 if ( port == 23 ) {	
 			
-		supla_esp_state.Relay[chnl+2] = hi;
+		supla_esp_state.Relay[HRM_CH] = hi;
 		supla_esp_save_state(SAVE_STATE_DELAY);
-		supla_esp_channel_value_changed(chnl+2, supla_esp_state.Relay[chnl+2]);
+		supla_esp_channel_value_changed(HRM_CH, supla_esp_state.Relay[HRM_CH]);
 		supla_esp_cfg_save(&supla_esp_cfg);
-		supla_esp_channel_value_changed(chnl+2, hi);
+		supla_esp_channel_value_changed(HRM_CH, hi);
 };
 
 }
