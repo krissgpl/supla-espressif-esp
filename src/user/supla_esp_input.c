@@ -557,7 +557,7 @@ void GPIO_ICACHE_FLASH supla_esp_input_advanced_timer_cb(void *timer_arg) {
 	  input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE) {		// moje
             //supla_esp_gpio_on_input_inactive(input_cfg);
 			supla_log(LOG_DEBUG, "supla_esp_input_advanced_timer_cb - supla_esp_gpio_on_input_inactive");	// moje
-  
+	  }
 }
 
 // Send action triger notification to server
