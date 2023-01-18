@@ -34,6 +34,8 @@
 
 #define TEMP_SELECT
 
+#define SUPLA_DEBUG
+
 //#define BTN_MODE_PUBLISH_AT
 
 #define AP_SSID "SWITCH_DUAL"
