@@ -553,11 +553,11 @@ void GPIO_ICACHE_FLASH supla_esp_input_advanced_timer_cb(void *timer_arg) {
       }
   }
   
-  if (input_cfg->last_state == INPUT_STATE_INACTIVE || 
+ /* if (input_cfg->last_state == INPUT_STATE_INACTIVE || 
 	  input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE) {		// moje
             //supla_esp_gpio_on_input_inactive(input_cfg);
 			supla_log(LOG_DEBUG, "supla_esp_input_advanced_timer_cb - supla_esp_gpio_on_input_inactive");	// moje
-	  }
+	  } */
 }
 
 // Send action triger notification to server
@@ -580,8 +580,10 @@ supla_esp_input_send_action_trigger(supla_input_cfg_t *input_cfg, int action) {
         // to call input active/inactive methods depending on input state
         if (input_cfg->last_state == INPUT_STATE_ACTIVE
             || input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE) {
+		  supla_log(LOG_DEBUG, "supla_esp_input_send_action_trigger - supla_esp_gpio_on_input_active");	// moje		
           supla_esp_gpio_on_input_active(input_cfg);
         } else {
+		  supla_log(LOG_DEBUG, "supla_esp_input_send_action_trigger - supla_esp_gpio_on_input_inactive");	// moje	
           supla_esp_gpio_on_input_inactive(input_cfg);
         }
       } else if (input_cfg->type == INPUT_TYPE_MOTION_SENSOR) {
