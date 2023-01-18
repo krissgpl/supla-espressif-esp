@@ -317,7 +317,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[chnl+2].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[chnl+2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[chnl+2].Default = 0;
-	channels[chnl+2].value[0] = supla_esp_gpio_relay_on(HARMONOGRAM);
+	channels[chnl+2].value[0] = supla_esp_gpio_relay_on(B_HARMONOGRAM);
    
 }
 
@@ -328,7 +328,7 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 	supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_UPD_PORT));
 	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_RELAY1_DIS));
 	supla_esp_channel_value_changed(4, supla_esp_gpio_relay_on(B_RELAY1_DIS));
-	supla_esp_channel_value_changed(chnl+2, supla_esp_gpio_relay_on(HARMONOGRAM));
+	supla_esp_channel_value_changed(chnl+2, supla_esp_gpio_relay_on(B_HARMONOGRAM));
 }
 
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
