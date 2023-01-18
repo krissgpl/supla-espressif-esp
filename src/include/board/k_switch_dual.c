@@ -79,12 +79,12 @@ void supla_esp_baord_value_timer2_cb(void *timer_arg) {
 
 	supla_log(LOG_DEBUG, "board_output RELAY");
 	
-//	if ( supla_esp_state.Relay[0] == 1 && supla_esp_state.Relay[1] == 0 && currentDeviceState == STATE_CONNECTED ) {
+	if ( supla_esp_state.Relay[0] == 1 || supla_esp_state.Relay[1] == 1 ) {
 		if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2) {
 			supla_esp_devconn_send_action_trigger(6, SUPLA_ACTION_CAP_SHORT_PRESS_x5);
 		} else { supla_esp_devconn_send_action_trigger(5, SUPLA_ACTION_CAP_SHORT_PRESS_x5); }
-/*	};
-	
+	};
+/*	
 	if ( supla_esp_state.Relay[1] == 1 && supla_esp_state.Relay[0] == 0 && currentDeviceState == STATE_CONNECTED ) {
 		if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2) {
 			supla_esp_devconn_send_action_trigger(6, SUPLA_ACTION_CAP_SHORT_PRESS_x5);
@@ -98,17 +98,17 @@ void supla_esp_board_input_state_change(uint8 gpio, int state) {
 
 	supla_log(LOG_DEBUG, "BOARD notify input %d change: %d", gpio, state);
 	
-	if ( supla_esp_state.Relay[0] == 1 && state == 0 && Licznik == 0 && currentDeviceState == STATE_CONNECTED) {
+	if ( state == 0 && Licznik == 0 && currentDeviceState == STATE_CONNECTED) {
 		Licznik2 = 1;
 		os_timer_disarm(&value_timer2);
 		os_timer_setfn(&value_timer2, (os_timer_func_t *)supla_esp_baord_value_timer2_cb, NULL);
 		os_timer_arm(&value_timer2, 2000, 0); }
 		
-	if ( supla_esp_state.Relay[1] == 1 && state == 0 && Licznik == 0 && currentDeviceState == STATE_CONNECTED) {
+/*	if ( supla_esp_state.Relay[1] == 1 && state == 0 && Licznik == 0 && currentDeviceState == STATE_CONNECTED) {
 		Licznik2 = 1;
 		os_timer_disarm(&value_timer2);
 		os_timer_setfn(&value_timer2, (os_timer_func_t *)supla_esp_baord_value_timer2_cb, NULL);
-		os_timer_arm(&value_timer2, 2000, 0); }
+		os_timer_arm(&value_timer2, 2000, 0); } */
 }
 
 void supla_esp_baord_Led_ON_cb(void *timer_arg) {
