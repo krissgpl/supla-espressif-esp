@@ -472,6 +472,10 @@ void GPIO_ICACHE_FLASH supla_esp_input_advanced_state_change_handling(
           if (input_cfg->type == INPUT_TYPE_MOTION_SENSOR) {
             supla_esp_gpio_on_input_inactive(input_cfg);
           }
+		  if (input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE) {		// moje
+            supla_esp_gpio_on_input_inactive(input_cfg);
+			supla_log(LOG_DEBUG, "supla_esp_input_advanced_state_change_handling - supla_esp_gpio_on_input_inactive");	// moje
+          }
         }
       }
 
