@@ -579,11 +579,9 @@ supla_esp_input_send_action_trigger(supla_input_cfg_t *input_cfg, int action) {
         // in advanced mode with AT, roller shutter still requires
         // to call input active/inactive methods depending on input state
         if (input_cfg->last_state == INPUT_STATE_ACTIVE
-            || input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE) {
-		  supla_log(LOG_DEBUG, "supla_esp_input_send_action_trigger - supla_esp_gpio_on_input_active");	// moje		
+            || input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE) {		
           supla_esp_gpio_on_input_active(input_cfg);
         } else {
-		  supla_log(LOG_DEBUG, "supla_esp_input_send_action_trigger - supla_esp_gpio_on_input_inactive");	// moje	
           supla_esp_gpio_on_input_inactive(input_cfg);
         }
       } else if (input_cfg->type == INPUT_TYPE_MOTION_SENSOR) {
@@ -594,6 +592,7 @@ supla_esp_input_send_action_trigger(supla_input_cfg_t *input_cfg, int action) {
         // in advanvced mode, inputs which are not controlling roller
         // shutter, should call only input active method
         supla_esp_gpio_on_input_active(input_cfg);
+		supla_log(LOG_DEBUG, "supla_esp_input_send_action_trigger - supla_esp_gpio_on_input_active");	// moje
       }
       return;
     }
