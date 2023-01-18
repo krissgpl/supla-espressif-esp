@@ -66,6 +66,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffe
 
 void supla_esp_board_on_state_changed(char supla_last_state) {
   currentDeviceState = supla_last_state;
+  supla_log(LOG_DEBUG, "supla_esp_board_on_state_changed");
 }
 
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {
@@ -78,6 +79,8 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 void supla_esp_baord_value_timer2_cb(void *timer_arg) {
 
 	supla_log(LOG_DEBUG, "board_output RELAY");
+	supla_log(LOG_DEBUG, "supla_esp_state.Relay[0] : %d", supla_esp_state.Relay[0]);
+	supla_log(LOG_DEBUG, "supla_esp_state.Relay[1] : %d", supla_esp_state.Relay[1]);
 	
 	if ( supla_esp_state.Relay[0] == 1 || supla_esp_state.Relay[1] == 1 ) {
 		if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2) {
@@ -97,6 +100,7 @@ void supla_esp_baord_value_timer2_cb(void *timer_arg) {
 void supla_esp_board_input_state_change(uint8 gpio, int state) {
 
 	supla_log(LOG_DEBUG, "BOARD notify input %d change: %d", gpio, state);
+	supla_log(LOG_DEBUG, "BOARD notify currentDeviceState : %s", currentDeviceState);
 	
 	if ( state == 0 && Licznik == 0 && currentDeviceState == STATE_CONNECTED) {
 		Licznik2 = 1;
