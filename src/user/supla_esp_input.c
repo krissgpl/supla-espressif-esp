@@ -230,6 +230,8 @@ void GPIO_ICACHE_FLASH supla_esp_input_legacy_state_change_handling(
 
   os_timer_disarm(&input_cfg->timer);
 
+  supla_log(LOG_DEBUG, "supla_esp_input_legacy_state_change_handling");	// moje
+
   if (supla_esp_input_is_cfg_button_enabled(input_cfg)) {
     if (supla_esp_cfgmode_started() == 0) {
       if ((system_get_time() - input_cfg->last_state_change >= 2000 * 1000)) {
@@ -449,6 +451,7 @@ void GPIO_ICACHE_FLASH supla_esp_input_advanced_state_change_handling(
   if (input_cfg->click_counter != -1) {
     // Monostable buttons counts "click" when state change to "active"
     // Bistable buttons counts "click" on each state change
+	supla_log(LOG_DEBUG, "supla_esp_input_advanced_state_change_handling - click_counter != -1");	// moje
     if (new_state == INPUT_STATE_ACTIVE ||
         (input_cfg->type == INPUT_TYPE_BTN_BISTABLE) ||
         (input_cfg->type == INPUT_TYPE_MOTION_SENSOR)) {
@@ -556,6 +559,7 @@ supla_esp_input_send_action_trigger(supla_input_cfg_t *input_cfg, int action) {
     if (input_cfg->click_counter == -1) {
       return;
     }
+	supla_log(LOG_DEBUG, "supla_esp_input_send_action_trigger - action > 0");	// moje
     // if there is related relay gpio id, then single click/press is used for
     // device's local action
     if (input_cfg->click_counter == 1 && input_cfg->relay_gpio_id != 255) {
