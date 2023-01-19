@@ -34,8 +34,6 @@ ETSTimer Led_ON2;
 ETSTimer Led_OFF2;
 ETSTimer Port_OFF;
 
-unsigned char chnl;
-
 uint8 UPD_CH;
 uint8 DIS1_CH;
 uint8 DIS2_CH;
@@ -237,8 +235,18 @@ void supla_esp_board_gpio_init(void) {
 
 void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
 	
+	unsigned char chnl;
 	
-	*channel_count = chnl+2;
+	if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2) {
+	
+		*channel_count = 9;
+		chnl = 7;
+		}
+	else {
+
+		*channel_count = 8;
+		chnl = 6;
+		}
 
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
