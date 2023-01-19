@@ -36,7 +36,7 @@ ETSTimer Port_OFF;
 
 unsigned char chnl;
 
-uint8 UPD_channel;
+uint8 UPD_CH;
 uint8 DIS1_CH;
 uint8 DIS2_CH;
 uint8 HRM_CH;
@@ -496,6 +496,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	supla_log(LOG_DEBUG, "supla_esp_state RELAY 2 = %i", supla_esp_state.Relay[2]);
 	supla_log(LOG_DEBUG, "supla_esp_state RELAY 3 = %i", supla_esp_state.Relay[3]);
 	supla_log(LOG_DEBUG, "supla_esp_state RELAY 4 = %i", supla_esp_state.Relay[4]);
+	supla_log(LOG_DEBUG, "supla_esp_state RELAY 5 = %i", supla_esp_state.Relay[5]);
 
 }
 
@@ -541,10 +542,7 @@ void supla_send_at(uint8 gpio, int action) {
 	if ( gpio == 14 && action == SUPLA_ACTION_CAP_SHORT_PRESS_x2 ) {
 		supla_log(LOG_DEBUG, "Blokada kanalu 0 !!!");
 		if ( supla_esp_state.Relay[3] == 0 ) {
-			
-			//supla_esp_gpio_set_hi(B_RELAY1_DIS, 1);
-			//supla_esp_channel_value_changed(3, 1);
-			
+						
 			ledblock=LED_RED_BLOCK;
 			os_timer_disarm(&Port_OFF);
 			os_timer_setfn(&Port_OFF, (os_timer_func_t *)supla_esp_baord_Port_OFF_cb, (void*)ledblock);	
@@ -559,8 +557,6 @@ void supla_send_at(uint8 gpio, int action) {
 			os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
 			os_timer_arm(&Led_OFF, 1000, 0); 
 		} else {	
-			//supla_esp_gpio_set_hi(B_RELAY1_DIS, 0);
-			//supla_esp_channel_value_changed(3, 0);
 			
 			ledblock=LED_RED_BLOCK;
 			supla_esp_gpio_set_hi(LED_RED_PORT, 0);
@@ -578,9 +574,6 @@ void supla_send_at(uint8 gpio, int action) {
 		supla_log(LOG_DEBUG, "Blokada kanalu 1 !!!");
 		if ( supla_esp_state.Relay[4] == 0 ) {
 			
-			//supla_esp_gpio_set_hi(B_RELAY2_DIS, 1);
-			//supla_esp_channel_value_changed(4, 1);
-			
 			ledblock=LED_GREEN_BLOCK;
 			os_timer_disarm(&Port_OFF);
 			os_timer_setfn(&Port_OFF, (os_timer_func_t *)supla_esp_baord_Port_OFF_cb, (void*)ledblock);	
@@ -595,8 +588,6 @@ void supla_send_at(uint8 gpio, int action) {
 			os_timer_setfn(&Led_OFF, (os_timer_func_t *)supla_esp_baord_Led_OFF_cb, (void*)ledblock);	
 			os_timer_arm(&Led_OFF, 1000, 0); 
 		} else {	
-			//supla_esp_gpio_set_hi(B_RELAY2_DIS, 0);
-			//supla_esp_channel_value_changed(4, 0);
 			
 			ledblock=LED_GREEN_BLOCK;
 			supla_esp_gpio_set_hi(LED_GREEN_PORT, 0);
@@ -616,8 +607,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
 	
 	supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port);
 		
-	UPD_channel = 2;
-	
+	UPD_CH  = 2;
 	DIS1_CH = 3;
 	DIS2_CH = 4;
 	HRM_CH  = 5;
@@ -632,10 +622,10 @@ if ( port == 20 ) {
 		
 		if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
 			
-			supla_esp_state.Relay[UPD_channel] = 1;
+			supla_esp_state.Relay[UPD_CH] = 1;
 			supla_log(LOG_DEBUG, "value_changed upd - 1");
 			supla_esp_save_state(SAVE_STATE_DELAY);
-			supla_esp_channel_value_changed(UPD_channel, supla_esp_state.Relay[UPD_channel]);
+			supla_esp_channel_value_changed(UPD_CH, supla_esp_state.Relay[UPD_CH]);
 			os_timer_disarm(&value_timer1);
 			os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
 			os_timer_arm(&value_timer1, 4000, 0);
@@ -645,7 +635,7 @@ if ( port == 20 ) {
 			
 			supla_esp_cfg.FirmwareUpdate = 1; 
 			supla_esp_cfg_save(&supla_esp_cfg);
-			supla_esp_channel_value_changed(UPD_channel, 1);
+			supla_esp_channel_value_changed(UPD_CH, 1);
 			supla_log(LOG_DEBUG, "value_changed upd - 0");
 		};
 	}; 
