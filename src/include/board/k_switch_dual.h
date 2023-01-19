@@ -20,29 +20,29 @@
 #define K_SWITCH_DUAL_H_
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
-#define RETREIVE_CHANNEL_CONFIG 0b11100000
+#define RETREIVE_CHANNEL_CONFIG 0b111000000
 
-#define SUPLA_ESP_SOFTVER "2.8.51.0"
+#define SUPLA_ESP_SOFTVER "2.8.51.2"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
 #define BOARD_ON_CONNECT
 
-#define RELAY_MAX_COUNT		9
+#define BOARD_ESP_ON_STATE_CHANGED
+
+#define RELAY_MAX_COUNT		10
 
 #define TEMP_SELECT
-
-//#define BTN_MODE_PUBLISH_AT
 
 #define AP_SSID "SWITCH_DUAL"
 #define ESP_HOSTNAME "SUPLA-SWITCH-DUAL"
 #define CFGMODE_SSID_LIMIT_MACLEN
 
 #define DS18B20
-#define TEMPERATURE_CHANNEL 5
+#define TEMPERATURE_CHANNEL 6
 
 #define DHTSENSOR
-#define TEMPERATURE_HUMIDITY_CHANNEL 5
+#define TEMPERATURE_HUMIDITY_CHANNEL 6
 
 #define USE_GPIO16_OUTPUT
 
@@ -59,6 +59,7 @@
 #define B_UPD_PORT		 20
 #define B_RELAY1_DIS	 21
 #define B_RELAY2_DIS	 22
+#define B_HARMONOGRAM	 23
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
@@ -89,10 +90,12 @@
 }
 
 #define BOARD_GPIO_OUTPUT_IS_HI	\
-				if ( port == 21)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 3 = %i", supla_esp_state.Relay[3]);	\
+				if ( port == B_RELAY1_DIS)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 3 = %i", supla_esp_state.Relay[3]);	\
 									return supla_esp_state.Relay[3] == 1 ? 1 : 0;	}	\
-				if ( port == 22)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
-									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}
+				if ( port == B_RELAY2_DIS)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 4 = %i", supla_esp_state.Relay[4]);	\
+									return supla_esp_state.Relay[4] == 1 ? 1 : 0;	}	\
+				if ( port == B_HARMONOGRAM)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 5 = %i", supla_esp_state.Relay[5]);	\
+												return supla_esp_state.Relay[5] == 1 ? 1 : 0; }
 				
 #define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 2 ) {	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
@@ -101,8 +104,12 @@
 											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };
 										
 //#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
-
+							
 #define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
+
+#define BOARD_INPUT_STATE_CHANGE_SEND supla_esp_board_input_state_change(input_cfg->gpio_id, new_state);
+
+void supla_esp_board_input_state_change(uint8 gpio, int state);
 
 void supla_send_at(uint8 gpio, int action);
 				
@@ -112,6 +119,8 @@ void supla_block_channel(int ledblock);
 	
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved);
+
+void supla_esp_board_on_state_changed(char supla_last_state);
 	
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 

@@ -132,6 +132,10 @@ void GPIO_ICACHE_FLASH supla_esp_input_notify_state_change(
   supla_esp_board_input_state_change(input_cfg);
 #endif
 
+#ifdef BOARD_INPUT_STATE_CHANGE_SEND
+  BOARD_INPUT_STATE_CHANGE_SEND
+#endif																	// moje
+
   if (supla_esp_input_is_advanced_mode_enabled(input_cfg)) {
     os_timer_setfn(&input_cfg->timer, supla_esp_input_advanced_timer_cb,
         input_cfg);
@@ -297,7 +301,7 @@ void GPIO_ICACHE_FLASH supla_esp_input_legacy_state_change_handling(
       }
     }
     if (! supla_esp_input_can_button_exit_cfgmode(input_cfg) ) {
-      supla_esp_gpio_on_input_inactive(input_cfg);
+      supla_esp_gpio_on_input_inactive(input_cfg); 
     }
   }
 
@@ -565,7 +569,7 @@ supla_esp_input_send_action_trigger(supla_input_cfg_t *input_cfg, int action) {
         // in advanced mode with AT, roller shutter still requires
         // to call input active/inactive methods depending on input state
         if (input_cfg->last_state == INPUT_STATE_ACTIVE
-            || input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE) {
+            || input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE) {		
           supla_esp_gpio_on_input_active(input_cfg);
         } else {
           supla_esp_gpio_on_input_inactive(input_cfg);
