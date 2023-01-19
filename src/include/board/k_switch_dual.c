@@ -160,7 +160,10 @@ void supla_esp_board_gpio_init(void) {
 		
 	supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[0].gpio_id = B_BTN1_PORT;
-	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN | INPUT_FLAG_TRIGGER_ON_PRESS;
+	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP |
+							   INPUT_FLAG_CFG_BTN | 
+							   INPUT_FLAG_TRIGGER_ON_PRESS | 
+							   INPUT_FLAG_FACTORY_RESET;
 	supla_input_cfg[0].action_trigger_cap = SUPLA_ACTION_CAP_HOLD |
 											SUPLA_ACTION_CAP_SHORT_PRESS_x1 |
 											SUPLA_ACTION_CAP_SHORT_PRESS_x2 |
@@ -172,7 +175,10 @@ void supla_esp_board_gpio_init(void) {
 
 	supla_input_cfg[1].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[1].gpio_id = B_BTN2_PORT;
-	supla_input_cfg[1].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN | INPUT_FLAG_TRIGGER_ON_PRESS;
+	supla_input_cfg[1].flags = INPUT_FLAG_PULLUP |
+							   INPUT_FLAG_CFG_BTN | 
+							   INPUT_FLAG_TRIGGER_ON_PRESS | 
+							   INPUT_FLAG_FACTORY_RESET;
 	supla_input_cfg[1].action_trigger_cap = SUPLA_ACTION_CAP_HOLD |
 											SUPLA_ACTION_CAP_SHORT_PRESS_x1 |
 											SUPLA_ACTION_CAP_SHORT_PRESS_x2 |
