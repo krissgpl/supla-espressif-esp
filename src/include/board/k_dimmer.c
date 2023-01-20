@@ -153,7 +153,8 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 	if ( Wlacznik2 == 2 ) Wlacznik2 = 1;
 	} else {
 		Licznik ++;
-		//supla_log(LOG_DEBUG, "Licznik++ : %i", Licznik); };
+		//supla_log(LOG_DEBUG, "Licznik++ : %i", Licznik); 
+		};
 }
 
 void dimmer_timer_OFF_cb(void *timer_arg) {
@@ -185,7 +186,8 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 		os_timer_disarm(&dimmer_timer); 
 	} else {
 		Licznik --;
-		//supla_log(LOG_DEBUG, "Licznik-- : %i", Licznik); };
+		//supla_log(LOG_DEBUG, "Licznik-- : %i", Licznik); 
+		};
 }
 
 void work_timer_cb(void *timer_arg) {
