@@ -221,7 +221,7 @@ void supla_dimmer_smooth(int in1, int in2) {
 		if ( supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1 ) {
 		
 			if ( Wlacznik1 == 0 && in1 == 1 ) { 
-				supla_log(LOG_DEBUG, "Set dimmer 1 in1=1");
+				supla_log(LOG_DEBUG, "Set dimmer 1 in1=1, Wlacznik1=0");
 				Licznik = 0;
 				Wlacznik1 = 2;
 				os_timer_disarm(&dimmer_timer);
@@ -230,22 +230,26 @@ void supla_dimmer_smooth(int in1, int in2) {
 			};
 		
 			if ( Wlacznik1 == 1 && in1 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1) {
-				
+				supla_log(LOG_DEBUG, "Wlacznik1=1 in1=0, B_SENSOR_BLOCK2=1");
 				if ( in1 == 0 && in2 == 0 ) {
+					supla_log(LOG_DEBUG, "in1=0, in2=0");
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
-				os_timer_arm(&work_timer, Czas, 0); }; }
+					os_timer_arm(&work_timer, Czas, 0); }; }
 				
 			if ( Wlacznik1 == 1 && in1 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 0) {	
-				
+				supla_log(LOG_DEBUG, "Wlacznik1=1 in1=0, B_SENSOR_BLOCK2=0");
 				if (  in1 == 0 ) {
+					supla_log(LOG_DEBUG, "in1=0");
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 					os_timer_arm(&work_timer, Czas, 0); }; }
 			
-			if ( Work == 1 && in1 == 1 ) { os_timer_disarm(&work_timer); };
+			if ( Work == 1 && in1 == 1 ) { os_timer_disarm(&work_timer); 
+				supla_log(LOG_DEBUG, "Work=1 in1=1"); };
 			
 			if ( Wlacznik1 == 2 && in1 == 0 ) {
+				supla_log(LOG_DEBUG, "Wlacznik1=2 in1=0");
 				os_timer_disarm(&work_timer);
 				os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 				os_timer_arm(&work_timer, Czas+10000, 0); }
@@ -254,7 +258,7 @@ void supla_dimmer_smooth(int in1, int in2) {
 		if ( supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1 ) {
 		
 			if ( Wlacznik2 == 0 && in2 == 1 ) { 
-				supla_log(LOG_DEBUG, "Set dimmer 2 in2=1");
+				supla_log(LOG_DEBUG, "Set dimmer 2 Wlacznik2=0, in2=1");
 				Licznik = 0;
 				Wlacznik2 = 2;
 				os_timer_disarm(&dimmer_timer);
@@ -263,22 +267,25 @@ void supla_dimmer_smooth(int in1, int in2) {
 			};
 
 			if ( Wlacznik2 == 1 && in2 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1) {
-				
+				supla_log(LOG_DEBUG, "Wlacznik2=1 in2=0, B_SENSOR_BLOCK1=1");
 				if ( in1 == 0 && in2 == 0 ) {
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
-				os_timer_arm(&work_timer, Czas, 0); }; }
+					os_timer_arm(&work_timer, Czas, 0); }; }
 				
 			if ( Wlacznik2 == 1 && in2 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 0) {	
-				
+				supla_log(LOG_DEBUG, "Wlacznik2=1 in2=0, B_SENSOR_BLOCK1=0");
 				if (  in2 == 0 ) {
+					supla_log(LOG_DEBUG, "in2=0");
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 					os_timer_arm(&work_timer, Czas, 0); }; }
 					
-			if ( Work == 1 && in2 == 1 ) { os_timer_disarm(&work_timer); };
+			if ( Work == 1 && in2 == 1 ) { os_timer_disarm(&work_timer); 
+				supla_log(LOG_DEBUG, "Work=1 in2=1"); };
 			
 			if ( Wlacznik2 == 2 && in2 == 0 ) {
+				supla_log(LOG_DEBUG, "Wlacznik2=2 in2=0");
 				os_timer_disarm(&work_timer);
 				os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 				os_timer_arm(&work_timer, Czas+10000, 0); }
