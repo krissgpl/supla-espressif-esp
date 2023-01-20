@@ -129,7 +129,7 @@ void ICACHE_FLASH_ATTR board_esp_pwm_set_percent_duty(uint8 percent, uint8 chann
 	uint32 duty = ((PWM_PERIOD * 1000 / 45) * percent) / 100;
 	duty = (duty * 50) / 100;
 	
-	supla_log(LOG_DEBUG, "DUTY: %i, CHANNEL: %i", duty, channel);
+	//supla_log(LOG_DEBUG, "DUTY: %i, CHANNEL: %i", duty, channel);
 
 	pwm_set_duty(duty, channel);
 	os_delay_us(1000);
@@ -153,7 +153,8 @@ void dimmer_timer_ON_cb(void *timer_arg) {
 	if ( Wlacznik2 == 2 ) Wlacznik2 = 1;
 	} else {
 		Licznik ++;
-		supla_log(LOG_DEBUG, "Licznik++ : %i", Licznik); };
+		//supla_log(LOG_DEBUG, "Licznik++ : %i", Licznik); 
+		};
 }
 
 void dimmer_timer_OFF_cb(void *timer_arg) {
@@ -185,7 +186,8 @@ void dimmer_timer_OFF_cb(void *timer_arg) {
 		os_timer_disarm(&dimmer_timer); 
 	} else {
 		Licznik --;
-		supla_log(LOG_DEBUG, "Licznik-- : %i", Licznik); };
+		//supla_log(LOG_DEBUG, "Licznik-- : %i", Licznik); 
+		};
 }
 
 void work_timer_cb(void *timer_arg) {
@@ -219,7 +221,7 @@ void supla_dimmer_smooth(int in1, int in2) {
 		if ( supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1 ) {
 		
 			if ( Wlacznik1 == 0 && in1 == 1 ) { 
-				supla_log(LOG_DEBUG, "Set dimmer 1 in1=1");
+				supla_log(LOG_DEBUG, "Set dimmer 1 in1=1, Wlacznik1=0");
 				Licznik = 0;
 				Wlacznik1 = 2;
 				os_timer_disarm(&dimmer_timer);
@@ -228,26 +230,35 @@ void supla_dimmer_smooth(int in1, int in2) {
 			};
 		
 			if ( Wlacznik1 == 1 && in1 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1) {
-				
+				supla_log(LOG_DEBUG, "Wlacznik1=1 in1=0, B_SENSOR_BLOCK2=1");
 				if ( in1 == 0 && in2 == 0 ) {
+					supla_log(LOG_DEBUG, "in1=0, in2=0");
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
-				os_timer_arm(&work_timer, Czas, 0); }; }
+					os_timer_arm(&work_timer, Czas, 0); }; }
 				
 			if ( Wlacznik1 == 1 && in1 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 0) {	
-				
+				supla_log(LOG_DEBUG, "Wlacznik1=1 in1=0, B_SENSOR_BLOCK2=0");
 				if (  in1 == 0 ) {
+					supla_log(LOG_DEBUG, "in1=0");
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 					os_timer_arm(&work_timer, Czas, 0); }; }
 			
-			if ( Work == 1 && in1 == 1 ) { os_timer_disarm(&work_timer); };
+			if ( Work == 1 && in1 == 1 ) { os_timer_disarm(&work_timer); 
+				supla_log(LOG_DEBUG, "Work=1 in1=1"); };
+			
+			if ( Wlacznik1 == 2 && in1 == 0 ) {
+				supla_log(LOG_DEBUG, "Wlacznik1=2 in1=0");
+				os_timer_disarm(&work_timer);
+				os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
+				os_timer_arm(&work_timer, Czas+10000, 0); }
 		};
 	
 		if ( supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK2) == 1 ) {
 		
 			if ( Wlacznik2 == 0 && in2 == 1 ) { 
-				supla_log(LOG_DEBUG, "Set dimmer 2 in2=1");
+				supla_log(LOG_DEBUG, "Set dimmer 2 Wlacznik2=0, in2=1");
 				Licznik = 0;
 				Wlacznik2 = 2;
 				os_timer_disarm(&dimmer_timer);
@@ -256,20 +267,28 @@ void supla_dimmer_smooth(int in1, int in2) {
 			};
 
 			if ( Wlacznik2 == 1 && in2 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 1) {
-				
+				supla_log(LOG_DEBUG, "Wlacznik2=1 in2=0, B_SENSOR_BLOCK1=1");
 				if ( in1 == 0 && in2 == 0 ) {
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
-				os_timer_arm(&work_timer, Czas, 0); }; }
+					os_timer_arm(&work_timer, Czas, 0); }; }
 				
 			if ( Wlacznik2 == 1 && in2 == 0 && supla_esp_gpio_output_is_hi(B_SENSOR_BLOCK1) == 0) {	
-				
+				supla_log(LOG_DEBUG, "Wlacznik2=1 in2=0, B_SENSOR_BLOCK1=0");
 				if (  in2 == 0 ) {
+					supla_log(LOG_DEBUG, "in2=0");
 					os_timer_disarm(&work_timer);
 					os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
 					os_timer_arm(&work_timer, Czas, 0); }; }
 					
-			if ( Work == 1 && in2 == 1 ) { os_timer_disarm(&work_timer); };
+			if ( Work == 1 && in2 == 1 ) { os_timer_disarm(&work_timer); 
+				supla_log(LOG_DEBUG, "Work=1 in2=1"); };
+			
+			if ( Wlacznik2 == 2 && in2 == 0 ) {
+				supla_log(LOG_DEBUG, "Wlacznik2=2 in2=0");
+				os_timer_disarm(&work_timer);
+				os_timer_setfn(&work_timer, (os_timer_func_t *)work_timer_cb, NULL);
+				os_timer_arm(&work_timer, Czas+10000, 0); }
 
 		};
 	};
