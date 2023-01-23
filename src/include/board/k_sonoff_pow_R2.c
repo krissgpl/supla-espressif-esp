@@ -29,7 +29,7 @@
 #include "user_config.h"
 //#include "supla_esp_devconn.h"
 #include "driver/uart.h"
-#include "supla_esp_electricity_meter.h
+#include "supla_esp_electricity_meter.h"
 
 #include "public_key_in_c_code"
 
