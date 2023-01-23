@@ -64,7 +64,7 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 //extern ETSTimer supla_pow_timer1;
 //int status_ok;
 
-ICACHE_FLASH_ATTR supla_esp_board_get_measurements(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 *pow_ev);
+int ICACHE_FLASH_ATTR supla_esp_board_get_measurements(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 *pow_ev);
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc);
 

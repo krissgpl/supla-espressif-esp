@@ -21,7 +21,7 @@
 #include <eagle_soc.h>
 #include <ets_sys.h>
 
-//#include "k_sonoff_pow_R2.h"
+#include "k_sonoff_pow_R2.h"
 #include "supla_esp_gpio.h"
 //#include "supla_w1.h"
 #include "supla-dev/log.h"
@@ -48,6 +48,8 @@ long cf_pulses = 0;
 
 ETSTimer supla_esp_baord_pow_timer1;
 unsigned int Licznik = 0;
+
+TElectricityMeter_ExtendedValue_V2 pow_ev[ELECTRICITY_METER_COUNT];
 
 void CseReceived(int start) {
 	
@@ -367,7 +369,7 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 
 }
 
-ICACHE_FLASH_ATTR supla_esp_board_get_measurements(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 *pow_ev) {
+int ICACHE_FLASH_ATTR supla_esp_board_get_measurements(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 *pow_ev) {
 	
 	supla_log(LOG_DEBUG, "supla_esp_board_get_measurements");
 	
