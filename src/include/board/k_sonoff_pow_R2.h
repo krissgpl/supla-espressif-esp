@@ -38,8 +38,8 @@
 #define SUPLA_ESP_SOFTVER "2.8.51.0"
 
 #define ELECTRICITIMETER
-#define ELECTRICITY_METER_COUNT
-#define ELECTRICITY_METER_CHANNEL_OFFSET 1
+#define ELECTRICITY_METER_COUNT 1
+#define ELECTRICITY_METER_CHANNEL_OFFSET 0
 
 #define BOARD_CFG_HTML_TEMPLATE
 #define AP_SSID "SONOFF_POW_R2"
@@ -64,7 +64,7 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 //extern ETSTimer supla_pow_timer1;
 //int status_ok;
 
-char ICACHE_FLASH_ATTR supla_esp_board_get_measurements(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 *pow_ev);
+char ICACHE_FLASH_ATTR supla_esp_board_get_measurements(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 pow_ev);
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc);
 

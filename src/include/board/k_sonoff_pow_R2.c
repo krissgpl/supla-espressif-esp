@@ -367,7 +367,7 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 
 }
 
-char ICACHE_FLASH_ATTR supla_esp_board_get_measurements(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 *pow_ev) {
+char ICACHE_FLASH_ATTR supla_esp_board_get_measurements(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 pow_ev) {
 	
 	supla_log(LOG_DEBUG, "supla_esp_board_get_measurements");
 	
