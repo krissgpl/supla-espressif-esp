@@ -68,3 +68,5 @@ int ICACHE_FLASH_ATTR supla_esp_board_get_measurements(unsigned char channel_num
 void supla_esp_board_send_channel_values_with_delay(void *srpc);
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
+
+#endif
