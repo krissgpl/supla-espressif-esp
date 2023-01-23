@@ -38,6 +38,7 @@
 #define SUPLA_ESP_SOFTVER "2.8.51.0"
 
 #define ELECTRICITIMETER
+#define ELECTRICITY_METER_COUNT
 #define ELECTRICITY_METER_CHANNEL_OFFSET 1
 
 #define BOARD_CFG_HTML_TEMPLATE
@@ -46,7 +47,7 @@
 
 #define B_RELAY1_PORT    12
 #define B_CFG_PORT        0
-#define LED_RED_PORT    13
+#define LED_RED_PORT     13
 
 /*#define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) {if (port == 20) { \
  	supla_log(LOG_DEBUG, "update, port = %i", port); \
