@@ -69,7 +69,7 @@ void ICACHE_FLASH_ATTR supla_esp_em_on_timer(void *force) {
       supla_esp_channel_em_value_changed(channel_number, &ev);
       memset(&ev, 0, sizeof(TElectricityMeter_ExtendedValue_V2));
 
-      supla_esp_board_on_ev_value_changed(channel_number, &ev);
+      //supla_esp_board_on_ev_value_changed(channel_number, &ev);
     }
 
     channel_number++;
