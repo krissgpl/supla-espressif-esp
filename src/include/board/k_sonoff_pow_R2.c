@@ -375,13 +375,13 @@ int ICACHE_FLASH_ATTR supla_esp_board_get_measurements(unsigned char channel_num
 	
 	//v.flags = EM_VALUE_FLAG_PHASE1_ON;
 	
-	pow_ev.m->voltage[0] = voltage;
-	ev.m->current[0] = current;
-	ev.m->power_active[0] = power;
+	pow_ev.m->voltage[1] = voltage;
+	pow_ev.m->current[1] = current;
+	pow_ev.m->power_active[1] = power;
 	
-	ev.measured_values = EM_VAR_VOLTAGE | EM_VAR_CURRENT | EM_VAR_POWER_ACTIVE;
-	ev.m_count = 1;
-	ev.period  = 0;
+	pow_ev.measured_values = EM_VAR_VOLTAGE | EM_VAR_CURRENT | EM_VAR_POWER_ACTIVE;
+	pow_ev.m_count = 1;
+	pow_ev.period  = 20;
 	
 	return 1;
 	
