@@ -367,13 +367,13 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 
 }
 
-char ICACHE_FLASH_ATTR supla_esp_board_get_measurements(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 *ev) {
+char ICACHE_FLASH_ATTR supla_esp_board_get_measurements(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 *pow_ev) {
 	
 	supla_log(LOG_DEBUG, "supla_esp_board_get_measurements");
 	
 	//v.flags = EM_VALUE_FLAG_PHASE1_ON;
 	
-	ev.m->voltage[0] = voltage;
+	pow_ev.m->voltage[0] = voltage;
 	ev.m->current[0] = current;
 	ev.m->power_active[0] = power;
 	
