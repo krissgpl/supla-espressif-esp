@@ -18,7 +18,7 @@
 
 #ifndef K_SONOFF_POW_R2_H_
 #define K_SONOFF_POW_R2_H_
-
+/*
 #define GPIO_PORT_INIT \
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0); \
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO4_U, FUNC_GPIO4); \
@@ -28,29 +28,25 @@
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTMS_U, FUNC_GPIO14); \
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDO_U, FUNC_GPIO15)
 #endif
-
+*/
 #include "supla_esp.h"
 #include "supla-dev/proto.h"
 #include <sntp.h>
 
-void ICACHE_FLASH_ATTR supla_esp_em_get_value(
-    unsigned char channel_number, char value[SUPLA_CHANNELVALUE_SIZE]);
+#define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define ESP8266_SUPLA_PROTO_VERSION 12
-#define MANUFACTURER_ID 0
-#define PRODUCT_ID 0
+#define SUPLA_ESP_SOFTVER "2.8.51.0"
 
-#define POWSENSOR2
-#define LED_RED_PORT    13
 #define ELECTRICITIMETER
-#define BOARD_CFG_HTML_TEMPLATE
-#define NTP_SERVER "pl.pool.ntp.org"
+#define ELECTRICITY_METER_CHANNEL_OFFSET 1
 
+#define BOARD_CFG_HTML_TEMPLATE
+#define AP_SSID "SONOFF_POW_R2"
 #define BOARD_ON_CONNECT
 
-#define AP_SSID "SONOFF_POW_R2"
-
-#define SUPLA_ESP_SOFTVER "2.7.24.0"
+#define B_RELAY1_PORT    12
+#define B_CFG_PORT        0
+#define LED_RED_PORT    13
 
 /*#define BOARD_GPIO_OUTPUT_SET_HI if (supla_last_state == STATE_CONNECTED) {if (port == 20) { \
  	supla_log(LOG_DEBUG, "update, port = %i", port); \
@@ -61,8 +57,13 @@ void ICACHE_FLASH_ATTR supla_esp_em_get_value(
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved);
 
-extern ETSTimer supla_pow_timer1;
-int status_ok;
+//void ICACHE_FLASH_ATTR supla_esp_em_get_value(
+//    unsigned char channel_number, char value[SUPLA_CHANNELVALUE_SIZE]);
+
+//extern ETSTimer supla_pow_timer1;
+//int status_ok;
+
+int ICACHE_FLASH_ATTR supla_esp_board_get_measurements(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 ev);
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc);
 

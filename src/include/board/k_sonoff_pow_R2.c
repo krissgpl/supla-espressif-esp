@@ -21,30 +21,191 @@
 #include <eagle_soc.h>
 #include <ets_sys.h>
 
-#include "k_sonoff_pow_R2.h"
+//#include "k_sonoff_pow_R2.h"
 #include "supla_esp_gpio.h"
-#include "supla_w1.h"
+//#include "supla_w1.h"
 #include "supla-dev/log.h"
 #include "gpio.h"
 #include "user_config.h"
-#include "supla_esp_devconn.h"
+//#include "supla_esp_devconn.h"
 #include "driver/uart.h"
+#include "supla_esp_electricity_meter.h
 
 #include "public_key_in_c_code"
 
-_supla_int64_t counter;
-
-#define B_RELAY1_PORT    12
-#define B_CFG_PORT        0
+//_supla_int64_t counter;
 
 uint8_t buffer[128];
+
 uint32_t voltage = 0;
 uint32_t current = 0;
 uint32_t power   = 0;
+
 long voltage_cycle = 0;
 long current_cycle = 0;
 long power_cycle = 0;
 long cf_pulses = 0;
+
+ETSTimer supla_esp_baord_pow_timer1;
+unsigned int Licznik = 0;
+
+void CseReceived(int start) {
+	
+	uint8_t header = buffer[0+start];
+	if ((header & 0xFC) == 0xFC) {
+		supla_log(LOG_DEBUG, "CSE: Abnormal hardware");
+		return;
+	}
+
+	long voltage_coefficient;
+	voltage_coefficient = buffer[2+start]*65536 + buffer[3+start]*256 + buffer[4+start];
+	voltage_cycle = buffer[5+start]*65536 + buffer[6+start]*256 + buffer[7+start];
+	if ((buffer[start] & 0xF8) == 0xF8) {
+		voltage = 0;
+	} else {
+		voltage = (voltage_coefficient * 10) / voltage_cycle;
+	}
+	supla_log(LOG_DEBUG, "Voltage: %i", voltage);
+
+	long current_coefficient;
+	current_coefficient = buffer[8+start]*65536 + buffer[9+start]*256 + buffer[10+start];
+	current_cycle = buffer[11+start]*65536 + buffer[12+start]*256 + buffer[13+start];
+	if ((buffer[start] & 0xF4) == 0xF4) {
+		current = 0;
+	} else {
+		current = (current_coefficient * 1000) / current_cycle;
+	}
+	if (current < 100) current = 0;
+	supla_log(LOG_DEBUG, "Current: %i", current);
+
+	long power_coefficient;
+	power_coefficient = buffer[14+start]*65536 + buffer[15+start]*256 + buffer[16+start];
+	power_cycle = buffer[17+start]*65536 + buffer[18+start]*256 + buffer[19+start];
+	uint8_t adjustment = buffer[20+start];
+	cf_pulses = buffer[21+start]*256 + buffer[22+start];
+	if (adjustment & 0x10) {
+		if ((buffer[start] & 0xF2) == 0xF2) {
+			power = 0;
+		} else {
+			power = power_coefficient / power_cycle;
+		}
+	}
+	supla_log(LOG_DEBUG, "Power: %i", power);
+}
+
+int ICACHE_FLASH_ATTR
+UART_Recv(uint8 uart_no, uint8_t *buffer, int max_buf_len)
+{
+    uint8 max_unload;
+	int index = -1;
+
+    uint8 fifo_len = (READ_PERI_REG(UART_STATUS(uart_no))>>UART_RXFIFO_CNT_S)&UART_RXFIFO_CNT;
+
+    if (fifo_len)
+    {
+        max_unload = (fifo_len<max_buf_len ? fifo_len : max_buf_len);
+        os_printf("Rx Fifo contains %d characters have to unload %d\r\n", fifo_len , max_unload);
+
+        for (index=0;index<max_unload; index++)
+        {
+            *(buffer+index) = READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
+        }
+        WRITE_PERI_REG(UART_INT_CLR(uart_no), UART_RXFIFO_FULL_INT_CLR);
+    }
+	else
+        os_printf("Rx Fifo is empty\r\n");
+
+    return index;
+}
+
+void ICACHE_FLASH_ATTR
+uart_read(void) {
+	int recv_len = -1;
+	int index;
+
+    recv_len = UART_Recv(0, buffer, sizeof(buffer)-2);
+
+    if (recv_len>0)
+    {
+        buffer[recv_len] = 0;
+        os_printf("Received: [%d]\r\n", recv_len);
+		
+        for (index = 0; index < recv_len-1; index ++) {
+			if ((buffer[index] == 0xF2) && (buffer[index+1] == 0x5A)) break;
+			if ((buffer[index] == 0x55) && (buffer[index+1] == 0x5A)) break;
+		}
+		if (index < recv_len - 24){
+			os_printf("Index: %d\r\n", index);
+			if (index>0) CseReceived(index);
+		}
+    }
+}
+
+void supla_esp_baord_pow_timer1_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "supla_esp_baord_pow_timer1_cb");
+	uart_read();
+		
+}
+
+void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
+	ets_snprintf(buffer, buffer_size, "SONOFF-POW-R2");
+}
+
+
+
+void supla_esp_board_gpio_init(void) {
+		
+    supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
+    supla_input_cfg[0].gpio_id = B_CFG_PORT;
+    supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN;
+    supla_input_cfg[0].relay_gpio_id = B_RELAY1_PORT;
+    supla_input_cfg[0].channel = 0;
+
+    supla_relay_cfg[0].gpio_id = B_RELAY1_PORT;
+    supla_relay_cfg[0].flags = RELAY_FLAG_RESTORE_FORCE;
+    supla_relay_cfg[0].channel = 0;
+	
+	//---------------------------------------
+
+	supla_relay_cfg[1].gpio_id = 20;
+	supla_relay_cfg[1].channel = 2;
+	
+	//---------------------------------------
+
+    uart_div_modify(0, UART_CLK_FREQ / 4800);	//CSE comm init
+	os_printf("UART Init\n");
+	
+	os_timer_disarm(&supla_esp_baord_pow_timer1);
+	os_timer_setfn(&supla_esp_baord_pow_timer1, (os_timer_func_t *)supla_esp_baord_pow_timer1_cb, NULL);
+	os_timer_arm(&supla_esp_baord_pow_timer1, 20000, 1);
+
+}
+
+void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
+	
+    *channel_count = 2;
+
+	channels[0].Number = 0;
+	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[0].FuncList = SUPLA_BIT_FUNC_POWERSWITCH \
+								| SUPLA_BIT_FUNC_LIGHTSWITCH;
+	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;							
+	channels[0].Default = SUPLA_CHANNELFNC_POWERSWITCH;
+	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
+    
+	channels[1].Number = 1;
+	channels[1].Type = SUPLA_CHANNELTYPE_ELECTRICITY_METER;
+	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	supla_esp_em_get_value(1, channels[1].value);
+	
+/*	channels[2].Number = 2;
+	channels[2].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[2].FuncList = SUPLA_BIT_RELAYFUNC_POWERSWITCH;
+	channels[2].Default = 0;
+	channels[2].value[0] = supla_esp_gpio_relay_on(20);  */
+
+}
 
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved) {
@@ -196,172 +357,6 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
   return buffer;
 }
 
-void Cse_Rec(int start, unsigned int relay_laststate)
-{
-	if ( relay_laststate == 1) {
-		long voltage_coefficient;
-		voltage_coefficient = buffer[2+start]*65536 + buffer[3+start]*256 + buffer[4+start];
-		voltage_cycle = buffer[5+start]*65536 + buffer[6+start]*256 + buffer[7+start];
-		if ((buffer[start] & 0xF8) == 0xF8) {
-			voltage = 0;
-		} else {
-			voltage = (voltage_coefficient * 10) / voltage_cycle;
-		}
-
-		long current_coefficient;
-		current_coefficient = buffer[8+start]*65536 + buffer[9+start]*256 + buffer[10+start];
-		current_cycle = buffer[11+start]*65536 + buffer[12+start]*256 + buffer[13+start];
-		if ((buffer[start] & 0xF4) == 0xF4) {
-		current = 0;
-		} else {
-		current = (current_coefficient * 1000) / current_cycle;
-		}
-		if (current < 100) current = 0;
-
-		long power_coefficient;
-		power_coefficient = buffer[14+start]*65536 + buffer[15+start]*256 + buffer[16+start];
-		power_cycle = buffer[17+start]*65536 + buffer[18+start]*256 + buffer[19+start];
-		uint8_t adjustment = buffer[20+start];
-		cf_pulses = buffer[21+start]*256 + buffer[22+start];
-		if (adjustment & 0x10) {
-		if ((buffer[start] & 0xF2) == 0xF2) {
-			power = 0;
-		} else {
-			power = power_coefficient / power_cycle;
-		}
-		} else {
-			power = 0;  
-		}
-	} else {
-		voltage = 0;
-		current = 0;
-		power = 0;  
-	}
-}
-
-//-------------------------------------------------------
-void ICACHE_FLASH_ATTR
-supla_getVoltage(char value[SUPLA_CHANNELVALUE_SIZE]) {
-	memcpy(value, &voltage, sizeof(uint32_t));
-}
-
-//-------------------------------------------------------
-void ICACHE_FLASH_ATTR
-supla_getCurrent(char value[SUPLA_CHANNELVALUE_SIZE]) {
-	memcpy(value, &current, sizeof(uint32_t));
-}
-
-//-------------------------------------------------------
-void ICACHE_FLASH_ATTR
-supla_getPower(char value[SUPLA_CHANNELVALUE_SIZE]) {
-	memcpy(value, &power, sizeof(uint32_t));
-}
-
-/*void ICACHE_FLASH_ATTR
-supla_pow_R2_init(void) {
-	uart_div_modify(0, UART_CLK_FREQ / 4800);
-	os_printf("UART Init\n");
-} */
-
-int ICACHE_FLASH_ATTR
-UART_Recv(uint8 uart_no, uint8_t *buffer, int max_buf_len)
-{
-    uint8 max_unload;
-	int index = -1;
-
-    uint8 fifo_len = (READ_PERI_REG(UART_STATUS(uart_no))>>UART_RXFIFO_CNT_S)&UART_RXFIFO_CNT;
-
-    if (fifo_len)
-    {
-        max_unload = (fifo_len<max_buf_len ? fifo_len : max_buf_len);
-        for (index=0;index<max_unload; index++)
-        {
-            *(buffer+index) = READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
-        }
-        WRITE_PERI_REG(UART_INT_CLR(uart_no), UART_RXFIFO_FULL_INT_CLR);
-    }
-    return index;
-}
-
-void ICACHE_FLASH_ATTR
-uart_status(unsigned int relay_laststate) {
-	int recv_len = -1;
-	int index;
-
-    recv_len = UART_Recv(0, buffer, sizeof(buffer)-2);
-
-    if (recv_len>0)
-    {
-        buffer[recv_len] = 0;
-        os_printf("Received: [%d]\r\n", recv_len);
-		
-        for (index = 0; index < recv_len-1; index ++) {
-			if ((buffer[index] == 0xF2) && (buffer[index+1] == 0x5A)) break;
-			if ((buffer[index] == 0x55) && (buffer[index+1] == 0x5A)) break;
-		}
-		if (index < recv_len - 24){
-			os_printf("Index: %d\r\n", index);
-			if (index>0) Cse_Rec(index, relay_laststate);
-		}
-    }
-}
-
-void supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
-	ets_snprintf(buffer, buffer_size, "SONOFF-POW-R2");
-}
-
-
-void supla_esp_board_gpio_init(void) {
-		
-    supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
-    supla_input_cfg[0].gpio_id = B_CFG_PORT;
-    supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN;
-    supla_input_cfg[0].relay_gpio_id = B_RELAY1_PORT;
-    supla_input_cfg[0].channel = 0;
-
-    supla_relay_cfg[0].gpio_id = B_RELAY1_PORT;
-    supla_relay_cfg[0].flags = RELAY_FLAG_RESTORE_FORCE;
-    supla_relay_cfg[0].channel = 0;
-	
-	//---------------------------------------
-
-	supla_relay_cfg[1].gpio_id = 20;
-	supla_relay_cfg[1].channel = 2;
-	
-	//---------------------------------------
-
-    sntp_setservername(0, NTP_SERVER);
-	sntp_set_timezone(2);
-    sntp_stop();
-    sntp_init();
-
-}
-
-void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
-	
-    *channel_count = 2;
-
-	channels[0].Number = 0;
-	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[0].FuncList = SUPLA_BIT_FUNC_POWERSWITCH \
-								| SUPLA_BIT_FUNC_LIGHTSWITCH;
-	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;							
-	channels[0].Default = SUPLA_CHANNELFNC_POWERSWITCH;
-	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
-    
-	channels[1].Number = 1;
-	channels[1].Type = SUPLA_CHANNELTYPE_ELECTRICITY_METER;
-	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	supla_esp_em_get_value(1, channels[1].value);
-	
-/*	channels[2].Number = 2;
-	channels[2].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[2].FuncList = SUPLA_BIT_RELAYFUNC_POWERSWITCH;
-	channels[2].Default = 0;
-	channels[2].value[0] = supla_esp_gpio_relay_on(20);  */
-
-}
-
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
   supla_esp_gpio_set_led(supla_esp_cfg.StatusLedOff, 0, 0);
 }
@@ -372,3 +367,20 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 
 }
 
+int ICACHE_FLASH_ATTR supla_esp_board_get_measurements(unsigned char channel_number, TElectricityMeter_ExtendedValue_V2 ev) {
+	
+	supla_log(LOG_DEBUG, "supla_esp_board_get_measurements");
+	
+	//v.flags = EM_VALUE_FLAG_PHASE1_ON;
+	
+	ev.m->voltage[0] = voltage;
+	ev.m->current[0] = current;
+	ev.m->power_active[0] = power;
+	
+	ev.measured_values = EM_VAR_VOLTAGE | EM_VAR_CURRENT | EM_VAR_POWER_ACTIVE;
+	ev.m_count = 1;
+	ev.period  = 0;
+	
+	return 1;
+	
+}
