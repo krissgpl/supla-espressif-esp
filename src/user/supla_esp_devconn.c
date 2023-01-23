@@ -1783,21 +1783,6 @@ supla_esp_devconn_reconnect_with_delay(uint32 time_ms) {
 	
 void DEVCONN_ICACHE_FLASH
 supla_esp_devconn_timer1_cb(void *timer_arg) {
-	#if defined(POWSENSOR2)
-		if (counter20 > 0) counter20--;
-		if ((measurement_start == 1) && (counter20 == 0)) {
-			counter20 = MEASUREMENT_TIME;
-			supla_log(LOG_DEBUG, "ZeroInitialEnergy: %i", supla_esp_cfg.ZeroInitialEnergy);
-			if (supla_esp_cfg.ZeroInitialEnergy == 1)
-			{
-				supla_esp_state.full_energy = 0;
-				supla_esp_save_state(0);
-				supla_esp_cfg.ZeroInitialEnergy = 0;
-				supla_esp_cfg_save(&supla_esp_cfg);
-			}
-			uart_status(relay_laststate);
-		}
-	#endif	
 	
 	unsigned int t1;
 	unsigned int t2;
