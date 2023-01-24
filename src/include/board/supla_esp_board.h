@@ -190,10 +190,6 @@
 
 #include "board/k_socket_01.h"
 
-#elif defined(__BOARD_k_sonoff_pow_R2)
-
-#include "board/k_sonoff_pow_R2.h"
-
 #elif defined(__BOARD_k_vindriktning)
 
 #include "board/k_vindriktning.h"
