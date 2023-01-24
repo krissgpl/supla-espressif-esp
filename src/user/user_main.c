@@ -261,18 +261,18 @@ void MAIN_ICACHE_FLASH user_init(void) {
   supla_esp_devconn_init();
 #endif /*MQTT_SUPPORT_ENABLED*/
 	 
-	#if defined TEMP_SELECT
+#if defined TEMP_SELECT
 	
-		if ( supla_esp_cfg.ThermometerType == 1 ) {
-			supla_ds18b20_init();
-			supla_log(LOG_DEBUG, "DS18B20 INIT" );
-		}
+	if ( supla_esp_cfg.ThermometerType == 1 ) {
+		supla_ds18b20_init();
+		supla_log(LOG_DEBUG, "DS18B20 INIT" );
+	}
 		
-		if ( supla_esp_cfg.ThermometerType == 2 ) {
-			supla_dht_init();
-			supla_log(LOG_DEBUG, "DHT22 INIT" );
-		}
-	#else
+	if ( supla_esp_cfg.ThermometerType == 2 ) {
+		supla_dht_init();
+		supla_log(LOG_DEBUG, "DHT22 INIT" );
+	}
+#else
 		
 	#ifdef DS18B20
 		if ( supla_esp_cfg.ThermometerType != 3 ) {
@@ -321,29 +321,29 @@ void MAIN_ICACHE_FLASH user_init(void) {
   }
 #endif /*MQTT_SUPPORT_ENABLED*/
 
-	#if defined TEMP_SELECT
+#if defined TEMP_SELECT
 	
-		if ( supla_esp_cfg.ThermometerType == 1 ) {
-			supla_ds18b20_start();
-			supla_log(LOG_DEBUG, "DS18B20 START" );
-		}
+	if ( supla_esp_cfg.ThermometerType == 1 ) {
+		supla_ds18b20_start();
+		supla_log(LOG_DEBUG, "DS18B20 START" );
+	}
 		
-		if ( supla_esp_cfg.ThermometerType == 2 ) {
-			supla_dht_start();
-			supla_log(LOG_DEBUG, "DHT22 START" );
-		}
-	#else
+	if ( supla_esp_cfg.ThermometerType == 2 ) {
+		supla_dht_start();
+		supla_log(LOG_DEBUG, "DHT22 START" );
+	}
+#else
 
      #ifdef DS18B20
 		if ( supla_esp_cfg.ThermometerType != 3 ) {
 			supla_ds18b20_start();
-		supla_log(LOG_DEBUG, "DS18B20 old START" ); }
+			supla_log(LOG_DEBUG, "DS18B20 old START" ); }
      #endif
 
 	 #ifdef DHTSENSOR
 		if ( supla_esp_cfg.ThermometerType != 3 ) {
 			supla_dht_start();
-		supla_log(LOG_DEBUG, "DHT22 old START" ); }
+			supla_log(LOG_DEBUG, "DHT22 old START" ); }
 	 #endif
 #endif
 

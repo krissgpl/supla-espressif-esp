@@ -55,9 +55,10 @@
 #define VAR_LED 10
 #define VAR_UPD 11
 #define VAR_RBT 12
-#define VAR_ZRE 13		// pow r2
+
 #define VAR_TRM	14		// wybor czujnika temperatury
 #define VAR_UPS	15		// update status
+
 #define VAR_EML 20
 #define VAR_USD 21
 #define VAR_TRG 22
@@ -326,11 +327,8 @@ void ICACHE_FLASH_ATTR supla_esp_parse_vars(TrivialHttpParserVars *pVars,
       char btn2[3] = {'b', 't', '2'};
       char icf[3] = {'i', 'c', 'f'};
       char led[3] = {'l', 'e', 'd'};
-#if defined(POWSENSOR2)
-				char zre[3] = { 'z', 'r', 'e' };
-#endif
-#ifdef TEMP_SELECT											// wybor czujnika temperatury
-				char trm[3] = { 't', 'r', 'm' };
+#ifdef TEMP_SELECT							// wybor czujnika temperatury
+	  char trm[3] = { 't', 'r', 'm' };
 #endif
 	  char ups[3] = {'u', 'p', 's'};		// update status
       char upd[3] = {'u', 'p', 'd'};
@@ -434,24 +432,16 @@ void ICACHE_FLASH_ATTR supla_esp_parse_vars(TrivialHttpParserVars *pVars,
           pVars->current_var = VAR_LED;
           pVars->buff_size = 12;
           pVars->pbuff = pVars->intval;
-
-					#if defined(POWSENSOR2)
-					} else if ( memcmp(zre, &pdata[a], 3) == 0 ) {
-
-						pVars->current_var = VAR_ZRE;
-						pVars->buff_size = 12;
-						pVars->pbuff = pVars->intval;
-					#endif
 					
-					#ifdef TEMP_SELECT									// wybor czujnika temperatury
-					} else if ( memcmp(trm, &pdata[a], 3) == 0 ) {
+#ifdef TEMP_SELECT										// wybor czujnika temperatury
+		} else if ( memcmp(trm, &pdata[a], 3) == 0 ) {
 						
-						pVars->current_var = VAR_TRM;
-						pVars->buff_size = 12;
-						pVars->pbuff = pVars->intval;
-					#endif
+		  pVars->current_var = VAR_TRM;
+		  pVars->buff_size = 12;
+		  pVars->pbuff = pVars->intval;
+#endif
 
-        } else if (memcmp(ups, &pdata[a], 3) == 0) {		// update status
+        } else if (memcmp(ups, &pdata[a], 3) == 0) {	// update status
           pVars->current_var = VAR_UPS;
           pVars->buff_size = 12;
           pVars->pbuff = pVars->intval;
@@ -689,15 +679,10 @@ void ICACHE_FLASH_ATTR supla_esp_parse_vars(TrivialHttpParserVars *pVars,
         } else if (pVars->current_var == VAR_LED) {
           cfg->StatusLedOff = (pVars->intval[0] - '0');
 						
-	#if defined(POWSENSOR2)
-		} else if ( pVars->current_var == VAR_ZRE ) {
-		cfg->ZeroInitialEnergy = pVars->intval[0] - '0';
-	#endif
-
-	#ifdef TEMP_SELECT					// wybor czujnika temperatury
+#ifdef TEMP_SELECT										// wybor czujnika temperatury
 		} else if ( pVars->current_var == VAR_TRM ) {
 		cfg->ThermometerType = pVars->intval[0] - '0';
-	#endif
+#endif
 					
         } else if (pVars->current_var == VAR_UPS) {
           cfg->UpdateStatus = pVars->intval[0] - '0';

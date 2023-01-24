@@ -163,10 +163,6 @@ case $1 in
    "k_socket_01")
 	  FOTA=1
    ;;
-   "k_sonoff_pow_R2")
-      FLASH_SIZE="2048"
-      FOTA=1
-   ;;   
    "wifisocket")
    ;;
    "wifisocket_x4")
