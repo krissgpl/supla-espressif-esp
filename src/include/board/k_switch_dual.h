@@ -19,7 +19,7 @@
 #ifndef K_SWITCH_DUAL_H_
 #define K_SWITCH_DUAL_H_
 
-#include "supla_esp_input.h"
+//#include "supla_esp_input.h"
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 #define RETREIVE_CHANNEL_CONFIG 0b111000000
@@ -115,7 +115,7 @@
 
 //void supla_esp_board_input_state_change(uint8 gpio, int state);
 
-void supla_esp_board_input_state_change(supla_input_cfg_t *input_cfg);
+void supla_esp_board_input_state_change(supla_input_cfg_t *input_cfg_board);
 
 void supla_send_at(uint8 gpio, int action);
 				

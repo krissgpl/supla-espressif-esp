@@ -44,6 +44,8 @@ uint8 Licznik2 = 0;
 
 int currentDeviceState = STATE_UNKNOWN;
 
+supla_input_cfg_t input_cfg_board[INPUT_MAX_COUNT];
+
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
 	supla_log(LOG_DEBUG, "Termometr: %i", supla_esp_cfg.ThermometerType);
@@ -76,6 +78,11 @@ void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	supla_system_restart();
 	
 }
+
+void supla_esp_board_input_state_change(supla_input_cfg_t *input_cfg_board) {
+	
+};
+
 /*
 void supla_esp_baord_value_timer2_cb(void *timer_arg) {
 
