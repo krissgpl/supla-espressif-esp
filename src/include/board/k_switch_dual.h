@@ -19,12 +19,10 @@
 #ifndef K_SWITCH_DUAL_H_
 #define K_SWITCH_DUAL_H_
 
-//#include "supla_esp_input.h"
-
 #define ESP8266_SUPLA_PROTO_VERSION 16
 #define RETREIVE_CHANNEL_CONFIG 0b111000000
 
-#define SUPLA_ESP_SOFTVER "2.8.51.2"
+#define SUPLA_ESP_SOFTVER "2.8.51.3"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -35,8 +33,6 @@
 #define RELAY_MAX_COUNT		10
 
 #define TEMP_SELECT
-
-#define BOARD_INPUT_STATE_CHANGE_NOTIF
 
 #define AP_SSID "SWITCH_DUAL"
 #define ESP_HOSTNAME "SUPLA-SWITCH-DUAL"
@@ -111,11 +107,9 @@
 							
 #define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
 
-//#define BOARD_INPUT_STATE_CHANGE_SEND supla_esp_board_input_state_change(input_cfg->gpio_id, new_state);
+#define BOARD_INPUT_STATE_CHANGE_SEND supla_esp_board_input_state_change(input_cfg->gpio_id, new_state);
 
-//void supla_esp_board_input_state_change(uint8 gpio, int state);
-
-void supla_esp_board_input_state_change(supla_input_cfg_t *input_cfg_board);
+void supla_esp_board_input_state_change(uint8 gpio, int state);
 
 void supla_send_at(uint8 gpio, int action);
 				
