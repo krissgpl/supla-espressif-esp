@@ -34,6 +34,8 @@
 
 #define TEMP_SELECT
 
+#define BOARD_INPUT_STATE_CHANGE_NOTIF
+
 #define AP_SSID "SWITCH_DUAL"
 #define ESP_HOSTNAME "SUPLA-SWITCH-DUAL"
 #define CFGMODE_SSID_LIMIT_MACLEN
@@ -107,9 +109,11 @@
 							
 #define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
 
-#define BOARD_INPUT_STATE_CHANGE_SEND supla_esp_board_input_state_change(input_cfg->gpio_id, new_state);
+//#define BOARD_INPUT_STATE_CHANGE_SEND supla_esp_board_input_state_change(input_cfg->gpio_id, new_state);
 
-void supla_esp_board_input_state_change(uint8 gpio, int state);
+//void supla_esp_board_input_state_change(uint8 gpio, int state);
+
+void supla_esp_board_input_state_change(supla_input_cfg_t *input_cfg);
 
 void supla_send_at(uint8 gpio, int action);
 				
