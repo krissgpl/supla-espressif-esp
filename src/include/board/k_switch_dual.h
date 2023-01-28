@@ -19,6 +19,8 @@
 #ifndef K_SWITCH_DUAL_H_
 #define K_SWITCH_DUAL_H_
 
+#include "supla_esp_input.h"
+
 #define ESP8266_SUPLA_PROTO_VERSION 16
 #define RETREIVE_CHANNEL_CONFIG 0b111000000
 
