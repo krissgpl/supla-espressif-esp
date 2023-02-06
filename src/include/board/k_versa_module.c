@@ -23,9 +23,20 @@
 #include "supla_esp_gpio.h"
 #include "supla_esp_input.h"
 
+ETSTimer value_timer1;
+
+uint8 UPD_CH;
+
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
 		ets_snprintf(buffer, buffer_size, "SUPLA-VERSA");
+	
+}
+
+void supla_esp_baord_value_timer1_cb(void *timer_arg) {
+	
+	supla_log(LOG_DEBUG, "TIMER update - restart");
+	supla_system_restart();
 	
 }
 
@@ -149,4 +160,38 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 	supla_esp_channel_value_changed(5, gpio__input_get(B_SENSOR_PORT6));	
 	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_UPD_PORT));
 
+}
+
+void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
+	
+	supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port);
+		
+	UPD_CH  = 6;
+	
+	if ( port == 20 ) {	
+
+		if ( hi == 1 ) {
+	
+			supla_log(LOG_DEBUG, "update, port = %i", port);
+		
+			if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
+			
+				supla_esp_state.Relay[UPD_CH] = 1;
+				supla_log(LOG_DEBUG, "value_changed upd - 1");
+				supla_esp_save_state(SAVE_STATE_DELAY);
+				supla_esp_channel_value_changed(UPD_CH, supla_esp_state.Relay[UPD_CH]);
+				os_timer_disarm(&value_timer1);
+				os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
+				os_timer_arm(&value_timer1, 4000, 0);
+			};
+		
+			if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
+			
+				supla_esp_cfg.FirmwareUpdate = 1; 
+				supla_esp_cfg_save(&supla_esp_cfg);
+				supla_esp_channel_value_changed(UPD_CH, 1);
+				supla_log(LOG_DEBUG, "value_changed upd - 0");
+			};
+		}; 
+	};
 }
