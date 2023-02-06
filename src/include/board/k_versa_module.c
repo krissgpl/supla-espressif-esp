@@ -152,12 +152,12 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 
 void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc) {
 
-	supla_esp_channel_value_changed(0, !gpio__input_get(B_SENSOR_PORT1));
-	supla_esp_channel_value_changed(1, !gpio__input_get(B_SENSOR_PORT2));
-	supla_esp_channel_value_changed(2, !gpio__input_get(B_SENSOR_PORT3));
-	supla_esp_channel_value_changed(3, !gpio__input_get(B_SENSOR_PORT4));
-	supla_esp_channel_value_changed(4, !gpio__input_get(B_SENSOR_PORT5));
-	supla_esp_channel_value_changed(5, !gpio__input_get(B_SENSOR_PORT6));	
+	supla_esp_channel_value_changed(0, gpio__input_get(B_SENSOR_PORT1));
+	supla_esp_channel_value_changed(1, gpio__input_get(B_SENSOR_PORT2));
+	supla_esp_channel_value_changed(2, gpio__input_get(B_SENSOR_PORT3));
+	supla_esp_channel_value_changed(3, gpio__input_get(B_SENSOR_PORT4));
+	supla_esp_channel_value_changed(4, gpio__input_get(B_SENSOR_PORT5));
+	supla_esp_channel_value_changed(5, gpio__input_get(B_SENSOR_PORT6));	
 	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_UPD_PORT));
 
 }

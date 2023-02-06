@@ -1207,7 +1207,7 @@ supla_esp_gpio_on_input_active(supla_input_cfg_t *input_cfg) {
   } else if (input_cfg->type == INPUT_TYPE_SENSOR && input_cfg->channel != 255) {
 
     // TODO: add MQTT support for sensor
-    supla_esp_channel_value_changed(input_cfg->channel, 1);
+    supla_esp_channel_value_changed(input_cfg->channel, 0);
   }
 
 }
@@ -1266,7 +1266,7 @@ supla_esp_gpio_on_input_inactive(supla_input_cfg_t *input_cfg) {
       input_cfg->channel != 255) {
 
     // TODO: add MQTT support for sensor
-    supla_esp_channel_value_changed(input_cfg->channel, 0);
+    supla_esp_channel_value_changed(input_cfg->channel, 1);
   }
 }
 
