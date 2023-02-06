@@ -163,6 +163,10 @@ case $1 in
    "k_socket_01")
 	  FOTA=1
    ;;
+   "k_versa_module")
+      FLASH_SIZE="4096"
+      FOTA=1
+   ;;
    "wifisocket")
    ;;
    "wifisocket_x4")

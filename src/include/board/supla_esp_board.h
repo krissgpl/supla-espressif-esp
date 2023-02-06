@@ -194,6 +194,10 @@
 
 #include "board/k_vindriktning.h"
 
+#elif defined(__BOARD_k_versa_module)
+
+#include "board/k_versa_module.h"
+
 #endif
 
 #endif

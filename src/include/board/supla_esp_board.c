@@ -185,6 +185,10 @@
 
 #include "board/k_vindriktning.c"
 
+#elif defined(__BOARD_k_versa_module)
+
+#include "board/k_versa_module.c"
+
 #endif
 
 #ifdef SUPLA_ESP_BOARD_SUBDEF
