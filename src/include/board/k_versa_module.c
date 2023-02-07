@@ -76,7 +76,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
     supla_relay_cfg[0].channel = 6;
 		
 	// ---------------------------------------
-	
+/*	
 	supla_relay_cfg[1].gpio_id = B_SENSOR1_EN;	// in1 enable AT channel
     supla_relay_cfg[1].channel = 9;
 	
@@ -94,7 +94,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	
 	supla_relay_cfg[6].gpio_id = B_SENSOR6_EN;	// in6 enable AT channel
     supla_relay_cfg[6].channel = 14;
-	
+*/	
 	// ---------------------------------------
 	
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_SD_DATA3_U, FUNC_GPIO10);//uzycie GPIO10
@@ -164,8 +164,15 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[7].Number = 7;
 	channels[7].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
 	channels[7].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
-	channels[7].Default = 0;
-	channels[7].value[0] = 0;
+	channels[7].ActionTriggerCaps = SUPLA_ACTION_CAP_SHORT_PRESS_x1 |
+									SUPLA_ACTION_CAP_SHORT_PRESS_x2 |
+									SUPLA_ACTION_CAP_SHORT_PRESS_x3 |
+									SUPLA_ACTION_CAP_SHORT_PRESS_x4 |
+									SUPLA_ACTION_CAP_SHORT_PRESS_x5 |
+									SUPLA_ACTION_CAP_TOGGLE_x1;
+	channels[7].actionTriggerProperties.relatedChannelNumber = 8;
+	//channels[7].Default = 0;
+	//channels[7].value[0] = 0;
 	
 	channels[8].Number = 8;
 	channels[8].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
