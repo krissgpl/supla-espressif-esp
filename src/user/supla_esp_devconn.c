@@ -289,7 +289,7 @@ supla_esp_data_write(void *buf, int count, void *dcd) {
 			devconn->last_sent = uptime_sec();
 		}
 
-		supla_log(LOG_DEBUG, "sproto send count: %i result: %i", count, r);
+		//supla_log(LOG_DEBUG, "sproto send count: %i result: %i", count, r);
 	};
 
 	if ( devconn->esp_send_buffer_len > 0 ) {
@@ -299,7 +299,7 @@ supla_esp_data_write(void *buf, int count, void *dcd) {
 	if ( count > 0 ) {
 
 		r = supla_espconn_sent(&devconn->ESPConn, buf, count);
-		supla_log(LOG_DEBUG, "sproto send count: %i result: %i", count, r);
+		//supla_log(LOG_DEBUG, "sproto send count: %i result: %i", count, r);
 
 		if ( ESPCONN_INPROGRESS == r  || ESPCONN_MAXNUM == r ) {
 			return supla_esp_data_write_append_buffer(buf, count);
