@@ -297,8 +297,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
 	
 	supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port);
 		
-	char UPD_CH = 6;
-	char SN1_CH = 8;
+	uint8 UPD_CH = 6;
+	uint8 SN1_CH = 8;
 	
 	if ( port == 20 ) {	
 
