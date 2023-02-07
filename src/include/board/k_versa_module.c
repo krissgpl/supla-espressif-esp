@@ -174,7 +174,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 									SUPLA_ACTION_CAP_SHORT_PRESS_x4 |
 									SUPLA_ACTION_CAP_SHORT_PRESS_x5 |
 									SUPLA_ACTION_CAP_TOGGLE_x1;
-	channels[7].actionTriggerProperties.relatedChannelNumber = 8;
+	//channels[7].actionTriggerProperties.relatedChannelNumber = 8;
 	
 	channels[8].Number = 8;
 	channels[8].Type = SUPLA_CHANNELTYPE_RELAY;
