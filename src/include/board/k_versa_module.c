@@ -283,7 +283,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
 	
 }
 
-void supla_esp_board_gpio_set_hi(char channel, char hi) {
+void supla_esp_board_gpio_set_hi(int channel, char hi) {
 
 	supla_esp_state.Relay[channel] = hi;
 	supla_esp_save_state(SAVE_STATE_DELAY);
@@ -293,7 +293,7 @@ void supla_esp_board_gpio_set_hi(char channel, char hi) {
 	
 }
 
-void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(char port, char hi) {
+void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
 	
 	supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port);
 		

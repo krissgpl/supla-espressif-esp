@@ -86,9 +86,9 @@
 							
 void supla_board_input(char in1, char in2, char in3, char in4, char in5, char in6);
 
-void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(char port, char hi);
+void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
 
-void supla_esp_board_gpio_set_hi(char channel, char hi);
+void supla_esp_board_gpio_set_hi(int channel, char hi);
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc);
 
