@@ -103,7 +103,7 @@ void GPIO_ICACHE_FLASH supla_esp_board_input_state_change(void *_input_cfg) {
 	  
 };
 
-void supla_esp_board_input_state_change(uint8 gpio, int state) {
+void supla_esp_board_input_state_change2(uint8 gpio, int state) {
 
 	supla_log(LOG_DEBUG, "BOARD notify input %d change: %d", gpio, state);
 	//supla_log(LOG_DEBUG, "BOARD notify input - Licznik2 : %d", Licznik2);
