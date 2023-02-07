@@ -29,18 +29,19 @@
 
 #define ESP_HOSTNAME "SUPLA-VERSA"
 #define AP_SSID "SUPLA-VERSA"
+#define CFGMODE_SSID_LIMIT_MACLEN
 
 #define USE_GPIO16_OUTPUT
 
 #define B_CFG_PORT          0
 #define LED_RED_PORT  		16
 
-#define B_SENSOR_PORT1      14
-#define B_SENSOR_PORT2      12
-#define B_SENSOR_PORT3      13
-#define B_SENSOR_PORT4      5
-#define B_SENSOR_PORT5      4
-#define B_SENSOR_PORT6      10
+#define B_SENSOR_PORT1      14	//ch7 CAP_TOGGLE_x1
+#define B_SENSOR_PORT2      12	//ch7 CAP_TOGGLE_x2
+#define B_SENSOR_PORT3      13	//ch7 CAP_TOGGLE_x3
+#define B_SENSOR_PORT4      5	//ch8 CAP_TOGGLE_x1
+#define B_SENSOR_PORT5      4	//ch8 CAP_TOGGLE_x2
+#define B_SENSOR_PORT6      10	//ch8 CAP_TOGGLE_x3
 
 #define B_UPD_PORT		    20
 
