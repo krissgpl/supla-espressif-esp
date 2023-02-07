@@ -20,6 +20,7 @@
 #define K_VERSA_MODULE_H_
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
+#define RETREIVE_CHANNEL_CONFIG 0b10000000
 
 #define SUPLA_ESP_SOFTVER "2.8.51.0"
 
@@ -44,10 +45,16 @@
 #define B_SENSOR_PORT6      10	//ch8 CAP_TOGGLE_x3
 
 #define B_UPD_PORT		    20
+#define B_SENSOR1_EN      	21
+#define B_SENSOR2_EN      	22
+#define B_SENSOR3_EN      	23
+#define B_SENSOR4_EN      	24
+#define B_SENSOR5_EN      	25
+#define B_SENSOR6_EN      	26
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 		if (port >= 20) {supla_esp_board_gpiooutput_set_hi(port, hi); 	\
-						supla_log(LOG_DEBUG, "PORT 20 MAKRO");	\
+						supla_log(LOG_DEBUG, "PORT >=20 MAKRO");	\
 						return;  };
 
 #define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 6 ) {	\

@@ -77,6 +77,26 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 		
 	// ---------------------------------------
 	
+	supla_relay_cfg[1].gpio_id = B_SENSOR1_EN;	// in1 enable AT channel
+    supla_relay_cfg[1].channel = 9;
+	
+	supla_relay_cfg[2].gpio_id = B_SENSOR2_EN;	// in2 enable AT channel
+    supla_relay_cfg[2].channel = 10;
+	
+	supla_relay_cfg[3].gpio_id = B_SENSOR3_EN;	// in3 enable AT channel
+    supla_relay_cfg[3].channel = 11;
+	
+	supla_relay_cfg[4].gpio_id = B_SENSOR4_EN;	// in4 enable AT channel
+    supla_relay_cfg[4].channel = 12;
+	
+	supla_relay_cfg[5].gpio_id = B_SENSOR5_EN;	// in5 enable AT channel
+    supla_relay_cfg[5].channel = 13;
+	
+	supla_relay_cfg[6].gpio_id = B_SENSOR6_EN;	// in6 enable AT channel
+    supla_relay_cfg[6].channel = 14;
+	
+	// ---------------------------------------
+	
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_SD_DATA3_U, FUNC_GPIO10);//uzycie GPIO10
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO12);	//uzycie GPIO12
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTCK_U, FUNC_GPIO13);	//uzycie GPIO13
