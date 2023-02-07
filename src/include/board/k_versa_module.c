@@ -196,9 +196,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg) {
       advanced_mode) &&
       input_cfg->relay_gpio_id != 255) {
 	supla_log(LOG_DEBUG, "INPUT_FLAG_TRIGGER_ON_PRESS active");
-    supla_roller_shutter_cfg_t *rs_cfg =
-      supla_esp_gpio_get_rs__cfg(input_cfg->relay_gpio_id);
-	  
+ 	  
       unsigned char newState = 255;
       if (input_cfg->type == INPUT_TYPE_MOTION_SENSOR) {
         if (input_cfg->active_triggers & SUPLA_ACTION_CAP_TURN_ON) {
@@ -207,7 +205,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg) {
         }
         newState = 1;
       
-      supla_esp_gpio_relay_switch_by_input(input_cfg, newState);
+      //supla_esp_gpio_relay_switch_by_input(input_cfg, newState);
     }
   } else if (input_cfg->type == INPUT_TYPE_SENSOR && input_cfg->channel != 255) {
 
@@ -229,8 +227,6 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
       input_cfg->type == INPUT_TYPE_MOTION_SENSOR) &&
       input_cfg->relay_gpio_id != 255) {
 	supla_log(LOG_DEBUG, "!INPUT_FLAG_TRIGGER_ON_PRESS inactive");
-    supla_roller_shutter_cfg_t *rs_cfg =
-      supla_esp_gpio_get_rs__cfg(input_cfg->relay_gpio_id);
 
       unsigned char newState = 255;
       if (input_cfg->type == INPUT_TYPE_MOTION_SENSOR) {
@@ -240,7 +236,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
         }
         newState = 0;
       }
-      supla_esp_gpio_relay_switch_by_input(input_cfg, newState);
+      //supla_esp_gpio_relay_switch_by_input(input_cfg, newState);
     
   } else if (input_cfg->type == INPUT_TYPE_SENSOR &&
       input_cfg->channel != 255) {
