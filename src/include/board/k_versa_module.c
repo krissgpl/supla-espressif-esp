@@ -95,7 +95,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
 	
 
-	*channel_count = 8;
+	*channel_count = 9;
 	
 
 	channels[0].Number = 0;
