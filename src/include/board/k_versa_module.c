@@ -197,13 +197,13 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg) {
       input_cfg->relay_gpio_id != 255) {
 	supla_log(LOG_DEBUG, "INPUT_FLAG_TRIGGER_ON_PRESS active");
  	  
-      unsigned char newState = 255;
+      //unsigned char newState = 255;
       if (input_cfg->type == INPUT_TYPE_MOTION_SENSOR) {
         if (input_cfg->active_triggers & SUPLA_ACTION_CAP_TURN_ON) {
           // ignore when type is motion sensor and AT is configured for turn on
           return;
         }
-        newState = 1;
+        //newState = 1;
       
       //supla_esp_gpio_relay_switch_by_input(input_cfg, newState);
     }
@@ -228,13 +228,13 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
       input_cfg->relay_gpio_id != 255) {
 	supla_log(LOG_DEBUG, "!INPUT_FLAG_TRIGGER_ON_PRESS inactive");
 
-      unsigned char newState = 255;
+      //unsigned char newState = 255;
       if (input_cfg->type == INPUT_TYPE_MOTION_SENSOR) {
         if (input_cfg->active_triggers & SUPLA_ACTION_CAP_TURN_OFF) {
           // ignore when type is motion sensor and AT is configured for turn off
           return;
         }
-        newState = 0;
+        //newState = 0;
       }
       //supla_esp_gpio_relay_switch_by_input(input_cfg, newState);
     
