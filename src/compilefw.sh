@@ -37,7 +37,8 @@ OPTIONS=(1 "k_gate_module"
 		 26 "k_sonoff_touch_triple"
 		 27 "k_sonoff_pow_R2"
 		 28 "k_impulse_counter"
-		 29 "k_impulse_counter_3")
+		 29 "k_impulse_counter_3"
+		 30 "k_versa_module")
 
 rm -f /CProjects/supla-espressif-esp/firmware/result.txt
 rm -f /CProjects/supla-espressif-esp/firmware/result2.txt
@@ -264,11 +265,18 @@ while true; do
 			PARAM=5
 			break
             ;;
-		28)
+		29)
             BOARD=k_impulse_counter_3
 			FLASH_SIZE=2048
 			SPI=DIO
 			PARAM=5
+			break
+            ;;
+		30)
+            BOARD=k_versa_module
+			FLASH_SIZE=4096
+			SPI=DIO
+			PARAM=6
 			break
             ;;
   esac
