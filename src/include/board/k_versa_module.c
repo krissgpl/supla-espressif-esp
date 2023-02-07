@@ -44,7 +44,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 		
 	supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[0].gpio_id = B_CFG_PORT;
-	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_CFG_BTN;
+	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP | INPUT_FLAG_FACTORY_RESET | INPUT_FLAG_CFG_BTN;
 	
 	supla_input_cfg[1].type = INPUT_TYPE_SENSOR;
 	supla_input_cfg[1].gpio_id = B_SENSOR_PORT1;
@@ -144,9 +144,14 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[7].Number = 7;
 	channels[7].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
 	channels[7].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
-	//channels[7].Flags = 0;
 	channels[7].Default = 0;
 	channels[7].value[0] = 0;
+	
+	channels[8].Number = 8;
+	channels[8].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
+	channels[8].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+	channels[8].Default = 0;
+	channels[8].value[0] = 0;
 	
 }
 
@@ -159,6 +164,12 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 	supla_esp_channel_value_changed(4, !gpio__input_get(B_SENSOR_PORT5));
 	supla_esp_channel_value_changed(5, !gpio__input_get(B_SENSOR_PORT6));	
 	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_UPD_PORT));
+
+}
+
+void supla_board_input(char in1, char in2, char in3, char in4, char in5, char in6) {
+	
+	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i, CH3 = %i, CH4 = %i, CH5 = %i, CH6 = %i", in1, in2, in3, in4, in5, in6);
 
 }
 

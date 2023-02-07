@@ -55,6 +55,13 @@
 										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
 											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };
 
+#define BOARD_INTR_HANDLER	if ( supla_last_state == STATE_CONNECTED && gpio_status > 1 ) { \
+							supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
+							supla_board_input(!gpio__input_get(B_SENSOR_PORT1), !gpio__input_get(B_SENSOR_PORT2), !gpio__input_get(B_SENSOR_PORT3),	\
+												!gpio__input_get(B_SENSOR_PORT4), !gpio__input_get(B_SENSOR_PORT5), !gpio__input_get(B_SENSOR_PORT6)); }
+							
+void supla_board_input(char in1, char in2, char in3, char in4, char in5, char in6);
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc);
