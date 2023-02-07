@@ -57,4 +57,14 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc);
 
+#define BOARD_ON_INPUT_ACTIVE                        \
+    supla_esp_board_gpio_on_input_active(input_cfg); \
+    return;
+void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg);
+
+#define BOARD_ON_INPUT_INACTIVE                        \
+    supla_esp_board_gpio_on_input_inactive(input_cfg); \
+    return;
+void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
+
 #endif

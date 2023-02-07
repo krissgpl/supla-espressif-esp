@@ -161,6 +161,94 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_UPD_PORT));
 
 }
+/*
+void ICACHE_FLASH_ATTR supla_esp_board_gpio_relay_switch(void* _input_cfg,
+    char hi)
+{
+
+    supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
+
+    if (input_cfg->relay_gpio_id != 255) {
+
+        // supla_log(LOG_DEBUG, "RELAY");
+
+        supla_esp_gpio_relay_hi(input_cfg->relay_gpio_id, hi, 0);
+
+        if (input_cfg->channel != 255)
+            supla_esp_channel_value_changed(
+                input_cfg->channel,
+                supla_esp_gpio_relay_is_hi(input_cfg->relay_gpio_id));
+    }
+}
+*/
+void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg) {
+
+    supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
+
+	supla_log(LOG_DEBUG, "board active");
+
+  bool advanced_mode = supla_esp_input_is_advanced_mode_enabled(input_cfg);
+
+  if (((input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE &&
+        input_cfg->flags & INPUT_FLAG_TRIGGER_ON_PRESS) ||
+      input_cfg->type == INPUT_TYPE_BTN_BISTABLE ||
+      input_cfg->type == INPUT_TYPE_MOTION_SENSOR ||
+      advanced_mode) &&
+      input_cfg->relay_gpio_id != 255) {
+	supla_log(LOG_DEBUG, "INPUT_FLAG_TRIGGER_ON_PRESS active");
+    supla_roller_shutter_cfg_t *rs_cfg =
+      supla_esp_gpio_get_rs__cfg(input_cfg->relay_gpio_id);
+	  
+      unsigned char newState = 255;
+      if (input_cfg->type == INPUT_TYPE_MOTION_SENSOR) {
+        if (input_cfg->active_triggers & SUPLA_ACTION_CAP_TURN_ON) {
+          // ignore when type is motion sensor and AT is configured for turn on
+          return;
+        }
+        newState = 1;
+      
+      supla_esp_gpio_relay_switch_by_input(input_cfg, newState);
+    }
+  } else if (input_cfg->type == INPUT_TYPE_SENSOR && input_cfg->channel != 255) {
+
+    // TODO: add MQTT support for sensor
+    supla_esp_channel_value_changed(input_cfg->channel, 0);
+  }
+}
+
+void ICACHE_FLASH_ATTR
+supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
+
+  supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
+
+  supla_log(LOG_DEBUG, "board inactive");
+
+  if (((input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE &&
+        !(input_cfg->flags & INPUT_FLAG_TRIGGER_ON_PRESS)) ||
+      input_cfg->type == INPUT_TYPE_BTN_BISTABLE ||
+      input_cfg->type == INPUT_TYPE_MOTION_SENSOR) &&
+      input_cfg->relay_gpio_id != 255) {
+	supla_log(LOG_DEBUG, "!INPUT_FLAG_TRIGGER_ON_PRESS inactive");
+    supla_roller_shutter_cfg_t *rs_cfg =
+      supla_esp_gpio_get_rs__cfg(input_cfg->relay_gpio_id);
+
+      unsigned char newState = 255;
+      if (input_cfg->type == INPUT_TYPE_MOTION_SENSOR) {
+        if (input_cfg->active_triggers & SUPLA_ACTION_CAP_TURN_OFF) {
+          // ignore when type is motion sensor and AT is configured for turn off
+          return;
+        }
+        newState = 0;
+      }
+      supla_esp_gpio_relay_switch_by_input(input_cfg, newState);
+    
+  } else if (input_cfg->type == INPUT_TYPE_SENSOR &&
+      input_cfg->channel != 255) {
+
+    // TODO: add MQTT support for sensor
+    supla_esp_channel_value_changed(input_cfg->channel, 1);
+  }
+}
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
 	
