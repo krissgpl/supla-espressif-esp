@@ -174,7 +174,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 									SUPLA_ACTION_CAP_SHORT_PRESS_x4 |
 									SUPLA_ACTION_CAP_SHORT_PRESS_x5 |
 									SUPLA_ACTION_CAP_TOGGLE_x1;
-	//channels[7].actionTriggerProperties.relatedChannelNumber = 8;
 	
 	channels[8].Number = 8;
 	channels[8].Type = SUPLA_CHANNELTYPE_RELAY;
@@ -236,27 +235,27 @@ void supla_board_input(char in1, char in2, char in3, char in4, char in5, char in
 	
 	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i, CH3 = %i, CH4 = %i, CH5 = %i, CH6 = %i", in1, in2, in3, in4, in5, in6);
 	
-	if ( in1 == 1 ) {
+	if ( in1 == 1 && supla_esp_state.Relay[8] == 1 ) {
 		supla_esp_devconn_send_action_trigger(7, SUPLA_ACTION_CAP_TOGGLE_x1); 
 		supla_log(LOG_DEBUG, "supla_esp_board send AT in1 (ch7 CAP_TOGGLE_x1)"); };
 		
-	if ( in2 == 1 ) {
+	if ( in2 == 1 && supla_esp_state.Relay[9] == 1 ) {
 		supla_esp_devconn_send_action_trigger(7, SUPLA_ACTION_CAP_SHORT_PRESS_x1); 
 		supla_log(LOG_DEBUG, "supla_esp_board send AT in2 (ch7 CAP_SHORT_PRESS_x1)"); };
 		
-	if ( in3 == 1 ) {
+	if ( in3 == 1 && supla_esp_state.Relay[10] == 1 ) {
 		supla_esp_devconn_send_action_trigger(7, SUPLA_ACTION_CAP_SHORT_PRESS_x2); 
 		supla_log(LOG_DEBUG, "supla_esp_board send AT in3 (ch7 CAP_SHORT_PRESS_x2)"); };
 
-	if ( in4 == 1 ) {
+	if ( in4 == 1 && supla_esp_state.Relay[11] == 1 ) {
 		supla_esp_devconn_send_action_trigger(7, SUPLA_ACTION_CAP_SHORT_PRESS_x3); 
 		supla_log(LOG_DEBUG, "supla_esp_board send AT in4 (ch8 CAP_SHORT_PRESS_x3)"); };
 		
-	if ( in5 == 1 ) {
+	if ( in5 == 1 && supla_esp_state.Relay[12] == 1 ) {
 		supla_esp_devconn_send_action_trigger(7, SUPLA_ACTION_CAP_SHORT_PRESS_x4); 
 		supla_log(LOG_DEBUG, "supla_esp_board send AT in5 (ch8 CAP_SHORT_PRESS_x4)"); };
 
-	if ( in6 == 1 ) {
+	if ( in6 == 1 && supla_esp_state.Relay[13] == 1 ) {
 		supla_esp_devconn_send_action_trigger(7, SUPLA_ACTION_CAP_SHORT_PRESS_x5); 
 		supla_log(LOG_DEBUG, "supla_esp_board send AT in6 (ch8 CAP_SHORT_PRESS_x5)"); };
 
