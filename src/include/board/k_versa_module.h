@@ -32,17 +32,19 @@
 #define AP_SSID "SUPLA-VERSA"
 #define CFGMODE_SSID_LIMIT_MACLEN
 
+#define RELAY_MAX_COUNT		14
+
 #define USE_GPIO16_OUTPUT
 
 #define B_CFG_PORT          0
 #define LED_RED_PORT  		16
 
-#define B_SENSOR_PORT1      14	//ch7 CAP_TOGGLE_x1
-#define B_SENSOR_PORT2      12	//ch7 CAP_TOGGLE_x2
-#define B_SENSOR_PORT3      13	//ch7 CAP_TOGGLE_x3
-#define B_SENSOR_PORT4      5	//ch8 CAP_TOGGLE_x1
-#define B_SENSOR_PORT5      4	//ch8 CAP_TOGGLE_x2
-#define B_SENSOR_PORT6      10	//ch8 CAP_TOGGLE_x3
+#define B_SENSOR_PORT1      14	//CAP_TOGGLE_x1
+#define B_SENSOR_PORT2      12	//CAP_SHORT_PRESS_x1
+#define B_SENSOR_PORT3      13	//CAP_SHORT_PRESS_x2
+#define B_SENSOR_PORT4      5	//CAP_SHORT_PRESS_x3
+#define B_SENSOR_PORT5      4	//CAP_SHORT_PRESS_x4
+#define B_SENSOR_PORT6      10	//CAP_SHORT_PRESS_x5
 
 #define B_UPD_PORT		    20
 #define B_SENSOR1_EN      	21
@@ -67,10 +69,26 @@
 							supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
 							supla_board_input(!gpio__input_get(B_SENSOR_PORT1), !gpio__input_get(B_SENSOR_PORT2), !gpio__input_get(B_SENSOR_PORT3),	\
 												!gpio__input_get(B_SENSOR_PORT4), !gpio__input_get(B_SENSOR_PORT5), !gpio__input_get(B_SENSOR_PORT6)); }
+												
+#define BOARD_GPIO_OUTPUT_IS_HI	\
+				if ( port == B_SENSOR1_EN)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 8 = %i", supla_esp_state.Relay[8]);	\
+									return supla_esp_state.Relay[8] == 1 ? 1 : 0;	}	\
+				if ( port == B_SENSOR2_EN)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 9 = %i", supla_esp_state.Relay[9]);	\
+									return supla_esp_state.Relay[9] == 1 ? 1 : 0;	}	\
+				if ( port == B_SENSOR3_EN)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 10 = %i", supla_esp_state.Relay[10]);	\
+									return supla_esp_state.Relay[10] == 1 ? 1 : 0;	}	\
+				if ( port == B_SENSOR4_EN)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 11 = %i", supla_esp_state.Relay[11]);	\
+									return supla_esp_state.Relay[11] == 1 ? 1 : 0;	}	\
+				if ( port == B_SENSOR5_EN)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 12 = %i", supla_esp_state.Relay[12]);	\
+									return supla_esp_state.Relay[12] == 1 ? 1 : 0;	}	\
+				if ( port == B_SENSOR6_EN)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 13 = %i", supla_esp_state.Relay[13]);	\
+									return supla_esp_state.Relay[13] == 1 ? 1 : 0;	}
 							
 void supla_board_input(char in1, char in2, char in3, char in4, char in5, char in6);
 
-void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
+void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(char port, char hi);
+
+void supla_esp_board_gpio_set_hi(char channel, char hi);
 
 void supla_esp_board_send_channel_values_with_delay(void *srpc);
 
