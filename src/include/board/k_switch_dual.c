@@ -95,6 +95,14 @@ void supla_esp_baord_value_timer2_cb(void *timer_arg) {
 	//supla_log(LOG_DEBUG, "board_output RELAY - Licznik2 : %d", Licznik2);
 }
 
+void GPIO_ICACHE_FLASH supla_esp_board_input_state_change(void *_input_cfg) {
+	
+	supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
+	
+	supla_log(LOG_DEBUG, "board notify input %d change: %d", input_cfg->gpio_id, input_cfg->last_state);
+	  
+};
+
 void supla_esp_board_input_state_change(uint8 gpio, int state) {
 
 	supla_log(LOG_DEBUG, "BOARD notify input %d change: %d", gpio, state);

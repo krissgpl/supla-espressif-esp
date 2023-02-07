@@ -32,6 +32,8 @@
 
 #define RELAY_MAX_COUNT		10
 
+#define BOARD_INPUT_STATE_CHANGE_NOTIF
+
 #define TEMP_SELECT
 
 #define AP_SSID "SWITCH_DUAL"
