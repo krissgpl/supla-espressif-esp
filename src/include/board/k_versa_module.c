@@ -186,7 +186,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg) {
     supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
 
 	supla_log(LOG_DEBUG, "board active");
-
+/*
   bool advanced_mode = supla_esp_input_is_advanced_mode_enabled(input_cfg);
 
   if (((input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE &&
@@ -206,8 +206,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg) {
         //newState = 1;
       
       //supla_esp_gpio_relay_switch_by_input(input_cfg, newState);
-    }
-  } else if (input_cfg->type == INPUT_TYPE_SENSOR && input_cfg->channel != 255) {
+    } 
+  } else */
+	  if (input_cfg->type == INPUT_TYPE_SENSOR && input_cfg->channel != 255) {
 
     // TODO: add MQTT support for sensor
     supla_esp_channel_value_changed(input_cfg->channel, 0);
@@ -220,7 +221,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
   supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
 
   supla_log(LOG_DEBUG, "board inactive");
-
+/*
   if (((input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE &&
         !(input_cfg->flags & INPUT_FLAG_TRIGGER_ON_PRESS)) ||
       input_cfg->type == INPUT_TYPE_BTN_BISTABLE ||
@@ -238,7 +239,8 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
       }
       //supla_esp_gpio_relay_switch_by_input(input_cfg, newState);
     
-  } else if (input_cfg->type == INPUT_TYPE_SENSOR &&
+  } else */
+	 if (input_cfg->type == INPUT_TYPE_SENSOR &&
       input_cfg->channel != 255) {
 
     // TODO: add MQTT support for sensor
