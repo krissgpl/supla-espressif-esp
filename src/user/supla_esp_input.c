@@ -311,12 +311,14 @@ void GPIO_ICACHE_FLASH supla_esp_input_legacy_state_change_handling(
 void GPIO_ICACHE_FLASH supla_esp_input_legacy_timer_cb(void *timer_arg) {
   supla_input_cfg_t *input_cfg = (supla_input_cfg_t *)timer_arg;
 
+  supla_log(LOG_DEBUG, "supla_esp_input_legacy_timer_cb");
+
   if (input_cfg->last_state == INPUT_STATE_ACTIVE) {
     if (supla_esp_input_is_cfg_on_hold_enabled(input_cfg)) {
-
+	  supla_log(LOG_DEBUG, "input_cfg->last_state == INPUT_STATE_ACTIVE");
       if (system_get_time() - input_cfg->last_state_change >=
           GET_CFG_PRESS_TIME(input_cfg)*1000) {
-
+		supla_log(LOG_DEBUG, "system_get_time - input_cfg->last_state_change >= GET_CFG_PRESS_TIMEinput_cfg*1000");
         os_timer_disarm(&input_cfg->timer);
         input_cfg->click_counter = 0;
 
