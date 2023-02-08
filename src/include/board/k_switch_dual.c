@@ -100,7 +100,7 @@ void GPIO_ICACHE_FLASH supla_esp_board_input_state_change(void *_input_cfg) {
 	supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
 	
 	supla_log(LOG_DEBUG, "board notify input %d change: %d", input_cfg->gpio_id, input_cfg->last_state);
-	
+/*	
 	if ( input_cfg->last_state == 0 ) {
 		if ( Licznik2 == 0 && currentDeviceState == STATE_CONNECTED && supla_esp_state.Relay[5] == 1 ) {
 			Licznik2 = 1;
@@ -108,7 +108,7 @@ void GPIO_ICACHE_FLASH supla_esp_board_input_state_change(void *_input_cfg) {
 			os_timer_setfn(&value_timer2, (os_timer_func_t *)supla_esp_baord_value_timer2_cb, NULL);
 			os_timer_arm(&value_timer2, 2000, 0);
 		}
-	}
+	} */
 };
 /*
 void supla_esp_board_input_state_change2(uint8 gpio, int state) {
