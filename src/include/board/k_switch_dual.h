@@ -32,7 +32,7 @@
 
 #define SUPLA_DEBUG
 
-#define INPUT_CYCLE_TIME 40
+#define INPUT_CYCLE_TIME 25
 
 #define RELAY_MAX_COUNT		10
 
