@@ -239,21 +239,19 @@ void GPIO_ICACHE_FLASH supla_esp_input_legacy_state_change_handling(
     if (supla_esp_cfgmode_started() == 0) {
       if ((system_get_time() - input_cfg->last_state_change >= 2000 * 1000)) {
         input_cfg->click_counter = 1;
-		supla_log(LOG_DEBUG, "supla_esp_input_legacy_timer_cb - input_cfg->click_counter = 1");
+
       } else {
         if ((input_cfg->type == INPUT_TYPE_BTN_MONOSTABLE &&
               new_state == INPUT_STATE_ACTIVE) ||
             input_cfg->type == INPUT_TYPE_BTN_BISTABLE ||
             input_cfg->type == INPUT_TYPE_MOTION_SENSOR) {
           input_cfg->click_counter++;
-		  supla_log(LOG_DEBUG, "supla_esp_input_legacy_timer_cb - input_cfg->click_counter++ : %d", input_cfg->click_counter);
         }
       }
       if (supla_esp_input_is_cfg_on_toggle_enabled(input_cfg) &&
           input_cfg->click_counter >= CFG_BTN_PRESS_COUNT) {
         input_cfg->click_counter = 0;
         // CFG MODE
-		supla_log(LOG_DEBUG, "supla_esp_input_legacy_timer_cb - input_cfg->click_counter >= CFG_BTN_PRESS_COUNT");
         supla_esp_input_start_cfg_mode();
         return;
       }
@@ -315,14 +313,11 @@ void GPIO_ICACHE_FLASH supla_esp_input_legacy_state_change_handling(
 void GPIO_ICACHE_FLASH supla_esp_input_legacy_timer_cb(void *timer_arg) {
   supla_input_cfg_t *input_cfg = (supla_input_cfg_t *)timer_arg;
 
-  supla_log(LOG_DEBUG, "supla_esp_input_legacy_timer_cb");
-
   if (input_cfg->last_state == INPUT_STATE_ACTIVE) {
     if (supla_esp_input_is_cfg_on_hold_enabled(input_cfg)) {
-	  supla_log(LOG_DEBUG, "input_cfg->last_state == INPUT_STATE_ACTIVE");
       if (system_get_time() - input_cfg->last_state_change >=
           GET_CFG_PRESS_TIME(input_cfg)*1000) {
-		supla_log(LOG_DEBUG, "system_get_time - input_cfg->last_state_change >= GET_CFG_PRESS_TIMEinput_cfg*1000");
+			  
         os_timer_disarm(&input_cfg->timer);
         input_cfg->click_counter = 0;
 
