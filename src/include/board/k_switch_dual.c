@@ -94,7 +94,7 @@ void supla_esp_baord_value_timer2_cb(void *timer_arg) {
 	Licznik2 = 0;
 	//supla_log(LOG_DEBUG, "board_output RELAY - Licznik2 : %d", Licznik2);
 }
-
+/*
 void GPIO_ICACHE_FLASH supla_esp_board_input_state_change(void *_input_cfg) {
 	
 	supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
@@ -110,7 +110,7 @@ void GPIO_ICACHE_FLASH supla_esp_board_input_state_change(void *_input_cfg) {
 		}
 	} 
 };
-/*
+*/
 void supla_esp_board_input_state_change2(uint8 gpio, int state) {
 
 	supla_log(LOG_DEBUG, "BOARD notify input %d change: %d", gpio, state);
@@ -124,7 +124,7 @@ void supla_esp_board_input_state_change2(uint8 gpio, int state) {
 		os_timer_arm(&value_timer2, 2000, 0); }
 		
 }
-*/
+
 void supla_esp_baord_Led_ON_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER Led ON");
