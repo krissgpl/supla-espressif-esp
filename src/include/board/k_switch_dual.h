@@ -34,7 +34,7 @@
 
 #define RELAY_MAX_COUNT		10
 
-//#define BOARD_INPUT_STATE_CHANGE_NOTIF
+#define BOARD_INPUT_STATE_CHANGE_NOTIF
 
 #define TEMP_SELECT
 
@@ -115,9 +115,9 @@
 
 //void supla_esp_board_input_state_change2(uint8 gpio, int state);
 
-#define BOARD_ON_INPUT_INACTIVE	supla_esp_board_gpio_on_input_inactive(input_cfg);
+//#define BOARD_ON_INPUT_INACTIVE	supla_esp_board_gpio_on_input_inactive(input_cfg);
 
-void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
+//void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
 
 void supla_send_at(uint8 gpio, int action);
 				
