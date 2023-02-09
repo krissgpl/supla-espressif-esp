@@ -16,6 +16,20 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/*----------OPIS-------------------------------
+
+	CHANNEL 0 - RELAY SWITCH 1	( gpio 5 )
+	CHANNEL 1 - RELAY SWITCH 2	( gpio 13 )
+	CHANNEL 2 - UPDATE INIT		( gpio 20 virtual )
+	CHANNEL 3 - RELAY 1 DISABLE	( gpio 21 virtual )
+	CHANNEL 4 - RELAY 2 DISABLE	( gpio 22 virtual )
+	CHANNEL 5 - HARMONOGRAM		( gpio 23 virtual )
+	CHANNEL 6 - TEMPERATURE ( OPTIONAL - IF DISABLE NEXT CHANNEL IS 6 )	(gpio 2 )
+	CHANNEL 7(6) - ACTIONTRIGGER RELAY 1
+	CHANNEL 8(7) - ACTIONTRIGGER RELAY 2
+
+----------------------------------------------*/
+	
 #ifndef K_SWITCH_DUAL_H_
 #define K_SWITCH_DUAL_H_
 
@@ -23,7 +37,7 @@
 #define RETREIVE_CHANNEL_CONFIG 0b111000000
 #define CHANNEL_CONFIG_LIMIT 9
 
-#define SUPLA_ESP_SOFTVER "2.8.51.3"
+#define SUPLA_ESP_SOFTVER "2.8.51.4"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -81,10 +95,8 @@
 		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
 			supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\
 		} else if ( supla_esp_cfg.StatusLedOff == 2 ) {	\
-			char hi1;	\
-			char hi2;	\
-			hi1 = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
-			hi2 = supla_esp_gpio_output_is_hi(B_RELAY2_PORT);	\
+			char hi1 = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
+			char hi2 = supla_esp_gpio_output_is_hi(B_RELAY2_PORT);	\
 			if (port == LED_RED_PORT) {hi1 = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
 									   hi2 = supla_esp_gpio_output_is_hi(B_RELAY2_PORT);	\
 			} else if (port == B_RELAY1_PORT || port == B_RELAY2_PORT) supla_esp_gpio_set_led(hi1, hi2, 1); }	\
