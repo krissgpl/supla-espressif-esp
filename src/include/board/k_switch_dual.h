@@ -36,7 +36,7 @@
 
 #define BOARD_INPUT_STATE_CHANGE_NOTIF
 
-#define INPUT_MAX_COUNT 8
+#define INPUT_MAX_COUNT 9
 
 #define TEMP_SELECT
 
