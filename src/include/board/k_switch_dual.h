@@ -29,21 +29,19 @@
 
 #define BOARD_ON_CONNECT
 
-#define BOARD_ESP_ON_STATE_CHANGED
-
-#define SUPLA_DEBUG
+//#define SUPLA_DEBUG
 
 #define RELAY_MAX_COUNT		10
+#define INPUT_MAX_COUNT 	9
 
 #define BOARD_INPUT_STATE_CHANGE_NOTIF
-
-#define INPUT_MAX_COUNT 9
-
-#define TEMP_SELECT
+#define BOARD_ESP_ON_STATE_CHANGED
 
 #define AP_SSID "SWITCH_DUAL"
 #define ESP_HOSTNAME "SUPLA-SWITCH-DUAL"
 #define CFGMODE_SSID_LIMIT_MACLEN
+
+#define TEMP_SELECT
 
 #define DS18B20
 #define TEMPERATURE_CHANNEL 6
@@ -113,14 +111,6 @@
 //#define BOARD_ON_COUNTDOWN_START	supla_log(LOG_DEBUG, "COUNTDOWN_START, time=%d, gpio=%d, ch=%d", time_ms, gpio_id, channel_number);
 							
 #define BOARD_SEND_AT supla_send_at(input_cfg->gpio_id, action);
-
-//#define BOARD_INPUT_STATE_CHANGE_SEND supla_esp_board_input_state_change2(input_cfg->gpio_id, new_state);
-
-//void supla_esp_board_input_state_change2(uint8 gpio, int state);
-
-//#define BOARD_ON_INPUT_INACTIVE	supla_esp_board_gpio_on_input_inactive(input_cfg);
-
-//void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
 
 void supla_send_at(uint8 gpio, int action);
 				

@@ -257,13 +257,11 @@ supla_esp_data_write_append_buffer(void *buf, int count) {
 
 		if ( devconn->esp_send_buffer_len+count > SEND_BUFFER_SIZE ) {
 
-			supla_log(LOG_DEBUG, "Send buffer size exceeded: %i count: %i",devconn->esp_send_buffer_len, count);	//moje
 			supla_log(LOG_ERR, "Send buffer size exceeded");
 			return -1;
 
 		} else {
 
-			supla_log(LOG_DEBUG, "Send buffer size: %i count: %i",devconn->esp_send_buffer_len, count);		//moje
 			memcpy(&devconn->esp_send_buffer[devconn->esp_send_buffer_len], buf, count);
 			devconn->esp_send_buffer_len+=count;
 

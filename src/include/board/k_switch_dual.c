@@ -66,8 +66,10 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffe
 }
 
 void supla_esp_board_on_state_changed(char supla_last_state) {
+	
   currentDeviceState = supla_last_state;
   //supla_log(LOG_DEBUG, "supla_esp_board_on_state_changed");
+  
 }
 
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {
@@ -110,33 +112,7 @@ void GPIO_ICACHE_FLASH supla_esp_board_input_state_change(void *_input_cfg) {
 		}
 	} 
 };
-/*
-void supla_esp_board_input_state_change2(uint8 gpio, int state) {
 
-	supla_log(LOG_DEBUG, "BOARD notify input %d change: %d", gpio, state);
-	//supla_log(LOG_DEBUG, "BOARD notify input - Licznik2 : %d", Licznik2);
-	//if ( currentDeviceState == STATE_CONNECTED) supla_log(LOG_DEBUG, "BOARD notify currentDeviceState : STATE_CONNECTED");
-	
-	if ( state == 0 && Licznik2 == 0 && currentDeviceState == STATE_CONNECTED && supla_esp_state.Relay[5] == 1 ) {
-		Licznik2 = 1;
-		os_timer_disarm(&value_timer2);
-		os_timer_setfn(&value_timer2, (os_timer_func_t *)supla_esp_baord_value_timer2_cb, NULL);
-		os_timer_arm(&value_timer2, 2000, 0); }
-		
-}
-*/
-/*
-void ICACHE_FLASH_ATTR
-supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
-
-	supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
-
-	supla_log(LOG_DEBUG, "board inactive");
-
-	supla_log(LOG_DEBUG, "board inactive %d change: %d", input_cfg->gpio_id, input_cfg->last_state);
-	
-}
-*/
 void supla_esp_baord_Led_ON_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER Led ON");
@@ -185,7 +161,7 @@ void supla_esp_board_gpio_init(void) {
 	else {
 		chnl = 6;
 		}
-	supla_log(LOG_DEBUG, "supla_esp_board_gpio_init chnl= %i", chnl);
+	//supla_log(LOG_DEBUG, "supla_esp_board_gpio_init chnl= %i", chnl);
 	
 	supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[0].gpio_id = B_BTN1_PORT;
@@ -265,8 +241,8 @@ void supla_esp_board_gpio_init(void) {
 		supla_log(LOG_DEBUG, "ustaw gpio10 high wl zasilania DH");
 	};
 	
-	supla_log(LOG_DEBUG, "AT 1 ch = %i", supla_input_cfg[0].channel);
-	supla_log(LOG_DEBUG, "AT 2 ch = %i", supla_input_cfg[1].channel);
+	//supla_log(LOG_DEBUG, "AT 1 ch = %i", supla_input_cfg[0].channel);
+	//supla_log(LOG_DEBUG, "AT 2 ch = %i", supla_input_cfg[1].channel);
 	
 }
 
@@ -284,7 +260,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 		*channel_count = 8;
 		chnl = 6;
 		}
-	supla_log(LOG_DEBUG, "supla_esp_board_set_channels chnl= %i", chnl);
+	//supla_log(LOG_DEBUG, "supla_esp_board_set_channels chnl= %i", chnl);
 
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
