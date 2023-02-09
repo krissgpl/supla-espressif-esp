@@ -115,6 +115,10 @@
 
 //void supla_esp_board_input_state_change2(uint8 gpio, int state);
 
+//#define BOARD_ON_INPUT_INACTIVE	supla_esp_board_gpio_on_input_inactive(input_cfg);
+
+void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
+
 void supla_send_at(uint8 gpio, int action);
 				
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
