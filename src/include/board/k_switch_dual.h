@@ -87,8 +87,7 @@
 			hi2 = supla_esp_gpio_output_is_hi(B_RELAY2_PORT);	\
 			if (port == LED_RED_PORT) {hi1 = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
 									   hi2 = supla_esp_gpio_output_is_hi(B_RELAY2_PORT);	\
-			} else if (port == B_RELAY1_PORT) {supla_esp_gpio_set_led(hi1, hi2, 1); \
-			} else if (port == B_RELAY2_PORT) {supla_esp_gpio_set_led(hi1, hi2, 1); }; }	\
+			} else if (port == B_RELAY1_PORT || port == B_RELAY2_PORT) {supla_esp_gpio_set_led(hi1, hi2, 1); \
 		if (port >= 20) {supla_esp_board_gpiooutput_set_hi(port, hi); 	\
 						supla_log(LOG_DEBUG, "PORT 20 MAKRO");	\
 						return;  };	\
@@ -117,6 +116,8 @@ void supla_send_at(uint8 gpio, int action);
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
 
 void supla_block_channel(int ledblock);
+
+void supla_esp_board_gpio_set_hi(int channel, char hi);
 	
 char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved);

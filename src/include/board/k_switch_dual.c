@@ -26,6 +26,7 @@
 #include "supla_esp_gpio.h"
 #include "supla_esp_input.h"
 
+//----------TIMERS DECLARATION---------------------------
 ETSTimer value_timer1;
 ETSTimer value_timer2;
 ETSTimer Led_ON;
@@ -34,10 +35,12 @@ ETSTimer Led_ON2;
 ETSTimer Led_OFF2;
 ETSTimer Port_OFF;
 
-uint8 UPD_CH;
-uint8 DIS1_CH;
-uint8 DIS2_CH;
-uint8 HRM_CH;
+void supla_esp_baord_value_timer1_cb(void *timer_arg);
+void supla_esp_baord_value_timer2_cb(void *timer_arg);
+void supla_esp_baord_Led_ON_cb(void *timer_arg);
+void supla_esp_baord_Led_OFF_cb(void *timer_arg);
+void supla_esp_baord_Port_OFF_cb(void *timer_arg);
+//--------------------------------------------------------
 
 uint8 Licznik = 0;
 uint8 Licznik2 = 0;
@@ -147,7 +150,7 @@ void supla_esp_baord_Port_OFF_cb(void *timer_arg) {
 	
 	if ( (int)timer_arg & LED_GREEN_BLOCK ) {
 		supla_esp_gpio_set_hi(B_RELAY2_PORT, 0);
-	supla_esp_channel_value_changed(1, 0); }
+		supla_esp_channel_value_changed(1, 0); }
 	
 }
 
@@ -625,14 +628,21 @@ void supla_send_at(uint8 gpio, int action) {
 	
 }
 
+void supla_esp_board_gpio_set_hi(int channel, char hi) {
+
+	supla_esp_state.Relay[channel] = hi;
+	supla_esp_save_state(SAVE_STATE_DELAY);
+	supla_esp_channel_value_changed(channel, supla_esp_state.Relay[channel]);
+	supla_esp_cfg_save(&supla_esp_cfg);
+	supla_esp_channel_value_changed(channel, hi);
+	
+}
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi) {
 	
 	supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi %i", port);
 		
-	UPD_CH  = 2;
-	DIS1_CH = 3;
-	DIS2_CH = 4;
-	HRM_CH  = 5;
+	uint8 UPD_CH  = 2;
 	
 	int ledblock;
 	
@@ -665,11 +675,7 @@ if ( port == 20 ) {
 
 if ( port == 21 ) {	
 			
-		supla_esp_state.Relay[DIS1_CH] = hi;
-		supla_esp_save_state(SAVE_STATE_DELAY);
-		supla_esp_channel_value_changed(DIS1_CH, supla_esp_state.Relay[DIS1_CH]);
-		supla_esp_cfg_save(&supla_esp_cfg);
-		supla_esp_channel_value_changed(DIS1_CH, hi);
+		supla_esp_board_gpio_set_hi(UPD_CH+1, hi);
 	
 		ledblock=LED_RED_BLOCK;
 		os_timer_disarm(&Port_OFF);
@@ -679,12 +685,8 @@ if ( port == 21 ) {
 };
 
 if ( port == 22 ) {	
-			
-		supla_esp_state.Relay[DIS2_CH] = hi;
-		supla_esp_save_state(SAVE_STATE_DELAY);
-		supla_esp_channel_value_changed(DIS2_CH, supla_esp_state.Relay[DIS2_CH]);
-		supla_esp_cfg_save(&supla_esp_cfg);
-		supla_esp_channel_value_changed(DIS2_CH, hi);
+
+		supla_esp_board_gpio_set_hi(UPD_CH+2, hi);
 		
 		ledblock=LED_GREEN_BLOCK;
 		os_timer_disarm(&Port_OFF);
@@ -692,13 +694,6 @@ if ( port == 22 ) {
 		os_timer_arm(&Port_OFF, 300, 0);
 };
 
-if ( port == 23 ) {	
-			
-		supla_esp_state.Relay[HRM_CH] = hi;
-		supla_esp_save_state(SAVE_STATE_DELAY);
-		supla_esp_channel_value_changed(HRM_CH, supla_esp_state.Relay[HRM_CH]);
-		supla_esp_cfg_save(&supla_esp_cfg);
-		supla_esp_channel_value_changed(HRM_CH, hi);
-};
+if ( port == 23 ) supla_esp_board_gpio_set_hi(UPD_CH+3, hi);
 
 }
