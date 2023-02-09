@@ -185,7 +185,8 @@ void supla_esp_board_gpio_init(void) {
 	else {
 		chnl = 6;
 		}
-		
+	supla_log(LOG_DEBUG, "supla_esp_board_gpio_init chnl= %i", chnl);
+	
 	supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[0].gpio_id = B_BTN1_PORT;
 	supla_input_cfg[0].flags = INPUT_FLAG_PULLUP |
@@ -283,6 +284,7 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 		*channel_count = 8;
 		chnl = 6;
 		}
+	supla_log(LOG_DEBUG, "supla_esp_board_set_channels chnl= %i", chnl);
 
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
