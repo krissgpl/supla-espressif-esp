@@ -87,7 +87,7 @@
 			hi2 = supla_esp_gpio_output_is_hi(B_RELAY2_PORT);	\
 			if (port == LED_RED_PORT) {hi1 = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
 									   hi2 = supla_esp_gpio_output_is_hi(B_RELAY2_PORT);	\
-			} else if (port == B_RELAY1_PORT || port == B_RELAY2_PORT) {supla_esp_gpio_set_led(hi1, hi2, 1); \
+			} else if (port == B_RELAY1_PORT || port == B_RELAY2_PORT) supla_esp_gpio_set_led(hi1, hi2, 1);	\
 		if (port >= 20) {supla_esp_board_gpiooutput_set_hi(port, hi); 	\
 						supla_log(LOG_DEBUG, "PORT 20 MAKRO");	\
 						return;  };	\
