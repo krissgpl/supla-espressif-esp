@@ -457,6 +457,9 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 	  "<i><select name=\"trm\"><option value=\"0\" %s>NONE</option>"
       "<option value=\"1\" %s>DS18B20</option><option value=\"2\" %s>DHT22</option>"
       "</select><label>Thermometer type:</label></i>"
+	  "<i><select name=\"sbt\"><option value=\"0\" %s>RESET</option>"
+      "<option value=\"1\" %s>TOGGLE</option>"
+      "</select><label>Staircase button type:</label></i>"
 	  "<i><select name=\"upd\"><option value=\"0\" "
       "%s>NO<option value=\"1\" %s>YES</select><label>Firmware "
       "update</label></i></div><button type=\"submit\">SAVE</button><input "
@@ -508,6 +511,8 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 	  supla_esp_cfg.ThermometerType == 0 ? "selected" : "",
 	  supla_esp_cfg.ThermometerType == 1 ? "selected" : "",
   	  supla_esp_cfg.ThermometerType == 2 ? "selected" : "",
+	  supla_esp_cfg.StaircaseButtonType == 0 ? "selected" : "",
+	  supla_esp_cfg.StaircaseButtonType == 1 ? "selected" : "",
 	  supla_esp_cfg.FirmwareUpdate == 0 ? "selected" : "",
       supla_esp_cfg.FirmwareUpdate == 1 ? "selected" : ""
       );
