@@ -16,19 +16,45 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/*----------OPIS-------------------------------
+/*---------------------------------------OPIS--------------------------------------
 
-	CHANNEL 0 - RELAY SWITCH 1	( gpio 5 )
-	CHANNEL 1 - RELAY SWITCH 2	( gpio 13 )
-	CHANNEL 2 - UPDATE INIT		( gpio 20 virtual )
-	CHANNEL 3 - RELAY 1 DISABLE	( gpio 21 virtual )
-	CHANNEL 4 - RELAY 2 DISABLE	( gpio 22 virtual )
-	CHANNEL 5 - HARMONOGRAM		( gpio 23 virtual )
+	CHANNEL 0 - RELAY SWITCH 1	( gpio 5 )  --FUNCTIONS---|-- LIGHTSWITCH (DEFAULT)
+														  |-- POWERSWITCH					 
+														  |-- STAIRCASETIMER
+	--------------------------------------------------------------------------------													  
+	CHANNEL 1 - RELAY SWITCH 2	( gpio 13 ) --FUNCTIONS---|-- LIGHTSWITCH (DEFAULT)
+														  |-- POWERSWITCH					 
+														  |-- STAIRCASETIMER
+	--------------------------------------------------------------------------------													  
+	CHANNEL 2 - UPDATE INIT		( gpio 20 virtual ) --FUNCTIONS---|-- NONE (DEFAULT)
+																  |-- POWERSWITCH
+	--------------------------------------------------------------------------------															  
+	CHANNEL 3 - RELAY 1 DISABLE	( gpio 21 virtual ) --FUNCTIONS---|-- NONE (DEFAULT)
+																  |-- POWERSWITCH
+	--------------------------------------------------------------------------------															  
+	CHANNEL 4 - RELAY 2 DISABLE	( gpio 22 virtual ) --FUNCTIONS---|-- NONE (DEFAULT)
+																  |-- POWERSWITCH
+	--------------------------------------------------------------------------------															  
+	CHANNEL 5 - HARMONOGRAM		( gpio 23 virtual ) --FUNCTIONS---|-- NONE (DEFAULT)
+																  |-- POWERSWITCH
+	--------------------------------------------------------------------------------															  
 	CHANNEL 6 - TEMPERATURE ( OPTIONAL - IF DISABLE NEXT CHANNEL IS 6 )	(gpio 2 )
-	CHANNEL 7(6) - ACTIONTRIGGER RELAY 1
-	CHANNEL 8(7) - ACTIONTRIGGER RELAY 2
+	--------------------------------------------------------------------------------
+	CHANNEL 7(6) - ACTIONTRIGGER RELAY SWITCH 1  --ACTIONS---|-- CAP_HOLD
+															 |-- CAP_SHORT_PRESS_x1
+															 |-- CAP_SHORT_PRESS_x2
+															 |-- CAP_SHORT_PRESS_x3
+															 |-- CAP_SHORT_PRESS_x4
+															 |-- CAP_SHORT_PRESS_x5
+	--------------------------------------------------------------------------------														 
+	CHANNEL 8(7) - ACTIONTRIGGER RELAY SWITCH 2  --ACTIONS---|-- CAP_HOLD
+															 |-- CAP_SHORT_PRESS_x1
+															 |-- CAP_SHORT_PRESS_x2
+															 |-- CAP_SHORT_PRESS_x3
+															 |-- CAP_SHORT_PRESS_x4
+															 |-- CAP_SHORT_PRESS_x5
 
-----------------------------------------------*/
+-----------------------------------------------------------------------------------*/
 	
 #ifndef K_SWITCH_DUAL_H_
 #define K_SWITCH_DUAL_H_
@@ -37,7 +63,7 @@
 #define RETREIVE_CHANNEL_CONFIG 0b111000011
 #define CHANNEL_CONFIG_LIMIT 9
 
-#define SUPLA_ESP_SOFTVER "2.8.51.4"
+#define SUPLA_ESP_SOFTVER "2.8.51.5"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
