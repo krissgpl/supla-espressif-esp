@@ -268,7 +268,8 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[0].Number = 0;
 	channels[0].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[0].FuncList = SUPLA_BIT_FUNC_POWERSWITCH \
-								| SUPLA_BIT_FUNC_LIGHTSWITCH;
+								| SUPLA_BIT_FUNC_LIGHTSWITCH \
+								| SUPLA_BIT_FUNC_STAIRCASETIMER;
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE \
 								| SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED;							
 	channels[0].Default = SUPLA_CHANNELFNC_LIGHTSWITCH;
@@ -277,7 +278,8 @@ void supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned c
 	channels[1].Number = 1;
 	channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH \
-								| SUPLA_BIT_FUNC_LIGHTSWITCH;
+								| SUPLA_BIT_FUNC_LIGHTSWITCH \
+								| SUPLA_BIT_FUNC_STAIRCASETIMER;
 	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE \
 								| SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED;							
 	channels[1].Default = SUPLA_CHANNELFNC_LIGHTSWITCH;
