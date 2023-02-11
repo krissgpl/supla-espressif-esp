@@ -44,14 +44,14 @@
 	--------------------------------------------------------------------------------
 	CHANNEL 7(6) - ACTIONTRIGGER RELAY SWITCH 1  --ACTIONS---|-- CAP_HOLD
 															 |-- CAP_SHORT_PRESS_x1
-															 |-- CAP_SHORT_PRESS_x2
+															 |-- CAP_SHORT_PRESS_x2 -- FOR TOGGLE RELAY 1 DISABLE
 															 |-- CAP_SHORT_PRESS_x3
 															 |-- CAP_SHORT_PRESS_x4
-															 |-- CAP_SHORT_PRESS_x5
+															 |-- CAP_SHORT_PRESS_x5 -- FOR EXECUTE IF CHANNEL 5 IS ON
 	--------------------------------------------------------------------------------														 
 	CHANNEL 8(7) - ACTIONTRIGGER RELAY SWITCH 2  --ACTIONS---|-- CAP_HOLD
 															 |-- CAP_SHORT_PRESS_x1
-															 |-- CAP_SHORT_PRESS_x2
+															 |-- CAP_SHORT_PRESS_x2 -- FOR TOGGLE RELAY 2 DISABLE
 															 |-- CAP_SHORT_PRESS_x3
 															 |-- CAP_SHORT_PRESS_x4
 															 |-- CAP_SHORT_PRESS_x5
