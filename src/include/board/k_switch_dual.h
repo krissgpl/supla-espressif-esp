@@ -20,11 +20,13 @@
 
 	CHANNEL 0 - RELAY SWITCH 1	( gpio 5 )  --FUNCTIONS---|-- LIGHTSWITCH (DEFAULT)
 														  |-- POWERSWITCH					 
-														  |-- STAIRCASETIMER
+														  |-- STAIRCASETIMER	---BUTTON SETINGS FROM CFG MODE ---|-- RESET ( RESET COUNTDOWN TIMER TO START )
+																												   |-- TOGGLE ( BREAK COUNTDOWN AND OFF )
 	--------------------------------------------------------------------------------													  
 	CHANNEL 1 - RELAY SWITCH 2	( gpio 13 ) --FUNCTIONS---|-- LIGHTSWITCH (DEFAULT)
 														  |-- POWERSWITCH					 
-														  |-- STAIRCASETIMER
+														  |-- STAIRCASETIMER	---BUTTON SETINGS FROM CFG MODE ---|-- RESET ( RESET COUNTDOWN TIMER TO START )
+																												   |-- TOGGLE ( BREAK COUNTDOWN AND OFF )
 	--------------------------------------------------------------------------------													  
 	CHANNEL 2 - UPDATE INIT		( gpio 20 virtual ) --FUNCTIONS---|-- NONE (DEFAULT)
 																  |-- POWERSWITCH
