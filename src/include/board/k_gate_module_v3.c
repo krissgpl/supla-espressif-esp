@@ -23,16 +23,19 @@
 #include "supla_dht.h"
 #include "supla_ds18b20.h"
 
+//----------TIMERS DECLARATION---------------------------
 ETSTimer value_timer1;
 ETSTimer value_timer2;
 ETSTimer blokada_bramy;
 ETSTimer odblokowanie_bramy;
 ETSTimer board_input_timer;
 
-int UPD_channel;
-int HRM_channel;
-int BLK_channel;
-int LHT_channel;
+void supla_esp_baord_value_timer1_cb(void *timer_arg);
+void supla_esp_baord_value_timer2_cb(void *timer_arg);
+void blokada_bramy_cb(void *timer_arg);
+void odblokowanie_bramy_cb(void *timer_arg);
+void board_input_timer_cb(void *timer_arg);
+//--------------------------------------------------------
 
 unsigned int Stan_Bramy = 0;	// 0 - zamknieta
 								// 1 - otwiera sie lub zamyka sie
@@ -250,7 +253,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[4].Number = 4;
 	channels[4].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
 	channels[4].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
-	channels[4].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[4].Default = 0;
 	channels[4].value[0] = 0;
 	
@@ -478,7 +480,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	
 }
 
-void supla_board_input(int in1, int in2) {
+void supla_board_input(uint8 in1, uint8 in2) {
 	
 	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i", in1, in2);
 	
@@ -510,83 +512,89 @@ void supla_board_input(int in1, int in2) {
 	supla_log(LOG_DEBUG, "Stan_Bramy = %i", Stan_Bramy);
 }
 
+void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg) {
+
+    supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
+
+	supla_log(LOG_DEBUG, "board active");
+
+	if (input_cfg->type == INPUT_TYPE_SENSOR && input_cfg->channel != 255) supla_esp_channel_value_changed(input_cfg->channel, 0);
+  
+}
+
+void ICACHE_FLASH_ATTR
+supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
+
+	supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
+
+	supla_log(LOG_DEBUG, "board inactive");
+
+	if (input_cfg->type == INPUT_TYPE_SENSOR && input_cfg->channel != 255) supla_esp_channel_value_changed(input_cfg->channel, 1);
+	
+}
+
+void supla_esp_board_gpio_set_hi(int channel, char hi) {
+
+	supla_esp_state.Relay[channel] = hi;
+	supla_esp_save_state(SAVE_STATE_DELAY);
+	supla_esp_channel_value_changed(channel, supla_esp_state.Relay[channel]);
+	supla_esp_cfg_save(&supla_esp_cfg);
+	supla_esp_channel_value_changed(channel, hi);
+	
+}
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 			
-		supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi port = %i, hi = %i", port, hi);
+	supla_log(LOG_DEBUG, "supla_esp_board_gpiooutput_set_hi port = %i, hi = %i", port, hi);
 		
-		UPD_channel = 6;
-		HRM_channel = 7;
-		BLK_channel = 8;
-		LHT_channel = 9;
+	uint8 UPD_channel = 6;
 
-if ( port == 20 ) {	
+	if ( port == 20 ) {	
 
-	if ( hi == 1 ) {
+		if ( hi == 1 ) {
 	
-		supla_log(LOG_DEBUG, "update, port = %i", port);
+			supla_log(LOG_DEBUG, "update, port = %i", port);
 		
-		if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
+			if ( supla_esp_cfg.FirmwareUpdate == 1 ) {
 			
-			supla_esp_state.Relay[UPD_channel] = 1;
-			supla_log(LOG_DEBUG, "value_changed upd - 1");
-			supla_esp_save_state(SAVE_STATE_DELAY);
-			supla_esp_channel_value_changed(UPD_channel, supla_esp_state.Relay[UPD_channel]);
-			os_timer_disarm(&value_timer1);
-			os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
-			os_timer_arm(&value_timer1, 4000, 0);
-		};
+				supla_esp_state.Relay[UPD_channel] = 1;
+				supla_log(LOG_DEBUG, "value_changed upd - 1");
+				supla_esp_save_state(SAVE_STATE_DELAY);
+				supla_esp_channel_value_changed(UPD_channel, supla_esp_state.Relay[UPD_channel]);
+				os_timer_disarm(&value_timer1);
+				os_timer_setfn(&value_timer1, (os_timer_func_t *)supla_esp_baord_value_timer1_cb, NULL);
+				os_timer_arm(&value_timer1, 4000, 0);
+			};
 		
-		if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
+			if ( supla_esp_cfg.FirmwareUpdate == 0 ) {
 			
-			supla_esp_cfg.FirmwareUpdate = 1; 
-			supla_esp_cfg_save(&supla_esp_cfg);
-			supla_esp_channel_value_changed(UPD_channel, 1);
-			supla_log(LOG_DEBUG, "value_changed upd - 0");
-		};
-	}; 
-};
+				supla_esp_cfg.FirmwareUpdate = 1; 
+				supla_esp_cfg_save(&supla_esp_cfg);
+				supla_esp_channel_value_changed(UPD_channel, 1);
+				supla_log(LOG_DEBUG, "value_changed upd - 0");
+			};
+		}; 
+	};
 
-if ( port == 21 ) {	
+	if ( port == 21 ) 	supla_esp_board_gpio_set_hi(UPD_channel+1, hi);
 			
-		supla_esp_state.Relay[HRM_channel] = hi;
-		supla_esp_save_state(SAVE_STATE_DELAY);
-		supla_esp_channel_value_changed(HRM_channel, supla_esp_state.Relay[HRM_channel]);
-		supla_esp_cfg_save(&supla_esp_cfg);
-		supla_esp_channel_value_changed(HRM_channel, hi);
-};
-
-if ( port == 22 ) {	
-			
-		supla_esp_state.Relay[BLK_channel] = hi;
-		supla_esp_save_state(SAVE_STATE_DELAY);
-		supla_esp_channel_value_changed(BLK_channel, supla_esp_state.Relay[BLK_channel]);
-		supla_esp_cfg_save(&supla_esp_cfg);
-		supla_esp_channel_value_changed(BLK_channel, hi);
+	if ( port == 22 ) {	supla_esp_board_gpio_set_hi(UPD_channel+2, hi);
 		
-		if ( hi==1 ) { supla_log(LOG_DEBUG, "blokada bramy ON"); 
-					supla_esp_gpio_set_hi(B_RELAY2_PORT, 1);
-					os_timer_disarm(&blokada_bramy);
-					os_timer_setfn(&blokada_bramy, (os_timer_func_t *)blokada_bramy_cb, NULL);
-					os_timer_arm(&blokada_bramy, 500, 0);
+					if ( hi==1 ) { supla_log(LOG_DEBUG, "blokada bramy ON"); 
+								supla_esp_gpio_set_hi(B_RELAY2_PORT, 1);
+								os_timer_disarm(&blokada_bramy);
+								os_timer_setfn(&blokada_bramy, (os_timer_func_t *)blokada_bramy_cb, NULL);
+								os_timer_arm(&blokada_bramy, 500, 0);
 					};
 
-		if ( hi==0 ) { supla_log(LOG_DEBUG, "blokada bramy OFF"); 
-		
-					os_timer_disarm(&odblokowanie_bramy);
-					os_timer_setfn(&odblokowanie_bramy, (os_timer_func_t *)odblokowanie_bramy_cb, NULL);
-					os_timer_arm(&odblokowanie_bramy, 500, 0);
+					if ( hi==0 ) { supla_log(LOG_DEBUG, "blokada bramy OFF"); 
+								os_timer_disarm(&odblokowanie_bramy);
+								os_timer_setfn(&odblokowanie_bramy, (os_timer_func_t *)odblokowanie_bramy_cb, NULL);
+								os_timer_arm(&odblokowanie_bramy, 500, 0);
 					
-					};
-						
-};
+					};					
+	};
 
-if ( port == 23 ) {	
-			
-		supla_esp_state.Relay[LHT_channel] = hi;
-		supla_esp_save_state(SAVE_STATE_DELAY);
-		supla_esp_channel_value_changed(LHT_channel, supla_esp_state.Relay[LHT_channel]);
-		supla_esp_cfg_save(&supla_esp_cfg);
-		supla_esp_channel_value_changed(LHT_channel, hi);
-};
+	if ( port == 23 )	supla_esp_board_gpio_set_hi(UPD_channel+3, hi);
 
 }

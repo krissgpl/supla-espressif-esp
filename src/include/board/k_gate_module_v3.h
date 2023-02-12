@@ -12,12 +12,56 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+ 
+ /*------------------------------------------------------------SUPLA-NICE_V3--SUPLA-NICE_V3-DS18B20--SUPLA-NICE_V3-DHT22-----------------------------------------------------
+
+	CHANNEL 0 - GATE RELAY 2	( gpio 5 )  --FUNCTIONS---|-- CONTROLLINGTHEGATE (DEFAULT)
+														  |-- CONTROLLINGTHEGATEWAYLOCK					 
+														  |-- CONTROLLINGTHEGARAGEDOOR
+														  |-- CONTROLLINGTHEDOORLOCK													  
+														  
+	--------------------------------------------------------------------------------													  
+	CHANNEL 1 - SENSORNO IN 1	( gpio 12 ) 	
+														  
+	--------------------------------------------------------------------------------													  
+	CHANNEL 2 - SENSORNO IN 2	( gpio 14 ) 	
+											
+	--------------------------------------------------------------------------------													  
+	CHANNEL 3 - BLOKADA BRAMY (RELAY 1)	( gpio 13 ) --FUNCTIONS---|-- NONE (DEFAULT)
+																  |-- POWERSWITCH	
+																  
+	--------------------------------------------------------------------------------
+	CHANNEL 4 - ACTIONTRIGGER   					--FUNCTIONS---|-- NONE (DEFAULT)
+																  |-- ACTIONTRIGGER  --ACTIONS---|-- CAP_TOGGLE_x1 -- FOR EXECUTE IF CHANNEL 7 HARMONOGRAM IS ON
+																								 |-- CAP_TOGGLE_x2 -- FOR EXECUTE IF CHANNEL 9 (AND 7) LIGHT IS ON
+																								 
+	--------------------------------------------------------------------------------													  
+	CHANNEL 5 - WYJŚCIE 2 (RELAY 3)		 ( gpio 4 ) --FUNCTIONS---|-- NONE (DEFAULT)
+																  |-- POWERSWITCH	
+																  																  
+	--------------------------------------------------------------------------------													  
+	CHANNEL 6 - UPDATE INIT		( gpio 20 virtual ) --FUNCTIONS---|-- NONE (DEFAULT)
+																  |-- POWERSWITCH
+	--------------------------------------------------------------------------------															  
+	CHANNEL 7 - HARMONOGRAM		( gpio 21 virtual ) --FUNCTIONS---|-- NONE (DEFAULT)
+																  |-- POWERSWITCH
+	--------------------------------------------------------------------------------															  
+	CHANNEL 8 - BLOKADA BRAMY	( gpio 22 virtual ) --FUNCTIONS---|-- NONE (DEFAULT) 
+																  |-- POWERSWITCH	-- IT OPENS THE GATE AND AFTER IS OPENED THEN SET CHANNEL 3 ON ( INPUT STOP IN NICE )
+	--------------------------------------------------------------------------------															  
+	CHANNEL 9 - LIGHT			( gpio 23 virtual ) --FUNCTIONS---|-- NONE (DEFAULT)
+																  |-- POWERSWITCH	-- IS CONTROLLED FROM SWITCH MODULE WHEN IS ON THEN SET LIGHT ON
+	--------------------------------------------------------------------------------															  
+	CHANNEL 10 - TEMPERATURE ( OPTIONAL )	(gpio 2 )
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #ifndef K_SUPLA_GATE_MODULE_V3_H_
 #define K_SUPLA_GATE_MODULE_V3_H_
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.8.51.1"
+#define SUPLA_ESP_SOFTVER "2.8.52.0"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -58,10 +102,9 @@
 		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
 			supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\
 		} else if ( supla_esp_cfg.StatusLedOff == 2 ) {	\
-			char hi1;	\
-			hi1 = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
-			if (port == LED_RED_PORT) {hi1 = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
-			} else if (port == B_RELAY1_PORT) {supla_esp_gpio_set_led(hi1 ,1 , 1); }; }\
+			char hi = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
+			if (port == LED_RED_PORT) {hi = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
+			} else if (port == B_RELAY1_PORT) supla_esp_gpio_set_led(hi1 ,1 , 1); }\
 		if (port >= 20) {supla_esp_board_gpiooutput_set_hi(port, hi); 	\
 						supla_log(LOG_DEBUG, "PORT 20 MAKRO");	\
 						return;  };	\
@@ -92,11 +135,23 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
-void supla_board_input(int in1, int in2);
+void supla_board_input(uint8 in1, uint8 in2);
 
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
 
+void supla_esp_board_gpio_set_hi(int channel, char hi);
+
 char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved);
+	
+#define BOARD_ON_INPUT_ACTIVE                        \
+    supla_esp_board_gpio_on_input_active(input_cfg); \
+    return;
+void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg);
+
+#define BOARD_ON_INPUT_INACTIVE                        \
+    supla_esp_board_gpio_on_input_inactive(input_cfg); \
+    return;
+void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
 	
 #endif
