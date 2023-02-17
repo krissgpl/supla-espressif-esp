@@ -140,7 +140,7 @@ void board_input_timer1_cb(void *timer_arg) {
 		Licznik1 = 0;
 		Low1=0;
 		High1=0;
-		supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy);
+		supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
 		os_timer_disarm(&board_input_timer1); };
 		
 	//supla_log(LOG_DEBUG, "Stan_Bramy1 timer Low1 po = %i", Low1);
@@ -183,15 +183,15 @@ void board_input_timer2_cb(void *timer_arg) {
 	//supla_log(LOG_DEBUG, "Stan_Bramy2 timer High2 po = %i", High2);
 }
 
-void board_input_timer1_cb(void *timer_arg) {
+void board_input_timer3_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "board_input_timer3_cb tylko raz");
 	
 	os_timer_disarm(&board_input_timer2);
 	os_timer_setfn(&board_input_timer2, (os_timer_func_t *)board_input_timer2_cb, NULL);
-	os_timer_arm(&board_input_timer2, 100, 1); };
+	os_timer_arm(&board_input_timer2, 100, 1);
 			
-};
+}
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 		
