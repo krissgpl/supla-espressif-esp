@@ -93,16 +93,16 @@ void supla_esp_baord_value_timer2_cb(void *timer_arg) {
 
 void blokada_bramy_cb(void *timer_arg) {
 	
-	supla_esp_gpio_set_hi(B_RELAY2_PORT, 0);
+	supla_esp_gpio_set_hi(B_RELAY1_PORT, 0);
 	
 }
 
 void odblokowanie_bramy_cb(void *timer_arg) {
 	
-	supla_esp_gpio_set_hi(B_RELAY1_PORT, 0);
+	supla_esp_gpio_set_hi(B_RELAY2_PORT, 0);
 	supla_esp_channel_value_changed(3, 0);
 	os_delay_us(500000);
-	supla_esp_gpio_set_hi(B_RELAY2_PORT, 1);
+	supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
 	os_timer_disarm(&blokada_bramy);
 	os_timer_setfn(&blokada_bramy, (os_timer_func_t *)blokada_bramy_cb, NULL);
 	os_timer_arm(&blokada_bramy, 500, 0);
@@ -125,7 +125,7 @@ void board_input_timer1_cb(void *timer_arg) {
 		Stan_Bramy1 = 2;
 		supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
 			if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
-				supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
+				supla_esp_gpio_set_hi(B_RELAY2_PORT, 1);
 				supla_esp_channel_value_changed(3, 1); };
 		Low1=0;
 		High1=0;
@@ -214,11 +214,11 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 
     supla_relay_cfg[0].gpio_id = B_RELAY1_PORT;
     supla_relay_cfg[0].flags = RELAY_FLAG_RESTORE_FORCE;
-    supla_relay_cfg[0].channel = 3;
+    supla_relay_cfg[0].channel = 0;
 	
 	supla_relay_cfg[1].gpio_id = B_RELAY2_PORT;
     supla_relay_cfg[1].flags = RELAY_FLAG_RESET;
-    supla_relay_cfg[1].channel = 0;
+    supla_relay_cfg[1].channel = 3;
 	
 	supla_relay_cfg[2].gpio_id = B_RELAY3_PORT;
     supla_relay_cfg[2].flags = RELAY_FLAG_RESTORE_FORCE;
@@ -282,7 +282,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 								| SUPLA_BIT_FUNC_CONTROLLINGTHEDOORLOCK;
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;							
 	channels[0].Default = SUPLA_CHANNELFNC_CONTROLLINGTHEGATE;
-	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY2_PORT);
+	channels[0].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
 
 	channels[1].Number = 1;
 	channels[1].Type = SUPLA_CHANNELTYPE_SENSORNO;
@@ -301,7 +301,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[3].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
 	channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[3].Default = 0;
-	channels[3].value[0] = supla_esp_gpio_relay_on(B_RELAY1_PORT);
+	channels[3].value[0] = supla_esp_gpio_relay_on(B_RELAY2_PORT);
 	
 	channels[4].Number = 4;
 	channels[4].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
@@ -370,7 +370,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 
 	supla_esp_channel_value_changed(1, gpio__input_get(B_SENSOR_PORT1));
 	supla_esp_channel_value_changed(2, gpio__input_get(B_SENSOR_PORT2));
-	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_RELAY1_PORT));
+	supla_esp_channel_value_changed(3, supla_esp_gpio_relay_on(B_RELAY2_PORT));
 	if ( supla_esp_cfg.UpsideDown == 0 ) supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_RELAY3_PORT));
 	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_UPD_PORT));
 	supla_esp_channel_value_changed(7, supla_esp_gpio_relay_on(B_HARMONOGRAM));
@@ -657,7 +657,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 	if ( port == 22 ) {	supla_esp_board_gpio_set_hi(UPD_channel+2, hi);
 		
 					if ( hi==1 ) { supla_log(LOG_DEBUG, "blokada bramy ON"); 
-								supla_esp_gpio_set_hi(B_RELAY2_PORT, 1);
+								supla_esp_gpio_set_hi(B_RELAY1_PORT, 1);
 								os_timer_disarm(&blokada_bramy);
 								os_timer_setfn(&blokada_bramy, (os_timer_func_t *)blokada_bramy_cb, NULL);
 								os_timer_arm(&blokada_bramy, 500, 0);
