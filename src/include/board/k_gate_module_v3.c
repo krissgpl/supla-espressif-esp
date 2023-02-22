@@ -124,6 +124,7 @@ void board_input_timer1_cb(void *timer_arg) {
 	if ( High1 >= 7 ) {
 		Stan_Bramy1 = 2;
 		supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
+		supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
 			if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
 				supla_esp_gpio_set_hi(B_RELAY2_PORT, 1);
 				supla_esp_channel_value_changed(3, 1); };
@@ -141,6 +142,7 @@ void board_input_timer1_cb(void *timer_arg) {
 		Low1=0;
 		High1=0;
 		supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
+		supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
 		os_timer_disarm(&board_input_timer1); };
 		
 	//supla_log(LOG_DEBUG, "Stan_Bramy1 timer Low1 po = %i", Low1);
@@ -162,6 +164,7 @@ void board_input_timer2_cb(void *timer_arg) {
 		
 	if ( High2 >= 7 ) {
 		Stan_Bramy2 = 2;
+		supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
 		supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
 		Low2=0;
 		High2=0;
@@ -176,6 +179,7 @@ void board_input_timer2_cb(void *timer_arg) {
 		Licznik2 = 0;
 		Low2=0;
 		High2=0;
+		supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
 		supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
 		os_timer_disarm(&board_input_timer2); };
 		
