@@ -110,41 +110,42 @@ void odblokowanie_bramy_cb(void *timer_arg) {
 
 void board_input_timer1_cb(void *timer_arg) {
 	
-	supla_log(LOG_DEBUG, "board_input_timer2_cb");
+	supla_log(LOG_DEBUG, "board_input_timer1_cb");
 	
 	//supla_log(LOG_DEBUG, "Stan_Bramy1 timer Low1 przed = %i", Low1);
 	//supla_log(LOG_DEBUG, "Stan_Bramy1 timer High1 przed = %i", High1);
 	
 	if ( Stan_Bramy1 == 2 ) os_timer_disarm(&board_input_timer1);
-	
-	if ( gpio__input_get(B_SENSOR_PORT1) == 0 ) { // gdy na input napiecie to 0
-		High1++;
-		Low1=0; };
+	else {
 		
-	if ( High1 >= 7 ) {
-		Stan_Bramy1 = 2;
-		supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
-		supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
-			if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
-				supla_esp_gpio_set_hi(B_RELAY2_PORT, 1);
-				supla_esp_channel_value_changed(3, 1); };
-		Low1=0;
-		High1=0;
-		os_timer_disarm(&board_input_timer1); };
+		if ( gpio__input_get(B_SENSOR_PORT1) == 0 ) { // gdy na input napiecie to 0
+			High1++;
+			Low1=0; };
 		
-	if ( gpio__input_get(B_SENSOR_PORT1) == 1 ) { // gdy na input brak napiecia to 1
-		High1=0;
-		Low1++; };
+		if ( High1 >= 7 ) {
+			Stan_Bramy1 = 2;
+			supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
+			supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
+				if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
+					supla_esp_gpio_set_hi(B_RELAY2_PORT, 1);
+					supla_esp_channel_value_changed(3, 1); };
+			Low1=0;
+			High1=0;
+			os_timer_disarm(&board_input_timer1); };
 		
-	if ( Low1 >= 7 ) {
-		Stan_Bramy1 = 0;
-		Licznik1 = 0;
-		Low1=0;
-		High1=0;
-		supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
-		supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
-		os_timer_disarm(&board_input_timer1); };
+		if ( gpio__input_get(B_SENSOR_PORT1) == 1 ) { // gdy na input brak napiecia to 1
+			High1=0;
+			Low1++; };
 		
+		if ( Low1 >= 7 ) {
+			Stan_Bramy1 = 0;
+			Licznik1 = 0;
+			Low1=0;
+			High1=0;
+			supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
+			supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
+			os_timer_disarm(&board_input_timer1); };
+	};	
 	//supla_log(LOG_DEBUG, "Stan_Bramy1 timer Low1 po = %i", Low1);
 	//supla_log(LOG_DEBUG, "Stan_Bramy1 timer High1 po = %i", High1);
 }
@@ -157,32 +158,33 @@ void board_input_timer2_cb(void *timer_arg) {
 	//supla_log(LOG_DEBUG, "Stan_Bramy2 timer High2 przed = %i", High2);
 	
 	if ( Stan_Bramy2 == 2 ) os_timer_disarm(&board_input_timer2);
-	
-	if ( gpio__input_get(B_SENSOR_PORT2) == 0 ) { // gdy na input napiecie to 0
-		High2++;
-		Low2=0; };
+	else {
 		
-	if ( High2 >= 7 ) {
-		Stan_Bramy2 = 2;
-		supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
-		supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
-		Low2=0;
-		High2=0;
-		os_timer_disarm(&board_input_timer2); };
+		if ( gpio__input_get(B_SENSOR_PORT2) == 0 ) { // gdy na input napiecie to 0
+			High2++;
+			Low2=0; };
 		
-	if ( gpio__input_get(B_SENSOR_PORT2) == 1 ) { // gdy na input brak napiecia to 1
-		High2=0;
-		Low2++; };
+		if ( High2 >= 7 ) {
+			Stan_Bramy2 = 2;
+			supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
+			supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
+			Low2=0;
+			High2=0;
+			os_timer_disarm(&board_input_timer2); };
 		
-	if ( Low2 >= 7 ) {
-		Stan_Bramy2 = 0;
-		Licznik2 = 0;
-		Low2=0;
-		High2=0;
-		supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
-		supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
-		os_timer_disarm(&board_input_timer2); };
+		if ( gpio__input_get(B_SENSOR_PORT2) == 1 ) { // gdy na input brak napiecia to 1
+			High2=0;
+			Low2++; };
 		
+		if ( Low2 >= 7 ) {
+			Stan_Bramy2 = 0;
+			Licznik2 = 0;
+			Low2=0;
+			High2=0;
+			supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
+			supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
+			os_timer_disarm(&board_input_timer2); };
+	};	
 	//supla_log(LOG_DEBUG, "Stan_Bramy2 timer Low2 po = %i", Low2);
 	//supla_log(LOG_DEBUG, "Stan_Bramy2 timer High2 po = %i", High2);
 }
