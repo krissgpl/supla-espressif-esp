@@ -118,7 +118,7 @@ void board_input_timer1_cb(void *timer_arg) {
 	
 	if ( Stan_Bramy1 == 2 ) os_timer_disarm(&board_input_timer1);
 	else {
-	
+		
 		if ( gpio__input_get(B_SENSOR_PORT1) == 0 ) { // gdy na input napiecie to 0
 			High1++;
 			Low1=0; };
@@ -146,9 +146,7 @@ void board_input_timer1_cb(void *timer_arg) {
 			supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
 			supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
 			os_timer_disarm(&board_input_timer1); };
-		
-	};
-		
+	};	
 	//supla_log(LOG_DEBUG, "Stan_Bramy1 timer Low1 po = %i", Low1);
 	//supla_log(LOG_DEBUG, "Stan_Bramy1 timer High1 po = %i", High1);
 }
@@ -162,7 +160,7 @@ void board_input_timer2_cb(void *timer_arg) {
 	
 	if ( Stan_Bramy2 == 2 ) os_timer_disarm(&board_input_timer2);
 	else {
-	
+		
 		if ( gpio__input_get(B_SENSOR_PORT2) == 0 ) { // gdy na input napiecie to 0
 			High2++;
 			Low2=0; };
@@ -186,10 +184,8 @@ void board_input_timer2_cb(void *timer_arg) {
 			High2=0;
 			supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
 			supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
-			os_timer_disarm(&board_input_timer2); }
-		
-	};
-		
+			os_timer_disarm(&board_input_timer2); };
+	};	
 	//supla_log(LOG_DEBUG, "Stan_Bramy2 timer Low2 po = %i", Low2);
 	//supla_log(LOG_DEBUG, "Stan_Bramy2 timer High2 po = %i", High2);
 }
@@ -594,6 +590,9 @@ void supla_board_input(uint8 in1, uint8 in2) {
 				};
 			};
 	};
+
+	if ( in1 == 0 && Stan_Bramy1 == 2 ) Stan_Bramy1 = 0;
+	if ( in2 == 0 && Stan_Bramy2 == 2 ) Stan_Bramy2 = 0;
 
 	if ( in2 == 1 && Licznik2 == 1 && supla_esp_cfg.UpsideDown == 1 ) supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x3);
 	
