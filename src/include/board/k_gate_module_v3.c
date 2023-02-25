@@ -19,10 +19,9 @@
 #include "public_key_in_c_code"
 		 
 #include "supla_esp.h"
+#include "supla_temp.h"
 
-#include "supla_dht.h"
-#include "supla_ds18b20.h"
-
+ 
 //----------TIMERS DECLARATION---------------------------
 ETSTimer value_timer1;
 ETSTimer value_timer2;
@@ -40,6 +39,8 @@ void board_input_timer1_cb(void *timer_arg);
 void board_input_timer2_cb(void *timer_arg);
 void board_input_timer3_cb(void *timer_arg);
 //--------------------------------------------------------
+
+uint8 temperature_channel = 10;	// temperature channel set
 
 unsigned int Stan_Bramy1 = 0;	// 0 - zamknieta
 unsigned int Stan_Bramy2 = 0;	// 1 - otwiera sie lub zamyka sie
@@ -261,6 +262,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTMS_U);			// pullup gpio 14
 
 	//----------------------------------------	wlaczenie zasilania dht z opoznieniem (zaklocenia)
+	
+	void ICACHE_FLASH_ATTR supla_temp_channel( temperature_channel );
 	
 	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 	
