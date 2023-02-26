@@ -40,7 +40,7 @@ void board_input_timer2_cb(void *timer_arg);
 void board_input_timer3_cb(void *timer_arg);
 //--------------------------------------------------------
 
-uint8 temperature_channel = 10;	// temperature channel set
+//uint8 temperature_channel = 10;	// temperature channel set
 
 unsigned int Stan_Bramy1 = 0;	// 0 - zamknieta
 unsigned int Stan_Bramy2 = 0;	// 1 - otwiera sie lub zamyka sie
@@ -363,7 +363,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[10].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
 	channels[10].FuncList = 0;
 	channels[10].Default = 0;
-	supla_temp_channel(channels[10].Number);
+	supla_set_temp_channel(channels[10].Number);
 	supla_get_temperature(channels[10].value);
    }
 
@@ -372,7 +372,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[10].Type = SUPLA_CHANNELTYPE_DHT22;
 	channels[10].FuncList = 0;
 	channels[10].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
-	supla_temp_channel(channels[10].Number);
+	supla_set_temp_channel(channels[10].Number);
 	supla_get_temp_and_humidity(channels[10].value);
    }
 }
