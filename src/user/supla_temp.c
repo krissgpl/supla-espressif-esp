@@ -49,12 +49,11 @@ static float supla_ds18b20_divider;
 // TODO: Add support for multiple sensors
 // TODO: Add resolution setup
 
-void ICACHE_FLASH_ATTR supla_temp_channel( uint8 channel ) {
-
-	if ( supla_esp_cfg.ThermometerType == THERM_DS18B20 ) temp_channel = channel;
-	if ( supla_esp_cfg.ThermometerType == THERM_DHT22 ) temp_channel = channel;
+void ICACHE_FLASH_ATTR supla_set_temp_channel( uint8 channel ) {
 	
-}
+	temp_channel = channel;
+
+};
 
 void ICACHE_FLASH_ATTR supla_ds18b20_init(void) {
 
