@@ -54,21 +54,16 @@ unsigned int High2 = 0;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
-	supla_log(LOG_DEBUG, "Termometr: %i", supla_esp_cfg.ThermometerType);
-   if ( supla_esp_cfg.ThermometerType == THERM_DS18B20 || supla_esp_cfg.ThermometerType == THERM_DHT22 ) {
-	
-	supla_log(LOG_DEBUG, "if name 1 i 2: %i", supla_esp_cfg.ThermometerType);
 	if ( supla_esp_cfg.ThermometerType == THERM_DS18B20 ) {
-		supla_log(LOG_DEBUG, "if name 1: %i", supla_esp_cfg.ThermometerType);
+		//supla_log(LOG_DEBUG, "if name 1: %i", supla_esp_cfg.ThermometerType);
 		ets_snprintf(buffer, buffer_size, "SUPLA-NICE_V3-DS18B20");
 	}
 	if ( supla_esp_cfg.ThermometerType == THERM_DHT22 ) {
-		supla_log(LOG_DEBUG, "if name 2: %i", supla_esp_cfg.ThermometerType);
+		//supla_log(LOG_DEBUG, "if name 2: %i", supla_esp_cfg.ThermometerType);
 		ets_snprintf(buffer, buffer_size, "SUPLA-NICE_V3-DHT22");
 	}
-   }
-   else {
-	   supla_log(LOG_DEBUG, "else if name: %i", supla_esp_cfg.ThermometerType);
+    if ( supla_esp_cfg.ThermometerType == THERM_NONE ) {
+	   //supla_log(LOG_DEBUG, "if name: %i", supla_esp_cfg.ThermometerType);
 		ets_snprintf(buffer, buffer_size, "SUPLA-NICE_V3");
 	}
 }
@@ -258,10 +253,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTMS_U);			// pullup gpio 14
 
 	//----------------------------------------	wlaczenie zasilania dht z opoznieniem (zaklocenia)
-	
-	//supla_temp_channel( temperature_channel );
-	
-	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
+		
+	if ( supla_esp_cfg.ThermometerType == THERM_DS18B20 || supla_esp_cfg.ThermometerType == THERM_DHT22 ) {
 	
 		supla_esp_gpio_set_hi(10, 0);	// ustaw gpio10 low wyl zasilania DHT
 		supla_log(LOG_DEBUG, "ustaw gpio10 low wyl zasilania DHT");
@@ -358,7 +351,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[9].Default = 0;
 	channels[9].value[0] = supla_esp_gpio_relay_on(B_LIGHT);
 
-	if( supla_esp_cfg.ThermometerType == 1 ) {
+	if( supla_esp_cfg.ThermometerType == THERM_DS18B20 ) {
     channels[10].Number = 10;
 	channels[10].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
 	channels[10].FuncList = 0;
@@ -367,7 +360,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	supla_get_temperature(channels[10].value);
    }
 
-   if( supla_esp_cfg.ThermometerType == 2 ) {
+   if( supla_esp_cfg.ThermometerType == THERM_DHT22 ) {
 	channels[10].Number = 10;
 	channels[10].Type = SUPLA_CHANNELTYPE_DHT22;
 	channels[10].FuncList = 0;
