@@ -33,6 +33,8 @@ ETSTimer Led_OFF2;
 int UPD_channel;
 int DIS_CH;
 
+bool supla_esp_board_rs_motor_move = false;
+
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
 	supla_log(LOG_DEBUG, "Termometr: %i", supla_esp_cfg.ThermometerType);
@@ -374,16 +376,10 @@ char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 }
 
 bool GPIO_ICACHE_FLASH
-supla_esp_board_is_rs_in_move(supla_roller_shutter_cfg_t *rs_cfg);
+supla_esp_board_is_rs_in_move(supla_roller_shutter_cfg_t *rs_cfg) {
 
-void ICACHE_FLASH_ATTR supla_esp_board_rs_motor_move( bool move ) {
+	return supla_esp_board_rs_motor_move;
 	
-	supla_roller_shutter_cfg_t *rs_cfg;
-	
-	if (move)
-		supla_esp_board_is_rs_in_move(rs_cfg) = true;
-	else
-		supla_esp_board_is_rs_in_move(rs_cfg) = false;
 }
 
 void GPIO_ICACHE_FLASH supla_block_channel(void) {
