@@ -259,7 +259,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 
 	//----------------------------------------	wlaczenie zasilania dht z opoznieniem (zaklocenia)
 	
-	supla_temp_channel( temperature_channel );
+	//supla_temp_channel( temperature_channel );
 	
 	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 	
@@ -363,6 +363,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[10].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
 	channels[10].FuncList = 0;
 	channels[10].Default = 0;
+	supla_temp_channel(channels[10].Number);
 	supla_get_temperature(channels[10].value);
    }
 
@@ -371,6 +372,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[10].Type = SUPLA_CHANNELTYPE_DHT22;
 	channels[10].FuncList = 0;
 	channels[10].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+	supla_temp_channel(channels[10].Number);
 	supla_get_temp_and_humidity(channels[10].value);
    }
 }
