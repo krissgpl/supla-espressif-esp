@@ -373,7 +373,7 @@ char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     return buffer;
 }
 
-void ICACHE_FLASH_ATTR supla_esp_board_rs_motor_move(supla_roller_shutter_cfg_t *rs_cfg, bool move) {
+void ICACHE_FLASH_ATTR supla_esp_board_rs_motor_move( bool move ) {
 	
 	supla_esp_board_is_rs_in_move(rs_cfg) = move;
 
