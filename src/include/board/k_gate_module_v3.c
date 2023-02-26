@@ -259,7 +259,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 
 	//----------------------------------------	wlaczenie zasilania dht z opoznieniem (zaklocenia)
 	
-	void ICACHE_FLASH_ATTR supla_temp_channel( temperature_channel );
+	supla_temp_channel( temperature_channel );
 	
 	if ( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 	
