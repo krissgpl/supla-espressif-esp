@@ -27,6 +27,7 @@
 #include "driver/dht22.h"
 
 #include "supla_esp_devconn.h"
+#include "supla_esp_cfg.h"
 
 static double supla_ds18b20_last_temp = -275;
 static double supla_dht_last_temp = -275;
@@ -122,6 +123,10 @@ uint8_t  supla_ds18b20_read() {
     return r;
 }
 
+void ICACHE_FLASH_ATTR supla_get_temperature(char value[SUPLA_CHANNELVALUE_SIZE]) {
+	// Only temperature
+	memcpy(value, &supla_ds18b20_last_temp, sizeof(double));
+}
 
 void ICACHE_FLASH_ATTR
 supla_ds18b20_read_temperatureB(void *timer_arg) {
@@ -211,13 +216,18 @@ void ICACHE_FLASH_ATTR supla_ds18b20_start(void)
 	os_timer_arm (&supla_ds18b20_timer1, 5000, 1);
 }
 
-void ICACHE_FLASH_ATTR supla_get_temperature(char value[SUPLA_CHANNELVALUE_SIZE]) {
-	// Only temperature
-	memcpy(value, &supla_ds18b20_last_temp, sizeof(double));
-}
-
 void DHT_ICACHE_FLASH supla_dht_init(void) {
 	supla_w1_init();
+}
+
+void DHT_ICACHE_FLASH supla_get_temp_and_humidity(char value[SUPLA_CHANNELVALUE_SIZE]) {
+
+	int t = supla_dht_last_temp*1000.00;
+	int h = supla_dht_last_humidity*1000.00;
+
+	memcpy(value, &t, 4);
+	memcpy(&value[4], &h, 4);
+	
 }
 
 void
@@ -269,16 +279,6 @@ supla_dht_read_th(void *timer_arg) {
 		supla_dht_last_humidity = -1;
 		
 	}
-}
-
-void DHT_ICACHE_FLASH supla_get_temp_and_humidity(char value[SUPLA_CHANNELVALUE_SIZE]) {
-
-	int t = supla_dht_last_temp*1000.00;
-	int h = supla_dht_last_humidity*1000.00;
-
-	memcpy(value, &t, 4);
-	memcpy(&value[4], &h, 4);
-	
 }
 
 void DHT_ICACHE_FLASH supla_dht_start(void) {
