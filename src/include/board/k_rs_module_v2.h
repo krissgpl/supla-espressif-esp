@@ -86,7 +86,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi);
 
 void supla_block_channel(void);
 
-bool GPIO_ICACHE_FLASH supla_esp_board_is_rs_in_move(supla_roller_shutter_cfg_t *rs_cfg);
+//bool GPIO_ICACHE_FLASH supla_esp_board_is_rs_in_move(supla_roller_shutter_cfg_t *rs_cfg);
 
 void ICACHE_FLASH_ATTR supla_esp_board_rs_motor_move(bool move);
 
