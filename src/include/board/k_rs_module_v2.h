@@ -22,7 +22,7 @@
 #define STATE_SECTOR_OFFSET 2		// zmiana sektora zapisu
 #define RS_SAVE_STATE_DELAY 500		// zmiana czestotliwosci zapisu
 
-#define RETREIVE_CHANNEL_CONFIG 0b111000
+#define RETREIVE_CHANNEL_CONFIG 0b111001
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 #define BOARD_CFG_HTML_TEMPLATE
@@ -32,8 +32,8 @@
 #define _ROLLERSHUTTER_SUPPORT
 #define RS_AUTOCALIBRATION_SUPPORTED
 
-#define AP_SSID "ROLETY_V2"
-#define ESP_HOSTNAME "SUPLA-ROLETY_V2"
+#define AP_SSID "ROLETY_V4"
+#define ESP_HOSTNAME "SUPLA-ROLETY_V4"
 #define CFGMODE_SSID_LIMIT_MACLEN
 
 #define TEMP_SELECT
@@ -50,6 +50,7 @@
 #define B_RELAY2_PORT      13
 #define B_BTN1_PORT        14
 #define B_BTN2_PORT        12
+#define B_SENSOR_PORT		4
 #define B_UPD_PORT		   20
 #define B_RS_DIS		   21
 #define LED_RED_PORT   	   16
@@ -90,5 +91,15 @@ char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved);
 void ICACHE_FLASH_ATTR
 supla_esp_board_send_channel_values_with_delay(void* srpc);
+
+#define BOARD_ON_INPUT_ACTIVE                        \
+    supla_esp_board_gpio_on_input_active(input_cfg); \
+    return;
+void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg);
+
+#define BOARD_ON_INPUT_INACTIVE                        \
+    supla_esp_board_gpio_on_input_inactive(input_cfg); \
+    return;
+void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
 
 #endif
