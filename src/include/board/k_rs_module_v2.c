@@ -19,7 +19,7 @@
 #include "public_key_in_c_code"
 
 #include "supla_esp.h"
-#include "supla_esp_gpio.h"
+//#include "supla_esp_gpio.h"
 #include "supla_temp.h"
 
 ETSTimer value_timer1;
@@ -35,10 +35,6 @@ bool supla_esp_board_rs_motor_move = false;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
-	supla_log(LOG_DEBUG, "Termometr: %i", supla_esp_cfg.ThermometerType);
-   if ( supla_esp_cfg.ThermometerType == THERM_DS18B20 || supla_esp_cfg.ThermometerType == THERM_DHT22 ) {
-	
-	supla_log(LOG_DEBUG, "if name 1 i 2: %i", supla_esp_cfg.ThermometerType);
 	if ( supla_esp_cfg.ThermometerType == THERM_DS18B20 ) {
 		supla_log(LOG_DEBUG, "if name 1: %i", supla_esp_cfg.ThermometerType);
 		ets_snprintf(buffer, buffer_size, "ROLETY_V4-DS18B20");
@@ -47,9 +43,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffe
 		supla_log(LOG_DEBUG, "if name 2: %i", supla_esp_cfg.ThermometerType);
 		ets_snprintf(buffer, buffer_size, "ROLETY_V4-DHT22");
 	}
-   }
-   else {
-	   supla_log(LOG_DEBUG, "else if name: %i", supla_esp_cfg.ThermometerType);
+    if ( supla_esp_cfg.ThermometerType == THERM_NONE ) {
+	    supla_log(LOG_DEBUG, "if name 0: %i", supla_esp_cfg.ThermometerType);
 		ets_snprintf(buffer, buffer_size, "ROLETY_V4");
 	}
 }
@@ -128,10 +123,12 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	
 	//----------------------------------------
 	
-	  PIN_FUNC_SELECT(PERIPHS_IO_MUX_SD_DATA3_U, FUNC_GPIO10); //ustawienie funkcji GPIO10
-	  PIN_PULLUP_EN(PERIPHS_IO_MUX_SD_DATA3_U);				   // pullup gpio 10
+	  PIN_FUNC_SELECT(PERIPHS_IO_MUX_SD_DATA3_U, FUNC_GPIO10); 	//uzycie GPIO10
+	  PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO12);		//uzycie GPIO12
+	  PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTMS_U, FUNC_GPIO14);		//uzycie GPIO14
 	
 	  PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO4_U);	// pullup gpio 4
+	  PIN_PULLUP_EN(PERIPHS_IO_MUX_SD_DATA3_U);	// pullup gpio 10
 	  PIN_PULLUP_EN(PERIPHS_IO_MUX_MTDI_U);		// pullup gpio 12	
 	  PIN_PULLUP_EN(PERIPHS_IO_MUX_MTMS_U);		// pullup gpio 14
 	
@@ -214,6 +211,7 @@ void ICACHE_FLASH_ATTR
 	channels[6].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[6].FuncList = 0;
 	channels[6].Default = 0;
+	supla_set_temp_channel(channels[6].Number);
 	supla_get_temperature(channels[6].value);
    }
 
@@ -223,6 +221,7 @@ void ICACHE_FLASH_ATTR
 	channels[6].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[6].FuncList = 0;
 	channels[6].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+	supla_set_temp_channel(channels[6].Number);
 	supla_get_temp_and_humidity(channels[6].value);
    }
       

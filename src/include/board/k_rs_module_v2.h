@@ -38,12 +38,6 @@
 
 #define TEMP_SELECT
 
-#define DHTSENSOR
-#define TEMPERATURE_HUMIDITY_CHANNEL 3
-
-#define DS18B20
-#define TEMPERATURE_CHANNEL 3
-
 #define USE_GPIO16_OUTPUT
 
 #define B_RELAY1_PORT       5
