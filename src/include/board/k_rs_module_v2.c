@@ -97,7 +97,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	supla_input_cfg[1].channel = 4;
 
 	supla_input_cfg[2].type = INPUT_TYPE_SENSOR;
-	supla_input_cfg[2].gpio_id = B_SENSOR_PORT1;
+	supla_input_cfg[2].gpio_id = B_SENSOR_PORT;
 	supla_input_cfg[2].channel = 3;
 
 	// ---------------------------------------
@@ -232,7 +232,7 @@ void ICACHE_FLASH_ATTR
 		
 		supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_UPD_PORT));
 		supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_RS_DIS));
-		supla_esp_channel_value_changed(3, gpio__input_get(B_SENSOR_PORT1));
+		supla_esp_channel_value_changed(3, gpio__input_get(B_SENSOR_PORT));
 }
 
 char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
