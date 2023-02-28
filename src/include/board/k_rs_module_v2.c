@@ -20,9 +20,7 @@
 
 #include "supla_esp.h"
 #include "supla_esp_gpio.h"
-
-#include "supla_ds18b20.h"
-#include "supla_dht.h"
+#include "supla_temp.h"
 
 ETSTimer value_timer1;
 ETSTimer Led_ON;
