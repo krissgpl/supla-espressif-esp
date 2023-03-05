@@ -69,11 +69,12 @@ case $1 in
       FOTA=1
       FLASH_SIZE="4096"
    ;;
-   "k_rs_module_v2")
+   "k_rs_module_v3")
       FOTA=1
       FLASH_SIZE="4096"
+	  EXTRA_CCFLAGS="-DSRPC_WITHOUT_OUT_QUEUE -DSRPC_WITHOUT_IN_QUEUE -DSPROTO_WITHOUT_OUT_BUFFER"
    ;;
-   "k_rs_module_v3")
+   "k_rs_module_v4")
       FOTA=1
       FLASH_SIZE="4096"
 	  EXTRA_CCFLAGS="-DSRPC_WITHOUT_OUT_QUEUE -DSRPC_WITHOUT_IN_QUEUE -DSPROTO_WITHOUT_OUT_BUFFER"
@@ -335,8 +336,8 @@ case $1 in
    echo "              k_rs_module";
    echo "              k_rs_module_ds18b20";
    echo "              k_rs_module_DHT22";
-   echo "              k_rs_module_v2 (wybor czujnika temp)";
    echo "              k_rs_module_v3 (wybor czujnika temp)";
+   echo "              k_rs_module_v4 (wybor czujnika temp, autokalibracja)";
    echo "              k_smoke_module";
    echo "              k_smoke_module_ds18b20";
    echo "              k_smoke_module_DHT22";

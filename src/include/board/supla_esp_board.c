@@ -119,13 +119,13 @@
 
 #include "board/k_rs_module.c"
 
-#elif defined(__BOARD_k_rs_module_v2)
- 
-#include "board/k_rs_module_v2.c"
-
 #elif defined(__BOARD_k_rs_module_v3)
  
 #include "board/k_rs_module_v3.c"
+
+#elif defined(__BOARD_k_rs_module_v4)
+ 
+#include "board/k_rs_module_v4.c"
 
 #elif defined(__BOARD_k_smoke_module) \
       || defined(__BOARD_k_smoke_module_ds18b20)	\

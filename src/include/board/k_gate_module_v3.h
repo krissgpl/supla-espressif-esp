@@ -15,7 +15,7 @@
  
  /*------------------------------------------------------------SUPLA-NICE_V3--SUPLA-NICE_V3-DS18B20--SUPLA-NICE_V3-DHT22-----------------------------------------------------
 
-	CHANNEL 0 - GATE RELAY 2	( gpio 5 )  --FUNCTIONS---|-- CONTROLLINGTHEGATE (DEFAULT)
+	CHANNEL 0 - GATE RELAY 1	( gpio 4 )  --FUNCTIONS---|-- CONTROLLINGTHEGATE (DEFAULT)
 														  |-- CONTROLLINGTHEGATEWAYLOCK					 
 														  |-- CONTROLLINGTHEGARAGEDOOR
 														  |-- CONTROLLINGTHEDOORLOCK													  
@@ -27,18 +27,24 @@
 	CHANNEL 2 - SENSORNO IN 2	( gpio 14 ) 	
 											
 	--------------------------------------------------------------------------------													  
-	CHANNEL 3 - BLOKADA BRAMY (RELAY 1)	( gpio 13 ) --FUNCTIONS---|-- NONE (DEFAULT)
+	CHANNEL 3 - BLOKADA BRAMY (RELAY 2)	( gpio 5 )  --FUNCTIONS---|-- NONE (DEFAULT)
 																  |-- POWERSWITCH	
 																  
 	--------------------------------------------------------------------------------
 	CHANNEL 4 - ACTIONTRIGGER   					--FUNCTIONS---|-- NONE (DEFAULT)
-																  |-- ACTIONTRIGGER  --ACTIONS---|-- CAP_TOGGLE_x1 -- FOR EXECUTE IF CHANNEL 7 HARMONOGRAM IS ON
+																  |-- ACTIONTRIGGER  --ACTIONS---|-- CAP_TOGGLE_x1 -- FOR EXECUTE IF CHANNEL 7 HARMONOGRAM IS ON (GATE)
 																								 |-- CAP_TOGGLE_x2 -- FOR EXECUTE IF CHANNEL 9 (AND 7) LIGHT IS ON
+																								 |-- CAP_TOGGLE_x3 -- FOR EXECUTE IF CHANNEL 7 HARMONOGRAM IS ON (GATE2)
 																								 
 	--------------------------------------------------------------------------------													  
-	CHANNEL 5 - WYJŚCIE 2 (RELAY 3)		 ( gpio 4 ) --FUNCTIONS---|-- NONE (DEFAULT)
-																  |-- POWERSWITCH	
-																  																  
+	CHANNEL 5 - WYJŚCIE 2 OR GATE2 (RELAY 3)( gpio 13 )--FUNCTIONS---|-- NONE (DEFAULT)
+																	 |-- POWERSWITCH
+																	OR (SET IN CONFIG MODE - "Relay 3 Mode")
+													   --FUNCTIONS---|-- NONE (DEFAULT)
+																	 |-- CONTROLLINGTHEGATE (DEFAULT)
+																	 |-- CONTROLLINGTHEGATEWAYLOCK					 
+																	 |-- CONTROLLINGTHEGARAGEDOOR
+																	 |-- CONTROLLINGTHEDOORLOCK																  
 	--------------------------------------------------------------------------------													  
 	CHANNEL 6 - UPDATE INIT		( gpio 20 virtual ) --FUNCTIONS---|-- NONE (DEFAULT)
 																  |-- POWERSWITCH
@@ -71,22 +77,17 @@
 
 #define ESP_HOSTNAME "SUPLA-NICE_V3"
 #define AP_SSID "SUPLA-NICE-V3"
+#define CFGMODE_SSID_LIMIT_MACLEN
 
 #define RELAY_MAX_COUNT		11
-
-#define DS18B20
-#define TEMPERATURE_CHANNEL 10
-
-#define DHTSENSOR
-#define TEMPERATURE_HUMIDITY_CHANNEL 10
 
 #define USE_GPIO16_OUTPUT
 
 #define B_CFG_PORT          0
 #define LED_RED_PORT  		16
-#define B_RELAY1_PORT       13	// blokada bramy
-#define B_RELAY2_PORT       5	// sterowanie brama
-#define B_RELAY3_PORT       4	// wyjscie 2
+#define B_RELAY1_PORT       4	// sterowanie brama
+#define B_RELAY2_PORT       5	// blokada bramy
+#define B_RELAY3_PORT       13	// wyjscie 2
 #define B_SENSOR_PORT1      12
 #define B_SENSOR_PORT2      14
 #define B_UPD_PORT		    20
@@ -102,9 +103,9 @@
 		if ( supla_esp_cfg.StatusLedOff == 0 || supla_esp_cfg.StatusLedOff == 1 ) {	\
 			supla_log(LOG_DEBUG, "STATUS LED OFF ON");	\
 		} else if ( supla_esp_cfg.StatusLedOff == 2 ) {	\
-			char hi = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
-			if (port == LED_RED_PORT) {hi = supla_esp_gpio_output_is_hi(B_RELAY1_PORT);	\
-			} else if (port == B_RELAY1_PORT) supla_esp_gpio_set_led(hi ,1 , 1); }\
+			char hi = supla_esp_gpio_output_is_hi(B_RELAY2_PORT);	\
+			if (port == LED_RED_PORT) {hi = supla_esp_gpio_output_is_hi(B_RELAY2_PORT);	\
+			} else if (port == B_RELAY2_PORT) supla_esp_gpio_set_led(hi ,1 , 1); }\
 		if (port >= 20) {supla_esp_board_gpiooutput_set_hi(port, hi); 	\
 						supla_log(LOG_DEBUG, "PORT 20 MAKRO");	\
 						return;  };	\

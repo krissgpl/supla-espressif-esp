@@ -261,8 +261,7 @@ void MAIN_ICACHE_FLASH user_init(void) {
   supla_esp_devconn_init();
 #endif /*MQTT_SUPPORT_ENABLED*/
 	 
-#if defined TEMP_SELECT
-	
+#ifdef TEMP_SELECT
 	if ( supla_esp_cfg.ThermometerType == 1 ) {
 		supla_ds18b20_init();
 		supla_log(LOG_DEBUG, "DS18B20 INIT" );
@@ -272,19 +271,14 @@ void MAIN_ICACHE_FLASH user_init(void) {
 		supla_dht_init();
 		supla_log(LOG_DEBUG, "DHT22 INIT" );
 	}
-#else
+#endif
 		
-	#ifdef DS18B20
-		if ( supla_esp_cfg.ThermometerType != 3 ) {
-			supla_ds18b20_init();
-			supla_log(LOG_DEBUG, "DS18B20 old INIT" ); }
-	#endif
+#ifdef DS18B20
+  supla_ds18b20_init();
+#endif
 
-	#ifdef DHTSENSOR
-		if ( supla_esp_cfg.ThermometerType != 3 ) {
-			supla_dht_init();
-		supla_log(LOG_DEBUG, "DHT22 old INIT" ); }
-	#endif
+#ifdef DHTSENSOR
+  supla_dht_init();
 #endif
 
 #ifdef SUPLA_PWM_COUNT
@@ -321,8 +315,7 @@ void MAIN_ICACHE_FLASH user_init(void) {
   }
 #endif /*MQTT_SUPPORT_ENABLED*/
 
-#if defined TEMP_SELECT
-	
+#ifdef TEMP_SELECT
 	if ( supla_esp_cfg.ThermometerType == 1 ) {
 		supla_ds18b20_start();
 		supla_log(LOG_DEBUG, "DS18B20 START" );
@@ -332,20 +325,16 @@ void MAIN_ICACHE_FLASH user_init(void) {
 		supla_dht_start();
 		supla_log(LOG_DEBUG, "DHT22 START" );
 	}
-#else
-
-     #ifdef DS18B20
-		if ( supla_esp_cfg.ThermometerType != 3 ) {
-			supla_ds18b20_start();
-			supla_log(LOG_DEBUG, "DS18B20 old START" ); }
-     #endif
-
-	 #ifdef DHTSENSOR
-		if ( supla_esp_cfg.ThermometerType != 3 ) {
-			supla_dht_start();
-			supla_log(LOG_DEBUG, "DHT22 old START" ); }
-	 #endif
 #endif
+
+#ifdef DS18B20
+  supla_ds18b20_start();
+#endif
+
+#ifdef DHTSENSOR
+  supla_dht_start();
+#endif
+
 
 #ifdef ELECTRICITY_METER_COUNT
   supla_esp_em_start();
