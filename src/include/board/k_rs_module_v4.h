@@ -16,8 +16,8 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef K_RS_MODULE_V2_H_
-#define K_RS_MODULE_V2_H_
+#ifndef K_RS_MODULE_V4_H_
+#define K_RS_MODULE_V4_H_
 
 #define STATE_SECTOR_OFFSET 2		// zmiana sektora zapisu
 #define RS_SAVE_STATE_DELAY 500		// zmiana czestotliwosci zapisu
@@ -32,8 +32,8 @@
 #define _ROLLERSHUTTER_SUPPORT
 #define RS_AUTOCALIBRATION_SUPPORTED
 
-#define AP_SSID "ROLETY_V4"
-#define ESP_HOSTNAME "SUPLA-ROLETY_V4"
+#define AP_SSID "ROLETY_AC_V4"
+#define ESP_HOSTNAME "SUPLA-ROLETY_AC_V4"
 #define CFGMODE_SSID_LIMIT_MACLEN
 
 #define TEMP_SELECT

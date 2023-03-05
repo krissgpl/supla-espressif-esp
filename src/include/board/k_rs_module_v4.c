@@ -37,15 +37,15 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffe
 	
 	if ( supla_esp_cfg.ThermometerType == THERM_DS18B20 ) {
 		supla_log(LOG_DEBUG, "if name 1: %i", supla_esp_cfg.ThermometerType);
-		ets_snprintf(buffer, buffer_size, "ROLETY_V4-DS18B20");
+		ets_snprintf(buffer, buffer_size, "ROLETY_AC_V4-DS18B20");
 	}
 	if ( supla_esp_cfg.ThermometerType == THERM_DHT22 ) {
 		supla_log(LOG_DEBUG, "if name 2: %i", supla_esp_cfg.ThermometerType);
-		ets_snprintf(buffer, buffer_size, "ROLETY_V4-DHT22");
+		ets_snprintf(buffer, buffer_size, "ROLETY_AC_V4-DHT22");
 	}
     if ( supla_esp_cfg.ThermometerType == THERM_NONE ) {
 	    supla_log(LOG_DEBUG, "if name 0: %i", supla_esp_cfg.ThermometerType);
-		ets_snprintf(buffer, buffer_size, "ROLETY_V4");
+		ets_snprintf(buffer, buffer_size, "ROLETY_AC_V4");
 	}
 }
 
