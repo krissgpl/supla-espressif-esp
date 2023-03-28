@@ -15,6 +15,49 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+ 
+/*------------------------------------------------------------ROLETY_AC_V4--ROLETY_AC_V4-DS18B20--ROLETY_AC_V4-DHT22-----------------------------------------------------
+
+	CHANNEL 0 - ROLLERSHUTTER	(   RELAY UP - gpio 5  )  		--FUNCTIONS--- CONTROLLINGTHEROLLERSHUTTER (DEFAULT)
+								( RELAY DOWN - gpio 13 )				 
+								(     BTN UP - gpio 14 )
+								(   BTN DOWN - gpio 12 )																		  
+														  
+	--------------------------------------------------------------------------------													  
+												  
+	CHANNEL 1 - UPDATE INIT		( gpio 20 virtual ) --FUNCTIONS---|-- NONE (DEFAULT)
+																  |-- POWERSWITCH
+	--------------------------------------------------------------------------------															  
+	CHANNEL 2 - RS DISABLE		( gpio 21 virtual ) --FUNCTIONS---|-- NONE (DEFAULT)
+																  |-- POWERSWITCH
+	--------------------------------------------------------------------------------															  
+	CHANNEL 3 - RS SENSOR	    ( gpio 4 )			--FUNCTIONS---|-- NONE (DEFAULT) 
+																  |-- SENSORNO	-- DETECT MOTOR ON - FOR AUTOCALIBRATION ROLLERSHUTTER
+	--------------------------------------------------------------------------------															  
+
+	CHANNEL 4 - ACTIONTRIGGER   ( FOR BUTTON UP )	--FUNCTIONS---|-- NONE (DEFAULT)
+																  |-- ACTIONTRIGGER  --ACTIONS---|-- CAP_HOLD
+																								 |-- CAP_SHORT_PRESS
+																								 |-- CAP_SHORT_PRESS_x2 ( FOR RS DISABLE )
+																								 |-- CAP_SHORT_PRESS_x3
+																								 |-- CAP_SHORT_PRESS_x4
+																								 |-- CAP_SHORT_PRESS_x5
+																								 
+
+	--------------------------------------------------------------------------------															  
+
+	CHANNEL 5 - ACTIONTRIGGER   ( FOR BUTTON DOWN )	--FUNCTIONS---|-- NONE (DEFAULT)
+																  |-- ACTIONTRIGGER  --ACTIONS---|-- CAP_HOLD
+																								 |-- CAP_SHORT_PRESS
+																								 |-- CAP_SHORT_PRESS_x2 ( FOR RS DISABLE )
+																								 |-- CAP_SHORT_PRESS_x3
+																								 |-- CAP_SHORT_PRESS_x4
+																								 |-- CAP_SHORT_PRESS_x5
+																								 
+	--------------------------------------------------------------------------------															  
+	CHANNEL 6 - TEMPERATURE ( OPTIONAL )	(gpio 2 )
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #ifndef K_RS_MODULE_V4_H_
 #define K_RS_MODULE_V4_H_
