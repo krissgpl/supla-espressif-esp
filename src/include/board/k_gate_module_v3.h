@@ -144,7 +144,7 @@ void supla_esp_board_gpio_set_hi(int channel, char hi);
 
 char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved);
-/*	
+
 #define BOARD_ON_INPUT_ACTIVE                        \
     supla_esp_board_gpio_on_input_active(input_cfg); \
     return;
@@ -154,5 +154,5 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg);
     supla_esp_board_gpio_on_input_inactive(input_cfg); \
     return;
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
-*/
+
 #endif
