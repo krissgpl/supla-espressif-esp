@@ -594,7 +594,7 @@ void supla_board_input(uint8 in1, uint8 in2) {
 	supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
 	supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
 }
-
+/*
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg) {
 
     supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
@@ -615,7 +615,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
 	if (input_cfg->type == INPUT_TYPE_SENSOR && input_cfg->channel != 255) supla_esp_channel_value_changed(input_cfg->channel, 1);
 	
 }
-
+*/
 void supla_esp_board_gpio_set_hi(int channel, char hi) {
 
 	supla_esp_state.Relay[channel] = hi;
