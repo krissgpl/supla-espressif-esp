@@ -67,7 +67,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.8.52.1"
+#define SUPLA_ESP_SOFTVER "2.8.55.0"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -144,7 +144,7 @@ void supla_esp_board_gpio_set_hi(int channel, char hi);
 
 char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved);
-
+/*
 #define BOARD_ON_INPUT_ACTIVE                        \
     supla_esp_board_gpio_on_input_active(input_cfg); \
     return;
@@ -154,5 +154,5 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg);
     supla_esp_board_gpio_on_input_inactive(input_cfg); \
     return;
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
-
+*/
 #endif
