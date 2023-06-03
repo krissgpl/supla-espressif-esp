@@ -182,7 +182,7 @@ while true; do
 			PARAM=6
 			break
             ;;
-		17
+		17)
             BOARD=k_socket_ds18b20
 			FLASH_SIZE=4096
 			SPI=DIO
