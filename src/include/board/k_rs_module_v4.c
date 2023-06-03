@@ -105,9 +105,11 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 
     supla_relay_cfg[0].gpio_id = B_RELAY1_PORT;
     supla_relay_cfg[0].channel = 0;
+	supla_relay_cfg[0].channel_flags = SUPLA_CHANNEL_FLAG_RS_AUTO_CALIBRATION;
     
     supla_relay_cfg[1].gpio_id = B_RELAY2_PORT;
     supla_relay_cfg[1].channel = 0;
+	supla_relay_cfg[1].channel_flags = SUPLA_CHANNEL_FLAG_RS_AUTO_CALIBRATION;
 
     supla_rs_cfg[0].up = &supla_relay_cfg[0];
     supla_rs_cfg[0].down = &supla_relay_cfg[1];
