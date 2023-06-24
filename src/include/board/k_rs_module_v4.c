@@ -440,8 +440,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg) {
  
 }
 
-void ICACHE_FLASH_ATTR
-supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
+void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
 
 	supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
 

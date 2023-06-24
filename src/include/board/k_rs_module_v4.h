@@ -65,7 +65,7 @@
 #define STATE_SECTOR_OFFSET 2		// zmiana sektora zapisu
 #define RS_SAVE_STATE_DELAY 500		// zmiana czestotliwosci zapisu
 
-#define RETREIVE_CHANNEL_CONFIG 0b111001
+#define RETREIVE_CHANNEL_CONFIG 0b110001
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 #define BOARD_CFG_HTML_TEMPLATE
@@ -131,12 +131,12 @@ supla_esp_board_send_channel_values_with_delay(void* srpc);
 
 #define BOARD_ON_INPUT_ACTIVE                        \
     supla_esp_board_gpio_on_input_active(input_cfg); \
-    return;
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg);
 
 #define BOARD_ON_INPUT_INACTIVE                        \
     supla_esp_board_gpio_on_input_inactive(input_cfg); \
-    return;
+
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
 
 #endif
