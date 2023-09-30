@@ -204,6 +204,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	supla_input_cfg[1].type = INPUT_TYPE_SENSOR;
 	supla_input_cfg[1].gpio_id = B_SENSOR_PORT1;
 	supla_input_cfg[1].channel = 1;
+	supla_input_cfg[1].last_state = INPUT_STATE_ACTIVE;
 	
 	supla_input_cfg[2].type = INPUT_TYPE_SENSOR;
 	supla_input_cfg[2].gpio_id = B_SENSOR_PORT2;
@@ -308,6 +309,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[4].Number = 4;
 	channels[4].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
 	channels[4].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+	channels[4].ActionTriggerCaps = SUPLA_ACTION_CAP_SHORT_PRESS_x1 |
+									SUPLA_ACTION_CAP_SHORT_PRESS_x2 |
+									SUPLA_ACTION_CAP_SHORT_PRESS_x3;
 	channels[4].Default = 0;
 	channels[4].value[0] = 0;
 	
@@ -545,7 +549,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	}
   supla_log(LOG_DEBUG, "Stan Bramy1 = %i", Stan_Bramy1);
   supla_log(LOG_DEBUG, "Stan Bramy2 = %i", Stan_Bramy2);
-	
+  supla_log(LOG_DEBUG, "Input 1 = %i", gpio__input_get(B_SENSOR_PORT1));
+  supla_log(LOG_DEBUG, "Input 2 = %i", gpio__input_get(B_SENSOR_PORT2));
 }
 
 void supla_board_input(uint8 in1, uint8 in2) {
