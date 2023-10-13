@@ -43,7 +43,7 @@ void board_input_timer3_cb(void *timer_arg);
 //uint8 temperature_channel = 10;	// temperature channel set
 
 unsigned int Stan_Bramy1 = 0;	// 0 - zamknieta
-unsigned int Stan_Bramy2 = 0;	// 1 - otwiera sie lub zamyka sie
+unsigned int Stan_Bramy2 = 0;	// 1 - w ruchu
 								// 2 - otwarta
 unsigned int Licznik1 = 0;
 unsigned int Licznik2 = 0;
@@ -120,6 +120,7 @@ void board_input_timer1_cb(void *timer_arg) {
 		
 		if ( High1 >= 7 ) {
 			Stan_Bramy1 = 2;
+			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1);
 			supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
 			supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
 				if ( supla_esp_gpio_output_is_hi(B_BLOKADA) == 1 ) {
@@ -135,6 +136,7 @@ void board_input_timer1_cb(void *timer_arg) {
 		
 		if ( Low1 >= 7 ) {
 			Stan_Bramy1 = 0;
+			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_SHORT_PRESS_x4);
 			Licznik1 = 0;
 			Low1=0;
 			High1=0;
@@ -162,6 +164,7 @@ void board_input_timer2_cb(void *timer_arg) {
 		
 		if ( High2 >= 7 ) {
 			Stan_Bramy2 = 2;
+			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x4);
 			supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
 			supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
 			Low2=0;
@@ -174,6 +177,7 @@ void board_input_timer2_cb(void *timer_arg) {
 		
 		if ( Low2 >= 7 ) {
 			Stan_Bramy2 = 0;
+			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x2);
 			Licznik2 = 0;
 			Low2=0;
 			High2=0;
@@ -311,7 +315,13 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[4].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
 	channels[4].ActionTriggerCaps = SUPLA_ACTION_CAP_SHORT_PRESS_x1 |
 									SUPLA_ACTION_CAP_SHORT_PRESS_x2 |
-									SUPLA_ACTION_CAP_SHORT_PRESS_x3;
+									SUPLA_ACTION_CAP_SHORT_PRESS_x3 |
+									SUPLA_ACTION_CAP_SHORT_PRESS_x4 |
+									SUPLA_ACTION_CAP_SHORT_PRESS_x5 |
+									SUPLA_ACTION_CAP_TOGGLE_x1 |
+									SUPLA_ACTION_CAP_TOGGLE_x2 |
+									SUPLA_ACTION_CAP_TOGGLE_x3 |
+									SUPLA_ACTION_CAP_TOGGLE_x4;
 	channels[4].Default = 0;
 	channels[4].value[0] = 0;
 	
@@ -564,6 +574,7 @@ void supla_board_input(uint8 in1, uint8 in2) {
 	supla_log(LOG_DEBUG, "Licznik2 = %i", Licznik2);
 	if ( in1 == 1 && Stan_Bramy1 != 1) {
 			Stan_Bramy1 = 1;
+			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_SHORT_PRESS_x5);
 			//supla_log(LOG_DEBUG, "in1=1, board_input_timer" );
 			os_timer_disarm(&board_input_timer1);
 			os_timer_setfn(&board_input_timer1, (os_timer_func_t *)board_input_timer1_cb, NULL);
@@ -571,6 +582,7 @@ void supla_board_input(uint8 in1, uint8 in2) {
 			
 	if ( in2 == 1 && Stan_Bramy2 != 1 && supla_esp_cfg.UpsideDown == 1 ) {
 			Stan_Bramy2 = 1;
+			supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x3);
 			//supla_log(LOG_DEBUG, "in2=1, board_input_timer" );
 			os_timer_disarm(&board_input_timer3);
 			os_timer_setfn(&board_input_timer3, (os_timer_func_t *)board_input_timer3_cb, NULL);

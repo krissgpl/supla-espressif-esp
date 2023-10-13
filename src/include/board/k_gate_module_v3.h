@@ -32,9 +32,15 @@
 																  
 	--------------------------------------------------------------------------------
 	CHANNEL 4 - ACTIONTRIGGER   					--FUNCTIONS---|-- NONE (DEFAULT)
-																  |-- ACTIONTRIGGER  --ACTIONS---|-- CAP_TOGGLE_x1 -- FOR EXECUTE IF CHANNEL 7 HARMONOGRAM IS ON (GATE)
-																								 |-- CAP_TOGGLE_x2 -- FOR EXECUTE IF CHANNEL 9 (AND 7) LIGHT IS ON
-																								 |-- CAP_TOGGLE_x3 -- FOR EXECUTE IF CHANNEL 7 HARMONOGRAM IS ON (GATE2)
+																  |-- ACTIONTRIGGER  --ACTIONS---|-- CAP_SHORT_PRESS_x1 -- FOR EXECUTE IF CHANNEL 7 HARMONOGRAM IS ON (GATE)
+																								 |-- CAP_SHORT_PRESS_x2 -- FOR EXECUTE IF CHANNEL 9 (AND 7) LIGHT IS ON
+																								 |-- CAP_SHORT_PRESS_x3 -- FOR EXECUTE IF CHANNEL 7 HARMONOGRAM IS ON (GATE2)
+																								 |-- CAP_SHORT_PRESS_x4 -- GATE 1 IS CLOSE
+																								 |-- CAP_SHORT_PRESS_x5 -- GATE 1 IN MOOVE
+																								 |-- CAP_TOGGLE_x1 -- GATE 1 IS OPEN
+																								 |-- CAP_TOGGLE_x2 -- GATE 2 IS CLOSE
+																								 |-- CAP_TOGGLE_x3 -- GATE 2 IN MOOVE
+																								 |-- CAP_TOGGLE_x4 -- GATE 2 IS OPEN
 																								 
 	--------------------------------------------------------------------------------													  
 	CHANNEL 5 - WYJŚCIE 2 OR GATE2 (RELAY 3)( gpio 13 )--FUNCTIONS---|-- NONE (DEFAULT)
@@ -44,19 +50,24 @@
 																	 |-- CONTROLLINGTHEGATE (DEFAULT)
 																	 |-- CONTROLLINGTHEGATEWAYLOCK					 
 																	 |-- CONTROLLINGTHEGARAGEDOOR
-																	 |-- CONTROLLINGTHEDOORLOCK																  
+																	 |-- CONTROLLINGTHEDOORLOCK		
+																	 
 	--------------------------------------------------------------------------------													  
 	CHANNEL 6 - UPDATE INIT		( gpio 20 virtual ) --FUNCTIONS---|-- NONE (DEFAULT)
 																  |-- POWERSWITCH
+																  
 	--------------------------------------------------------------------------------															  
 	CHANNEL 7 - HARMONOGRAM		( gpio 21 virtual ) --FUNCTIONS---|-- NONE (DEFAULT)
 																  |-- POWERSWITCH
+																  
 	--------------------------------------------------------------------------------															  
 	CHANNEL 8 - BLOKADA BRAMY	( gpio 22 virtual ) --FUNCTIONS---|-- NONE (DEFAULT) 
 																  |-- POWERSWITCH	-- IT OPENS THE GATE AND AFTER IS OPENED THEN SET CHANNEL 3 ON ( INPUT STOP IN NICE )
+																  
 	--------------------------------------------------------------------------------															  
 	CHANNEL 9 - LIGHT			( gpio 23 virtual ) --FUNCTIONS---|-- NONE (DEFAULT)
 																  |-- POWERSWITCH	-- IS CONTROLLED FROM SWITCH MODULE WHEN IS ON THEN SET LIGHT ON
+																  
 	--------------------------------------------------------------------------------															  
 	CHANNEL 10 - TEMPERATURE ( OPTIONAL )	(gpio 2 )
 
@@ -67,7 +78,7 @@
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 
-#define SUPLA_ESP_SOFTVER "2.8.55.1"
+#define SUPLA_ESP_SOFTVER "2.8.55.2"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
