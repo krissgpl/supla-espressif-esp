@@ -591,10 +591,10 @@ void supla_board_input(uint8 in1, uint8 in2) {
 	if ( in1 == 1 && Licznik1 == 1) {
 			if ( supla_esp_state.Relay[7] == 1) {
 				if ( supla_esp_state.Relay[9] == 0) {
-					supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x1); 
+					supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_SHORT_PRESS_x1); 
 					supla_log(LOG_DEBUG, "supla_esp_board send AT 1 (gate)"); 
 				} else {
-					supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x2); 
+					supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_SHORT_PRESS_x2); 
 					supla_log(LOG_DEBUG, "supla_esp_board send AT 2 (gate)"); 
 					os_timer_disarm(&value_timer2);
 					os_timer_setfn(&value_timer2, (os_timer_func_t *)supla_esp_baord_value_timer2_cb, NULL);
@@ -606,7 +606,7 @@ void supla_board_input(uint8 in1, uint8 in2) {
 	if ( in1 == 0 && Stan_Bramy1 == 2 ) Stan_Bramy1 = 0;
 	if ( in2 == 0 && Stan_Bramy2 == 2 ) Stan_Bramy2 = 0;
 
-	if ( in2 == 1 && Licznik2 == 1 && supla_esp_cfg.UpsideDown == 1 ) supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_TOGGLE_x3);
+	if ( in2 == 1 && Licznik2 == 1 && supla_esp_cfg.UpsideDown == 1 ) supla_esp_devconn_send_action_trigger(4, SUPLA_ACTION_CAP_SHORT_PRESS_x3);
 	
 	supla_log(LOG_DEBUG, "Stan_Bramy1 = %i", Stan_Bramy1);
 	supla_log(LOG_DEBUG, "Stan_Bramy2 = %i", Stan_Bramy2);
