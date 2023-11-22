@@ -19,7 +19,7 @@
 
 #include "public_key_in_c_code"
  
-#include "k_dimmer.h"
+#include "k_dimmer_din.h"
 #include "supla_esp_devconn.h"
 #include "supla_temp.h"
 #include "supla_esp.h"
