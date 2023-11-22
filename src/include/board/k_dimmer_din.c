@@ -28,7 +28,6 @@
 int HRM_channel;
 int UPD_channel;
 int BLK_channel;
-int BL1_channel;
 
 uint8 dimmer_brightness[2] = {0, 0};
 
@@ -76,7 +75,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffe
 	    supla_log(LOG_DEBUG, "if name 0: %i", supla_esp_cfg.ThermometerType);
 		ets_snprintf(buffer, buffer_size, "STAIRCASE_DIMMER_DIN");
 	}
-	ets_snprintf(buffer, buffer_size, "STAIRCASE-DIMMER-DIN");
 }
 
 
@@ -532,7 +530,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		HRM_channel = 3;
 		BLK_channel = 4;
 		UPD_channel = 5;
-		BL1_channel = 6;
 				
 if ( port == B_UPD_PORT ) {	
 

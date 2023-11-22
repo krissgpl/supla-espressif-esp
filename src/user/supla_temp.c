@@ -164,6 +164,7 @@ supla_ds18b20_read_temperatureB(void *timer_arg) {
     	memset(value, 0, sizeof(SUPLA_CHANNELVALUE_SIZE));
     	supla_get_temperature(value);
     	supla_esp_channel_value__changed(temp_channel, value);
+		supla_log(LOG_DEBUG, "ds18b20 temp_channel : %i, value : %i", temp_channel, value);
     };
 
 }

@@ -103,7 +103,7 @@
 							supla_dimmer_smooth(!gpio__input_get(B_SENSOR_PORT1)); }
 							
 							
-#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 6 ) {	\
+#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 5 ) {	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
 										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
