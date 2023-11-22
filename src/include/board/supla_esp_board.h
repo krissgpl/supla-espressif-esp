@@ -110,6 +110,10 @@
 
 #include "board/k_dimmer.h"
 
+#elif defined(__BOARD_k_dimmer_din)
+
+#include "board/k_dimmer_din.h"
+
 #elif defined(__BOARD_k_gniazdko_neo)
 
 #include "board/k_gniazdko_neo.h"

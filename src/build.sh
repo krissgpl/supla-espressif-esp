@@ -46,6 +46,12 @@ case $1 in
      DEP_LIBS="-lpwm"
      NOSSL=1
    ;;
+   "k_dimmer_din")
+	 FLASH_SIZE="4096"
+	 FOTA=1
+     DEP_LIBS="-lpwm"
+     NOSSL=1
+   ;;
    "k_gniazdko_neo")
       FOTA=1
    ;;
