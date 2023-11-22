@@ -12,34 +12,35 @@ MENU="Wybierz plytke:"
 OPTIONS=(1 "k_gate_module"
 		 2 "k_gate_module_v3"
 		 3 "k_dimmer"
-		 4 "k_gniazdko_neo"
-		 5 "k_rs_module_v3"
-		 6 "k_rs_module_v4"
-		 7 "k_socket_v2"
-		 8 "k_socket_dual_v2"
-		 9 "k_switch_dual"
-		 10 "k_socket_SSR"
-		 11 "k_yunschan"
-		 12 "k_socket_01"
-		 13 "k_smoke_module"
-		 14 "k_smoke_module_ds18b20"
-		 15 "k_smoke_module_DHT22"
-		 16 "k_socket"
-		 17 "k_socket_ds18b20"
-		 18 "k_socket_DHT22"
-		 19 "k_socket_dual"
-		 20 "k_socket_dual_ds18b20"
-		 21 "k_socket_dual_DHT22"
-		 22 "k_sonoff"
-		 23 "k_sonoff_ds18b20"
-		 24 "k_sonoff_DHT22"
-		 25 "k_sonoff_touch"
-		 26 "k_sonoff_touch_dual"
-		 27 "k_sonoff_touch_triple"
-		 28 "k_sonoff_pow_R2"
-		 29 "k_impulse_counter"
-		 30 "k_impulse_counter_3"
-		 31 "k_versa_module")
+		 4 "k_dimmer"
+		 5 "k_gniazdko_neo"
+		 6 "k_rs_module_v3"
+		 7 "k_rs_module_v4"
+		 8 "k_socket_v2"
+		 9 "k_socket_dual_v2"
+		 10 "k_switch_dual"
+		 11 "k_socket_SSR"
+		 12 "k_yunschan"
+		 13 "k_socket_01"
+		 14 "k_smoke_module"
+		 15 "k_smoke_module_ds18b20"
+		 16 "k_smoke_module_DHT22"
+		 17 "k_socket"
+		 18 "k_socket_ds18b20"
+		 19 "k_socket_DHT22"
+		 20 "k_socket_dual"
+		 21 "k_socket_dual_ds18b20"
+		 22 "k_socket_dual_DHT22"
+		 23 "k_sonoff"
+		 24 "k_sonoff_ds18b20"
+		 25 "k_sonoff_DHT22"
+		 26 "k_sonoff_touch"
+		 27 "k_sonoff_touch_dual"
+		 28 "k_sonoff_touch_triple"
+		 29 "k_sonoff_pow_R2"
+		 30 "k_impulse_counter"
+		 31 "k_impulse_counter_3"
+		 32 "k_versa_module")
 
 rm -f /CProjects/supla-espressif-esp/firmware/result.txt
 rm -f /CProjects/supla-espressif-esp/firmware/result2.txt
@@ -92,195 +93,203 @@ while true; do
 			break
             ;;
 		4)
+            BOARD=k_dimmer_din
+			FLASH_SIZE=4096
+			NOSSL=1
+			SPI=DIO
+			PARAM=6
+			break
+            ;;
+		5)
             BOARD=k_gniazdko_neo
 			FLASH_SIZE=1024
 			SPI=DIO
 			PARAM=2
 			break
             ;;
-		5)
+		6)
             BOARD=k_rs_module_v3
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		6)
+		7)
             BOARD=k_rs_module_v4
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		7)
+		8)
             BOARD=k_socket_v2
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		8)
+		9)
             BOARD=k_socket_dual_v2
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		9)
+		10)
             BOARD=k_switch_dual
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		10)
+		11)
             BOARD=k_socket_SSR
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		11)
+		12)
             BOARD=k_yunschan
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		12)
+		13)
             BOARD=k_socket_01
 			FLASH_SIZE=1024
 			SPI=DIO
 			PARAM=2
 			break
             ;;
-		13)
+		14)
             BOARD=k_smoke_module
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		14)
+		15)
             BOARD=k_smoke_module_ds18b20
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		15)
+		16)
             BOARD=k_smoke_module_DHT22
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		16)
+		17)
             BOARD=k_socket
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		17)
+		18)
             BOARD=k_socket_ds18b20
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		18)
+		19)
             BOARD=k_socket_DHT22
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		19)
+		20)
             BOARD=k_socket_dual
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		20)
+		21)
             BOARD=k_socket_dual_ds18b20
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		21)
+		22)
             BOARD=k_socket_dual_DHT22
 			FLASH_SIZE=4096
 			SPI=DIO
 			PARAM=6
 			break
             ;;
-		22)
+		23)
             BOARD=k_sonoff
 			FLASH_SIZE=1024
 			SPI=DIO
 			PARAM=2
 			break
             ;;
-		23)
+		24)
             BOARD=k_sonoff_ds18b20
 			FLASH_SIZE=1024
 			SPI=DIO
 			PARAM=2
 			break
             ;;
-		24)
+		25)
             BOARD=k_sonoff_DHT22
 			FLASH_SIZE=1024
 			SPI=DIO
 			PARAM=2
 			break
             ;;
-		25)
+		26)
             BOARD=k_sonoff_touch
 			FLASH_SIZE=1024
 			SPI=DOUT
 			PARAM=2
 			break
             ;;
-		26)
+		27)
             BOARD=k_sonoff_touch_dual
 			FLASH_SIZE=1024
 			SPI=DOUT
 			PARAM=2
 			break
             ;;
-		27)
+		28)
             BOARD=k_sonoff_touch_triple
 			FLASH_SIZE=1024
 			SPI=DOUT
 			PARAM=2
 			break
             ;;
-		28)
+		29)
             BOARD=k_sonoff_pow_R2
 			FLASH_SIZE=2048
 			SPI=DIO
 			PARAM=5
 			break
             ;;
-		29)
+		30)
             BOARD=k_impulse_counter
 			FLASH_SIZE=2048
 			SPI=DIO
 			PARAM=5
 			break
             ;;
-		30)
+		31)
             BOARD=k_impulse_counter_3
 			FLASH_SIZE=2048
 			SPI=DIO
 			PARAM=5
 			break
             ;;
-		31)
+		32)
             BOARD=k_versa_module
 			FLASH_SIZE=4096
 			SPI=DIO
