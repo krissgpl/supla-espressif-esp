@@ -129,8 +129,10 @@ void ICACHE_FLASH_ATTR supla_get_temperature(char value[SUPLA_CHANNELVALUE_SIZE]
 
 void ICACHE_FLASH_ATTR
 supla_ds18b20_read_temperatureB(void *timer_arg) {
-	
+
+#ifdef TEMP_DEBUG
 	supla_log(LOG_DEBUG, "supla_ds18b20_read_temperatureB timer");
+#endif	
 	os_timer_disarm(&supla_ds18b20_timer2);
 
 	supla_ds18b20_reset();
@@ -165,7 +167,9 @@ supla_ds18b20_read_temperatureB(void *timer_arg) {
     	memset(value, 0, sizeof(SUPLA_CHANNELVALUE_SIZE));
     	supla_get_temperature(value);
     	supla_esp_channel_value__changed(temp_channel, value);
+#ifdef TEMP_DEBUG
 		supla_log(LOG_DEBUG, "ds18b20 temp_channel : %i, value : %i", temp_channel, value);
+#endif
     };
 
 }
@@ -173,11 +177,16 @@ supla_ds18b20_read_temperatureB(void *timer_arg) {
 void ICACHE_FLASH_ATTR
 supla_ds18b20_read_temperatureA(void *timer_arg) {
 	
+#ifdef TEMP_DEBUG	
 	supla_log(LOG_DEBUG, "supla_ds18b20_read_temperatureA timer");
+#endif
 	supla_ds18b20_reset();
 
 	if ( SUPLA_DS_MODEL == SUPLA_DS_MODEL_UNKNOWN ) {
 
+#ifdef TEMP_DEBUG
+		supla_log(LOG_DEBUG, "SUPLA_DS_MODEL == SUPLA_DS_MODEL_UNKNOWN");
+#endif
 		uint8_t data = 0;
 
 		supla_ds18b20_write(0x33, 1);
@@ -186,18 +195,30 @@ supla_ds18b20_read_temperatureA(void *timer_arg) {
 	    if ( data == 0x28 ) {
 	    	supla_ds18b20_divider = 16.0;
 	    	SUPLA_DS_MODEL = SUPLA_DS_MODEL_18B20;
+#ifdef TEMP_DEBUG
+			supla_log(LOG_DEBUG, "SUPLA_DS_MODEL = SUPLA_DS_MODEL_18B20");
+#endif
 
 	    } else if ( data == 0x10 ) {
 	    	supla_ds18b20_divider = 2.0;
 	    	SUPLA_DS_MODEL = SUPLA_DS_MODEL_1820;
+#ifdef TEMP_DEBUG
+			supla_log(LOG_DEBUG, "SUPLA_DS_MODEL = SUPLA_DS_MODEL_1820");
+#endif
 	    }
 
 
 	    if ( SUPLA_DS_MODEL != SUPLA_DS_MODEL_UNKNOWN )
 	    	supla_ds18b20_read_temperatureA(NULL);
+#ifdef TEMP_DEBUG
+			supla_log(LOG_DEBUG, "SUPLA_DS_MODEL != SUPLA_DS_MODEL_UNKNOWN");
+#endif
 
 	} else {
 
+#ifdef TEMP_DEBUG		
+		supla_log(LOG_DEBUG, "else SUPLA_DS_MODEL");
+#endif
 		supla_ds18b20_write(0xcc,1);
 	    supla_ds18b20_write(0x44,1);
 
@@ -212,7 +233,9 @@ supla_ds18b20_read_temperatureA(void *timer_arg) {
 void ICACHE_FLASH_ATTR supla_ds18b20_start(void)
 {
 	
+#ifdef TEMP_DEBUG	
 	supla_log(LOG_DEBUG, "supla_ds18b20_start");
+#endif
 	supla_ds18b20_last_temp = -275;
 
 	os_timer_disarm(&supla_ds18b20_timer1);

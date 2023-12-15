@@ -71,6 +71,7 @@
 #define PWM_0_OUT_IO_FUNC  FUNC_GPIO13
 
 #define TEMP_SELECT
+//#define TEMP_DEBUG
 
 #define B_CFG_PORT         0
 #define B_SENSOR_PORT1     12
