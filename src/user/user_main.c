@@ -39,6 +39,10 @@
 #include "supla_esp_wifi.h"
 #include "uptime.h"
 
+#ifdef TEMP_SELECT
+#include "supla_temp.h"
+#endif
+
 #ifdef MQTT_SUPPORT_ENABLED
 #include "supla_esp_mqtt.h"
 #endif
