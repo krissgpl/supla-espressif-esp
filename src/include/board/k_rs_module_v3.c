@@ -453,5 +453,6 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		supla_esp_channel_value_changed(DIS_CH, supla_esp_state.Relay[DIS_CH]);
 		supla_esp_cfg_save(&supla_esp_cfg);
 		supla_esp_channel_value_changed(DIS_CH, hi);
-	}; */
+	}; 
 }
+*/
