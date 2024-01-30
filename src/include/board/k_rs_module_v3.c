@@ -22,7 +22,7 @@
 
 #include "supla_ds18b20.h"
 #include "supla_dht.h"
-
+/*
 ETSTimer value_timer1;
 ETSTimer Led_ON;
 ETSTimer Led_OFF;
@@ -31,7 +31,7 @@ ETSTimer Led_OFF2;
 
 int UPD_channel;
 int DIS_CH;
-
+*/
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
 	supla_log(LOG_DEBUG, "Termometr: %i", supla_esp_cfg.ThermometerType);
@@ -52,7 +52,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffe
 		ets_snprintf(buffer, buffer_size, "ROLETY_V3");
 	}
 }
-
+/*
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {
 	
 	supla_log(LOG_DEBUG, "TIMER update - restart");
@@ -73,7 +73,7 @@ void supla_esp_baord_Led_OFF_cb(void *timer_arg) {
 	supla_esp_gpio_set_hi(LED_RED_PORT, 0);
 	
 }
-
+*/
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 				
 	supla_input_cfg[0].type = INPUT_TYPE_BTN_MONOSTABLE;
@@ -113,14 +113,14 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
     supla_rs_cfg[0].down = &supla_relay_cfg[1];
 
 	//----------------------------------------
-	
+/*	
     supla_relay_cfg[2].gpio_id = B_UPD_PORT;	// update init channel
     supla_relay_cfg[2].channel = 1;
 	
 	supla_relay_cfg[3].gpio_id = B_RS_DIS;	// rel1 dis channel
 	supla_relay_cfg[3].flags = RELAY_FLAG_RESTORE_FORCE | RELAY_FLAG_VIRTUAL_GPIO;
 	supla_relay_cfg[3].channel = 2;
-	
+*/	
 	//----------------------------------------
 	
 	  PIN_FUNC_SELECT(PERIPHS_IO_MUX_SD_DATA3_U, FUNC_GPIO10); //ustawienie funkcji GPIO10
@@ -155,13 +155,13 @@ void ICACHE_FLASH_ATTR
 	
    if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 	
-    *channel_count = 6;
-	chnl = 4;
+    *channel_count = 4;
+	chnl = 2;
     }
    else {
 
-    *channel_count = 5;
-	chnl = 3;
+    *channel_count = 3;
+	chnl = 1;
     }
 
 	channels[0].Number = 0;
@@ -170,7 +170,7 @@ void ICACHE_FLASH_ATTR
 	channels[0].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[0].Default = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER;
 	channels[0].value[0] = supla_esp_gpio_rs_get_current_position(&supla_rs_cfg[0]);
-	
+/*	
 	channels[1].Number = 1;
 	channels[1].Type = SUPLA_CHANNELTYPE_RELAY;
 	channels[1].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
@@ -184,23 +184,23 @@ void ICACHE_FLASH_ATTR
 	channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[2].Default = 0;
 	channels[2].value[0] = supla_esp_gpio_relay_on(B_RS_DIS);
-
+*/
    if( supla_esp_cfg.ThermometerType == 1 ) {
-    channels[3].Number = 3;
-	channels[3].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
-	channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[3].FuncList = 0;
-	channels[3].Default = 0;
-	supla_get_temperature(channels[3].value);
+    channels[1].Number = 1;
+	channels[1].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
+	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[1].FuncList = 0;
+	channels[1].Default = 0;
+	supla_get_temperature(channels[1].value);
    }
 
-   if( supla_esp_cfg.ThermometerType == 2 ) {
-	channels[3].Number = 3;
-	channels[3].Type = SUPLA_CHANNELTYPE_DHT22;
-	channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[3].FuncList = 0;
-	channels[3].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
-	supla_get_temp_and_humidity(channels[3].value);
+   if( supla_esp_cfg.ThermometerType == 1 ) {
+	channels[1].Number = 1;
+	channels[1].Type = SUPLA_CHANNELTYPE_DHT22;
+	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[1].FuncList = 0;
+	channels[1].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+	supla_get_temp_and_humidity(channels[1].value);
    }
    
     channels[chnl].Number = chnl;
@@ -226,8 +226,8 @@ void ICACHE_FLASH_ATTR
 void ICACHE_FLASH_ATTR
 	supla_esp_board_send_channel_values_with_delay(void *srpc) {
 		
-		supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_UPD_PORT));
-		supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_RS_DIS));
+	//	supla_esp_channel_value_changed(1, supla_esp_gpio_relay_on(B_UPD_PORT));
+	//	supla_esp_channel_value_changed(2, supla_esp_gpio_relay_on(B_RS_DIS));
 }
 
 char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
@@ -371,7 +371,7 @@ char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 
     return buffer;
 }
-
+/*
 void GPIO_ICACHE_FLASH supla_block_channel(void) {
 
 	supla_log(LOG_DEBUG, "Blokada board LED void !!!");
@@ -453,5 +453,5 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(uint8 port, uint8 hi) {
 		supla_esp_channel_value_changed(DIS_CH, supla_esp_state.Relay[DIS_CH]);
 		supla_esp_cfg_save(&supla_esp_cfg);
 		supla_esp_channel_value_changed(DIS_CH, hi);
-	};
+	}; */
 }
