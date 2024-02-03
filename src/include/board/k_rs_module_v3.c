@@ -86,7 +86,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 											SUPLA_ACTION_CAP_SHORT_PRESS_x4 |
 											SUPLA_ACTION_CAP_SHORT_PRESS_x5;
     supla_input_cfg[0].relay_gpio_id = B_RELAY1_PORT;
-	supla_input_cfg[0].channel = 3;
+	supla_input_cfg[0].channel = 1;
 
 	supla_input_cfg[1].type = INPUT_TYPE_BTN_MONOSTABLE;
 	supla_input_cfg[1].gpio_id = B_BTN2_PORT;
@@ -98,7 +98,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 											SUPLA_ACTION_CAP_SHORT_PRESS_x4 |
 											SUPLA_ACTION_CAP_SHORT_PRESS_x5;
 	supla_input_cfg[1].relay_gpio_id = B_RELAY2_PORT;
-	supla_input_cfg[1].channel = 4;
+	supla_input_cfg[1].channel = 2;
 
 	// ---------------------------------------
 	// ---------------------------------------
@@ -156,12 +156,12 @@ void ICACHE_FLASH_ATTR
    if( supla_esp_cfg.ThermometerType == 1 || supla_esp_cfg.ThermometerType == 2 ) {
 	
     *channel_count = 4;
-	chnl = 2;
+	//chnl = 2;
     }
    else {
 
     *channel_count = 3;
-	chnl = 1;
+	//chnl = 1;
     }
 
 	channels[0].Number = 0;
@@ -184,43 +184,42 @@ void ICACHE_FLASH_ATTR
 	channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
 	channels[2].Default = 0;
 	channels[2].value[0] = supla_esp_gpio_relay_on(B_RS_DIS);
-*/
-   if( supla_esp_cfg.ThermometerType == 1 ) {
+*/ 
     channels[1].Number = 1;
-	channels[1].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
+	channels[1].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
+	channels[1].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+	channels[1].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+	channels[1].ActionTriggerCaps = supla_input_cfg[0].action_trigger_cap;
 	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[1].FuncList = 0;
-	channels[1].Default = 0;
-	supla_get_temperature(channels[1].value);
+	channels[1].actionTriggerProperties.relatedChannelNumber = 1;
+	channels[1].actionTriggerProperties.disablesLocalOperation = SUPLA_ACTION_CAP_SHORT_PRESS_x1;
+   
+	channels[2].Number = 2;
+	channels[2].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
+	channels[2].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+	channels[2].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
+	channels[2].ActionTriggerCaps = supla_input_cfg[1].action_trigger_cap;
+	channels[2].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[2].actionTriggerProperties.relatedChannelNumber = 1;
+	channels[2].actionTriggerProperties.disablesLocalOperation = SUPLA_ACTION_CAP_SHORT_PRESS_x1;
+   
+   if( supla_esp_cfg.ThermometerType == 1 ) {
+    channels[3].Number = 3;
+	channels[3].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
+	channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[3].FuncList = 0;
+	channels[3].Default = 0;
+	supla_get_temperature(channels[3].value);
    }
 
    if( supla_esp_cfg.ThermometerType == 1 ) {
-	channels[1].Number = 1;
-	channels[1].Type = SUPLA_CHANNELTYPE_DHT22;
-	channels[1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[1].FuncList = 0;
-	channels[1].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
-	supla_get_temp_and_humidity(channels[1].value);
+	channels[3].Number = 3;
+	channels[3].Type = SUPLA_CHANNELTYPE_DHT22;
+	channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[3].FuncList = 0;
+	channels[3].Default = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+	supla_get_temp_and_humidity(channels[3].value);
    }
-   
-    channels[chnl].Number = chnl;
-	channels[chnl].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
-	channels[chnl].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
-	channels[chnl].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
-	channels[chnl].ActionTriggerCaps = supla_input_cfg[0].action_trigger_cap;
-	channels[chnl].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[chnl].actionTriggerProperties.relatedChannelNumber = 1;
-	channels[chnl].actionTriggerProperties.disablesLocalOperation = SUPLA_ACTION_CAP_SHORT_PRESS_x1;
-   
-	channels[chnl+1].Number = chnl+1;
-	channels[chnl+1].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
-	channels[chnl+1].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
-	channels[chnl+1].Default = SUPLA_CHANNELFNC_ACTIONTRIGGER;
-	channels[chnl+1].ActionTriggerCaps = supla_input_cfg[1].action_trigger_cap;
-	channels[chnl+1].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
-	channels[chnl+1].actionTriggerProperties.relatedChannelNumber = 1;
-	channels[chnl+1].actionTriggerProperties.disablesLocalOperation = SUPLA_ACTION_CAP_SHORT_PRESS_x1;
-   
 }
 
 void ICACHE_FLASH_ATTR
