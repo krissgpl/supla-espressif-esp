@@ -19,7 +19,7 @@
 #ifndef K_RS_MODULE_V3_H_
 #define K_RS_MODULE_V3_H_
 
-#define STATE_SECTOR_OFFSET 2		// zmiana sektora zapisu
+#define STATE_SECTOR_OFFSET 3		// zmiana sektora zapisu
 #define RS_SAVE_STATE_DELAY 500		// zmiana czestotliwosci zapisu
 
 #define RETREIVE_CHANNEL_CONFIG 0b1110
