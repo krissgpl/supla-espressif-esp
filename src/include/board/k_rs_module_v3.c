@@ -34,10 +34,6 @@ int DIS_CH;
 */
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
-	supla_log(LOG_DEBUG, "Termometr: %i", supla_esp_cfg.ThermometerType);
-   if ( supla_esp_cfg.ThermometerType == THERM_DS18B20 || supla_esp_cfg.ThermometerType == THERM_DHT22 ) {
-	
-	supla_log(LOG_DEBUG, "if name 1 i 2: %i", supla_esp_cfg.ThermometerType);
 	if ( supla_esp_cfg.ThermometerType == THERM_DS18B20 ) {
 		supla_log(LOG_DEBUG, "if name 1: %i", supla_esp_cfg.ThermometerType);
 		ets_snprintf(buffer, buffer_size, "ROLETY_V3-DS18B20");
@@ -46,9 +42,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffe
 		supla_log(LOG_DEBUG, "if name 2: %i", supla_esp_cfg.ThermometerType);
 		ets_snprintf(buffer, buffer_size, "ROLETY_V3-DHT22");
 	}
-   }
-   else {
-	   supla_log(LOG_DEBUG, "else if name: %i", supla_esp_cfg.ThermometerType);
+    if ( supla_esp_cfg.ThermometerType == THERM_NONE ) {
+	   supla_log(LOG_DEBUG, "if name 3: %i", supla_esp_cfg.ThermometerType);
 		ets_snprintf(buffer, buffer_size, "ROLETY_V3");
 	}
 }
@@ -203,7 +198,7 @@ void ICACHE_FLASH_ATTR
 	channels[2].actionTriggerProperties.relatedChannelNumber = 1;
 	channels[2].actionTriggerProperties.disablesLocalOperation = SUPLA_ACTION_CAP_SHORT_PRESS_x1;
    
-   if( supla_esp_cfg.ThermometerType == 1 ) {
+   if( supla_esp_cfg.ThermometerType == THERM_DS18B20 ) {
     channels[3].Number = 3;
 	channels[3].Type = SUPLA_CHANNELTYPE_THERMOMETERDS18B20;
 	channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
@@ -212,7 +207,7 @@ void ICACHE_FLASH_ATTR
 	supla_get_temperature(channels[3].value);
    }
 
-   if( supla_esp_cfg.ThermometerType == 1 ) {
+   if( supla_esp_cfg.ThermometerType == THERM_DHT22 ) {
 	channels[3].Number = 3;
 	channels[3].Type = SUPLA_CHANNELTYPE_DHT22;
 	channels[3].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;

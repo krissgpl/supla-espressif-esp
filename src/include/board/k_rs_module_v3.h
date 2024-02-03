@@ -22,7 +22,7 @@
 #define STATE_SECTOR_OFFSET 3		// zmiana sektora zapisu
 #define RS_SAVE_STATE_DELAY 500		// zmiana czestotliwosci zapisu
 
-#define RETREIVE_CHANNEL_CONFIG 0b1110
+#define RETREIVE_CHANNEL_CONFIG 0b110
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
 #define BOARD_CFG_HTML_TEMPLATE
