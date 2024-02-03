@@ -276,7 +276,7 @@ void MAIN_ICACHE_FLASH user_init(void) {
 		supla_log(LOG_DEBUG, "DHT22 INIT" );
 	}
 #endif
-		
+/*		
 #ifdef DS18B20
   supla_ds18b20_init();
 #endif
@@ -284,7 +284,7 @@ void MAIN_ICACHE_FLASH user_init(void) {
 #ifdef DHTSENSOR
   supla_dht_init();
 #endif
-
+*/
 #ifdef SUPLA_PWM_COUNT
   supla_esp_pwm_init();
 #endif
@@ -330,7 +330,7 @@ void MAIN_ICACHE_FLASH user_init(void) {
 		supla_log(LOG_DEBUG, "DHT22 START" );
 	}
 #endif
-
+/*
 #ifdef DS18B20
   supla_ds18b20_start();
 #endif
@@ -338,7 +338,7 @@ void MAIN_ICACHE_FLASH user_init(void) {
 #ifdef DHTSENSOR
   supla_dht_start();
 #endif
-
+*/
 
 #ifdef ELECTRICITY_METER_COUNT
   supla_esp_em_start();
