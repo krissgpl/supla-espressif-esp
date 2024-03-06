@@ -23,7 +23,7 @@
 #include "espmissingincludes.h"
 
 #ifndef SUPLA_ESP_SOFTVER
-#define SUPLA_ESP_SOFTVER "2.8.55"
+#define SUPLA_ESP_SOFTVER "2.8.59"
 #endif
 
 #define STATE_UNKNOWN 0
@@ -260,6 +260,7 @@
 #define CFG_FLAG_MQTT_NO_RETAIN 0x02
 #define CFG_FLAG_MQTT_TLS 0x04
 #define CFG_FLAG_MQTT_NO_AUTH 0x08
+#define CFG_FLAG_DEVICE_LOCKED 0x10
 
 #ifndef CFG_FLAG_TRIGGER_ON_RELEASE
 #define CFG_FLAG_TRIGGER_ON_RELEASE 0
