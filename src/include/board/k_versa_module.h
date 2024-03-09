@@ -104,4 +104,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg);
     return;
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_inactive(void* _input_cfg);
 
+void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void);
+
+char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
+    char dev_name[25], const char mac[6], const char data_saved);
+
 #endif
