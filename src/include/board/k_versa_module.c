@@ -359,7 +359,7 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
   
 	supla_esp_gpio_set_led(!supla_esp_cfg.StatusLedOff, 0, 0);
-	supla_esp_gpio_set_hi(15, 1);	// ustaw gpio15 high
+	supla_esp_gpio_set_hi(15, 0);	// ustaw gpio15 low
 	
 }
 
