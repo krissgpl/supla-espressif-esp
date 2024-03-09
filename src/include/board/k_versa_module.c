@@ -105,6 +105,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO12);	//uzycie GPIO12
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTCK_U, FUNC_GPIO13);	//uzycie GPIO13
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTMS_U, FUNC_GPIO14);	//uzycie GPIO14
+	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDO_U, FUNC_GPIO15);	//uzycie GPIO15
 	
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO0_U);			// pullup gpio 0
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO4_U);			// pullup gpio 4
@@ -358,6 +359,7 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
   
 	supla_esp_gpio_set_led(!supla_esp_cfg.StatusLedOff, 0, 0);
+	supla_esp_gpio_set_hi(15, 1);	// ustaw gpio15 high
 	
 }
 
