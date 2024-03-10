@@ -115,7 +115,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTCK_U);			// pullup gpio 13
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTMS_U);			// pullup gpio 14
 
-	supla_esp_gpio_set_hi(15, 1);	// ustaw gpio15 high
+	supla_esp_gpio_set_hi(15, 0);	// ustaw gpio15 low
 
 }
 
