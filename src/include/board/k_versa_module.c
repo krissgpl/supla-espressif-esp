@@ -56,7 +56,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	supla_input_cfg[3].gpio_id = B_SENSOR_PORT3;
 	supla_input_cfg[3].channel = 2;
 	
-	supla_input_cfg[4].type = INPUT_TYPE_BTN_MONOSTABLE;
+	supla_input_cfg[4].type = INPUT_TYPE_SENSOR;
 	supla_input_cfg[4].gpio_id = B_SENSOR_PORT4;
 	supla_input_cfg[4].channel = 3;
 	
@@ -108,6 +108,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDO_U, FUNC_GPIO15);	//uzycie GPIO15
 	
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO0_U);			// pullup gpio 0
+	GPIO_DIS_OUTPUT(0);
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO4_U);			// pullup gpio 4
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_GPIO5_U);			// pullup gpio 5
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_SD_DATA3_U);		// pullup gpio 10
