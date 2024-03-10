@@ -115,7 +115,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTCK_U);			// pullup gpio 13
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTMS_U);			// pullup gpio 14
 
-	supla_esp_gpio_set_hi(15, 0);	// ustaw gpio15 low
+	supla_esp_gpio_set_hi(15, supla_esp_cfg.Trigger);	// ustaw gpio15 - zasilanie wejsc
 
 }
 
@@ -308,7 +308,9 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       "value=\"%s\"><label>E-mail</label></i></div><div "
       "class=\"w\"><h3>Additional Settings</h3>"
 	  "<i><select name=\"led\"><option value=\"0\" %s>LED "
-      "ON<option value=\"1\" %s>LED OFF</i>"
+      "ON<option value=\"1\" %s>LED OFF</select><label>Status LED</label></i>"
+	  "<i><select name=\"trg\"><option value=\"0\" %s>External 12V"
+      "<option value=\"1\" %s>Internal 5V</select><label>Input power supply:</label></i>"
 	  "<i><select name=\"upd\"><option value=\"0\" "
       "%s>NO<option value=\"1\" %s>YES</select><label>Firmware update</label>"
 	  "</i></div><button type=\"submit\">SAVE</button><input "
@@ -351,6 +353,8 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       supla_esp_cfg.Server, supla_esp_cfg.Email,
 	  supla_esp_cfg.StatusLedOff == 0 ? "selected" : "",
       supla_esp_cfg.StatusLedOff == 1 ? "selected" : "",
+	  supla_esp_cfg.Trigger == 0 ? "selected" : "",
+      supla_esp_cfg.Trigger == 1 ? "selected" : "",
 	  supla_esp_cfg.FirmwareUpdate == 0 ? "selected" : "",
       supla_esp_cfg.FirmwareUpdate == 1 ? "selected" : ""
       );
