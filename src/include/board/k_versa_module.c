@@ -115,6 +115,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTCK_U);			// pullup gpio 13
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTMS_U);			// pullup gpio 14
 
+	supla_esp_gpio_set_hi(15, 1);	// ustaw gpio15 high
+
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *channels, unsigned char *channel_count) {
@@ -359,7 +361,7 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
   
 	supla_esp_gpio_set_led(!supla_esp_cfg.StatusLedOff, 0, 0);
-	supla_esp_gpio_set_hi(15, 0);	// ustaw gpio15 low
+	//supla_esp_gpio_set_hi(15, 0);	// ustaw gpio15 low
 	
 }
 
