@@ -391,7 +391,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 void supla_board_input(char in1, char in2, char in3, char in4, char in5, char in6) {
 	
 	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i, CH3 = %i, CH4 = %i, CH5 = %i, CH6 = %i", in1, in2, in3, in4, in5, in6);
-	
+	/*
 	if ( in1 == 1 && supla_esp_state.Relay[8] == 1 ) {
 		supla_esp_devconn_send_action_trigger(7, SUPLA_ACTION_CAP_TOGGLE_x1); 
 		supla_log(LOG_DEBUG, "supla_esp_board send AT in1 (ch7 CAP_TOGGLE_x1)"); };
@@ -415,7 +415,7 @@ void supla_board_input(char in1, char in2, char in3, char in4, char in5, char in
 	if ( in6 == 1 && supla_esp_state.Relay[13] == 1 ) {
 		supla_esp_devconn_send_action_trigger(7, SUPLA_ACTION_CAP_SHORT_PRESS_x5); 
 		supla_log(LOG_DEBUG, "supla_esp_board send AT in6 (ch8 CAP_SHORT_PRESS_x5)"); };
-
+*/
 }
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg) {
@@ -435,7 +435,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
 
 	supla_log(LOG_DEBUG, "board inactive, channel=%i",input_cfg->channel);
 
-	if (input_cfg->type == INPUT_TYPE_SENSOR && input_cfg->channel != 255) supla_esp_channel_value_changed(input_cfg->channel, 1);
+	if (input_cfg->type == INPUT_TYPE_SENSOR && input_cfg->channel != 255 && supla_esp_state.Relay[input_cfg->channel+8] == 1) supla_esp_channel_value_changed(input_cfg->channel, 1);
 	
 }
 
