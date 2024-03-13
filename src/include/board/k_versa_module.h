@@ -20,7 +20,7 @@
 #define K_VERSA_MODULE_H_
 
 #define ESP8266_SUPLA_PROTO_VERSION 16
-#define RETREIVE_CHANNEL_CONFIG 0b10000000
+//#define RETREIVE_CHANNEL_CONFIG 0b10000000
 
 #define SUPLA_ESP_SOFTVER "2.8.55.0"
 
@@ -41,13 +41,13 @@
 #define B_CFG_PORT          0
 #define LED_RED_PORT  		16
 
-#define B_SENSOR_PORT1      14	//CAP_TOGGLE_x1
-#define B_SENSOR_PORT2      12	//CAP_SHORT_PRESS_x1
-#define B_SENSOR_PORT3      13	//CAP_SHORT_PRESS_x2
-#define B_SENSOR_PORT4      5	//CAP_SHORT_PRESS_x3
-#define B_SENSOR_PORT5      4	//CAP_SHORT_PRESS_x4
-#define B_SENSOR_PORT6      10	//CAP_SHORT_PRESS_x5
-
+#define B_SENSOR_PORT1      14	
+#define B_SENSOR_PORT2      12	
+#define B_SENSOR_PORT3      13	
+#define B_SENSOR_PORT4      5	
+#define B_SENSOR_PORT5      4	
+#define B_SENSOR_PORT6      10
+	
 #define B_UPD_PORT		    20
 #define B_SENSOR1_EN      	21
 #define B_SENSOR2_EN      	22
@@ -55,6 +55,7 @@
 #define B_SENSOR4_EN      	24
 #define B_SENSOR5_EN      	25
 #define B_SENSOR6_EN      	26
+//#define B_INPUT_VCC			27
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 		if (port >= 20) {supla_esp_board_gpiooutput_set_hi(port, hi); 	\
@@ -66,12 +67,12 @@
 											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
 										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
 											supla_log(LOG_DEBUG, "IP FIELD = %i", ipaddr_addr(SUPLA_ESP_SOFTVER)); };
-
+/*
 #define BOARD_INTR_HANDLER	if ( supla_last_state == STATE_CONNECTED && gpio_status > 1 ) { \
 							supla_log(LOG_DEBUG, "INTR gpio_status = %i", gpio_status);	\
 							supla_board_input(!gpio__input_get(B_SENSOR_PORT1), !gpio__input_get(B_SENSOR_PORT2), !gpio__input_get(B_SENSOR_PORT3),	\
 												!gpio__input_get(B_SENSOR_PORT4), !gpio__input_get(B_SENSOR_PORT5), !gpio__input_get(B_SENSOR_PORT6)); }
-												
+*/												
 #define BOARD_GPIO_OUTPUT_IS_HI	\
 				if ( port == B_SENSOR1_EN)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 8 = %i", supla_esp_state.Relay[8]);	\
 									return supla_esp_state.Relay[8] == 1 ? 1 : 0;	}	\
@@ -86,7 +87,7 @@
 				if ( port == B_SENSOR6_EN)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 13 = %i", supla_esp_state.Relay[13]);	\
 									return supla_esp_state.Relay[13] == 1 ? 1 : 0;	}
 							
-void supla_board_input(char in1, char in2, char in3, char in4, char in5, char in6);
+//void supla_board_input(char in1, char in2, char in3, char in4, char in5, char in6);
 
 void ICACHE_FLASH_ATTR supla_esp_board_gpiooutput_set_hi(int port, char hi);
 

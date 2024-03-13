@@ -68,6 +68,10 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	supla_input_cfg[6].gpio_id = B_SENSOR_PORT6;
 	supla_input_cfg[6].channel = 5;
 	
+	supla_input_cfg[7].type = INPUT_TYPE_SENSOR;
+	//supla_input_cfg[7].gpio_id = B_INPUT_VCC;
+	supla_input_cfg[7].channel = 6;
+	
 	//----------------------------------------
 	
     supla_relay_cfg[0].gpio_id = B_UPD_PORT;	// update init channel
@@ -163,21 +167,17 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_channels(TDS_SuplaDeviceChannel_C *ch
 	channels[5].value[0] = 0;
 	
 	channels[6].Number = 6;
-	channels[6].Type = SUPLA_CHANNELTYPE_RELAY;
-	channels[6].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
-	channels[6].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[6].Type = SUPLA_CHANNELTYPE_SENSORNO;
+	channels[6].FuncList = 0;
 	channels[6].Default = 0;
-	channels[6].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
+	channels[6].value[0] = 0;
 	
 	channels[7].Number = 7;
-	channels[7].Type = SUPLA_CHANNELTYPE_ACTIONTRIGGER;
-	channels[7].FuncList = SUPLA_CHANNELFNC_ACTIONTRIGGER;
-	channels[7].ActionTriggerCaps = SUPLA_ACTION_CAP_SHORT_PRESS_x1 |
-									SUPLA_ACTION_CAP_SHORT_PRESS_x2 |
-									SUPLA_ACTION_CAP_SHORT_PRESS_x3 |
-									SUPLA_ACTION_CAP_SHORT_PRESS_x4 |
-									SUPLA_ACTION_CAP_SHORT_PRESS_x5 |
-									SUPLA_ACTION_CAP_TOGGLE_x1;
+	channels[7].Type = SUPLA_CHANNELTYPE_RELAY;
+	channels[7].FuncList = SUPLA_BIT_FUNC_POWERSWITCH;
+	channels[7].Flags = SUPLA_CHANNEL_FLAG_CHANNELSTATE;
+	channels[7].Default = 0;
+	channels[7].value[0] = supla_esp_gpio_relay_on(B_UPD_PORT);
 	
 	channels[8].Number = 8;
 	channels[8].Type = SUPLA_CHANNELTYPE_RELAY;
@@ -377,8 +377,9 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 	supla_esp_channel_value_changed(2, !gpio__input_get(B_SENSOR_PORT3));
 	supla_esp_channel_value_changed(3, !gpio__input_get(B_SENSOR_PORT4));
 	supla_esp_channel_value_changed(4, !gpio__input_get(B_SENSOR_PORT5));
-	supla_esp_channel_value_changed(5, !gpio__input_get(B_SENSOR_PORT6));	
-	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_on(B_UPD_PORT));
+	supla_esp_channel_value_changed(5, !gpio__input_get(B_SENSOR_PORT6));
+	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_is_hi(15));	
+	supla_esp_channel_value_changed(7, supla_esp_gpio_relay_on(B_UPD_PORT));
 	supla_esp_channel_value_changed(8, supla_esp_gpio_relay_on(B_SENSOR1_EN));
 	supla_esp_channel_value_changed(9, supla_esp_gpio_relay_on(B_SENSOR2_EN));
 	supla_esp_channel_value_changed(10, supla_esp_gpio_relay_on(B_SENSOR3_EN));
@@ -387,11 +388,11 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 	supla_esp_channel_value_changed(13, supla_esp_gpio_relay_on(B_SENSOR6_EN));
 
 }
-
+/*
 void supla_board_input(char in1, char in2, char in3, char in4, char in5, char in6) {
 	
 	supla_log(LOG_DEBUG, "board_input CH1 = %i, CH2 = %i, CH3 = %i, CH4 = %i, CH5 = %i, CH6 = %i", in1, in2, in3, in4, in5, in6);
-	/*
+	
 	if ( in1 == 1 && supla_esp_state.Relay[8] == 1 ) {
 		supla_esp_devconn_send_action_trigger(7, SUPLA_ACTION_CAP_TOGGLE_x1); 
 		supla_log(LOG_DEBUG, "supla_esp_board send AT in1 (ch7 CAP_TOGGLE_x1)"); };
@@ -415,9 +416,9 @@ void supla_board_input(char in1, char in2, char in3, char in4, char in5, char in
 	if ( in6 == 1 && supla_esp_state.Relay[13] == 1 ) {
 		supla_esp_devconn_send_action_trigger(7, SUPLA_ACTION_CAP_SHORT_PRESS_x5); 
 		supla_log(LOG_DEBUG, "supla_esp_board send AT in6 (ch8 CAP_SHORT_PRESS_x5)"); };
-*/
-}
 
+}
+*/
 void ICACHE_FLASH_ATTR supla_esp_board_gpio_on_input_active(void* _input_cfg) {
 
     supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
