@@ -433,7 +433,7 @@ supla_esp_board_gpio_on_input_inactive(void* _input_cfg) {
 
 	supla_input_cfg_t* input_cfg = (supla_input_cfg_t*)_input_cfg;
 
-	supla_log(LOG_DEBUG, "board inactive");
+	supla_log(LOG_DEBUG, "board inactive, channel=%i",input_cfg->channel);
 
 	if (input_cfg->type == INPUT_TYPE_SENSOR && input_cfg->channel != 255) supla_esp_channel_value_changed(input_cfg->channel, 1);
 	
