@@ -56,14 +56,13 @@
 #define B_SENSOR4_EN      	24
 #define B_SENSOR5_EN      	25
 #define B_SENSOR6_EN      	26
-//#define B_INPUT_VCC			27
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 		if (port >= 20) {supla_esp_board_gpiooutput_set_hi(port, hi); 	\
 						supla_log(LOG_DEBUG, "PORT >=20 MAKRO");	\
 						return;  };
 
-#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 6 ) {	\
+#define BOARD_ON_CHANNEL_STATE_PREPARE	if ( ChannelNumber == 7 ) {	\
 											state->Fields |= SUPLA_CHANNELSTATE_FIELD_LASTCONNECTIONRESETCAUSE;	\
 											state->LastConnectionResetCause = supla_esp_cfg.UpdateStatus;	\
 										    state->IPv4 = ipaddr_addr(SUPLA_ESP_SOFTVER);	\
@@ -75,6 +74,8 @@
 												!gpio__input_get(B_SENSOR_PORT4), !gpio__input_get(B_SENSOR_PORT5), !gpio__input_get(B_SENSOR_PORT6)); }
 */												
 #define BOARD_GPIO_OUTPUT_IS_HI	\
+				if ( port == B_UPD_PORT)    {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 7 = %i", supla_esp_state.Relay[7]);	\
+									return supla_esp_state.Relay[7] == 1 ? 1 : 0;	};	\
 				if ( port == B_SENSOR1_EN)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 8 = %i", supla_esp_state.Relay[8]);	\
 									return supla_esp_state.Relay[8] == 1 ? 1 : 0;	}	\
 				if ( port == B_SENSOR2_EN)  {  supla_log(LOG_DEBUG, "BOARD_GPIO_OUTPUT_IS_HI 9 = %i", supla_esp_state.Relay[9]);	\
