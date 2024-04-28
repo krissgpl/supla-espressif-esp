@@ -28,7 +28,7 @@ ETSTimer value_timer1;
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
 		ets_snprintf(buffer, buffer_size, "SUPLA-VERSA");
-	
+		
 }
 
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {

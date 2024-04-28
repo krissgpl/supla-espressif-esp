@@ -474,7 +474,7 @@ supla_esp_update_connect_cb(void *arg) {
 			     update->url->url.host);
 
 	/*int s =*/ espconn_sent(&update->conn, (unsigned char*)request, strlen(request));
-	//supla_log(LOG_DEBUG, "espconn_sent %i, %i", s, strlen(request));
+	supla_log(LOG_DEBUG, "espconn_sent %i, %i", s, strlen(request));
 }
 
 void ICACHE_FLASH_ATTR
@@ -528,6 +528,8 @@ supla_esp_update_delay_timer_func(void *timer_arg) {
 void ICACHE_FLASH_ATTR
 supla_esp_update_url_result(TSD_FirmwareUpdate_UrlResult *url_result) {
 
+	supla_log(LOG_DEBUG, "supla_esp_update_url_result = %i, host = %s, port = %i, path = %s", url_result->exists, url_result->url.host, url_result->url.port, url_result->url.path);
+	
 	if ( update_step != FUPDT_STEP_CHECKING ) return;
 
 	supla_log(LOG_DEBUG, "Firmware -- exists = %i, host = %s, port = %i, path = %s", url_result->exists, url_result->url.host, url_result->url.port, url_result->url.path);
