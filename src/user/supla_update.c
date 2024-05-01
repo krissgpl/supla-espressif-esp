@@ -149,7 +149,7 @@ supla_esp_check_updates(void *srpc) {
 		params.Param3 = UPDATE_PARAM3;
 		params.Param4 = UPDATE_PARAM4;
 
-		supla_log(LOG_DEBUG, "get_firmware_update_url");
+		supla_log(LOG_DEBUG, "get_firmware_update_url params: Platform=%i, Flash_size=%i, userbin=%i, param3=%i, param4=%i", params.Platform, params.Param1, params.Param2, params.Param3, params.Param4);
 		srpc_sd_async_get_firmware_update_url(srpc, &params);
 	}
 }
@@ -510,6 +510,7 @@ void ICACHE_FLASH_ATTR
 supla_esp_update_resolvandconnect(void) {
 
 	uint32_t _ip = ipaddr_addr(update->url->url.host);
+	supla_log(LOG_DEBUG, "supla_esp_update_resolvandconnect: %s", update->url->url.host);
 
 	if ( _ip == -1 ) {
 		 supla_log(LOG_DEBUG, "Resolv %s", update->url->url.host);
