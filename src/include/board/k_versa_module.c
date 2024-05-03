@@ -378,7 +378,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_send_channel_values_with_delay(void *srpc
 	supla_esp_channel_value_changed(3, !gpio__input_get(B_SENSOR_PORT4));
 	supla_esp_channel_value_changed(4, !gpio__input_get(B_SENSOR_PORT5));
 	supla_esp_channel_value_changed(5, !gpio__input_get(B_SENSOR_PORT6));
-	supla_esp_channel_value_changed(6, supla_esp_gpio_relay_is_hi(15));	
+	//supla_esp_channel_value_changed(6, supla_esp_gpio_relay_is_hi(15));	
 	supla_esp_channel_value_changed(7, supla_esp_gpio_relay_on(B_UPD_PORT));
 	supla_esp_channel_value_changed(8, supla_esp_gpio_relay_on(B_SENSOR1_EN));
 	supla_esp_channel_value_changed(9, supla_esp_gpio_relay_on(B_SENSOR2_EN));
