@@ -27,7 +27,7 @@ ETSTimer value_timer1;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
-		ets_snprintf(buffer, buffer_size, "SUPLA-VERSA-TH");
+		ets_snprintf(buffer, buffer_size, "SUPLA-VERSA");
 		
 }
 
@@ -119,7 +119,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_gpio_init(void) {
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTCK_U);			// pullup gpio 13
 	PIN_PULLUP_EN(PERIPHS_IO_MUX_MTMS_U);			// pullup gpio 14
 
-	supla_esp_gpio_set_hi(15, supla_esp_cfg.Trigger);	// ustaw gpio15 - zasilanie wejsc
+	//supla_esp_gpio_set_hi(15, supla_esp_cfg.Trigger);	// ustaw gpio15 - zasilanie wejsc
 
 }
 
