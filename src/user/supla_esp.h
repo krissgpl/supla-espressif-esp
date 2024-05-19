@@ -23,7 +23,7 @@
 #include "espmissingincludes.h"
 
 #ifndef SUPLA_ESP_SOFTVER
-#define SUPLA_ESP_SOFTVER "2.8.59"
+#define SUPLA_ESP_SOFTVER "2.8.60"
 #endif
 
 #define STATE_UNKNOWN 0
@@ -113,6 +113,10 @@
 #ifndef CFG_TIME2_COUNT
 #define CFG_TIME2_COUNT 8
 #endif /*CFG_TIME2_COUNT*/
+
+#ifndef CFG_TIME3_COUNT
+#define CFG_TIME3_COUNT 8
+#endif /*CFG_TIME3_COUNT*/
 
 #ifndef STATE_CFG_TIME1_COUNT
 #define STATE_CFG_TIME1_COUNT CFG_TIME1_COUNT
