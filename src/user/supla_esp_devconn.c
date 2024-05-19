@@ -2085,6 +2085,7 @@ supla_esp_channel_config_result(TSD_ChannelConfig *result) {
 	    supla_log(LOG_DEBUG, "Set active action channel = %d ,active action = %d",
             result->ChannelNumber, actionTriggerCfg->ActiveActions);	
         }
+	   }
       }
       break;
     }
