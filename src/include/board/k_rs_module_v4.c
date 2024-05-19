@@ -19,6 +19,7 @@
 #include "public_key_in_c_code"
 
 #include "supla_esp.h"
+#include "supla_esp_rs_fb.h"
 //#include "supla_esp_gpio.h"
 #include "supla_temp.h"
 
