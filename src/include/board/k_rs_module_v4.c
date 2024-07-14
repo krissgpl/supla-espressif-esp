@@ -35,7 +35,7 @@ int DIS_CH;
 bool supla_esp_board_rs_motor_move = false;
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
-/*	
+	
 	if ( supla_esp_cfg.ThermometerType == THERM_DS18B20 ) {
 		supla_log(LOG_DEBUG, "if name 1: %i", supla_esp_cfg.ThermometerType);
 		ets_snprintf(buffer, buffer_size, "ROLETY_AC_V4-DS18B20");
@@ -47,8 +47,8 @@ void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffe
     if ( supla_esp_cfg.ThermometerType == THERM_NONE ) {
 	    supla_log(LOG_DEBUG, "if name 0: %i", supla_esp_cfg.ThermometerType);
 		ets_snprintf(buffer, buffer_size, "ROLETY_AC_V4");
-	} */
-	ets_snprintf(buffer, buffer_size, "ROLETY_AC_V4");
+	}
+	//ets_snprintf(buffer, buffer_size, "ROLETY_AC_V4");
 }
 
 void supla_esp_baord_value_timer1_cb(void *timer_arg) {
