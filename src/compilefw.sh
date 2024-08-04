@@ -330,6 +330,7 @@ then
 		elif [ "$YOUR_CHOOSE" == 1 ];
 		then
 			echo "Wybrałeś Nie";
+			cp /CProjects/supla-espressif-esp/firmware/$PLIK /ESP_Firmware/$PLIK
 			exit;
 		else
 			echo "Niczego nie wybrałeś";
@@ -357,6 +358,7 @@ then
 				mkdir -p /CProjects/supla-espressif-esp/firmware/signed
 				rm -f /CProjects/supla-espressif-esp/firmware/signed/$PLIK
 				cp /CProjects/supla-espressif-esp/firmware/$PLIK /CProjects/supla-espressif-esp/firmware/signed/$PLIK
+				cp /CProjects/supla-espressif-esp/firmware/signed/$PLIK /ESP_Firmware/signed/$PLIK
 				rm -f /CProjects/supla-espressif-esp/firmware/$PLIK
 				rm -f /CProjects/supla-espressif-esp/firmware/result.txt
 				sleep 1
@@ -370,6 +372,7 @@ then
 				mkdir -p /CProjects/supla-espressif-esp/firmware/signed
 				rm -f /CProjects/supla-espressif-esp/firmware/signed/$PLIK2
 				cp /CProjects/supla-espressif-esp/firmware/$PLIK2 /CProjects/supla-espressif-esp/firmware/signed/$PLIK2
+				cp /CProjects/supla-espressif-esp/firmware/signed/$PLIK2 /ESP_Firmware/signed/$PLIK2
 				rm -f /CProjects/supla-espressif-esp/firmware/$PLIK2
 				rm -f /CProjects/supla-espressif-esp/firmware/result2.txt
 				sleep 1
@@ -380,6 +383,8 @@ then
 		elif [ "$YOUR_CHOOSE" == 1 ];
 		then
 			echo "Wybrałeś Nie";
+			cp /CProjects/supla-espressif-esp/firmware/$PLIK /ESP_Firmware/$PLIK
+			cp /CProjects/supla-espressif-esp/firmware/$PLIK2 /ESP_Firmware/$PLIK2
 			exit;
 		else
 			echo "Niczego nie wybrałeś";
