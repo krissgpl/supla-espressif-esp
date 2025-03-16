@@ -400,9 +400,13 @@ supla_esp_gpio_on_input_inactive(supla_input_cfg_t *input_cfg) {
         if (supla_esp_gpio_rs_get_value(rs_cfg) == direction
             || (supla_esp_gpio_rs_get_value(rs_cfg) == RS_RELAY_OFF
             && rs_cfg->delayed_trigger.value == direction)) {
-          supla_esp_gpio_rs_set_relay(rs_cfg, RS_RELAY_OFF, 1, 1);
+          if (supla_esp_gpio_is_fb(rs_cfg)) {
+             supla_esp_gpio_rs_set_relay(rs_cfg, RS_RELAY_OFF, 1, 0);
+           } else {
+             supla_esp_gpio_rs_set_relay(rs_cfg, RS_RELAY_OFF, 1, 1);
+           }
         }
-      } else { // monostable
+      } else {  // monostable
         if (supla_esp_gpio_rs_get_value(rs_cfg) != RS_RELAY_OFF) {
           supla_esp_gpio_rs_set_relay(rs_cfg, RS_RELAY_OFF, 1, 1);
 	
