@@ -362,7 +362,7 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 }
 
 char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
-    char dev_name[25], const char mac[6], const char data_saved)
+    char dev_name[25], const char mac[6], const char data_saved) {
 		
   char html_template_header[] =
       "<!DOCTYPE html><meta http-equiv=\"content-type\" content=\"text/html; "
