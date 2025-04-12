@@ -108,7 +108,11 @@
 #define B_RELAY2_DIS	 22
 #define B_HARMONOGRAM	 23
 
-#define BEFORE_CFG_ENTER	cfgmode_vars.exit_after_timeout = true;
+#define BEFORE_CFG_ENTER	\
+	supla_esp_devconn_stop();	\
+    supla_esp_cfgmode_start_with_timeout();	\
+	return;
+
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\
