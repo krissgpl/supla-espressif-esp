@@ -65,7 +65,7 @@
 #define RETREIVE_CHANNEL_CONFIG 0b111000011
 #define CHANNEL_CONFIG_LIMIT 9
 
-#define SUPLA_ESP_SOFTVER "2.8.55.0"
+#define SUPLA_ESP_SOFTVER "2.8.55.1"
 
 #define BOARD_CFG_HTML_TEMPLATE
 
@@ -107,6 +107,8 @@
 #define B_RELAY1_DIS	 21
 #define B_RELAY2_DIS	 22
 #define B_HARMONOGRAM	 23
+
+#define BEFORE_CFG_ENTER	cfgmode_vars.exit_after_timeout = true;
 
 #define BOARD_GPIO_OUTPUT_SET_HI	\
 	if ( port == B_RELAY1_PORT && supla_esp_state.Relay[3] == 1 ) { supla_log(LOG_DEBUG, "Blokada GPIO5 !!!");	\

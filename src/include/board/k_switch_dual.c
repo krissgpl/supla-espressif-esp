@@ -361,10 +361,10 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 	supla_esp_channel_value_changed(5, supla_esp_gpio_relay_on(B_HARMONOGRAM));
 }
 
-char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
-    char dev_name[25], const char mac[6], const char data_saved) {
+char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
+    char dev_name[25], const char mac[6], const char data_saved)
 		
-  static char html_template_header[] =
+  char html_template_header[] =
       "<!DOCTYPE html><meta http-equiv=\"content-type\" content=\"text/html; "
       "charset=UTF-8\"><meta name=\"viewport\" "
       "content=\"width=device-width,initial-scale=1,maximum-scale=1,user-"
@@ -410,9 +410,11 @@ char *ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
       "input,select{width:calc(100% - "
       "10px);font-size:16px;line-height:28px;padding:0 5px;border-bottom:solid "
       "1px #00d151}select{width:100%;float:none;margin:0}}</style><script "
-      "type=\"text/javascript\">setTimeout(function(){var element =  "
-      "document.getElementById('msg');if ( element != null ) "
-      "element.style.visibility = \"hidden\";},3200);</script>";
+      "type=\"text/javascript\">function saveAndReboot(){var "
+      "e=document.getElementById(\"cfgform\");e.rbt.value=\"2\",e.submit()}"
+      "setTimeout(function(){var element =  document.getElementById('msg');if "
+      "( element != null ) element.style.visibility = "
+      "\"hidden\";},3200);</script>";
   
   static char html_template[] =
       "%s%s<div class=\"s\"><svg version=\"1.1\" id=\"l\" x=\"0\" y=\"0\" "
