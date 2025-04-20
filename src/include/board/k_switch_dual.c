@@ -364,7 +364,7 @@ void supla_esp_board_send_channel_values_with_delay(void *srpc) {
 char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
     char dev_name[25], const char mac[6], const char data_saved) {
 		
-  char html_template_header[] =
+char html_template_header[] =
       "<!DOCTYPE html><meta http-equiv=\"content-type\" content=\"text/html; "
       "charset=UTF-8\"><meta name=\"viewport\" "
       "content=\"width=device-width,initial-scale=1,maximum-scale=1,user-"
@@ -468,7 +468,7 @@ char* ICACHE_FLASH_ATTR supla_esp_board_cfg_html_template(
 //	  "type=\"hidden\" name=\"rbt\" value=\"2\" /></form></div><br><br></body></html>";
 	  "update</label></i></div><button type=\"submit\">SAVE</button><br><br><button type=\"button\" "
       "onclick=\"saveAndReboot();\">SAVE &amp; RESTART</button><input "
-      "type=\"hidden\" name=\"rbt\" value=\"0\" /></form></div><br><br>";
+      "type=\"hidden\" name=\"rbt\" value=\"2\" /></form></div><br><br>";
 
   int bufflen = strlen(supla_esp_devconn_laststate())
 				+strlen(dev_name)
