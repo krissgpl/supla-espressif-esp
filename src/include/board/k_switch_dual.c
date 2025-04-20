@@ -411,7 +411,7 @@ char html_template_header[] =
       "10px);font-size:16px;line-height:28px;padding:0 5px;border-bottom:solid "
       "1px #00d151}select{width:100%;float:none;margin:0}}</style><script "
       "type=\"text/javascript\">function saveAndReboot(){var "
-      "e=document.getElementById(\"cfgform\");e.rbt.value=\"2\",e.submit()}"
+      "e=document.getElementById(\"cfgform\");e.rbt.value=\"2\",e.submit();alert('funkcja SaveAndReboot')}"
       "setTimeout(function(){var element =  document.getElementById('msg');if "
       "( element != null ) element.style.visibility = "
       "\"hidden\";},3200);</script>";
