@@ -409,12 +409,16 @@ char html_template_header[] =
       "12px;color:#00d151;font-size:13px;position:relative;line-height:18px}"
       "input,select{width:calc(100% - "
       "10px);font-size:16px;line-height:28px;padding:0 5px;border-bottom:solid "
-      "1px #00d151}select{width:100%;float:none;margin:0}}</style><script "
-      "type=\"text/javascript\">function saveAndReboot(){var "
-      "e=document.getElementById(\"cfgform\");e.rbt.value=\"2\",e.submit();alert('funkcja SaveAndReboot')}"
-      "setTimeout(function(){var element =  document.getElementById('msg');if "
-      "( element != null ) element.style.visibility = "
-      "\"hidden\";},3200);</script>";
+      "1px #00d151}select{width:100%;float:none;margin:0}}</style>"
+	  "<script type=\"text/javascript\">function saveAndReboot()"
+	  "{alert('funkcja SaveAndReboot');"
+	  "var e=document.getElementById(\"cfgform\");"
+	  "e.rbt.value=\"2\";"
+	  "e.submit();}"
+      "setTimeout(function()"
+	  "{var element =  document.getElementById('msg');"
+	  "if ( element != null ) element.style.visibility = \"hidden\";},3200);"
+	  "</script>";"
   
   static char html_template[] =
       "%s%s<div class=\"s\"><svg version=\"1.1\" id=\"l\" x=\"0\" y=\"0\" "
@@ -467,7 +471,7 @@ char html_template_header[] =
 //    "update</label></i></div><button type=\"submit\">SAVE</button><input "
 //	  "type=\"hidden\" name=\"rbt\" value=\"2\" /></form></div><br><br></body></html>";
 	  "update</label></i></div><button type=\"submit\">SAVE</button><br><br><button type=\"button\" "
-      "onclick=\"alert('funkcja SaveAndReboot');\">SAVE &amp; RESTART</button><input "
+      "onclick=\"saveAndReboot();\">SAVE &amp; RESTART</button><input "
       "type=\"hidden\" name=\"rbt\" value=\"2\" /></form></div><br><br>";
 
   int bufflen = strlen(supla_esp_devconn_laststate())
