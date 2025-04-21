@@ -467,7 +467,7 @@ char html_template_header[] =
 //    "update</label></i></div><button type=\"submit\">SAVE</button><input "
 //	  "type=\"hidden\" name=\"rbt\" value=\"2\" /></form></div><br><br></body></html>";
 	  "update</label></i></div><button type=\"submit\">SAVE</button><br><br><button type=\"button\" "
-      "onclick=\"saveAndReboot();\">SAVE &amp; RESTART</button><input "
+      "onclick=\"alert('funkcja SaveAndReboot');\">SAVE &amp; RESTART</button><input "
       "type=\"hidden\" name=\"rbt\" value=\"2\" /></form></div><br><br>";
 
   int bufflen = strlen(supla_esp_devconn_laststate())
