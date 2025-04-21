@@ -414,6 +414,7 @@ char html_template_header[] =
 	  "{alert('funkcja SaveAndReboot');"
 	  "var e=document.getElementById(\"cfgform\");"
 	  "e.rbt.value=\"2\";"
+	  "alert(e.rbt);"
 	  "e.submit();}"
       "setTimeout(function()"
 	  "{var element =  document.getElementById('msg');"
