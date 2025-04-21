@@ -411,10 +411,8 @@ char html_template_header[] =
       "10px);font-size:16px;line-height:28px;padding:0 5px;border-bottom:solid "
       "1px #00d151}select{width:100%;float:none;margin:0}}</style>"
 	  "<script type=\"text/javascript\">function saveAndReboot()"
-	  "var e=document.getElementById(\"cfgform\");"
-	  "e.rbt.value='2';"
-	  "alert(e.rbt);"
-	  "e.submit();}"
+	  "document.getElementById(\"cfgform\").rbt.value=\"2\";"
+	  "document.getElementById(\"cfgform\").submit();}"
       "setTimeout(function()"
 	  "{var element =  document.getElementById('msg');"
 	  "if ( element != null ) element.style.visibility = \"hidden\";},3200);"
@@ -472,7 +470,7 @@ char html_template_header[] =
 //	  "type=\"hidden\" name=\"rbt\" value=\"2\" /></form></div><br><br></body></html>";
 	  "update</label></i></div><button type=\"submit\">SAVE</button><br><br><button type=\"button\" "
       "onclick=\"saveAndReboot();\">SAVE &amp; RESTART</button><input "
-      "type=\"hidden\" name=\"rbt\" value=\"2\" /></form></div><br><br>";
+      "type=\"hidden\" name=\"rbt\" value=\"0\" /></form></div><br><br>";
 
   int bufflen = strlen(supla_esp_devconn_laststate())
 				+strlen(dev_name)
