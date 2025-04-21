@@ -418,7 +418,7 @@ char html_template_header[] =
       "setTimeout(function()"
 	  "{var element =  document.getElementById('msg');"
 	  "if ( element != null ) element.style.visibility = \"hidden\";},3200);"
-	  "</script>";"
+	  "</script>";
   
   static char html_template[] =
       "%s%s<div class=\"s\"><svg version=\"1.1\" id=\"l\" x=\"0\" y=\"0\" "
