@@ -22,6 +22,7 @@
 #if defined(ESP8266)
 #include <mem.h>
 #define LOG_ICACHE_FLASH ICACHE_FLASH_ATTR
+#define DEVCONN_ICACHE_FLASH ICACHE_FLASH_ATTR
 #endif
 
 #if defined(ARDUINO)
