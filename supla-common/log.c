@@ -48,6 +48,12 @@ static const char *SUPLA_TAG = "SUPLA";
 #include <mem.h>
 #include <osapi.h>
 
+#include <user_interface.h>		// UDP log send
+#include <espconn.h>			// UDP log send
+
+static struct espconn udp_server;	// UDP log send
+static esp_udp udp_proto;			// UDP log send
+
 #ifndef ARDUINO
 #include <user_interface.h>
 #include "espmissingincludes.h"
@@ -171,6 +177,7 @@ void supla_vlog(int __pri, const char *message);
 void LOG_ICACHE_FLASH supla_vlog(int __pri, const char *message) {
 #ifndef ESP8266_LOG_DISABLED
   os_printf("%s\r\n", message);
+  send_udp_log(message);	//UDP log send
 #endif
 }
 #else
@@ -337,3 +344,31 @@ void LOG_ICACHE_FLASH supla_write_state_file(const char *file, int __pri,
 
   free(buffer);
 }
+
+#ifdef ESP8266	// UDP log send
+
+// Funkcja do wysyłania logów
+void LOG_ICACHE_FLASH send_udp_log(const char* log_message) {
+    if (udp_server.proto.udp != NULL) {
+        espconn_sendto(&udp_server, (uint8_t*)log_message, os_strlen(log_message));
+    }
+}
+
+void DEVCONN_ICACHE_FLASH udp_log_init(void) {
+    // Inicjalizacja UART dla debugowania
+    uart_div_modify(0, UART_CLK_FREQ / 115200);
+    os_printf("ESP8266 UDP Log Server Initialized\n");
+
+    // Konfiguracja serwera UDP
+    udp_proto.local_port = 2020; // Port serwera UDP
+
+    os_memset(&udp_server, 0, sizeof(udp_server));
+    udp_server.type = ESPCONN_UDP;
+    udp_server.proto.udp = &udp_proto;
+
+    espconn_create(&udp_server);
+
+    os_printf("UDP server running on port %d\n", udp_proto.local_port);
+}
+
+#endif

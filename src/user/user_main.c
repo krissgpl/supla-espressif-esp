@@ -276,6 +276,8 @@ void MAIN_ICACHE_FLASH user_init(void) {
 		supla_log(LOG_DEBUG, "DHT22 INIT" );
 	}
 #endif
+
+udp_log_init();		//UDP log init
 /*		
 #ifdef DS18B20
   supla_ds18b20_init();
