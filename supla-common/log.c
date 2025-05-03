@@ -354,6 +354,11 @@ void LOG_ICACHE_FLASH send_udp_log(const char* log_message) {
     }
 }
 
+// Funkcja callback do odbioru danych (choć tutaj logi są jednostronne)
+static void udp_recv_callback(void *arg, char *pdata, unsigned short len) {
+    os_printf("Received data: %s\n", pdata);
+}
+
 void DEVCONN_ICACHE_FLASH udp_log_init(void) {
     // Inicjalizacja UART dla debugowania
     uart_div_modify(0, UART_CLK_FREQ / 115200);
@@ -365,6 +370,7 @@ void DEVCONN_ICACHE_FLASH udp_log_init(void) {
     os_memset(&udp_server, 0, sizeof(udp_server));
     udp_server.type = ESPCONN_UDP;
     udp_server.proto.udp = &udp_proto;
+	espconn_regist_recvcb(&udp_server, udp_recv_callback); // Rejestracja callback do odbioru danych
 
     espconn_create(&udp_server);
 
