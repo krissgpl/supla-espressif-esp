@@ -366,8 +366,6 @@ void MAIN_ICACHE_FLASH user_init(void) {
   supla_esp_devconn_start();
 #endif /*MQTT_SUPPORT_ENABLED*/
 
-udp_log_init();		//UDP log init
-
   system_print_meminfo();
 
 #ifdef BOARD_ESP_STARTED

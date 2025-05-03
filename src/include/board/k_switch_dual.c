@@ -25,6 +25,7 @@
 #include "supla_esp.h"
 #include "supla_esp_gpio.h"
 #include "supla_esp_input.h"
+#include "supla-dev/log.h"
 
 //----------TIMERS DECLARATION---------------------------
 ETSTimer value_timer1;
@@ -530,6 +531,7 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	supla_log(LOG_DEBUG, "supla_esp_state RELAY 3 = %i", supla_esp_state.Relay[3]);
 	supla_log(LOG_DEBUG, "supla_esp_state RELAY 4 = %i", supla_esp_state.Relay[4]);
 	supla_log(LOG_DEBUG, "supla_esp_state RELAY 5 = %i", supla_esp_state.Relay[5]);
+	udp_log_init();		//UDP log init
 
 }
 
