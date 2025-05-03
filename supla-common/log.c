@@ -361,7 +361,7 @@ static void udp_recv_callback(void *arg, char *pdata, unsigned short len) {
 
 void DEVCONN_ICACHE_FLASH udp_log_init(void) {
     // Inicjalizacja UART dla debugowania
-    uart_div_modify(0, UART_CLK_FREQ / 115200);
+    //uart_div_modify(0, UART_CLK_FREQ / 115200);
     os_printf("ESP8266 UDP Log Server Initialized\n");
 
     // Konfiguracja serwera UDP

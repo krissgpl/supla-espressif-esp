@@ -277,7 +277,6 @@ void MAIN_ICACHE_FLASH user_init(void) {
 	}
 #endif
 
-udp_log_init();		//UDP log init
 /*		
 #ifdef DS18B20
   supla_ds18b20_init();
@@ -366,6 +365,8 @@ udp_log_init();		//UDP log init
 #else
   supla_esp_devconn_start();
 #endif /*MQTT_SUPPORT_ENABLED*/
+
+udp_log_init();		//UDP log init
 
   system_print_meminfo();
 
