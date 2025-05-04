@@ -488,7 +488,7 @@ void DEVCONN_ICACHE_FLASH syslog_init(void) {
 	
 //	syslog_start=true;
 	
-    send_syslog_message("Uruchomienie systemu");
+    append_to_syslog("Uruchomienie systemu");
 }
 
 #endif
