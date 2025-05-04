@@ -53,7 +53,7 @@ static const char *SUPLA_TAG = "SUPLA";
 #include <user_interface.h>		// UDP log send
 #include <espconn.h>			// UDP log send
 
-#define SYSLOG_SERVER "192.168.10.4"  // Zmień na adres IP serwera Syslog
+#define SYSLOG_SERVER_IP {192, 168, 10, 4}  // Zmień na IP serwera Syslog
 #define SYSLOG_PORT 514
 
 bool syslog_start=false;
@@ -422,25 +422,21 @@ void DEVCONN_ICACHE_FLASH send_syslog_message(const char *message) {
 }
 
 void DEVCONN_ICACHE_FLASH syslog_init(void) {
-    udp_proto.local_port = espconn_port();
+    udp_proto.local_port = espconn_port();  // Pobranie dostępnego portu
     udp_proto.remote_port = SYSLOG_PORT;
     udp_conn.type = ESPCONN_UDP;
     udp_conn.proto.udp = &udp_proto;
-    udp_conn.state = ESPCONN_NONE;
 
-    // Ustawienie adresu IP serwera Syslog
-    espconn_set_opt(&udp_conn, ESPCONN_COPY);
-    espconn_regist_connectcb(&udp_conn, NULL);
-    udp_conn.proto.udp->remote_ip[0] = 192;  // Częściowe ustawienie IP
-    udp_conn.proto.udp->remote_ip[1] = 168;
-    udp_conn.proto.udp->remote_ip[2] = 10;
-    udp_conn.proto.udp->remote_ip[3] = 4;  // Dostosuj do adresu serwera Syslog
+    // Ustawienie IP serwera Syslog
+    uint8 remote_ip[] = SYSLOG_SERVER_IP;
+    os_memcpy(udp_conn.proto.udp->remote_ip, remote_ip, 4);
 
-    espconn_create(&udp_conn);
-    os_printf("Syslog UDP inicjalizacja zakończona\n");
+    espconn_create(&udp_conn);  // Tworzenie gniazda po przypisaniu wartości
+    
+    os_printf("Syslog UDP gotowy\n");
 	
-	os_printf("ESP8266 gotowy do wysyłania Syslog\n");
 	syslog_start=true;
+	
     send_syslog_message("Uruchomienie systemu");
 }
 
