@@ -410,7 +410,7 @@ void DEVCONN_ICACHE_FLASH send_udp_log(const char* message) {
 */
 
 void DEVCONN_ICACHE_FLASH send_syslog_message(const char *message) {
-    if ( syslog_start=true ) {
+    if ( syslog_start==true ) {
 		char syslog_buffer[128];
 		os_sprintf(syslog_buffer, "<14>ESP8266: %s", message);  // <14> oznacza priorytet i typ logu (INFO)
 
