@@ -445,6 +445,7 @@ void DEVCONN_ICACHE_FLASH syslog_init(void) {
     os_memcpy(udp_conn.proto.udp->remote_ip, remote_ip, 4);
 
     espconn_create(&udp_conn);  // Tworzenie gniazda po przypisaniu wartości
+	espconn_regist_sentcb(&udp_conn, syslog_sent_cb);  // Rejestracja callback po wysłaniu
     
     os_printf("Syslog UDP gotowy\n");
 	
