@@ -51,8 +51,8 @@ static const char *SUPLA_TAG = "SUPLA";
 #include <user_interface.h>		// UDP log send
 #include <espconn.h>			// UDP log send
 
-struct espconn udp_server;	// UDP log send
-esp_udp udp_proto;			// UDP log send
+static struct espconn udp_server;	// UDP log send
+static esp_udp udp_proto;			// UDP log send
 
 #ifndef ARDUINO
 #include <user_interface.h>
@@ -355,7 +355,7 @@ void LOG_ICACHE_FLASH send_udp_log(const char* log_message) {
 }
 
 // Funkcja callback do odbioru danych (choć tutaj logi są jednostronne)
-void DEVCONN_ICACHE_FLASH udp_recv_callback(void *arg, char *pdata, unsigned short len) {
+static void udp_recv_callback(void *arg, char *pdata, unsigned short len) {
     os_printf("Received data: %s\n", pdata);
 }
 
