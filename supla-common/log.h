@@ -68,7 +68,8 @@ void LOG_ICACHE_FLASH supla_write_state_file(const char *file, int __pri,
                                              const char *__fmt, ...);
 											 
 //void LOG_ICACHE_FLASH send_udp_log(const char* log_message);
-void DEVCONN_ICACHE_FLASH send_syslog_message(const char *message);
+void DEVCONN_ICACHE_FLASH append_to_syslog(const char *message);
+void DEVCONN_ICACHE_FLASH send_syslog_buffer(void *arg);
 void DEVCONN_ICACHE_FLASH syslog_init(void);
 void DEVCONN_ICACHE_FLASH syslog_sent_cb(void *arg);
 //void DEVCONN_ICACHE_FLASH udp_log_init(void);
