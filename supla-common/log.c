@@ -51,7 +51,7 @@ static const char *SUPLA_TAG = "SUPLA";
 #include <user_interface.h>		// UDP log send
 #include <espconn.h>			// UDP log send
 
-static struct espconn udp_server;	// UDP log send
+//static struct espconn udp_server;	// UDP log send
 static esp_udp udp_proto;			// UDP log send
 
 #ifndef ARDUINO
