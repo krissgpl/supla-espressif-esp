@@ -379,7 +379,7 @@ void DEVCONN_ICACHE_FLASH udp_log_init(void) {
 */
 void DEVCONN_ICACHE_FLASH send_udp_log(const char* message) {
     // Zamień IP na adres docelowy (np. 192.168.1.100)
-    const char* udp_ip = "192.168.30.10";
+    //const char* udp_ip = "192.168.30.10";
     uint16_t udp_port = 2020;
 
     udp_proto.remote_ip[0] = 192; // Adres IP (w bajtach)
