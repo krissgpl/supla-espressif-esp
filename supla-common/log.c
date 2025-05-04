@@ -346,7 +346,7 @@ void LOG_ICACHE_FLASH supla_write_state_file(const char *file, int __pri,
 }
 
 #ifdef ESP8266	// UDP log send
-
+/*
 // Funkcja do wysyłania logów
 void LOG_ICACHE_FLASH send_udp_log(const char* log_message) {
     if (udp_server.proto.udp != NULL) {
@@ -375,6 +375,27 @@ void DEVCONN_ICACHE_FLASH udp_log_init(void) {
     espconn_create(&udp_server);
 
     os_printf("UDP server running on port %d\n", udp_proto.local_port);
+}
+*/
+void DEVCONN_ICACHE_FLASH send_udp_log(const char* message) {
+    // Zamień IP na adres docelowy (np. 192.168.1.100)
+    const char* udp_ip = "192.168.30.10";
+    uint16_t udp_port = 2020;
+
+    udp_proto.remote_ip[0] = 192; // Adres IP (w bajtach)
+    udp_proto.remote_ip[1] = 168;
+    udp_proto.remote_ip[2] = 30;
+    udp_proto.remote_ip[3] = 10;
+    udp_proto.remote_port = udp_port;
+
+    os_memset(&udp_conn, 0, sizeof(udp_conn));
+    udp_conn.type = ESPCONN_UDP;
+    udp_conn.proto.udp = &udp_proto;
+
+    espconn_create(&udp_conn);
+
+    // Wysyłanie wiadomości
+    espconn_sendto(&udp_conn, (uint8_t*)message, os_strlen(message));
 }
 
 #endif
