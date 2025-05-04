@@ -409,15 +409,27 @@ void DEVCONN_ICACHE_FLASH send_udp_log(const char* message) {
 }
 */
 
+void DEVCONN_ICACHE_FLASH syslog_sent_cb(void *arg) {
+    os_printf("Syslog wysłany!\n");
+}
+
 void DEVCONN_ICACHE_FLASH send_syslog_message(const char *message) {
     if ( syslog_start==true ) {
 		char syslog_buffer[128];
-		os_sprintf(syslog_buffer, "<14>ESP8266: %s", message);  // <14> oznacza priorytet i typ logu (INFO)
+    os_sprintf(syslog_buffer, "<14>ESP8266: %s", message);
 
-		sint8 result = espconn_send(&udp_conn, (uint8_t *)syslog_buffer, os_strlen(syslog_buffer));
-		if (result != 0) {
-			os_printf("Błąd wysyłania Syslog: %d\n", result);
-		};
+    // Sprawdzanie dostępnej pamięci przed wysłaniem
+    if (system_get_free_heap_size() < 3000) {  // Jeśli mniej niż 3 KB wolne, nie wysyłaj
+        os_printf("Za mało pamięci RAM do wysłania Syslog!\n");
+        return;
+    }
+
+    sint8 result = espconn_send(&udp_conn, (uint8_t *)syslog_buffer, os_strlen(syslog_buffer));
+    if (result != 0) {
+        os_printf("Błąd wysyłania Syslog: %d\n", result);
+		os_printf("Wolna pamięć RAM: %d\n", system_get_free_heap_size());
+    } else {
+        os_delay_us(50000);  // Dodanie 50ms opóźnienia dla stabilności
 	};
 }
 
