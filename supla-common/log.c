@@ -58,7 +58,7 @@ static const char *SUPLA_TAG = "SUPLA";
 #define LOG_SEND_INTERVAL 5000  // Czas między wysyłkami (ms)
 #define MAX_LOG_BUFFER 1024      // Maksymalny rozmiar bufora logów
 
-//bool syslog_start=false;
+bool syslog_start=false;
 LOCAL struct espconn udp_conn;
 LOCAL esp_udp udp_proto;
 LOCAL os_timer_t syslog_timer;
@@ -460,7 +460,9 @@ void DEVCONN_ICACHE_FLASH append_to_syslog(const char *message) {
     
     // Sprawdzenie, czy zmieści się w buforze
     if (log_size + msg_length + 2 > MAX_LOG_BUFFER) {
-        send_syslog_buffer(NULL);  // Wysyłanie paczki przed dodaniem nowego logu
+		if ( syslog_start==true ) {
+			send_syslog_buffer(NULL); 
+			}; // Wysyłanie paczki przed dodaniem nowego logu
     }
 
     os_sprintf(log_buffer + log_size, "<14>ESP8266: %s\n", message);
@@ -486,7 +488,7 @@ void DEVCONN_ICACHE_FLASH syslog_init(void) {
 
     os_printf("Syslog UDP gotowy\n");
 	
-//	syslog_start=true;
+ 	syslog_start=true;
 	
     append_to_syslog("Uruchomienie systemu");
 }
