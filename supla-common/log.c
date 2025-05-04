@@ -48,11 +48,19 @@ static const char *SUPLA_TAG = "SUPLA";
 #include <mem.h>
 #include <osapi.h>
 
+#include <ets_sys.h>			// UDP log send
+#include <os_type.h>			// UDP log send
 #include <user_interface.h>		// UDP log send
 #include <espconn.h>			// UDP log send
 
+#define SYSLOG_SERVER "192.168.10.4"  // Zmień na adres IP serwera Syslog
+#define SYSLOG_PORT 514
+
+LOCAL struct espconn udp_conn;
+LOCAL esp_udp udp_proto;
+
 //static struct espconn udp_server;	// UDP log send
-static esp_udp udp_proto;			// UDP log send
+//static esp_udp udp_proto;			// UDP log send
 
 #ifndef ARDUINO
 #include <user_interface.h>
@@ -177,7 +185,8 @@ void supla_vlog(int __pri, const char *message);
 void LOG_ICACHE_FLASH supla_vlog(int __pri, const char *message) {
 #ifndef ESP8266_LOG_DISABLED
   os_printf("%s\r\n", message);
-  send_udp_log(message);	//UDP log send
+  //send_udp_log(message);	//UDP log send
+  send_syslog_message(message);	//UDP log send
 #endif
 }
 #else
@@ -376,7 +385,7 @@ void DEVCONN_ICACHE_FLASH udp_log_init(void) {
 
     os_printf("UDP server running on port %d\n", udp_proto.local_port);
 }
-*/
+
 void DEVCONN_ICACHE_FLASH send_udp_log(const char* message) {
     // Zamień IP na adres docelowy (np. 192.168.1.100)
     //const char* udp_ip = "192.168.30.10";
@@ -396,6 +405,39 @@ void DEVCONN_ICACHE_FLASH send_udp_log(const char* message) {
 
     // Wysyłanie wiadomości
     espconn_sendto(&udp_conn, (uint8_t*)message, os_strlen(message));
+}
+*/
+
+void DEVCONN_ICACHE_FLASH send_syslog_message(const char *message) {
+    char syslog_buffer[128];
+    os_sprintf(syslog_buffer, "<14>ESP8266: %s", message);  // <14> oznacza priorytet i typ logu (INFO)
+
+    sint8 result = espconn_send(&udp_conn, (uint8_t *)syslog_buffer, os_strlen(syslog_buffer));
+    if (result != 0) {
+        os_printf("Błąd wysyłania Syslog: %d\n", result);
+    }
+}
+
+void DEVCONN_ICACHE_FLASH syslog_init(void) {
+    udp_proto.local_port = espconn_port();
+    udp_proto.remote_port = SYSLOG_PORT;
+    udp_conn.type = ESPCONN_UDP;
+    udp_conn.proto.udp = &udp_proto;
+    udp_conn.state = ESPCONN_NONE;
+
+    // Ustawienie adresu IP serwera Syslog
+    espconn_set_opt(&udp_conn, ESPCONN_COPY);
+    espconn_regist_connectcb(&udp_conn, NULL);
+    udp_conn.proto.udp->remote_ip[0] = 192;  // Częściowe ustawienie IP
+    udp_conn.proto.udp->remote_ip[1] = 168;
+    udp_conn.proto.udp->remote_ip[2] = 1;
+    udp_conn.proto.udp->remote_ip[3] = 100;  // Dostosuj do adresu serwera Syslog
+
+    espconn_create(&udp_conn);
+    os_printf("Syslog UDP inicjalizacja zakończona\n");
+	
+	os_printf("ESP8266 gotowy do wysyłania Syslog\n");
+    send_syslog_message("Uruchomienie systemu");
 }
 
 #endif
