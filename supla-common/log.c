@@ -418,24 +418,6 @@ void DEVCONN_ICACHE_FLASH send_udp_log(const char* message) {
 }
 */
 
-void DEVCONN_ICACHE_FLASH syslog_sent_cb(void *arg) {
-    os_printf("Syslog wysłany!\n");
-}
-
-void DEVCONN_ICACHE_FLASH send_syslog_buffer(void *arg) {
-    
-	if (log_size == 0) {
-        return;  // Nie wysyłaj pustych paczek
-    }
-
-    sint8 result = espconn_send(&udp_conn, (uint8_t *)log_buffer, log_size);
-    if (result == 0) {
-        os_printf("Syslog: Wysłano paczkę %d bajtów\n", log_size);
-        log_size = 0;  // Zerowanie bufora po wysyłce
-    } else {
-        os_printf("Błąd wysyłania Syslog: %d\n", result);
-    }
-}
 /*
 void DEVCONN_ICACHE_FLASH send_syslog_message(const char *message) {
     if ( syslog_start==true ) {
