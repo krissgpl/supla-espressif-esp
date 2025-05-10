@@ -470,7 +470,13 @@ void send_syslog_chunk(void *arg) {
         os_strcat(chunk_buffer, "\n");  // Znacznik końca wiadomości
     }
 
-    os_printf("Syslog: Wysyłanie paczki %d bajtów, offset %d\n", chunk_size, bytes_sent);
+    uint16_t chunk_size = (log_size - bytes_sent > UDP_PACKET_SIZE) ? UDP_PACKET_SIZE : (log_size - bytes_sent);
+    char chunk_buffer[UDP_PACKET_SIZE + 2];  // Dodatkowe miejsce na \0
+
+    os_memcpy(chunk_buffer, log_buffer + bytes_sent, chunk_size);
+    chunk_buffer[chunk_size] = '\0';  // 🛠 Zapewnia pełne zakończenie stringa
+
+    os_printf("Syslog: Wysyłanie paczki: %s\n", chunk_buffer);
     sint8 result = espconn_send(&udp_conn, (uint8_t *)chunk_buffer, chunk_size);
 
     if (result == 0) {
