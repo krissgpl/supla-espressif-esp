@@ -488,6 +488,11 @@ void DEVCONN_ICACHE_FLASH append_to_syslog(const char *message) {
         return;
     }
 
+	if ( syslog_start==false ) {
+		os_printf("UDP nie zainicjowany, nie wysylam!\n");
+        return;  // Nie wysyłaj pustych paczek
+	}
+
     if (log_size + msg_length + 2 > MAX_LOG_BUFFER) {
         send_syslog_buffer(NULL);
     }
