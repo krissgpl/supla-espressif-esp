@@ -447,36 +447,41 @@ void syslog_sent_cb(void *arg) {
     os_printf("Syslog wysłany!\n");
 }
 
-void DEVCONN_ICACHE_FLASH send_syslog_chunk(void *arg) {
-	
+void send_syslog_chunk(void *arg) {
     if (!sending_logs) {
         return;  // Jeśli nie ma aktywnej wysyłki, nic nie rób
     }
 
     if (bytes_sent >= log_size) {
+        os_printf("Syslog: Wszystkie dane wysłane, zerowanie bufora.\n");
         bytes_sent = 0;
-        sending_logs = false;  // Zatrzymanie wysyłki po zakończeniu przesyłania wszystkich paczek
-        os_timer_disarm(&send_timer);
+        log_size = 0;  // 🛠 Zerowanie bufora po wysyłce
+        sending_logs = false;  // 🛠 Zatrzymanie wysyłki
+        os_timer_disarm(&send_timer);  // 🛠 Wyłączenie timera
         return;
     }
 
-   uint16_t chunk_size = (log_size - bytes_sent > UDP_PACKET_SIZE) ? UDP_PACKET_SIZE : (log_size - bytes_sent);
+    uint16_t chunk_size = (log_size - bytes_sent > UDP_PACKET_SIZE) ? UDP_PACKET_SIZE : (log_size - bytes_sent);
     sint8 result = espconn_send(&udp_conn, (uint8_t *)(log_buffer + bytes_sent), chunk_size);
 
     if (result == 0) {
         os_printf("Syslog: Wysłano %d bajtów\n", chunk_size);
         bytes_sent += chunk_size;
 
-        // Jeśli nie wysłaliśmy jeszcze wszystkiego, zaplanuj kolejną wysyłkę
-        if (bytes_sent < log_size) {
-            os_timer_arm(&send_timer, SEND_DELAY, 0);
+        // Jeśli to ostatnia paczka, zatrzymaj timer
+        if (bytes_sent >= log_size) {
+            os_printf("Ostatnia paczka wysłana, wyłączanie timera.\n");
+            sending_logs = false;  // 🛠 Zatrzymanie wysyłania
+            os_timer_disarm(&send_timer);  // 🛠 Wyłączenie timera
+            log_size = 0;  // 🛠 Zerowanie bufora
         } else {
-            sending_logs = false;  // Wysyłanie zakończone
+            os_timer_arm(&send_timer, SEND_DELAY, 0);  // Kontynuacja wysyłki kolejnego fragmentu
         }
     } else {
         os_printf("Błąd wysyłania Syslog: %d\n", result);
-        sending_logs = false;  // Jeśli błąd, zatrzymaj wysyłanie
+        sending_logs = false;  // 🛠 Jeśli błąd, zatrzymaj wysyłanie
         os_timer_disarm(&send_timer);
+        log_size = 0;  // 🛠 Zerowanie bufora, aby zapobiec zapętleniu
     }
 }
 
