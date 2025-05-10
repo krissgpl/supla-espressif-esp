@@ -61,6 +61,8 @@ static const char *SUPLA_TAG = "SUPLA";
 #define SEND_DELAY 50            // Opóźnienie między paczkami (ms)
 
 bool syslog_start=false;
+LOCAL bool sending_logs = false;  // Flaga kontrolująca stan wysyłania
+
 LOCAL struct espconn udp_conn;
 LOCAL esp_udp udp_proto;
 LOCAL os_timer_t syslog_timer, send_timer;
@@ -447,23 +449,35 @@ void syslog_sent_cb(void *arg) {
 
 void DEVCONN_ICACHE_FLASH send_syslog_chunk(void *arg) {
 	
+    if (!sending_logs) {
+        return;  // Jeśli nie ma aktywnej wysyłki, nic nie rób
+    }
+
     if (bytes_sent >= log_size) {
-        bytes_sent = 0;  // Zerowanie po wysłaniu całości
-        os_timer_disarm(&send_timer);  // Wyłączenie timera
+        bytes_sent = 0;
+        sending_logs = false;  // Zatrzymanie wysyłki po zakończeniu przesyłania wszystkich paczek
+        os_timer_disarm(&send_timer);
         return;
     }
 
-    uint16_t chunk_size = (log_size - bytes_sent > UDP_PACKET_SIZE) ? UDP_PACKET_SIZE : (log_size - bytes_sent);
+   uint16_t chunk_size = (log_size - bytes_sent > UDP_PACKET_SIZE) ? UDP_PACKET_SIZE : (log_size - bytes_sent);
     sint8 result = espconn_send(&udp_conn, (uint8_t *)(log_buffer + bytes_sent), chunk_size);
 
     if (result == 0) {
         os_printf("Syslog: Wysłano %d bajtów\n", chunk_size);
         bytes_sent += chunk_size;
+
+        // Jeśli nie wysłaliśmy jeszcze wszystkiego, zaplanuj kolejną wysyłkę
+        if (bytes_sent < log_size) {
+            os_timer_arm(&send_timer, SEND_DELAY, 0);
+        } else {
+            sending_logs = false;  // Wysyłanie zakończone
+        }
     } else {
         os_printf("Błąd wysyłania Syslog: %d\n", result);
+        sending_logs = false;  // Jeśli błąd, zatrzymaj wysyłanie
+        os_timer_disarm(&send_timer);
     }
-
-    os_timer_arm(&send_timer, SEND_DELAY, 0);  // Powtarzające się wysyłanie fragmentów
 }
 
 void DEVCONN_ICACHE_FLASH send_syslog_buffer(void *arg) {
@@ -477,6 +491,7 @@ void DEVCONN_ICACHE_FLASH send_syslog_buffer(void *arg) {
 	}
 	
     bytes_sent = 0;  // Reset bufora wysyłki
+	sending_logs = true;  // Aktywowanie flagi wysyłki
     send_syslog_chunk(NULL);  // Rozpoczęcie wysyłania pierwszej paczki
 }
 
