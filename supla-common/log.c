@@ -519,12 +519,18 @@ void DEVCONN_ICACHE_FLASH append_to_syslog(const char *message) {
         return;
     }
 
-    if (log_size + msg_length + 2 > MAX_LOG_BUFFER) {
+    if (log_size + msg_length + 3 > MAX_LOG_BUFFER) {  // Dodano +3 dla \n i \0
         send_syslog_buffer(NULL);
     }
 
-    os_sprintf(log_buffer + log_size, "<14>ESP8266: %s\n", message);
-    log_size += msg_length + 2;
+    os_memcpy(log_buffer + log_size, message, msg_length);  // 🛠 Poprawne kopiowanie danych
+    log_buffer[log_size + msg_length] = '\n';  // 🛠 Zapewnienie końca linii
+    log_buffer[log_size + msg_length + 1] = '\0';  // 🛠 Zapewnienie poprawnego zakończenia
+
+    log_size += msg_length + 2;  // Aktualizacja rozmiaru bufora
+
+    // Debugowanie pełnej wiadomości przed wysłaniem
+    os_printf("DEBUG LOG: %s\n", log_buffer);
 }
 
 void syslog_init(void) {
