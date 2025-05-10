@@ -448,7 +448,7 @@ void syslog_sent_cb(void *arg) {
 }
 
 void send_syslog_chunk(void *arg) {
-    if (!sending_logs) {
+   if (!sending_logs) {
         return;  // Jeśli nie ma aktywnej wysyłki, nic nie rób
     }
 
@@ -462,26 +462,32 @@ void send_syslog_chunk(void *arg) {
     }
 
     uint16_t chunk_size = (log_size - bytes_sent > UDP_PACKET_SIZE) ? UDP_PACKET_SIZE : (log_size - bytes_sent);
-    sint8 result = espconn_send(&udp_conn, (uint8_t *)(log_buffer + bytes_sent), chunk_size);
+    
+    // 🛠 Dodajemy znacznik końca wiadomości, jeśli wysyłamy ostatnią paczkę
+    char chunk_buffer[UDP_PACKET_SIZE + 2];
+    os_memcpy(chunk_buffer, log_buffer + bytes_sent, chunk_size);
+    if (bytes_sent + chunk_size >= log_size) {
+        os_strcat(chunk_buffer, "\n");  // Znacznik końca wiadomości
+    }
+
+    os_printf("Syslog: Wysyłanie paczki %d bajtów, offset %d\n", chunk_size, bytes_sent);
+    sint8 result = espconn_send(&udp_conn, (uint8_t *)chunk_buffer, chunk_size);
 
     if (result == 0) {
-        os_printf("Syslog: Wysłano %d bajtów\n", chunk_size);
         bytes_sent += chunk_size;
 
-        // Jeśli to ostatnia paczka, zatrzymaj timer
-        if (bytes_sent >= log_size) {
-            os_printf("Ostatnia paczka wysłana, wyłączanie timera.\n");
-            sending_logs = false;  // 🛠 Zatrzymanie wysyłania
-            os_timer_disarm(&send_timer);  // 🛠 Wyłączenie timera
-            log_size = 0;  // 🛠 Zerowanie bufora
+        if (bytes_sent < log_size) {
+            os_timer_arm(&send_timer, SEND_DELAY, 0);
         } else {
-            os_timer_arm(&send_timer, SEND_DELAY, 0);  // Kontynuacja wysyłki kolejnego fragmentu
+            sending_logs = false;
+            os_timer_disarm(&send_timer);
+            log_size = 0;  // 🛠 Zerowanie bufora
         }
     } else {
         os_printf("Błąd wysyłania Syslog: %d\n", result);
-        sending_logs = false;  // 🛠 Jeśli błąd, zatrzymaj wysyłanie
+        sending_logs = false;
         os_timer_disarm(&send_timer);
-        log_size = 0;  // 🛠 Zerowanie bufora, aby zapobiec zapętleniu
+        log_size = 0;  // 🛠 Zerowanie bufora w przypadku błędu
     }
 }
 
@@ -507,11 +513,6 @@ void DEVCONN_ICACHE_FLASH append_to_syslog(const char *message) {
         os_printf("Za mało pamięci RAM na dodanie logu!\n");
         return;
     }
-
-	if ( syslog_start==false ) {
-		os_printf("UDP nie zainicjowany, nie wysylam!\n");
-        return;  // Nie wysyłaj pustych paczek
-	}
 
     if (log_size + msg_length + 2 > MAX_LOG_BUFFER) {
         send_syslog_buffer(NULL);
