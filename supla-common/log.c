@@ -449,6 +449,7 @@ void DEVCONN_ICACHE_FLASH send_syslog_chunk(void *arg) {
 	
     if (bytes_sent >= log_size) {
         bytes_sent = 0;  // Zerowanie po wysłaniu całości
+        os_timer_disarm(&send_timer);  // Wyłączenie timera
         return;
     }
 
