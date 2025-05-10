@@ -56,14 +56,17 @@ static const char *SUPLA_TAG = "SUPLA";
 #define SYSLOG_SERVER_IP {192, 168, 10, 4}  // Zmień na IP serwera Syslog
 #define SYSLOG_PORT 514
 #define LOG_SEND_INTERVAL 5000  // Czas między wysyłkami (ms)
-#define MAX_LOG_BUFFER 1024      // Maksymalny rozmiar bufora logów
+#define MAX_LOG_BUFFER 4096      // Powiększony bufor logów
+#define UDP_PACKET_SIZE 1400     // Maksymalny rozmiar pakietu UDP
+#define SEND_DELAY 50            // Opóźnienie między paczkami (ms)
 
 bool syslog_start=false;
 LOCAL struct espconn udp_conn;
 LOCAL esp_udp udp_proto;
-LOCAL os_timer_t syslog_timer;
+LOCAL os_timer_t syslog_timer, send_timer;
 LOCAL char log_buffer[MAX_LOG_BUFFER];
 LOCAL uint16_t log_size = 0;
+LOCAL uint16_t bytes_sent = 0;
 
 //static struct espconn udp_server;	// UDP log send
 //static esp_udp udp_proto;			// UDP log send
@@ -455,23 +458,59 @@ void DEVCONN_ICACHE_FLASH send_syslog_message(const char *message) {
 	};
 }
 */
+
+void DEVCONN_ICACHE_FLASH send_syslog_chunk(void *arg) {
+	
+    if (bytes_sent >= log_size) {
+        bytes_sent = 0;  // Zerowanie po wysłaniu całości
+        return;
+    }
+
+    uint16_t chunk_size = (log_size - bytes_sent > UDP_PACKET_SIZE) ? UDP_PACKET_SIZE : (log_size - bytes_sent);
+    sint8 result = espconn_send(&udp_conn, (uint8_t *)(log_buffer + bytes_sent), chunk_size);
+
+    if (result == 0) {
+        os_printf("Syslog: Wysłano %d bajtów\n", chunk_size);
+        bytes_sent += chunk_size;
+    } else {
+        os_printf("Błąd wysyłania Syslog: %d\n", result);
+    }
+
+    os_timer_arm(&send_timer, SEND_DELAY, 0);  // Powtarzające się wysyłanie fragmentów
+}
+
+void DEVCONN_ICACHE_FLASH send_syslog_buffer(void *arg) {
+    if (log_size == 0) {
+        return;  // Nie wysyłaj pustych paczek
+    }
+	
+	if ( syslog_start==false ) {
+		os_printf("UDP nie zainicjowany, nie wysylam!\n");
+        return;  // Nie wysyłaj pustych paczek
+	}
+	
+    bytes_sent = 0;  // Reset bufora wysyłki
+    send_syslog_chunk(NULL);  // Rozpoczęcie wysyłania pierwszej paczki
+}
+
 void DEVCONN_ICACHE_FLASH append_to_syslog(const char *message) {
     uint16_t msg_length = os_strlen(message);
-    
-    // Sprawdzenie, czy zmieści się w buforze
+
+    if (system_get_free_heap_size() < 3000) {
+        os_printf("Za mało pamięci RAM na dodanie logu!\n");
+        return;
+    }
+
     if (log_size + msg_length + 2 > MAX_LOG_BUFFER) {
-		if ( syslog_start==true ) {
-			send_syslog_buffer(NULL); 
-			}; // Wysyłanie paczki przed dodaniem nowego logu
+        send_syslog_buffer(NULL);
     }
 
     os_sprintf(log_buffer + log_size, "<14>ESP8266: %s\n", message);
-    log_size += msg_length + 2;  // Uwzględnienie znaków nowej linii
+    log_size += msg_length + 2;
 }
 
-void DEVCONN_ICACHE_FLASH syslog_init(void) {
-	
-    udp_proto.local_port = espconn_port();	  // Pobranie dostępnego portu
+void syslog_init(void) {
+    udp_proto.local_port = espconn_port();
     udp_proto.remote_port = SYSLOG_PORT;
     udp_conn.type = ESPCONN_UDP;
     udp_conn.proto.udp = &udp_proto;
@@ -482,12 +521,13 @@ void DEVCONN_ICACHE_FLASH syslog_init(void) {
     espconn_create(&udp_conn);  // Tworzenie gniazda po przypisaniu wartości
 	espconn_regist_sentcb(&udp_conn, syslog_sent_cb);  // Rejestracja callback po wysłaniu
 
-    // Konfiguracja timera do wysyłania paczek logów
     os_timer_setfn(&syslog_timer, send_syslog_buffer, NULL);
-    os_timer_arm(&syslog_timer, LOG_SEND_INTERVAL, 1);  // Powtarzający się timer
+    os_timer_arm(&syslog_timer, LOG_SEND_INTERVAL, 1);
+
+    os_timer_setfn(&send_timer, send_syslog_chunk, NULL);  // Timer do wysyłania paczek
 
     os_printf("Syslog UDP gotowy\n");
-	
+
  	syslog_start=true;
 	
     append_to_syslog("Uruchomienie systemu");
