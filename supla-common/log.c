@@ -448,7 +448,7 @@ void syslog_sent_cb(void *arg) {
 }
 
 void send_syslog_chunk(void *arg) {
-   if (!sending_logs) {
+    if (!sending_logs) {
         return;  // Jeśli nie ma aktywnej wysyłki, nic nie rób
     }
 
@@ -463,27 +463,26 @@ void send_syslog_chunk(void *arg) {
 
     uint16_t chunk_size = (log_size - bytes_sent > UDP_PACKET_SIZE) ? UDP_PACKET_SIZE : (log_size - bytes_sent);
     
-    // 🛠 Dodajemy znacznik końca wiadomości, jeśli wysyłamy ostatnią paczkę
-    char chunk_buffer[UDP_PACKET_SIZE + 2];
+    // 🛠 Bufor na wysyłany fragment + miejsce na zakończenie stringa
+    char chunk_buffer[UDP_PACKET_SIZE + 2];  
     os_memcpy(chunk_buffer, log_buffer + bytes_sent, chunk_size);
+    
+    // 🛠 Dodajemy znacznik końca wiadomości, jeśli to ostatnia paczka
     if (bytes_sent + chunk_size >= log_size) {
-        os_strcat(chunk_buffer, "\n");  // Znacznik końca wiadomości
+        chunk_buffer[chunk_size] = '\n';  
+        chunk_buffer[chunk_size + 1] = '\0';  // 🛠 Zapewnia pełne zakończenie stringa
+    } else {
+        chunk_buffer[chunk_size] = '\0';  // 🛠 Zapewnienie zakończenia każdej paczki
     }
 
-    uint16_t chunk_size = (log_size - bytes_sent > UDP_PACKET_SIZE) ? UDP_PACKET_SIZE : (log_size - bytes_sent);
-    char chunk_buffer[UDP_PACKET_SIZE + 2];  // Dodatkowe miejsce na \0
-
-    os_memcpy(chunk_buffer, log_buffer + bytes_sent, chunk_size);
-    chunk_buffer[chunk_size] = '\0';  // 🛠 Zapewnia pełne zakończenie stringa
-
-    os_printf("Syslog: Wysyłanie paczki: %s\n", chunk_buffer);
+    os_printf("Syslog: Wysyłanie paczki [%s], rozmiar: %d bajtów, offset: %d\n", chunk_buffer, chunk_size, bytes_sent);
     sint8 result = espconn_send(&udp_conn, (uint8_t *)chunk_buffer, chunk_size);
 
     if (result == 0) {
         bytes_sent += chunk_size;
 
         if (bytes_sent < log_size) {
-            os_timer_arm(&send_timer, SEND_DELAY, 0);
+            os_timer_arm(&send_timer, SEND_DELAY, 0);  // Kontynuacja wysyłki kolejnego fragmentu
         } else {
             sending_logs = false;
             os_timer_disarm(&send_timer);
