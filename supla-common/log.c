@@ -441,6 +441,10 @@ void DEVCONN_ICACHE_FLASH send_syslog_message(const char *message) {
 }
 */
 
+void syslog_sent_cb(void *arg) {
+    os_printf("Syslog wysłany!\n");
+}
+
 void DEVCONN_ICACHE_FLASH send_syslog_chunk(void *arg) {
 	
     if (bytes_sent >= log_size) {
