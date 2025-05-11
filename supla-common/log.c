@@ -63,7 +63,7 @@ LOCAL os_timer_t send_timer;
 LOCAL struct espconn *current_conn;
 LOCAL const char *current_html;
 LOCAL uint16_t bytes_sent = 0;
-LOCAL uint16_t content_length = 0
+LOCAL uint16_t content_length = 0;
 bool http_log_start=false;
 
 #ifndef ARDUINO
