@@ -388,25 +388,24 @@ void DEVCONN_ICACHE_FLASH http_callback(void *arg) {
     struct espconn *conn = (struct espconn *)arg;
     char request_path[32];
 
-    // 🛠 Poprawne kopiowanie ścieżki żądania do zmiennej `request_path`
-    os_memcpy(request_path, conn->proto.tcp->remote_ip, sizeof(request_path) - 1);
-    request_path[sizeof(request_path) - 1] = '\0';  // 🛠 Zapewnienie zakończenia stringa
-
-    char http_response[4500];
-
-    if (os_strcmp(request_path, "/logs") == 0) {
+     // Sprawdzenie, czy klient chce pobrać logi
+    if (os_strncmp(conn->proto.tcp->remote_ip, "/logs", 5) == 0) {
         os_sprintf(http_response,
             "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n"
             "{\"logs\": \"%s\"}", log_buffer);
     } else {
+        // Główna strona z działającym AJAX-em
         os_sprintf(http_response,
             "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"
             "<html><head><script>"
             "function fetchLogs() {"
-            "fetch('/logs').then(response => response.json()).then(data => {"
+            "fetch('/logs')"
+            ".then(response => response.json())"
+            ".then(data => {"
             "document.getElementById('logArea').innerHTML = data.logs;"
             "setTimeout(fetchLogs, 1000);"
-            "});"
+            "})"
+            ".catch(error => console.error('Błąd AJAX:', error));"
             "}"
             "window.onload = fetchLogs;"
             "</script></head>"
