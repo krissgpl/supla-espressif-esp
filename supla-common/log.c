@@ -389,9 +389,16 @@ void LOG_ICACHE_FLASH append_log(const char *message) {
 
 // 🛠 Wysyłanie odpowiedzi HTTP w pakietach
 void DEVCONN_ICACHE_FLASH send_chunk(void *arg) {
+     if (!current_conn || !current_html) {
+        os_printf("Błąd: Wskaźniki NULL w send_chunk()\n");
+        os_timer_disarm(&send_timer);
+        return;
+    }
+
     uint16_t chunk_size = 1024;
     uint16_t size = (content_length - bytes_sent > chunk_size) ? chunk_size : (content_length - bytes_sent);
 
+    os_printf("Wysyłanie pakietu: %d bajtów (offset: %d)\n", size, bytes_sent);
     espconn_send(current_conn, (uint8_t *)(current_html + bytes_sent), size);
     bytes_sent += size;
 
