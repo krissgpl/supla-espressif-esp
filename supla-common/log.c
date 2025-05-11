@@ -502,7 +502,7 @@ void DEVCONN_ICACHE_FLASH send_syslog_buffer(void *arg) {
     }
 	
 	if ( syslog_start==false ) {
-		os_printf("UDP nie zainicjowany, nie wysylam!\n");
+		os_printf("send_syslog_buffer - UDP nie zainicjowany, nie wysylam!\n");
         return;  // Nie wysyłaj pustych paczek
 	}
 	
@@ -518,6 +518,11 @@ void DEVCONN_ICACHE_FLASH append_to_syslog(const char *message) {
         os_printf("Za mało pamięci RAM na dodanie logu!\n");
         return;
     }
+	
+	if ( syslog_start==false ) {
+		os_printf("append_to_syslog - UDP nie zainicjowany, nie wysylam!\n");
+        return;  // Nie wysyłaj pustych paczek
+	}
 
     os_printf("append_to_syslog: %s\n", message); // Debugowanie logu przed dodaniem
 
