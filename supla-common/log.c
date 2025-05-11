@@ -518,21 +518,21 @@ void DEVCONN_ICACHE_FLASH append_to_syslog(const char *message) {
         os_printf("Za mało pamięci RAM na dodanie logu!\n");
         return;
     }
-	
-	os_printf("append_to_syslog: %s\n", message);
 
-    if (log_size + msg_length + 3 > MAX_LOG_BUFFER) {  // Dodano +3 dla \n i \0
+    os_printf("append_to_syslog: %s\n", message); // Debugowanie logu przed dodaniem
+
+    if (log_size + msg_length + 3 > MAX_LOG_BUFFER) {  // Jeśli brak miejsca, wysyłamy i resetujemy bufor
         send_syslog_buffer(NULL);
+        log_size = 0;  // 🛠 Zerowanie bufora po wysyłce
     }
 
-    os_memcpy(log_buffer + log_size, message, msg_length);  // 🛠 Poprawne kopiowanie danych
-    log_buffer[log_size + msg_length] = '\n';  // 🛠 Zapewnienie końca linii
-    log_buffer[log_size + msg_length + 1] = '\0';  // 🛠 Zapewnienie poprawnego zakończenia
+    // 🛠 Prawidłowe dopisywanie nowej wiadomości do bufora
+    os_strcat(log_buffer, message);  // Dodanie wiadomości na koniec istniejącego bufora
+    os_strcat(log_buffer, "\n");  // 🛠 Dodanie końca linii dla Syslog
 
-    log_size += msg_length + 2;  // Aktualizacja rozmiaru bufora
+    log_size = os_strlen(log_buffer);  // Aktualizacja wartości `log_size`
 
-    // Debugowanie pełnej wiadomości przed wysłaniem
-    os_printf("append_to_syslog log_buffer: %s\n", log_buffer);
+    os_printf("append_to_syslog log_buffer: %s\n", log_buffer); // Debugowanie pełnego bufora
 }
 
 void syslog_init(void) {
