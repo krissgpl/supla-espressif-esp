@@ -53,17 +53,11 @@ static const char *SUPLA_TAG = "SUPLA";
 #include <user_interface.h>		// HTTP log display
 #include <espconn.h>			// HTTP log display
 
-#define MAX_LOG_BUFFER 4096  // Bufor na logi
+#define MAX_LOG_BUFFER 4096  // Powiększony bufor na logi
 LOCAL char log_buffer[MAX_LOG_BUFFER];
 LOCAL uint16_t log_size = 0;
 LOCAL struct espconn http_server;
 LOCAL esp_tcp http_tcp;
-
-LOCAL os_timer_t send_timer;
-LOCAL struct espconn *current_conn;
-LOCAL const char *current_html;
-LOCAL uint16_t bytes_sent = 0;
-LOCAL uint16_t content_length = 0;
 bool http_log_start=false;
 
 #ifndef ARDUINO
@@ -360,107 +354,57 @@ void LOG_ICACHE_FLASH supla_write_state_file(const char *file, int __pri,
 #ifdef ESP8266	// HTTP LOG SERVER
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Dodaj nowy log do bufora
+
+// 🛠 Dodanie logu do bufora
 void LOG_ICACHE_FLASH append_log(const char *message) {
     uint16_t msg_length = os_strlen(message);
-    
+
     if (system_get_free_heap_size() < 3000) {
         os_printf("Za mało pamięci RAM na dodanie logu!\n");
         return;
     }
-
+	
 	if ( http_log_start==false ) {
         os_printf("HTTP log server nie uruchomiony!\n");
         return;
     }
 
-    os_printf("Dodanie logu: %s\n", message);
+    os_printf("Dodanie logu: %s\n", message);  // Debugowanie dodawania logu
 
+    // 🛠 Sprawdzenie, czy mamy miejsce w buforze, jeśli nie - czyścimy go
     if (log_size + msg_length + 3 > MAX_LOG_BUFFER) {
         log_size = 0;
         os_memset(log_buffer, 0, MAX_LOG_BUFFER);
     }
 
-    os_strcat(log_buffer, message);
-    os_strcat(log_buffer, "\n");
+    os_strcat(log_buffer, message);  // 🛠 Prawidłowe dopisywanie logu
+    os_strcat(log_buffer, "\n");  // 🛠 Dodanie końca linii
 
-    log_size = os_strlen(log_buffer);
+    log_size = os_strlen(log_buffer);  // 🛠 Aktualizacja rozmiaru bufora
 }
 
-// 🛠 Wysyłanie odpowiedzi HTTP w pakietach
-void DEVCONN_ICACHE_FLASH send_chunk(void *arg) {
-     if (!current_conn || !current_html) {
-        os_printf("Błąd: Wskaźniki NULL w send_chunk()\n");
-        os_timer_disarm(&send_timer);
-        return;
-    }
-
-    uint16_t chunk_size = 1024;
-    uint16_t size = (content_length - bytes_sent > chunk_size) ? chunk_size : (content_length - bytes_sent);
-
-    os_printf("Wysyłanie pakietu: %d bajtów (offset: %d)\n", size, bytes_sent);
-    espconn_send(current_conn, (uint8_t *)(current_html + bytes_sent), size);
-    bytes_sent += size;
-
-    if (bytes_sent >= content_length) {
-        os_timer_disarm(&send_timer);
-    }
-}
-
-void DEVCONN_ICACHE_FLASH send_http_response(struct espconn *conn, const char *html_content) {
-    current_conn = conn;
-    current_html = html_content;
-    content_length = os_strlen(html_content);
-    bytes_sent = 0;
-
-    os_timer_setfn(&send_timer, send_chunk, NULL);
-    os_timer_arm(&send_timer, 50, 1);
-}
-
-void DEVCONN_ICACHE_FLASH connect_callback(void *arg) {
-    struct espconn *conn = (struct espconn *)arg;
-    os_printf("Nowe połączenie z klientem!\n");
-
-    // 🛠 Rejestracja funkcji do odbierania danych HTTP
-    espconn_regist_recvcb(conn, http_recv_callback);
-}
-
-// 🛠 Obsługa żądań HTTP
-void DEVCONN_ICACHE_FLASH http_recv_callback(void *arg, char *pdata, unsigned short len) {
+    // 🛠 Obsługa żądań HTTP
+void DEVCONN_ICACHE_FLASH http_callback(void *arg) {
     struct espconn *conn = (struct espconn *)arg;
     char http_response[4500];
 
-    if (os_strncmp(pdata, "GET /logs", 9) == 0) {
-        os_sprintf(http_response,
-            "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n"
-            "{\"logs\": \"%s\"}", log_buffer);
-    } else {
-        os_sprintf(http_response,
-            "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"
-            "<html><head><script>"
-            "function fetchLogs() {"
-            "fetch('/logs')"
-            ".then(response => response.json())"
-            ".then(data => {"
-            "document.getElementById('logArea').innerHTML = data.logs;"
-            "setTimeout(fetchLogs, 1000);"
-            "})"
-            ".catch(error => console.error('Błąd AJAX:', error));"
-            "}"
-            "window.onload = fetchLogs;"
-            "</script></head>"
-            "<body><pre id='logArea'></pre></body></html>");
-    }
+    os_sprintf(http_response,
+        "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"
+        "<html><head><meta http-equiv='refresh' content='1'><style>"
+        "body{font-family:Arial;background:#222;color:#0f0;}</style></head><body><pre>%s</pre></body></html>",
+        log_buffer);
 
-    send_http_response(conn, http_response);
+    espconn_send(conn, (uint8_t *)http_response, os_strlen(http_response));
 }
+
 // 🛠 Konfiguracja serwera HTTP
 void http_server_init(void) {
     http_tcp.local_port = 80;
     http_server.type = ESPCONN_TCP;
+    http_server.state = ESPCONN_NONE;
     http_server.proto.tcp = &http_tcp;
 
-    espconn_regist_connectcb(&http_server, connect_callback);  // 🛠 Rejestracja callbacku dla połączenia
+    espconn_regist_connectcb(&http_server, http_callback);
     espconn_accept(&http_server);
     os_printf("Serwer HTTP uruchomiony na porcie 80!\n");
 	http_log_start=true;
