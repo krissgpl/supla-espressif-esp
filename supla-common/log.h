@@ -23,6 +23,7 @@
 #include <mem.h>
 #define LOG_ICACHE_FLASH ICACHE_FLASH_ATTR
 #define DEVCONN_ICACHE_FLASH ICACHE_FLASH_ATTR
+#include "espconn.h"  // 🛠 Deklaracja struktury espconn
 #endif
 
 #if defined(ARDUINO)
