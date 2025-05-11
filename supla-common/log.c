@@ -53,7 +53,7 @@ static const char *SUPLA_TAG = "SUPLA";
 #include <user_interface.h>		// HTTP log display
 #include <espconn.h>			// HTTP log display
 
-#define MAX_LOG_BUFFER 2048  // Bufor na logi
+#define MAX_LOG_BUFFER 4096  // Bufor na logi
 
 LOCAL char log_buffer[MAX_LOG_BUFFER];
 LOCAL uint16_t log_size = 0;
@@ -359,25 +359,38 @@ void LOG_ICACHE_FLASH supla_write_state_file(const char *file, int __pri,
 void LOG_ICACHE_FLASH append_log(const char *message) {
     uint16_t msg_length = os_strlen(message);
     
-    if (log_size + msg_length + 2 > MAX_LOG_BUFFER) {
-        log_size = 0;  // Resetuj bufor jeśli pełny
+    if (system_get_free_heap_size() < 3000) {
+        os_printf("Za mało pamięci RAM na dodanie logu!\n");
+        return;
+    }
+
+	if ( http_log_start==false ) {
+        os_printf("HTTP log server nie uruchomiony!\n");
+        return;
+    }
+
+    os_printf("Dodanie logu: %s\n", message);  // Debugowanie dodawania logu
+
+    // 🛠 Sprawdzenie, czy mamy miejsce w buforze, jeśli nie - czyścimy go
+    if (log_size + msg_length + 3 > MAX_LOG_BUFFER) {
+        log_size = 0;
         os_memset(log_buffer, 0, MAX_LOG_BUFFER);
     }
 
-    os_memcpy(log_buffer + log_size, message, msg_length);
-    log_buffer[log_size + msg_length] = '\n';
-    log_buffer[log_size + msg_length + 1] = '\0';
-    log_size += msg_length + 2;
+    os_strcat(log_buffer, message);  // 🛠 Prawidłowe dopisywanie logu
+    os_strcat(log_buffer, "\n");  // 🛠 Dodanie końca linii
+
+    log_size = os_strlen(log_buffer);  // 🛠 Aktualizacja rozmiaru bufora
 }
 
 // Obsługa żądań HTTP
 void DEVCONN_ICACHE_FLASH http_callback(void *arg) {
     struct espconn *conn = (struct espconn *)arg;
-    char http_response[2500];
+    char http_response[4500];
 
     os_sprintf(http_response,
         "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"
-        "<html><head><meta http-equiv='refresh' content='2'><style>"
+        "<html><head><meta http-equiv='refresh' content='1'><style>"
         "body{font-family:Arial;background:#222;color:#0f0;}</style></head><body><pre>%s</pre></body></html>",
         log_buffer);
 
@@ -394,6 +407,7 @@ void http_server_init(void) {
     espconn_regist_connectcb(&http_server, http_callback);
     espconn_accept(&http_server);
     os_printf("Serwer HTTP uruchomiony na porcie 80!\n");
+	http_log_start=true;
 }
 
 
