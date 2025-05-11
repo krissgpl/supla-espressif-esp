@@ -388,11 +388,26 @@ void DEVCONN_ICACHE_FLASH http_callback(void *arg) {
     struct espconn *conn = (struct espconn *)arg;
     char http_response[4500];
 
-    os_sprintf(http_response,
-        "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"
-        "<html><head><meta http-equiv='refresh' content='1'><style>"
-        "body{font-family:Arial;background:#222;color:#0f0;}</style></head><body><pre>%s</pre></body></html>",
-        log_buffer);
+    if (os_strcmp(conn->proto.tcp->remote_ip, "/logs") == 0) {
+        // 🛠 Serwujemy logi w formacie JSON
+        os_sprintf(http_response,
+            "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n"
+            "{\"logs\": \"%s\"}", log_buffer);
+    } else {
+        // 🛠 Główna strona HTML z AJAX-em
+        os_sprintf(http_response,
+            "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"
+            "<html><head><script>"
+            "function fetchLogs() {"
+            "fetch('/logs').then(response => response.json()).then(data => {"
+            "document.getElementById('logArea').innerHTML = data.logs;"
+            "setTimeout(fetchLogs, 1000);"
+            "});"
+            "}"
+            "window.onload = fetchLogs;"
+            "</script></head>"
+            "<body><pre id='logArea'></pre></body></html>");
+    }
 
     espconn_send(conn, (uint8_t *)http_response, os_strlen(http_response));
 }
