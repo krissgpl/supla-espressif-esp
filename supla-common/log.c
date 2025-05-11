@@ -384,12 +384,17 @@ void LOG_ICACHE_FLASH append_log(const char *message) {
 }
 
 // 🛠 Obsługa żądań HTTP
-void DEVCONN_ICACHE_FLASH http_callback(void *arg, char *request) {
+void DEVCONN_ICACHE_FLASH http_callback(void *arg) {
     struct espconn *conn = (struct espconn *)arg;
+    char request_buffer[256];
+
+    // 🛠 Pobieranie żądania HTTP od klienta
+    espconn_recv(conn, (uint8_t *)request_buffer, sizeof(request_buffer));
+
     char http_response[4500];
 
-    // 🛠 Sprawdzenie pierwszej linii żądania HTTP
-    if (os_strncmp(request, "GET /logs", 9) == 0) {
+    // 🛠 Sprawdzanie, czy klient chce pobrać logi
+    if (os_strncmp(request_buffer, "GET /logs", 9) == 0) {
         os_sprintf(http_response,
             "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n"
             "{\"logs\": \"%s\"}", log_buffer);
