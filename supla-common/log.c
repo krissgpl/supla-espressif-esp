@@ -384,25 +384,16 @@ void LOG_ICACHE_FLASH append_log(const char *message) {
 }
 
 // 🛠 Obsługa żądań HTTP
-void DEVCONN_ICACHE_FLASH http_callback(void *arg) {
+void DEVCONN_ICACHE_FLASH http_callback(void *arg, char *request) {
     struct espconn *conn = (struct espconn *)arg;
-    char request_buffer[256];  // Bufor na żądanie HTTP
+    char http_response[4500];
 
-    // 🛠 Pobieranie danych z klienta
-    espconn_recv(conn, (uint8_t *)request_buffer, sizeof(request_buffer));
-
-    // 🛠 Sprawdzanie, czy klient chce pobrać logi
-    if (os_strncmp(request_buffer, "GET /logs", 9) == 0) {
-        char http_response[4500];
-
+    // 🛠 Sprawdzenie pierwszej linii żądania HTTP
+    if (os_strncmp(request, "GET /logs", 9) == 0) {
         os_sprintf(http_response,
             "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n"
             "{\"logs\": \"%s\"}", log_buffer);
-
-        espconn_send(conn, (uint8_t *)http_response, os_strlen(http_response));
     } else {
-        char http_response[4500];
-
         os_sprintf(http_response,
             "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"
             "<html><head><script>"
@@ -418,9 +409,9 @@ void DEVCONN_ICACHE_FLASH http_callback(void *arg) {
             "window.onload = fetchLogs;"
             "</script></head>"
             "<body><pre id='logArea'></pre></body></html>");
-
-        espconn_send(conn, (uint8_t *)http_response, os_strlen(http_response));
     }
+
+    espconn_send(conn, (uint8_t *)http_response, os_strlen(http_response));
 }
 
 // Konfiguracja serwera HTTP
