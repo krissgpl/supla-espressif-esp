@@ -522,14 +522,14 @@ supla_esp_gpio_init(void) {
     supla_rs_cfg[a].auto_closing_time = &supla_esp_cfg.AutoCalCloseTime[a];
     supla_rs_cfg[a].tilt_type = &supla_esp_cfg.TiltControlType[a];
     supla_rs_cfg[a].rs_time_margin = 110;  // default
- /*    supla_log(
-      LOG_DEBUG,
+    supla_log(
+        LOG_DEBUG,
         "RS loaded: position %d, tilt %d, auto open %d, auto close %d, "
         "open %d, close %d, tilting %d, type %d",
         *supla_rs_cfg[a].position, *supla_rs_cfg[a].tilt,
         *supla_rs_cfg[a].auto_opening_time, *supla_rs_cfg[a].auto_closing_time,
         *supla_rs_cfg[a].full_opening_time, *supla_rs_cfg[a].full_closing_time,
-        *supla_rs_cfg[a].tilt_change_time, *supla_rs_cfg[a].tilt_type);	*/
+        *supla_rs_cfg[a].tilt_change_time, *supla_rs_cfg[a].tilt_type);
     if (*supla_rs_cfg[a].tilt_type == 0 ||
         *supla_rs_cfg[a].tilt_change_time == 0) {
       *supla_rs_cfg[a].tilt = -1;
@@ -588,7 +588,7 @@ supla_esp_gpio_init(void) {
 
 		if ( supla_relay_cfg[a].gpio_id != 255 ) {
 
-			//  supla_log(LOG_DEBUG, "relay init %i", supla_relay_cfg[a].gpio_id);
+			  supla_log(LOG_DEBUG, "relay init %i", supla_relay_cfg[a].gpio_id);
 
 			if ( supla_relay_cfg[a].gpio_id <= 15
 				 && !(supla_relay_cfg[a].flags & RELAY_FLAG_VIRTUAL_GPIO ) ) {
@@ -623,10 +623,10 @@ supla_esp_gpio_init(void) {
 #ifndef COUNTDOWN_TIMER_DISABLED
         int channel = supla_relay_cfg[a].channel;
         if (channel >= 0 && channel < STATE_CFG_TIME2_COUNT) {
-      /*    supla_log(LOG_DEBUG, 
+          supla_log(LOG_DEBUG, 
               "Restoring relay state: ch %d, value %d, duration %d",
               channel, supla_esp_state.Relay[a],
-              supla_esp_state.Time2Left[channel]); */
+              supla_esp_state.Time2Left[channel]);
           supla_esp_gpio_relay_set_duration_timer(channel,
               supla_esp_state.Relay[a],
               supla_esp_state.Time2Left[channel], 0);
@@ -636,7 +636,7 @@ supla_esp_gpio_init(void) {
             supla_esp_state.Relay[a]);
 			} else if ( supla_relay_cfg[a].flags & RELAY_FLAG_RESET ) {
 
-			//	supla_log(LOG_DEBUG, "LO_VALUE");
+				supla_log(LOG_DEBUG, "LO_VALUE");
 				supla_esp_gpio_relay_hi(supla_relay_cfg[a].gpio_id, LO_VALUE);
 
 			}
@@ -650,7 +650,7 @@ supla_esp_gpio_init(void) {
     	    && supla_input_cfg[a].gpio_id < 16
     		&& supla_input_cfg[a].type != 0 ) {
 
-    //	supla_log(LOG_DEBUG, "input init %i", supla_input_cfg[a].gpio_id);
+    	supla_log(LOG_DEBUG, "input init %i", supla_input_cfg[a].gpio_id);
 
         gpio_output_set(0, 0, 0, BIT(supla_input_cfg[a].gpio_id));
 
@@ -661,7 +661,7 @@ supla_esp_gpio_init(void) {
         GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS, BIT(supla_input_cfg[a].gpio_id));
 
         if ( !(supla_input_cfg[a].flags & INPUT_FLAG_DISABLE_INTR) ) {
-        //    supla_log(LOG_DEBUG, "Input %d - enabling intr anyedge", supla_input_cfg[a].gpio_id);
+            supla_log(LOG_DEBUG, "Input %d - enabling intr anyedge", supla_input_cfg[a].gpio_id);
         	gpio_pin_intr_state_set(GPIO_ID_PIN(supla_input_cfg[a].gpio_id), GPIO_PIN_INTR_ANYEDGE);
         }
 
