@@ -396,6 +396,12 @@ void DEVCONN_ICACHE_FLASH http_recv_callback(void *arg, char *pdata, unsigned sh
     struct espconn *conn = (struct espconn *)arg;
     char http_response[4500];
 
+	os_printf("Wysyłana odpowiedź HTTP:\n%s\n", http_response);
+	sint8 result = espconn_send(conn, (uint8_t *)http_response, os_strlen(http_response));
+	if (result != 0) {
+		os_printf("Błąd wysyłania HTTP: %d\n", result);
+	}
+
     // 🛠 Sprawdzanie pierwszej linii żądania HTTP
     if (os_strncmp(pdata, "GET /logs", 9) == 0) {
         os_sprintf(http_response,
