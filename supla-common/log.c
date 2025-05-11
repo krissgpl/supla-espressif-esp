@@ -54,11 +54,16 @@ static const char *SUPLA_TAG = "SUPLA";
 #include <espconn.h>			// HTTP log display
 
 #define MAX_LOG_BUFFER 4096  // Bufor na logi
-
 LOCAL char log_buffer[MAX_LOG_BUFFER];
 LOCAL uint16_t log_size = 0;
 LOCAL struct espconn http_server;
 LOCAL esp_tcp http_tcp;
+
+LOCAL os_timer_t send_timer;
+LOCAL struct espconn *current_conn;
+LOCAL const char *current_html;
+LOCAL uint16_t bytes_sent = 0;
+LOCAL uint16_t content_length = 0
 bool http_log_start=false;
 
 #ifndef ARDUINO
@@ -369,18 +374,40 @@ void LOG_ICACHE_FLASH append_log(const char *message) {
         return;
     }
 
-    os_printf("Dodanie logu: %s\n", message);  // Debugowanie dodawania logu
+    os_printf("Dodanie logu: %s\n", message);
 
-    // 🛠 Sprawdzenie, czy mamy miejsce w buforze, jeśli nie - czyścimy go
     if (log_size + msg_length + 3 > MAX_LOG_BUFFER) {
         log_size = 0;
         os_memset(log_buffer, 0, MAX_LOG_BUFFER);
     }
 
-    os_strcat(log_buffer, message);  // 🛠 Prawidłowe dopisywanie logu
-    os_strcat(log_buffer, "\n");  // 🛠 Dodanie końca linii
+    os_strcat(log_buffer, message);
+    os_strcat(log_buffer, "\n");
 
-    log_size = os_strlen(log_buffer);  // 🛠 Aktualizacja rozmiaru bufora
+    log_size = os_strlen(log_buffer);
+}
+
+// 🛠 Wysyłanie odpowiedzi HTTP w pakietach
+void DEVCONN_ICACHE_FLASH send_chunk(void *arg) {
+    uint16_t chunk_size = 1024;
+    uint16_t size = (content_length - bytes_sent > chunk_size) ? chunk_size : (content_length - bytes_sent);
+
+    espconn_send(current_conn, (uint8_t *)(current_html + bytes_sent), size);
+    bytes_sent += size;
+
+    if (bytes_sent >= content_length) {
+        os_timer_disarm(&send_timer);
+    }
+}
+
+void DEVCONN_ICACHE_FLASH send_http_response(struct espconn *conn, const char *html_content) {
+    current_conn = conn;
+    current_html = html_content;
+    content_length = os_strlen(html_content);
+    bytes_sent = 0;
+
+    os_timer_setfn(&send_timer, send_chunk, NULL);
+    os_timer_arm(&send_timer, 50, 1);
 }
 
 void DEVCONN_ICACHE_FLASH connect_callback(void *arg) {
@@ -396,13 +423,6 @@ void DEVCONN_ICACHE_FLASH http_recv_callback(void *arg, char *pdata, unsigned sh
     struct espconn *conn = (struct espconn *)arg;
     char http_response[4500];
 
-	os_printf("Wysyłana odpowiedź HTTP:\n%s\n", http_response);
-	sint8 result = espconn_send(conn, (uint8_t *)http_response, os_strlen(http_response));
-	if (result != 0) {
-		os_printf("Błąd wysyłania HTTP: %d\n", result);
-	}
-
-    // 🛠 Sprawdzanie pierwszej linii żądania HTTP
     if (os_strncmp(pdata, "GET /logs", 9) == 0) {
         os_sprintf(http_response,
             "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n"
@@ -425,9 +445,8 @@ void DEVCONN_ICACHE_FLASH http_recv_callback(void *arg, char *pdata, unsigned sh
             "<body><pre id='logArea'></pre></body></html>");
     }
 
-    espconn_send(conn, (uint8_t *)http_response, os_strlen(http_response));
+    send_http_response(conn, http_response);
 }
-
 // 🛠 Konfiguracja serwera HTTP
 void http_server_init(void) {
     http_tcp.local_port = 80;
