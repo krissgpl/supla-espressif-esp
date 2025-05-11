@@ -384,17 +384,12 @@ void LOG_ICACHE_FLASH append_log(const char *message) {
 }
 
 // 🛠 Obsługa żądań HTTP
-void DEVCONN_ICACHE_FLASH http_callback(void *arg) {
+void DEVCONN_ICACHE_FLASH http_recv_callback(void *arg, char *pdata, unsigned short len) {
     struct espconn *conn = (struct espconn *)arg;
-    char request_buffer[256];
-
-    // 🛠 Pobieranie żądania HTTP od klienta
-    espconn_recv(conn, (uint8_t *)request_buffer, sizeof(request_buffer));
-
     char http_response[4500];
 
-    // 🛠 Sprawdzanie, czy klient chce pobrać logi
-    if (os_strncmp(request_buffer, "GET /logs", 9) == 0) {
+    // 🛠 Sprawdzanie pierwszej linii żądania HTTP
+    if (os_strncmp(pdata, "GET /logs", 9) == 0) {
         os_sprintf(http_response,
             "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n"
             "{\"logs\": \"%s\"}", log_buffer);
@@ -417,6 +412,17 @@ void DEVCONN_ICACHE_FLASH http_callback(void *arg) {
     }
 
     espconn_send(conn, (uint8_t *)http_response, os_strlen(http_response));
+}
+
+// 🛠 Konfiguracja serwera HTTP
+void http_server_init(void) {
+    http_tcp.local_port = 80;
+    http_server.type = ESPCONN_TCP;
+    http_server.proto.tcp = &http_tcp;
+
+    espconn_regist_connectcb(&http_server, http_recv_callback);  // 🛠 Poprawiona rejestracja
+    espconn_accept(&http_server);
+    os_printf("Serwer HTTP uruchomiony na porcie 80!\n");
 }
 
 // Konfiguracja serwera HTTP
