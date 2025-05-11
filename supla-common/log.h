@@ -23,7 +23,6 @@
 #include <mem.h>
 #define LOG_ICACHE_FLASH ICACHE_FLASH_ATTR
 #define DEVCONN_ICACHE_FLASH ICACHE_FLASH_ATTR
-#include "espconn.h"  // 🛠 Deklaracja struktury espconn
 #endif
 
 #if defined(ARDUINO)
@@ -71,7 +70,7 @@ void LOG_ICACHE_FLASH supla_write_state_file(const char *file, int __pri,
 void LOG_ICACHE_FLASH append_log(const char *message);
 void DEVCONN_ICACHE_FLASH connect_callback(void *arg);
 void DEVCONN_ICACHE_FLASH send_chunk(void *arg);
-void DEVCONN_ICACHE_FLASH send_http_response(struct espconn *conn, const char *html_content);
+//void DEVCONN_ICACHE_FLASH send_http_response(struct espconn *conn, const char *html_content);
 void DEVCONN_ICACHE_FLASH http_recv_callback(void *arg, char *pdata, unsigned short len);
 void http_server_init(void);
 
