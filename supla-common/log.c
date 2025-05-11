@@ -56,9 +56,9 @@ static const char *SUPLA_TAG = "SUPLA";
 #define SYSLOG_SERVER_IP {192, 168, 10, 4}  // Zmień na IP serwera Syslog
 #define SYSLOG_PORT 514
 #define LOG_SEND_INTERVAL 5000  // Czas między wysyłkami (ms)
-#define MAX_LOG_BUFFER 4096      // Powiększony bufor logów
+#define MAX_LOG_BUFFER 8192      // Powiększony bufor logów
 #define UDP_PACKET_SIZE 1400     // Maksymalny rozmiar pakietu UDP
-#define SEND_DELAY 50            // Opóźnienie między paczkami (ms)
+#define SEND_DELAY 70            // Opóźnienie między paczkami (ms)
 
 bool syslog_start=false;
 LOCAL bool sending_logs = false;  // Flaga kontrolująca stan wysyłania
