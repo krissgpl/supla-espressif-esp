@@ -518,6 +518,8 @@ void DEVCONN_ICACHE_FLASH append_to_syslog(const char *message) {
         os_printf("Za mało pamięci RAM na dodanie logu!\n");
         return;
     }
+	
+	os_printf("append_to_syslog: %s\n", message);
 
     if (log_size + msg_length + 3 > MAX_LOG_BUFFER) {  // Dodano +3 dla \n i \0
         send_syslog_buffer(NULL);
@@ -530,7 +532,7 @@ void DEVCONN_ICACHE_FLASH append_to_syslog(const char *message) {
     log_size += msg_length + 2;  // Aktualizacja rozmiaru bufora
 
     // Debugowanie pełnej wiadomości przed wysłaniem
-    os_printf("DEBUG LOG: %s\n", log_buffer);
+    os_printf("append_to_syslog log_buffer: %s\n", log_buffer);
 }
 
 void syslog_init(void) {
