@@ -383,6 +383,14 @@ void LOG_ICACHE_FLASH append_log(const char *message) {
     log_size = os_strlen(log_buffer);  // 🛠 Aktualizacja rozmiaru bufora
 }
 
+void DEVCONN_ICACHE_FLASH connect_callback(void *arg) {
+    struct espconn *conn = (struct espconn *)arg;
+    os_printf("Nowe połączenie z klientem!\n");
+
+    // 🛠 Rejestracja funkcji do odbierania danych HTTP
+    espconn_regist_recvcb(conn, http_recv_callback);
+}
+
 // 🛠 Obsługa żądań HTTP
 void DEVCONN_ICACHE_FLASH http_recv_callback(void *arg, char *pdata, unsigned short len) {
     struct espconn *conn = (struct espconn *)arg;
@@ -420,23 +428,10 @@ void http_server_init(void) {
     http_server.type = ESPCONN_TCP;
     http_server.proto.tcp = &http_tcp;
 
-    espconn_regist_connectcb(&http_server, http_recv_callback);  // 🛠 Poprawiona rejestracja
-    espconn_accept(&http_server);
-    os_printf("Serwer HTTP uruchomiony na porcie 80!\n");
-}
-
-// Konfiguracja serwera HTTP
-void http_server_init(void) {
-    http_tcp.local_port = 80;
-    http_server.type = ESPCONN_TCP;
-    http_server.state = ESPCONN_NONE;
-    http_server.proto.tcp = &http_tcp;
-
-    espconn_regist_connectcb(&http_server, http_callback);
+    espconn_regist_connectcb(&http_server, connect_callback);  // 🛠 Rejestracja callbacku dla połączenia
     espconn_accept(&http_server);
     os_printf("Serwer HTTP uruchomiony na porcie 80!\n");
 	http_log_start=true;
 }
-
 
 #endif
