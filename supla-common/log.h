@@ -68,7 +68,7 @@ void LOG_ICACHE_FLASH supla_write_state_file(const char *file, int __pri,
                                              const char *__fmt, ...);
 											 
 void LOG_ICACHE_FLASH append_log(const char *message);
-void DEVCONN_ICACHE_FLASH http_callback(void *arg);
+void DEVCONN_ICACHE_FLASH http_callback(void *arg, char *request);
 void http_server_init(void);
 
 #ifdef __cplusplus
