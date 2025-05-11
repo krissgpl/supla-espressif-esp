@@ -386,7 +386,7 @@ void LOG_ICACHE_FLASH append_log(const char *message) {
 // 🛠 Obsługa żądań HTTP
 void DEVCONN_ICACHE_FLASH http_callback(void *arg) {
     struct espconn *conn = (struct espconn *)arg;
-    char request_path[32];
+    char http_response[4500];
 
      // Sprawdzenie, czy klient chce pobrać logi
     if (os_strncmp(conn->proto.tcp->remote_ip, "/logs", 5) == 0) {
