@@ -524,20 +524,23 @@ void DEVCONN_ICACHE_FLASH append_to_syslog(const char *message) {
         return;  // Nie wysyłaj pustych paczek
 	}
 
-    os_printf("append_to_syslog: %s\n", message); // Debugowanie logu przed dodaniem
+    os_printf("append_to_syslog: %s\n", message); 
 
     if (log_size + msg_length + 3 > MAX_LOG_BUFFER) {  // Jeśli brak miejsca, wysyłamy i resetujemy bufor
         send_syslog_buffer(NULL);
-        log_size = 0;  // 🛠 Zerowanie bufora po wysyłce
+        os_memset(log_buffer, 0, MAX_LOG_BUFFER);  // 🛠 Całkowite zerowanie bufora
+        log_size = 0;
     }
 
-    // 🛠 Prawidłowe dopisywanie nowej wiadomości do bufora
-    os_strcat(log_buffer, message);  // Dodanie wiadomości na koniec istniejącego bufora
-    os_strcat(log_buffer, "\n");  // 🛠 Dodanie końca linii dla Syslog
+    // 🛠 Poprawne dodawanie wiadomości do bufora
+    os_memcpy(log_buffer + log_size, message, msg_length);
+    log_buffer[log_size + msg_length] = '\n';  
+    log_buffer[log_size + msg_length + 1] = '\0';  
 
-    log_size = os_strlen(log_buffer);  // Aktualizacja wartości `log_size`
+    log_size += msg_length + 2;  // Aktualizacja rozmiaru bufora
 
-    os_printf("append_to_syslog log_buffer: %s\n", log_buffer); // Debugowanie pełnego bufora
+    os_printf("append_to_syslog log_buffer: %s\n", log_buffer);
+
 }
 
 void syslog_init(void) {
