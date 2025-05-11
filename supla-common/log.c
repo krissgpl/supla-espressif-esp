@@ -383,18 +383,22 @@ void LOG_ICACHE_FLASH append_log(const char *message) {
     log_size = os_strlen(log_buffer);  // 🛠 Aktualizacja rozmiaru bufora
 }
 
-// Obsługa żądań HTTP
+// 🛠 Obsługa żądań HTTP
 void DEVCONN_ICACHE_FLASH http_callback(void *arg) {
     struct espconn *conn = (struct espconn *)arg;
+    char request_path[32];
+
+    // 🛠 Poprawne kopiowanie ścieżki żądania do zmiennej `request_path`
+    os_memcpy(request_path, conn->proto.tcp->remote_ip, sizeof(request_path) - 1);
+    request_path[sizeof(request_path) - 1] = '\0';  // 🛠 Zapewnienie zakończenia stringa
+
     char http_response[4500];
 
-    if (os_strcmp(conn->proto.tcp->remote_ip, "/logs") == 0) {
-        // 🛠 Serwujemy logi w formacie JSON
+    if (os_strcmp(request_path, "/logs") == 0) {
         os_sprintf(http_response,
             "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n"
             "{\"logs\": \"%s\"}", log_buffer);
     } else {
-        // 🛠 Główna strona HTML z AJAX-em
         os_sprintf(http_response,
             "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"
             "<html><head><script>"
