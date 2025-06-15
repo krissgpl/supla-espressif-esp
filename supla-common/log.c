@@ -47,7 +47,7 @@ static const char *SUPLA_TAG = "SUPLA";
 
 #include <mem.h>
 #include <osapi.h>
-
+/*
 #include <ets_sys.h>			// HTTP log display
 #include <os_type.h>			// HTTP log display
 #include <user_interface.h>		// HTTP log display
@@ -59,7 +59,7 @@ LOCAL uint16_t log_size = 0;
 LOCAL struct espconn http_server;
 LOCAL esp_tcp http_tcp;
 bool http_log_start=false;
-
+*/
 #ifndef ARDUINO
 #include <user_interface.h>
 #include "espmissingincludes.h"
