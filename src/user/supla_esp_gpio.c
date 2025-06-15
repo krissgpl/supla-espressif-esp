@@ -707,9 +707,7 @@ supla_esp_gpio_init(void) {
 
 void supla_esp_gpio_set_hi(int port, unsigned char hi) {
 
-    #ifdef SUPLA_DEBUG
-		supla_log(LOG_DEBUG, "supla_esp_gpio_set_hi %i, %i", port, hi);
-	#endif
+    supla_log(LOG_DEBUG, "supla_esp_gpio_set_hi %i, %i", port, hi);
 
 	#ifdef BOARD_GPIO_OUTPUT_SET_HI
 	BOARD_GPIO_OUTPUT_SET_HI
