@@ -25,7 +25,20 @@
 #include "supla_esp.h"
 #include "supla_esp_gpio.h"
 #include "supla_esp_input.h"
-#include "supla-dev/log.h"
+//#include "supla-dev/log.h"
+
+//----------- i2c sht30
+
+#include "ets_sys.h"
+#include "os_type.h"
+#include "osapi.h"
+#include "user_interface.h"
+#include "driver/i2c_master.h"
+
+#define SHT30_ADDR 0x44
+#define CMD_MEASURE_HIGH_REPEATABILITY 0x2C06
+
+//--------------
 
 //----------TIMERS DECLARATION---------------------------
 ETSTimer value_timer1;
@@ -47,6 +60,63 @@ uint8 Licznik = 0;
 uint8 Licznik2 = 0;
 
 int currentDeviceState = STATE_UNKNOWN;
+
+//------- i2c sht30
+
+void sht30_init() {
+    i2c_master_gpio_init();
+    i2c_master_init();
+}
+
+bool sht30_read_data(uint8_t *data, uint8_t len) {
+    i2c_master_start();
+    i2c_master_writeByte((SHT30_ADDR << 1)); // Adres z bitem zapisu
+    if (!i2c_master_checkAck()) {
+        i2c_master_stop();
+        return false;
+    }
+
+    i2c_master_writeByte((CMD_MEASURE_HIGH_REPEATABILITY >> 8) & 0xFF);
+    i2c_master_writeByte(CMD_MEASURE_HIGH_REPEATABILITY & 0xFF);
+    if (!i2c_master_checkAck()) {
+        i2c_master_stop();
+        return false;
+    }
+
+    os_delay_us(5000); // Oczekiwanie na przetworzenie danych
+
+    i2c_master_start();
+    i2c_master_writeByte((SHT30_ADDR << 1) | 1); // Adres z bitem odczytu
+    if (!i2c_master_checkAck()) {
+        i2c_master_stop();
+        return false;
+    }
+
+    for (uint8_t i = 0; i < len; i++) {
+        data[i] = i2c_master_readByte();
+        if (i < len - 1)
+            i2c_master_send_ack();
+        else
+            i2c_master_send_nack();
+    }
+
+    i2c_master_stop();
+    return true;
+}
+
+void sht30_get_temperature_humidity(float *temperature, float *humidity) {
+    uint8_t data[6];
+
+    if (sht30_read_data(data, 6)) {
+        uint16_t rawTemp = (data[0] << 8) | data[1];
+        uint16_t rawHum = (data[3] << 8) | data[4];
+
+        *temperature = -45.0 + (175.0 * ((float)rawTemp / 65535.0));
+        *humidity = 100.0 * ((float)rawHum / 65535.0);
+    }
+}
+
+//-----------------------------------------
 
 void ICACHE_FLASH_ATTR supla_esp_board_set_device_name(char *buffer, uint8 buffer_size) {
 	
@@ -247,6 +317,8 @@ void supla_esp_board_gpio_init(void) {
 	
 	//supla_log(LOG_DEBUG, "AT 1 ch = %i", supla_input_cfg[0].channel);
 	//supla_log(LOG_DEBUG, "AT 2 ch = %i", supla_input_cfg[1].channel);
+	
+	sht30_init();
 	
 }
 
@@ -533,6 +605,12 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 	supla_log(LOG_DEBUG, "supla_esp_state RELAY 5 = %i", supla_esp_state.Relay[5]);
 //	http_server_init();
 //    append_log("Logi systemowe uruchomione...");
+
+	float temp;
+	float humi;
+	sht30_get_temperature_humidity(temp, humi);
+	supla_log(LOG_DEBUG, "sht30 temp=%i C, humidity=%i",temp ,humi);
+	
 
 }
 
