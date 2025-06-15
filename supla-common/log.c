@@ -183,7 +183,7 @@ void supla_vlog(int __pri, const char *message);
 void LOG_ICACHE_FLASH supla_vlog(int __pri, const char *message) {
 #ifndef ESP8266_LOG_DISABLED
   os_printf("%s\r\n", message);
-  append_log(message);	//HTTP server log add to buffer
+//  append_log(message);	//HTTP server log add to buffer
 #endif
 }
 #else
@@ -350,7 +350,7 @@ void LOG_ICACHE_FLASH supla_write_state_file(const char *file, int __pri,
 
   free(buffer);
 }
-
+/*
 #ifdef ESP8266	// HTTP LOG SERVER
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -411,3 +411,4 @@ void http_server_init(void) {
 }
 
 #endif
+*/
