@@ -606,12 +606,10 @@ void ICACHE_FLASH_ATTR supla_esp_board_on_connect(void) {
 //	http_server_init();
 //    append_log("Logi systemowe uruchomione...");
 
-	float temp;
-	float humi;
-	sht30_get_temperature_humidity(temp, humi);
-	supla_log(LOG_DEBUG, "sht30 temp=%i C, humidity=%i",temp ,humi);
+	float temperature, humidity;
+    sht30_get_temperature_humidity(&temperature, &humidity);
+	supla_log(LOG_DEBUG, "sht30: %.2f °C, Wilgotność: %.2f %%\n", temperature, humidity);
 	
-
 }
 
 void GPIO_ICACHE_FLASH supla_block_channel(int ledblock) {
