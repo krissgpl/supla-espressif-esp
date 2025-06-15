@@ -33,7 +33,7 @@
 #include "os_type.h"
 #include "osapi.h"
 #include "user_interface.h"
-#include "driver/i2c_master.h"
+#include "i2c_master.h"
 
 #define SHT30_ADDR 0x44
 #define CMD_MEASURE_HIGH_REPEATABILITY 0x2C06
