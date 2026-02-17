@@ -130,6 +130,9 @@
 #define VAR_T33 75
 #endif /*CFG_TIME_VARIABLES*/
 
+#define VAR_HVC 76  // HLW voltage calibration
+#define VAR_HEC 77  // HLW energy calibration
+
 typedef struct {
   char step;
   char type;
@@ -438,6 +441,8 @@ void ICACHE_FLASH_ATTR supla_esp_parse_vars(TrivialHttpParserVars *pVars,
       char tc1[3] = {'t', 'c', '1'};  // Tilt control type idx 1
       char tc2[3] = {'t', 'c', '2'};  // Tilt control type idx 2
       char tc3[3] = {'t', 'c', '3'};  // Tilt control type idx 3
+      char hvc[3] = {'h', 'v', 'c'};
+      char hec[3] = {'h', 'e', 'c'};
 
       if (len - a >= 4 && pdata[a + 3] == '=') {
         if (memcmp(sid, &pdata[a], 3) == 0) {
@@ -494,6 +499,16 @@ void ICACHE_FLASH_ATTR supla_esp_parse_vars(TrivialHttpParserVars *pVars,
 
         } else if (memcmp(led, &pdata[a], 3) == 0) {
           pVars->current_var = VAR_LED;
+          pVars->buff_size = 12;
+          pVars->pbuff = pVars->intval;
+
+        } else if (memcmp(hvc, &pdata[a], 3) == 0) {
+          pVars->current_var = VAR_HVC;
+          pVars->buff_size = 12;
+          pVars->pbuff = pVars->intval;
+
+        } else if (memcmp(hec, &pdata[a], 3) == 0) {
+          pVars->current_var = VAR_HEC;
           pVars->buff_size = 12;
           pVars->pbuff = pVars->intval;
 					
@@ -846,7 +861,25 @@ void ICACHE_FLASH_ATTR supla_esp_parse_vars(TrivialHttpParserVars *pVars,
 
         } else if (pVars->current_var == VAR_LED) {
           cfg->StatusLedOff = (pVars->intval[0] - '0');
-						
+
+        } else if (pVars->current_var == VAR_HVC) {
+          int val = cfg_str2int(pVars->intval);
+          if (val < 500) {
+            val = 500;
+          } else if (val > 2000) {
+            val = 2000;
+          }
+          cfg->HlwVoltageCalibration = val;
+
+        } else if (pVars->current_var == VAR_HEC) {
+          int val = cfg_str2int(pVars->intval);
+          if (val < 500) {
+            val = 500;
+          } else if (val > 2000) {
+            val = 2000;
+          }
+          cfg->HlwEnergyCalibration = val;
+
 #ifdef TEMP_SELECT										// wybor czujnika temperatury
 		} else if ( pVars->current_var == VAR_TRM ) {
 		cfg->ThermometerType = pVars->intval[0] - '0';
