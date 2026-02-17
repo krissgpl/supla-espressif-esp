@@ -198,6 +198,10 @@
 
 #include "board/k_vindriktning.h"
 
+#elif defined(__BOARD_sp111)
+
+#include "board/sp111.h"
+
 #elif defined(__BOARD_k_versa_module)
 
 #include "board/k_versa_module.h"
